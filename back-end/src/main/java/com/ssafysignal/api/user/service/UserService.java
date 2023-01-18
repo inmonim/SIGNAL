@@ -30,7 +30,6 @@ public class UserService {
 
         User user = userRepository.findById(userSeq).get();
         //        .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
-
         return UserFindResponse.fromEntity(user);
     }
 

@@ -21,12 +21,13 @@ public class User {
     private Date birth;
     private String phone;
     private Date regDt;
-    private int heartCount;
+    private int heartCnt;
     private String userCode;
+
 
     @Builder
     public User(final int userSeq, String name, String email, String nickname,
-                    Date birth, String phone, Date regDt, int heartCount, String userCode) {
+                    Date birth, String phone, Date regDt, int heartCnt, String userCode) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
@@ -34,7 +35,7 @@ public class User {
         this.birth = birth;
         this.phone = phone;
         this.regDt = regDt;
-        this.heartCount = heartCount;
+        this.heartCnt = heartCnt;
         this.userCode = userCode;
     }
 }
