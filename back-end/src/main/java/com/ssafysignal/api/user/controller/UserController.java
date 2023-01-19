@@ -1,14 +1,14 @@
 package com.ssafysignal.api.user.controller;
 
 import com.ssafysignal.api.user.dto.Response.UserFindAllResponse;
-import com.ssafysignal.api.user.dto.Response.UserFindResponse;
+import com.ssafysignal.api.user.entity.FindUserRes;
+import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,12 +35,19 @@ public class UserController {
 
     @Operation(summary = "특정 회원 조회", description = "회원 ID를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
-    private ResponseEntity<UserFindResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
-        System.out.println("/user/"+userSeq);
+    private ResponseEntity<FindUserRes> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("findUser - Call");
-        UserFindResponse dto= userService.findUser(userSeq);
+        FindUserRes dto= userService.findUser(userSeq);
         System.out.println(dto);
         return ResponseEntity.ok().body(dto);
     }
 
+
+    @GetMapping("/all/{userSeq}")
+    private ResponseEntity<User> findUserAllInfo(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
+        log.info("findUserAllInfo - Call");
+        User dto= userService.findUserAllInfo(userSeq);
+        System.out.println(dto);
+        return ResponseEntity.ok().body(dto);
+    }
 }
