@@ -20,12 +20,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
+    /*@Transactional(readOnly = true)
     public UserFindAllResponse findAllUsers(int page, int size) {
         Page<User> userList = userRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.ASC, "userSeq"));
 
         return new UserFindAllResponse().fromEntity(userList);
-    }
+    }*/
+    
+    /*@Transactional(readOnly = true)
+    public User findUserAllInfo(final int userSeq) {
+
+        Optional<User> user = userRepository.findById(userSeq);
+        //        .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
+        //return UserFindResponse.fromEntity(user);
+        return user.get();
+    }*/
 
     @Transactional(readOnly = true)
     public FindUserRes findUser(final int userSeq) {
@@ -33,15 +42,17 @@ public class UserService {
         FindUserRes user = userRepository.findByUserSeq(userSeq);
         //        .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
         //return UserFindResponse.fromEntity(user);
+        
+        //userSeq가 없는 경우 에러 처리 추가하기!!
         return user;
     }
-
+    
     @Transactional(readOnly = true)
-    public User findUserAllInfo(final int userSeq) {
-
-        Optional<User> user = userRepository.findById(userSeq);
-        //        .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
-        //return UserFindResponse.fromEntity(user);
-        return user.get();
+    public User joinUser(final User user) {
+    	
+    	User ret=userRepository.save(user);
+    	return ret;
     }
+
+
 }

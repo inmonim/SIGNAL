@@ -15,14 +15,12 @@ public class UserFindResponse {
     private String email;
     private String nickName;
     private String phone;
-    private int heartCnt;
 
     public static UserFindResponse fromEntity(final User user){
         return UserFindResponse.builder()
                 .email(user.getEmail())
                 .nickName(user.getNickname())
                 .phone(user.getPhone())
-                .heartCnt(user.getHeartCnt())
                 .build();
     }
 }

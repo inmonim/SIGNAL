@@ -5,7 +5,5 @@ public interface FindUserRes {
     String getPhone();
     String getEmail();
     //String getUrl();
-    int getHeartCnt();
-    //getReceive();
 
 }

@@ -21,9 +21,9 @@ public class User {
     private Date birth;
     private String phone;
     private Date regDt;
-    private int heartCnt;
     private String userCode;
-
+    //private int userHeartSeq;
+    //private int userImageFileSeq;
 
     @Builder
     public User(final int userSeq, String name, String email, String nickname,
@@ -35,7 +35,6 @@ public class User {
         this.birth = birth;
         this.phone = phone;
         this.regDt = regDt;
-        this.heartCnt = heartCnt;
         this.userCode = userCode;
     }
 }
