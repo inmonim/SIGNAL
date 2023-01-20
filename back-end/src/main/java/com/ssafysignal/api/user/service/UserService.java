@@ -1,17 +1,11 @@
 package com.ssafysignal.api.user.service;
 
-import com.ssafysignal.api.user.dto.Response.UserFindAllResponse;
-import com.ssafysignal.api.user.entity.FindUserRes;
+import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +42,7 @@ public class UserService {
     }
     
     @Transactional(readOnly = true)
-    public User joinUser(final User user) {
+    public User registUser(final User user) {
     	
     	User ret = userRepository.save(user);
     	return ret;
