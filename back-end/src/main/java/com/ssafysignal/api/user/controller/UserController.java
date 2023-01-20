@@ -1,7 +1,8 @@
 package com.ssafysignal.api.user.controller;
 
-import com.ssafysignal.api.user.dto.Response.UserFindAllResponse;
-import com.ssafysignal.api.user.entity.FindUserRes;
+import com.ssafysignal.api.global.response.BasicHeader;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,20 +33,21 @@ public class UserController {
 
     @Operation(summary = "특정 회원 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
-    private ResponseEntity<FindUserRes> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
+    private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("findUser - Call");
-        FindUserRes dto= userService.findUser(userSeq);
-        System.out.println(dto);
-        return ResponseEntity.ok().body(dto);
+        FindUserRes resDto= userService.findUser(userSeq);
+        
+        return ResponseEntity.ok().body(BasicResponse.Body("success", "조회가 성공했습니다.", resDto));
+        //잘못된 조회 return 넣기
     }
 
     @Operation(summary = "회원가입", description = "입력된 정보로 회원가입한다.")
     @PostMapping("")   //실제로는 이메일 인증 url로 가입하도록 하기!!
-    private ResponseEntity<User> joinUser(@RequestBody User user) {
+    private ResponseEntity<BasicResponse> registUser(@RequestBody User user) {
         log.info("joinUser - Call");
         System.out.println(user);
-        User dto= userService.joinUser(user);
+        User dto= userService.registUser(user);
 
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok().body(BasicResponse.Body("success", "회원가입 되었습니다.", dto));
     }
 }

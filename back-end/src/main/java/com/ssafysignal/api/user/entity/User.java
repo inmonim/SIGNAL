@@ -1,5 +1,6 @@
 package com.ssafysignal.api.user.entity;
 
+import com.ssafysignal.api.global.db.entity.CommonCode;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -23,11 +24,13 @@ public class User {
     int birthDay;
     private String phone;
     private LocalDateTime regDt;
-    private String userCode;
+    @OneToOne
+    @JoinColumn(name = "code")
+    private CommonCode userCode;
     private int heartCnt;
 
     @Builder
-    public User(int userSeq, String name, String email, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, String userCode, int heartCnt) {
+    public User(int userSeq, String name, String email, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, CommonCode userCode, int heartCnt) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
