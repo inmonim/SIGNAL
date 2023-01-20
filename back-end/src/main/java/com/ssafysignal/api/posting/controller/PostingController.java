@@ -26,10 +26,10 @@ public class PostingController {
 
     @Operation(summary = "공고 등록", description = "공고를 등록한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody(required = true)RegistPostingRequest registPostingRequest) {
+    private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody RegistPostingRequest registPostingRequest) {
         log.info("registPosting - Call");
 
-        System.out.println(registPostingRequest);
+        log.info(registPostingRequest.toString());
 
         return ResponseEntity.ok().body(BasicResponse.Body("success", "공고 등록 성공", null));
     }
