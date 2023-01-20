@@ -50,7 +50,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User joinUser(final User user) {
     	
-    	User ret=userRepository.save(user);
+    	User ret = userRepository.save(user);
     	return ret;
     }
 
