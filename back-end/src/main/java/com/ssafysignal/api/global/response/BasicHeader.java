@@ -12,7 +12,7 @@ public class BasicHeader {
     private String code;
     private String message;
 
-    public static BasicHeader BasicHeader(final String code, final String message){
+    public static BasicHeader Header(final String code, final String message){
         return BasicHeader.builder()
                 .code(code)
                 .message(message)

@@ -1,5 +1,6 @@
 package com.ssafysignal.api.posting.entity;
 
+import com.ssafysignal.api.global.db.entity.CommonCode;
 import com.ssafysignal.api.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,15 +38,16 @@ public class Posting {
     @Column(name = "level")
     private Integer level;
 
-    @Column(name = "posting_code")
-    private String postingCode;
+    @OneToOne
+    @JoinColumn(name = "posting_seq")
+    private CommonCode postingCode;
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
     @Builder
     public Posting(final Integer postingSeq, final User user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
-                    final Integer level, final String postingCode, final LocalDateTime regDt) {
+                    final Integer level, final CommonCode postingCode, final LocalDateTime regDt) {
         this.postingSeq = postingSeq;
         this.user = user;
         this.content = content;
