@@ -1,0 +1,59 @@
+@import 'index.css';
+@import 'assets/font/font.css';
+
+.header-container {
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0px 2px 51px rgba(0, 0, 0, 0.08);
+}
+
+.header-logo {
+  margin-left: 95px;
+  margin-right: 53px;
+}
+
+.header-wrap {
+  height: 108px;
+  max-width: 1920px;
+  margin: 0 auto;
+
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'dohyeon';
+}
+
+.header-left-wrap {
+  display: flex;
+  align-items: center;
+  float: left;
+  /* border: 1px solid blue; */
+}
+
+.header-left-wrap ul {
+  display: flex;
+}
+
+.header-left-wrap li {
+  font-size: 27px;
+}
+
+.header-right-wrap {
+  display: flex;
+  align-items: right;
+  /* border: 1px solid green; */
+}
+
+.header-right-wrap ul {
+  display: flex;
+  margin-right: 95px;
+}
+
+.header-right-wrap li {
+  font-size: 27px;
+}
+
+.header-nav-item {
+  color: black;
+  text-decoration: none;
+}
