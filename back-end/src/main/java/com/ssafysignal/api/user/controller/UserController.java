@@ -10,12 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,8 +43,9 @@ public class UserController {
     @PostMapping("")   //실제로는 이메일 인증 url로 가입하도록 하기!!
     private ResponseEntity<User> joinUser(@RequestBody User user) {
         log.info("joinUser - Call");
+        System.out.println(user);
         User dto= userService.joinUser(user);
-        
-        return ResponseEntity.ok().body(user);
+
+        return ResponseEntity.ok().body(dto);
     }
 }
