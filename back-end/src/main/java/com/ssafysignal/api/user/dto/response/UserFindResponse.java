@@ -1,4 +1,4 @@
-package com.ssafysignal.api.user.dto.Response;
+package com.ssafysignal.api.user.dto.response;
 
 import com.ssafysignal.api.user.entity.User;
 import lombok.AllArgsConstructor;
