@@ -2,6 +2,7 @@ package com.ssafysignal.api.posting.controller;
 
 import com.ssafysignal.api.global.db.entity.CommonCode;
 import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.posting.dto.request.RegistPostingRequest;
 import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,16 @@ import java.util.List;
 @RequestMapping("/posting")
 public class PostingController {
 
+    @Operation(summary = "공고 등록", description = "공고를 등록한다.")
+    @PostMapping("")
+    private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody(required = true)RegistPostingRequest registPostingRequest) {
+        log.info("registPosting - Call");
+
+        System.out.println(registPostingRequest);
+
+        return ResponseEntity.ok().body(BasicResponse.Body("success", "공고 등록 성공", null));
+    }
+
     @Operation(summary = "공고 목록 조회", description = "공고 전체 목록을 조회한다.")
     @GetMapping("")
     private ResponseEntity<BasicResponse> findAllPosting() {
@@ -41,7 +52,7 @@ public class PostingController {
         return ResponseEntity.ok().body(BasicResponse.Body("success", "공고 목록 조회 성공", postingList));
     }
 
-    @Operation(summary = "공고 목록 조회", description = "공고 전체 목록을 조회한다.")
+    @Operation(summary = "공고 상세 조회", description = "공고 상세 목록을 조회한다.")
     @GetMapping("/{postingSeq}")
     private ResponseEntity<BasicResponse> findPosting(@Parameter(description = "공고 Seq", required = true) @PathVariable Integer postingSeq) {
         log.info("findPosting - Call");
