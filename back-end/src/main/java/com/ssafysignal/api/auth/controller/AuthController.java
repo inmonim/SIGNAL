@@ -43,7 +43,7 @@ public class AuthController {
         System.out.println(name+","+phone);
         FindEmailRes resDto = service.findEmail(name,phone);
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "공고 조회 성공", resDto));
+        return ResponseEntity.ok().body(BasicResponse.Body("success", "해당 정보의 이메일이 있습니다.", resDto));
 
     }
     
