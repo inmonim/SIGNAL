@@ -1,4 +1,4 @@
-package com.ssafysignal.api.global.Response;
+package com.ssafysignal.api.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
