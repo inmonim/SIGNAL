@@ -2,16 +2,14 @@ package com.ssafysignal.api.posting.entity;
 
 import com.ssafysignal.api.global.db.entity.CommonCode;
 import com.ssafysignal.api.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "posting")
@@ -21,10 +19,6 @@ public class Posting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "posting_seq")
     private Integer postingSeq;
-
-    @OneToOne
-    @JoinColumn(name = "user_seq")
-    private User user;
 
     @Column(name = "content")
     private String content;
@@ -38,12 +32,15 @@ public class Posting {
     @Column(name = "level")
     private Integer level;
 
-    @OneToOne
-    @JoinColumn(name = "posting_seq")
-    private CommonCode postingCode;
-
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
+
+    @OneToOne
+    @JoinColumn(name = "user_seq")
+    private User user;
+    @OneToOne
+    @JoinColumn(name = "posting_code")
+    private CommonCode postingCode;
 
     @Builder
     public Posting(final Integer postingSeq, final User user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
