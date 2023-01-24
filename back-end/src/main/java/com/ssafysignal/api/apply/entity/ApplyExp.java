@@ -14,16 +14,20 @@ import javax.persistence.*;
 @Table(name = "apply_exp")
 public class ApplyExp {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "apply_exp_seq")
     private Integer applyExpSeq;
+
+    @Column(name = "apply_seq")
+    private Integer applySeq;
+
+    @Column(name = "content")
     private String content;
 
-//    @ManyToOne
-//    private Apply apply;
-
     @Builder
-    public ApplyExp(final Integer applyExpSeq, final Apply apply, final String content) {
+    public ApplyExp(final Integer applyExpSeq, final Integer applySeq, final String content) {
         this.applyExpSeq = applyExpSeq;
-//        this.apply = apply;
+        this.applySeq = applySeq;
         this.content = content;
     }
 }

@@ -15,18 +15,20 @@ import javax.persistence.*;
 @Table(name = "apply_skill")
 public class ApplySkill {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "apply_skill_seq")
     private Integer applySkillSeq;
-//    @ManyToOne
-//    private Apply apply;
-//    @ManyToOne
-//    private CommonCode commonCode;
+
+    @Column(name = "apply_seq")
+    private Integer applySeq;
+
+    @Column(name = "common_code")
+    private String commonCode;
 
     @Builder
-    public ApplySkill(final Integer applySkillSeq
-//    , final Integer apply, final Integer commonCode
-    ) {
+    public ApplySkill(final Integer applySkillSeq, final Integer applySeq, final String commonCode) {
         this.applySkillSeq = applySkillSeq;
-//        this.apply = apply;
-//        this.commonCode = commonCode;
+        this.applySeq = applySeq;
+        this.commonCode = commonCode;
     }
 }
