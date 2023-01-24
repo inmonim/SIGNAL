@@ -1,12 +1,13 @@
 package com.ssafysignal.api.posting.repository;
 
-import com.ssafysignal.api.posting.entity.Posting;
-import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.posting.entity.PostingSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface PostingSkillRepository extends JpaRepository<PostingSkill, Integer> {
-    List<PostingSkill> findPostingSkillByPosting(Posting posting);
+    Optional<List<PostingSkill>> findPostingSkillsByPostingSeq(Integer postingSeq);
 }

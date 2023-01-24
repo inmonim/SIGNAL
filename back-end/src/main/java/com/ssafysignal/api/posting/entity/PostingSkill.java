@@ -1,16 +1,19 @@
 package com.ssafysignal.api.posting.entity;
 
-import com.ssafysignal.api.global.db.entity.CommonCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "posting_skill")
 public class PostingSkill {
 
@@ -19,18 +22,16 @@ public class PostingSkill {
     @Column(name = "posting_skill_seq")
     private Integer postingSkillSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "posting_seq")
-    private Posting posting;
+    @Column(name = "posting_seq")
+    private Integer postingSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "code")
-    private CommonCode skillCode;
+    @Column(name = "skill_code")
+    private String skillCode;
 
     @Builder
-    public PostingSkill(final Integer postingSkillSeq, final Posting posting, final CommonCode skillCode){
+    public PostingSkill(final Integer postingSkillSeq, final Integer postingSeq, final String skillCode){
         this.postingSkillSeq = postingSkillSeq;
-        this.posting = posting;
+        this.postingSeq = postingSeq;
         this.skillCode = skillCode;
     }
 }

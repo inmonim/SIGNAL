@@ -4,7 +4,6 @@ import com.ssafysignal.api.global.db.entity.CommonCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ class CommonCodeRepositoryTest {
     @Test
     void findAllTest() {
         List<CommonCode> commonCodeList = commonCodeRepository.findAll();
-        assertTrue(commonCodeList.size() == 95);
+        assertTrue(commonCodeList.size() == 97);
     }
 
     @Test
