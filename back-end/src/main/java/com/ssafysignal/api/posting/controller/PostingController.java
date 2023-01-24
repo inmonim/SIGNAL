@@ -1,6 +1,6 @@
 package com.ssafysignal.api.posting.controller;
 
-import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.common.response.BasicResponse;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.service.PostingService;
 import io.swagger.v3.oas.annotations.Operation;

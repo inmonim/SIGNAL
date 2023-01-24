@@ -1,4 +1,4 @@
-package com.ssafysignal.api.global.db.entity;
+package com.ssafysignal.api.global.common.db.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

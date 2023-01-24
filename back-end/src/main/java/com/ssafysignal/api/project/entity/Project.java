@@ -1,6 +1,6 @@
 package com.ssafysignal.api.project.entity;
 
-import com.ssafysignal.api.global.db.entity.ImageFile;
+import com.ssafysignal.api.global.common.db.entity.ImageFile;
 import com.ssafysignal.api.posting.entity.Posting;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
