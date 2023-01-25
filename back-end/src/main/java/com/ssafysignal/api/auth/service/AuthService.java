@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class AuthService {
-
-    @Autowired
-    AuthRepository repository;
+    private final AuthRepository repository;
     @Transactional(readOnly = true)
     public FindEmailRes findEmail(final String name, final String phone) {
 
