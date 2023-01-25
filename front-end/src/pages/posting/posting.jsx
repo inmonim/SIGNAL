@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
+// import axios from 'axios'
 import JavaScript from '../../assets/image/JavaScript.png'
 import PostingCardItem from 'components/Posting/PostingCardItem'
 
 function Posting() {
-  const [test, setTest] = useState()
+  const [test] = useState()
   console.log(test)
   useEffect(() => {
-    axios
-      .get('http://localhost:4000/api/todo')
-      .then((res) => {
-        const copy = [...res.data]
-        setTest(copy)
-      })
-      .catch((error) => console.log(error))
+    // axios
+    //   .get('http://localhost:4000/api/todo')
+    //   .then((res) => {
+    //     const copy = [...res.data]
+    //     setTest(copy)
+    //   })
+    //   .catch((error) => console.log(error))
   }, [])
   // const sa = 2
 
@@ -69,7 +69,7 @@ function Posting() {
           <option value="">옹옹</option>
         </FilterSelect>
         <PostList>
-          <PostingCardItem className="post-card" />
+          <PostingCardItem />
           <PostingCardItem />
           <PostingCardItem />
           <PostingCardItem />
@@ -136,6 +136,10 @@ const Skillbtn = styled.div`
   border-radius: 100px;
   padding: 1em;
   justify-content: space-between;
+  &:hover {
+    border: 1px solid #848484;
+    box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
 `
 const SkillText = styled.p`
   font-family: 'Roboto';
@@ -167,35 +171,15 @@ const FilterSelect = styled.select`
   border: 1px solid #d7e2eb;
   border-radius: 4px;
   box-sizing: border-box;
-  background-position: calc(100% - 0.8rem) 49%;
   background-size: 0.625rem 0.3125rem;
   background-color: #fbfbfd;
-  background-image: url(/images/common/toggle-black.png);
-  background-repeat: no-repeat;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.6;
   color: #263747;
-  appearance: none;
-  transition: color 0.08s ease-in-out, background-color 0.08s ease-in-out, border-color 0.08s ease-in-out,
-    box-shadow 0.08s ease-in-out;
-  cursor: pointer;
 
   &:hover {
-    border: 1px solid #3396f4;
-    box-shadow: inset 0 0 0 1px#3396f4;
-  }
-  &:focus {
-    border: 1px solid #3396f4;
-    box-shadow: inset 0 0 0 1px #3396f4;
-    background-color: #fff;
-    color: #495057;
-  }
-
-  @media (max-width: 767px) {
-    max-width: 100%;
-    height: 38px;
-    margin-bottom: 8px;
-    font-size: 14px;
+    border: 1px solid #848484;
+    box-shadow: inset 0 0 0 1px#bcb7d9;
   }
 `

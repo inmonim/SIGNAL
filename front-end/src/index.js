@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import ReactDOM from 'react-dom/client'
-import MainPage from 'pages/MainPage'
-import App from 'App'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+const Posting = lazy(() => import('./pages/Posting/Posting'))
+
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <MainPage />
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/posting" element={<Posting />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 )
 
