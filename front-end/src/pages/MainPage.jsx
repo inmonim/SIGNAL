@@ -18,6 +18,7 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
   border: '1px solid #574B9F',
   borderRadius: 25,
   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
+  position: 'static',
   '&:hover': {
     backgroundColor: '#fff',
     borderColor: '1px solid #574B9F',

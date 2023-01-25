@@ -1,19 +1,11 @@
-import React, { lazy } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from 'Layout'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-
-const Posting = lazy(() => import('./pages/Posting/Posting'))
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <Layout />
-    <BrowserRouter>
-      <Routes>
-        <Route path="/posting" element={<Posting />} />
-      </Routes>
-    </BrowserRouter>
   </React.StrictMode>
 )
 

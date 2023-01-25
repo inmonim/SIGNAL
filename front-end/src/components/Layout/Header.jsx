@@ -117,7 +117,7 @@ function Header() {
                 <D.Down isDropped={postingIsOpen}>
                   <D.Ul>
                     <D.Li>
-                      <D.LinkWrapper href="/">공고</D.LinkWrapper>
+                      <D.LinkWrapper href="/posting">공고</D.LinkWrapper>
                     </D.Li>
                     <D.Li>
                       <D.LinkWrapper href="/">오픈 프로필</D.LinkWrapper>
