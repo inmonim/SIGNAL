@@ -25,7 +25,7 @@ function Posting() {
         <Field>
           <Fieldtext
             onClick={() => {
-              console.log('WEb')
+              console.log('WEbb')
             }}
           >
             Web
