@@ -4,6 +4,7 @@ import com.ssafysignal.api.global.common.response.BasicResponse;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListReq;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqReq;
 import com.ssafysignal.api.letter.dto.request.SendLetterReq;
+import com.ssafysignal.api.letter.dto.response.CountNotReadLetterRes;
 import com.ssafysignal.api.letter.dto.response.FindLetterRes;
 import com.ssafysignal.api.letter.entity.Letter;
 import com.ssafysignal.api.letter.service.LetterService;
@@ -115,4 +116,19 @@ public class LetterController {
         }
         return ResponseEntity.ok().body(BasicResponse.Body("success", "리스트에 해당하는 모든 쪽지를 삭제했습니다.", null));
     }
+
+
+    @Tag(name = "쪽지")
+    @Operation(summary = "안읽은 쪽지 갯수 구하기", description = "유저seq가 받은 쪽지 중 안읽은 쪽지 갯수 구하기")
+    @GetMapping("/read/{userSeq}")
+    private ResponseEntity<BasicResponse> countNotReadLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq){
+        Long cnt = letterService.countNotReadLetter(userSeq);
+
+        CountNotReadLetterRes res = CountNotReadLetterRes.builder()
+                .count(cnt)
+                .build();
+        return ResponseEntity.ok().body(BasicResponse.Body("success", "안읽은 쪽지 갯수를 조회했습니다.", res));
+    }
+
+    
 }
