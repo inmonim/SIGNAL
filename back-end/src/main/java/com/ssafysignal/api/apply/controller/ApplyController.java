@@ -1,14 +1,21 @@
 package com.ssafysignal.api.apply.controller;
 
 
+import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.service.ApplyService;
 import com.ssafysignal.api.global.common.response.BasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "지원", description = "지원서 API")
@@ -17,21 +24,39 @@ import org.springframework.web.bind.annotation.*;
 
 public class ApplyController {
 
+    private ApplyService applyService;
+
+    @Autowired
+    public ApplyController(ApplyService applyService) {
+        this.applyService = applyService;
+    }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 등록",  description = "지원서를 등록한다.")
-    @GetMapping("")
-    private ResponseEntity<BasicResponse> registApply() {
-        log.info("registApply - Call");
+    @PostMapping("")
+    private ResponseEntity<BasicResponse> registApply(@Parameter(description = "지원서 작성을 위한 정보")
+                                                          @RequestBody ApplyBasicRequest applyRegistRequest) {
+        log.info("regeistApply - Call");
 
-//        CommonCode userCode = new CommonCode("US100", "일반 회원", "US", "회원 구분");
-//        User user = new User(1, "박싸피", "abc@abc.com", "싸피드가자", 2023, 1, 1, "01012345678", LocalDateTime.now(), userCode, 100);
-//        CommonCode postingCode = new CommonCode("PPS102", "모집중", "PPS", "작성한 공고 상태 구분");
-//        Posting posting = new Posting(1, user, "공고 테스트", LocalDateTime.now(), LocalDateTime.now(), 5, postingCode, LocalDateTime.now());
-//
-//        Apply apply = new Apply(1, user, posting, "fdsa", "fsd");
+        BasicResponse response = applyService.registApply(applyRegistRequest);
+
+        return ResponseEntity.ok().body(response);
+    }
 
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "지원서 등록 성공", "지원서 등록 성공입니다"));
+
+
+    @Tag(name = "지원")
+    @Operation(summary = "지원서 상세 조회", description = "지원서 상세 정보 조회")
+    @GetMapping("/{applySeq}")
+    private ResponseEntity<BasicResponse> findApply(@Parameter(description = "지원 Seq", required = true) @PathVariable() Integer applySeq) {
+//        log.info("findApply - Call");
+
+        BasicResponse response = applyService.findApply(applySeq);
+
+        log.info("지나옴");
+
+        return ResponseEntity.ok().body(response);
     }
 
 }
