@@ -9,7 +9,7 @@ import projectimg from 'assets/image/Projectpic.png'
 import signalweek from 'assets/image/Signalweek.png'
 
 const SignalBtn = styled(Btn)(({ theme }) => ({
-  fontFamily: 'dohyeon',
+  // fontFamily: 'dohyeon',
   fontColor: theme.palette.getContrastText('#574B9F'),
   backgroundColor: '#574B9F',
   width: '322px',
@@ -35,7 +35,9 @@ function MainPage() {
             <div className="text-item">내가 찾던 팀원</div>
             <div className="text-item">시그널에서 만나세요</div>
             <div className="btn-item">
-              <SignalBtn variant="contained">지원하러 가기</SignalBtn>
+              <SignalBtn variant="contained" href="/posting">
+                지원하러 가기
+              </SignalBtn>
             </div>
           </div>
         </div>
