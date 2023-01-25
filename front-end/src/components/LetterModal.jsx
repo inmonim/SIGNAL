@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
-import { FormControlLabel, TextField } from '@mui/material'
-// import FormGroup from '@mui/material/FormGroup'
-import Checkbox from '@mui/material/Checkbox'
 import 'assets/font/font.css'
 import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import RegistModal from './RegistModal'
+import FromLetter from 'components/FromLetter'
+import ToLetter from 'components/ToLetter'
+import TrashLetter from 'components/TrashLetter'
+// import Divider from '@mui/material/Divider'
 
 import closeBtn from 'assets/image/x.png'
+import fromimg from 'assets/image/FromLetterImg.png'
+import toimg from 'assets/image/ToLetterImg.png'
+import trashimg from 'assets/image/TrashLetter.png'
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 
 const style = {
   width: 1307,
@@ -27,30 +29,19 @@ const style = {
   transform: 'translate(-50%, -50%)',
 }
 
-const inputStyle = {
-  backgroundColor: '#DDDBEC',
-  width: '549px',
-  marginBottom: '38px',
-  '& label.Mui-focused': {
-    color: '#574b9f',
-  },
-  '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: '#574b9f',
-    },
-  },
-}
-
 const SignalBtn = styled(Btn)(({ theme }) => ({
   fontFamily: 'dohyeon',
   fontColor: theme.palette.getContrastText('#574B9F'),
   backgroundColor: '#574B9F',
-  width: '173px',
-  height: '90px',
-  fontSize: '44px',
+  width: '172px',
+  height: '55px',
+  fontSize: '29px',
   border: '1px solid #574B9F',
-  borderRadius: 25,
+  borderRadius: 15,
   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
+  color: '#fff',
+  margin: '30px auto',
+  display: 'block',
   '&:hover': {
     backgroundColor: '#fff',
     borderColor: '1px solid #574B9F',
@@ -58,54 +49,97 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
   },
 }))
 
-function LoginModal({ open, onClose }) {
-  const [regOpen, setRegOpen] = useState(false)
-  const handleRegOpen = () => {
-    setRegOpen(true)
-  }
-  const handleRegClose = () => {
-    setRegOpen(false)
-  }
-  const handleToMain = () => {
-    onClose(onClose(true))
+function LetterModal({ open, onClose }) {
+  const [selectedListIndex, setSelectedListIndex] = useState(0)
+  const handleMenuListItemClick = (e, index) => {
+    setSelectedListIndex(index)
   }
   return (
     <>
       <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
         <Box sx={style}>
-          <img
-            style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
-            src={closeBtn}
-            alt="closeBtn"
-            onClick={onClose}
-          />
-          <Typography id="modal-title" sx={{ textAlign: 'center', margin: '10px 0px' }}>
-            쪽지
-          </Typography>
-          <div id="modal-desc" style={{ textAlign: 'center' }}>
-            <TextField id="filled-multiline-flexible" label="E-mail" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Password" multiline sx={inputStyle} />
-            <FormControlLabel
-              style={{ color: '#574b9f' }}
-              label="자동로그인"
-              control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+          <div
+            className="letter-modal-left"
+            style={{
+              float: 'left',
+              width: '20%',
+              height: '100%',
+              borderRight: '1px solid #616161',
+            }}
+          >
+            <SignalBtn style={{ margin: '30px auto', display: 'block' }}>쪽지 쓰기</SignalBtn>
+            <List>
+              <ListItem disablePadding>
+                <ListItemButton
+                  selected={selectedListIndex === 0}
+                  onClick={(event) => handleMenuListItemClick(event, 0)}
+                >
+                  <ListItemIcon>
+                    <img src={fromimg} alt="fromimg" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="받은쪽지함"
+                    primaryTypographyProps={{
+                      fontSize: 20,
+                    }}
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton
+                  selected={selectedListIndex === 1}
+                  onClick={(event) => handleMenuListItemClick(event, 1)}
+                >
+                  <ListItemIcon>
+                    <img src={toimg} alt="toimg" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="보낸쪽지함"
+                    primaryTypographyProps={{
+                      fontSize: 20,
+                    }}
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton
+                  selected={selectedListIndex === 2}
+                  onClick={(event) => handleMenuListItemClick(event, 2)}
+                >
+                  <ListItemIcon>
+                    <img src={trashimg} alt="trashimg" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="휴지통"
+                    primaryTypographyProps={{
+                      fontSize: 20,
+                    }}
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </div>
+          <div
+            className="letter-modal-right"
+            style={{
+              float: 'left',
+              width: '80%',
+              height: '100%',
+            }}
+          >
+            <img
+              style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
+              src={closeBtn}
+              alt="closeBtn"
+              onClick={onClose}
             />
-            <Link>이메일 / 비밀번호 찾기 </Link>
-            <div style={{ fontSize: '20px' }}>
-              계정이 없으신가요?
-              <span
-                style={{ margin: '0px 30px', textDecoration: 'underline', cursor: 'pointer' }}
-                onClick={handleRegOpen}
-              >
-                회원가입
-              </span>
-              <RegistModal open={regOpen} onClose={handleRegClose}></RegistModal>
-            </div>
-            <div style={{ margin: '30px 0px' }}>
-              <SignalBtn variant="contained" onClick={handleToMain}>
-                로그인
-              </SignalBtn>
-            </div>
+            {selectedListIndex === 0 ? (
+              <FromLetter></FromLetter>
+            ) : selectedListIndex === 1 ? (
+              <ToLetter></ToLetter>
+            ) : (
+              <TrashLetter></TrashLetter>
+            )}
           </div>
         </Box>
       </Modal>
@@ -113,4 +147,4 @@ function LoginModal({ open, onClose }) {
   )
 }
 
-export default LoginModal
+export default LetterModal
