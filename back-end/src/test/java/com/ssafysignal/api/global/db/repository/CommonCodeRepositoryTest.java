@@ -1,6 +1,7 @@
 package com.ssafysignal.api.global.db.repository;
 
-import com.ssafysignal.api.global.db.entity.CommonCode;
+import com.ssafysignal.api.global.common.db.entity.CommonCode;
+import com.ssafysignal.api.global.common.db.repository.CommonCodeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,16 +17,21 @@ class CommonCodeRepositoryTest {
     private CommonCodeRepository commonCodeRepository;
 
     @Test
-    void findCommonCodeTest() {
-
+    void findAllTest() {
         List<CommonCode> commonCodeList = commonCodeRepository.findAll();
-
-        for (CommonCode code : commonCodeList) {
-            System.out.println("code = " + code);
-        }
-
-        assertTrue(commonCodeList.size() == 95);
+        assertTrue(commonCodeList.size() == 97);
     }
 
+    @Test
+    void findByIdTest() {
+        CommonCode commonCode = commonCodeRepository.findById("AI100").get();
+        assertEquals(commonCode.getName(), "keras");
+    }
+
+    @Test
+    void findByGroupCodeTest() {
+        List<CommonCode> commonCodeList = commonCodeRepository.findByGroupCode("LO");
+        assertEquals(commonCodeList.get(0).getName(), "서울특별시");
+    }
 
 }

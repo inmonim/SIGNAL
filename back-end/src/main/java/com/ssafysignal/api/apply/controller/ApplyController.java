@@ -1,20 +1,12 @@
 package com.ssafysignal.api.apply.controller;
 
 
-import com.ssafysignal.api.apply.entity.Apply;
-import com.ssafysignal.api.global.db.entity.CommonCode;
-import com.ssafysignal.api.global.response.BasicResponse;
-import com.ssafysignal.api.posting.entity.Posting;
-import com.ssafysignal.api.user.entity.User;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.ssafysignal.api.global.common.response.BasicResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
