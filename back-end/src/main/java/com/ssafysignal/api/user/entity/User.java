@@ -1,8 +1,7 @@
 package com.ssafysignal.api.user.entity;
 
-import com.ssafysignal.api.global.db.entity.CommonCode;
+import com.ssafysignal.api.global.common.db.entity.CommonCode;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

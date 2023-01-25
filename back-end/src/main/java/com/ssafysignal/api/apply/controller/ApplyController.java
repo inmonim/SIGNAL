@@ -2,6 +2,7 @@ package com.ssafysignal.api.apply.controller;
 
 
 import com.ssafysignal.api.global.common.response.BasicResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "지원", description = "지원서 CRUD와 지원서 메모")
+@Tag(name = "지원", description = "지원서 API")
 @RestController
 @RequestMapping("/apply")
 
 public class ApplyController {
 
+    @Tag(name = "지원")
+    @Operation(summary = "지원서 등록",  description = "지원서를 등록한다.")
     @GetMapping("")
     private ResponseEntity<BasicResponse> registApply() {
         log.info("registApply - Call");

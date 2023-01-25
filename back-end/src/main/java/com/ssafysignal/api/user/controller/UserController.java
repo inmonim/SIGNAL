@@ -1,7 +1,6 @@
 package com.ssafysignal.api.user.controller;
 
-import com.ssafysignal.api.global.response.BasicHeader;
-import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.common.response.BasicResponse;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
@@ -31,6 +30,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.findAllUsers(page, size));
     }*/
 
+    @Tag(name = "회원")
     @Operation(summary = "특정 회원 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
@@ -41,6 +41,7 @@ public class UserController {
         //잘못된 조회 return 넣기
     }
 
+    @Tag(name = "회원")
     @Operation(summary = "회원가입", description = "입력된 정보로 회원가입한다.")
     @PostMapping("")   //실제로는 이메일 인증 url로 가입하도록 하기!!
     private ResponseEntity<BasicResponse> registUser(@RequestBody User user) {
