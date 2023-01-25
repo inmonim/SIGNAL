@@ -14,8 +14,16 @@ const Tab1 = styled(Tab)`
   && {
     font-size: 1em;
     font-weight: 800;
-  }
+  },
 `
+
+const Tab2 = styled(Tab)(({ theme }) => ({
+  '&.Mui-selected': {
+    color: '#bcb7d9',
+    fontWeight: 'bold',
+  },
+}))
+
 function Posting() {
   const [postingList, setPostingList] = useState([])
   const [value, setValue] = React.useState('FI100')
@@ -45,8 +53,8 @@ function Posting() {
         <Box sx={{ width: '100%' }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1.5, color: '#bcb7d9' }}>
-              <TabList onChange={handleChange} aria-label="lab API tabs example">
-                <Tab1 label="Web" value="FI100" />
+              <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ textColor: '#bcb7d9' }}>
+                <Tab2 label="Web" value="FI100" />
                 <Tab1 label="안드로이드" value="FI101" />
                 <Tab1 label="IOS" value="FI102" />
                 <Tab1 label="IoT" value="FI104" />
