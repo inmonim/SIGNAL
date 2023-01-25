@@ -49,6 +49,8 @@ const Apply = () => {
   const [email, setEmail] = useState([])
   const [position, setPosition] = useState('frontEnd')
   const [post, setPost] = useState([])
+  //post body 확인하고 nickname처럼 나눌지 말지 결정
+  const [content, setContent] = userState([])
   const positionList = [
     {
       key: 1,
@@ -114,6 +116,50 @@ const Apply = () => {
     }
     careerArr.push(career)
     setCareerList(careerArr)
+  }
+
+  const handleContent = (event) => {
+    setContent(event.target.value)
+  }
+
+  const handleApplySubmit = async (event) => {
+    const regDt = new Date()
+    console.log(regDt)
+    const regDtreq =
+      regDt.getFullYear() +
+      '-' +
+      regDt.getMonth() +
+      '-' +
+      regDt.getDate() +
+      ' ' +
+      regDt.getHours() +
+      ':' +
+      regDt.getMinutes() +
+      ':' +
+      regDt.getSeconds() +
+      '.' +
+      regDt.getMilliseconds()
+
+    try {
+      const req = {
+        applyCareerList: careerList,
+        applyCode: 'AS101',
+        applyExpList: expList,
+        applySkillList: ['string'],
+        content: content,
+        memo: '이 지원자는 열정이 있음',
+        positionCode: 'PO100',
+        postingSeq: 1,
+        regDt: regDtreq,
+        select: true,
+        userSeq: 1,
+      }
+      await axios.post('SERVER_URL' + '/apply', req)
+
+      console.log('지원서 post')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -208,7 +254,7 @@ const Apply = () => {
           <div className="content-section">
             <Label className="label">하고싶은 말</Label>
             <div>
-              <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="5" />
+              <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="5" onChange={handleContent} />
             </div>
           </div>
 
@@ -227,7 +273,9 @@ const Apply = () => {
           </div>
         </div>
         <div className="submit-button">
-          <button className="apply-button">지원하기</button>
+          <button className="apply-button" onClick={handleApplySubmit}>
+            지원하기
+          </button>
         </div>
       </div>
     </Container>
