@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import AlertModal from 'components/AlertModal'
 
 import closeBtn from 'assets/image/x.png'
+import { PatternFormat } from 'react-number-format'
 
 const style = {
   width: 727,
@@ -41,6 +42,16 @@ const inputStyle = {
       borderColor: '#574b9f',
     },
   },
+}
+
+const listStyle = {
+  textAlign: 'center',
+  overflow: 'scroll',
+  maxHeight: '525px',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  padding: '10px',
+  scrollbarColor: '#574B9F',
 }
 
 const SignalBtn = styled(Btn)(({ theme }) => ({
@@ -88,26 +99,23 @@ function RegistModal({ open, onClose }) {
           >
             회원가입
           </Typography>
-          <div
-            id="modal-desc"
-            style={{
-              textAlign: 'center',
-              overflow: 'scroll',
-              maxHeight: '525px',
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              padding: '10px',
-            }}
-          >
+          <div id="modal-desc" style={listStyle}>
             <TextField id="filled-multiline-flexible" label="E-mail" multiline sx={inputStyle} />
             <TextField id="filled-multiline-flexible" label="Password" multiline sx={inputStyle} />
             <TextField id="filled-multiline-flexible" label="Password Check" multiline sx={inputStyle} />
             <TextField id="filled-multiline-flexible" label="Name" multiline sx={inputStyle} />
             <TextField id="filled-multiline-flexible" label="Nickname" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="PhoneNumber ( 010-0000-0000 )" multiline sx={inputStyle} />
+            <PatternFormat
+              format="### - #### - ####"
+              customInput={TextField}
+              label="Phone Number"
+              sx={inputStyle}
+            ></PatternFormat>
+            {/* <TextField id="filled-multiline-flexible" label="PhoneNumber ( 010-0000-0000 )" multiline sx={inputStyle} /> */}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Birth"
+                inputFormat="YYYY / MM / DD"
                 value={value}
                 onChange={(newValue) => {
                   setValue(newValue)
