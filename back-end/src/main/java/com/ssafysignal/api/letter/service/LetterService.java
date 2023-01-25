@@ -1,5 +1,7 @@
 package com.ssafysignal.api.letter.service;
 
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.letter.dto.response.FindLetterRes;
 import com.ssafysignal.api.letter.entity.Letter;
 import com.ssafysignal.api.letter.repository.LetterRepository;
@@ -23,7 +25,8 @@ public class LetterService {
 
     @Transactional
     public User findUserSeq(String nickname){
-        User toUser = userRepository.findByNickname(nickname);
+        User toUser = userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         return toUser;
     }
 

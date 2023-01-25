@@ -45,10 +45,10 @@ public class Apply {
     private String applyCode;
 
     @Column(name = "user_seq")
-    private Integer user;
+    private Integer userSeq;
 
     @Column(name = "posting_seq")
-    private Integer posting;
+    private Integer postingSeq;
 
     // Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
 //    @ManyToOne(targetEntity = Posting.class, cascade = CascadeType.ALL)
@@ -66,12 +66,12 @@ public class Apply {
     private List<ApplySkill> applySkillList = new ArrayList<>();
 
     @Builder
-    public Apply(final Integer applySeq, final Integer user, final Integer posting, final String content, final String memo, final String positionCode, final boolean isSelect, final LocalDateTime regDt,
-                  final String applyCode, final List<ApplyCareer> applyCareerList, final List<ApplyExp> applyExpList, final List<ApplySkill> applySkillList
+    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, String content, String memo, String positionCode, boolean isSelect, LocalDateTime regDt,
+                  String applyCode, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
     ) {
         this.applySeq = applySeq;
-        this.user = user;
-        this.posting = posting;
+        this.userSeq = userSeq;
+        this.postingSeq = postingSeq;
         this.content = content;
         this.positionCode = positionCode;
         this.memo = memo;

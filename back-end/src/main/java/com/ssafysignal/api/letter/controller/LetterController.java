@@ -1,6 +1,7 @@
 package com.ssafysignal.api.letter.controller;
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListReq;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqReq;
 import com.ssafysignal.api.letter.dto.request.SendLetterReq;
@@ -35,7 +36,7 @@ public class LetterController {
         String nickname = sendLette.getNickname();
         User toUser = letterService.findUserSeq(nickname);
         if(toUser == null){
-            return ResponseEntity.badRequest().body(BasicResponse.Body("fail", "존재하지 않는 nickname입니다.", null));
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LETTERSEND_FAIL, null));
         }
         int toUserSeq = toUser.getUserSeq();
 
@@ -48,7 +49,7 @@ public class LetterController {
         //System.out.println("letter:"+letter);
         Letter ret = letterService.registLetter(letter);
         //System.out.println(ret);
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "쪽지 전송이 성공했습니다.", ret));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ret));
     }
 
     @Tag(name = "쪽지")
@@ -59,7 +60,7 @@ public class LetterController {
                                                             @Parameter(description = "size", required = true)  int size) {
         List<FindLetterRes> letterList= letterService.findFromLetter(userSeq,page,size);
         //System.out.println(letterList);
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "보낸 쪽지 조회가 성공했습니다.", letterList));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
 
     @Tag(name = "쪽지")
@@ -70,7 +71,7 @@ public class LetterController {
                                                           @Parameter(description = "size", required = true)  int size) {
         List<FindLetterRes> letterList= letterService.findAllToLetter(userSeq,page,size);
         //System.out.println(letterList);
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "받은 쪽지 조회가 성공했습니다.", letterList));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
 
     @Tag(name = "쪽지")
@@ -81,7 +82,7 @@ public class LetterController {
                                                              @Parameter(description = "size", required = true)  int size) {
         List<FindLetterRes> letterList= letterService.findAllTrashLetter(userSeq,page,size);
         //System.out.println(letterList);
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "휴지통 쪽지 조회가 성공했습니다.", letterList));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
 
     @Tag(name = "쪽지")
@@ -89,9 +90,9 @@ public class LetterController {
     @GetMapping("/{letterSeq}")
     private ResponseEntity<BasicResponse> findLetter(@Parameter(description = "쪽지seq", required = true) @PathVariable int letterSeq){
         FindLetterRes res = letterService.findLetter(letterSeq);
-        if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body("fail", "존재하지 않는 메시지 입니다.", null));
+        if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "쪽지 상세 조회가 성공했습니다.", res));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
     }
 
     @Tag(name = "쪽지")
@@ -99,9 +100,9 @@ public class LetterController {
     @DeleteMapping("/{letterSeq}")
     private ResponseEntity<BasicResponse> deleteLetter(@Parameter(description = "쪽지seq", required = true) @PathVariable int letterSeq){
         Letter res = letterService.deleteLetter(letterSeq);
-        if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body("fail", "존재하지 않거나 이미 삭제된 메시지 입니다.", null));
+        if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "쪽지를 삭제했습니다.", res));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
     }
 
     @Tag(name = "쪽지")
@@ -113,6 +114,6 @@ public class LetterController {
             int letterSeq = deleteLetterSeqReq.getLetterSeq();
             letterService.deleteLetter(letterSeq);
         }
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "리스트에 해당하는 모든 쪽지를 삭제했습니다.", null));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
 }

@@ -61,11 +61,11 @@ public class ApplyFindRes {
                 .regDt(apply.getRegDt())
                 .applyCode(apply.getApplyCode())
                 .positionCode(apply.getPositionCode())
-                .postingSeq(apply.getPosting())
+                .postingSeq(apply.getPostingSeq())
                 .applyCareerList(apply.getApplyCareerList())
                 .applyExpList(apply.getApplyExpList())
                 .applySkillList(apply.getApplySkillList())
-                .userSeq(apply.getUser())
+                .userSeq(apply.getUserSeq())
                 .build();
     }
 }

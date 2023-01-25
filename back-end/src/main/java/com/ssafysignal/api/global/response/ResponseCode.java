@@ -10,6 +10,7 @@ public enum ResponseCode {
     MODIFY_NOT_FOUND("400", "수정하기 위한 정보 조회 실패"),
     MODIFY_FAIL("500", "수정 실패"),
     MAILSEND_FAIL("600", "메일 전송 실패"),
+    LETTERSEND_FAIL("700", "쪽지 전송 실패"),
     UNAUTHORIZED("1000", "자격 증명 실패");
 
     private String code;
