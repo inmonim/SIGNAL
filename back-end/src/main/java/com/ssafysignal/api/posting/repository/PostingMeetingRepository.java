@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface PostingMeetingRepository extends JpaRepository<PostingMeeting, Integer> {
-    Optional<List<PostingMeeting>> findPostingMeetingsByPostingSeq(Integer postingSeq);
+    List<PostingMeeting> findPostingMeetingsByPostingSeq(Integer postingSeq);
 }

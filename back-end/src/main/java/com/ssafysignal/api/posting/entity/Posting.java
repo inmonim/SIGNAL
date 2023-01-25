@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
@@ -66,9 +65,9 @@ public class Posting {
     }
 
     @Builder
-    public Posting(final Integer postingSeq, final Integer user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
-                    final Integer level, final String postingCode, final LocalDateTime regDt,
-                   final List<PostingSkill> postingSkillList, final List<PostingMeeting> postingMeetingList, final List<PostingPosition> postingPositionList, final List<PostingQuestion> postingQuestionList) {
+    public Posting(Integer postingSeq, Integer user, String content, LocalDateTime postingStartDt, LocalDateTime postingEndDt,
+                    Integer level, String postingCode, LocalDateTime regDt,
+                   List<PostingSkill> postingSkillList, List<PostingMeeting> postingMeetingList, List<PostingPosition> postingPositionList, List<PostingQuestion> postingQuestionList) {
         this.postingSeq = postingSeq;
         this.user = user;
         this.content = content;

@@ -13,16 +13,12 @@ class ApplyRepositoryTest {
 
     @Autowired
     private ApplyRepository applyRepository;
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     void saveTest() {
-        User user = userRepository.findById(1).get();
-
         Apply apply = Apply.builder()
                 .content("지원서 테스트2")
-                .user(user)
+                .user(1)
                 .build();
         applyRepository.save(apply);
     }

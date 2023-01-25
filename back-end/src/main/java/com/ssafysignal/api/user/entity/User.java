@@ -1,6 +1,6 @@
 package com.ssafysignal.api.user.entity;
 
-import com.ssafysignal.api.global.common.db.entity.CommonCode;
+import com.ssafysignal.api.common.entity.CommonCode;
 import lombok.*;
 
 import javax.persistence.*;

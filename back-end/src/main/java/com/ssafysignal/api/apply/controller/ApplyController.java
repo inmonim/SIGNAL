@@ -1,7 +1,8 @@
 package com.ssafysignal.api.apply.controller;
 
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ApplyController {
 //        Apply apply = new Apply(1, user, posting, "fdsa", "fsd");
 
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "지원서 등록 성공", "지원서 등록 성공입니다"));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
 
 }

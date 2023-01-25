@@ -1,6 +1,7 @@
 package com.ssafysignal.api.user.controller;
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
@@ -37,7 +38,7 @@ public class UserController {
         log.info("findUser - Call");
         FindUserRes resDto= userService.findUser(userSeq);
         
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "조회가 성공했습니다.", resDto));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resDto));
         //잘못된 조회 return 넣기
     }
 
@@ -49,6 +50,6 @@ public class UserController {
         System.out.println(user);
         User dto= userService.registUser(user);
 
-        return ResponseEntity.ok().body(BasicResponse.Body("success", "회원가입 되었습니다.", dto));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, dto));
     }
 }
