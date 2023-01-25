@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "인증", description = "회원 인증 및 확인이 가능한 controller")
@@ -37,9 +39,10 @@ public class AuthController {
 
     @Operation(summary = "email 찾기", description = "이름과 전화번호로 이메일 찾기")
     @PostMapping ("/email")
-    private ResponseEntity<BasicResponse> findEmail(@Parameter(description = "이름", required = true) @RequestParam String name,
-                                                    @Parameter(description = "전화번호", required = true) @RequestParam String phone) {
+    private ResponseEntity<BasicResponse> findEmail(@RequestBody Map<String, Object> requestData) {
         log.info("findUser - Call");
+        String name = (String)requestData.get("name");
+        String phone = (String)requestData.get("phone");
         System.out.println(name+","+phone);
         FindEmailRes resDto = service.findEmail(name,phone);
 
