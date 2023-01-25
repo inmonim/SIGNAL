@@ -1,4 +1,4 @@
-package com.ssafysignal.api.user.entity;
+package com.ssafysignal.api.user.dto.response;
 
 public interface FindUserRes {
     String getNickname();

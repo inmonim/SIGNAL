@@ -1,10 +1,9 @@
-package com.ssafysignal.api.global.Response;
+package com.ssafysignal.api.global.common.response;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -13,7 +12,7 @@ public class BasicHeader {
     private String code;
     private String message;
 
-    public static BasicHeader BasicHeader(final String code, final String message){
+    public static BasicHeader Header(final String code, final String message){
         return BasicHeader.builder()
                 .code(code)
                 .message(message)

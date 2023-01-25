@@ -1,4 +1,4 @@
-package com.ssafysignal.api.global.Response;
+package com.ssafysignal.api.global.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,9 @@ public class BasicResponse {
     private BasicHeader header;
     private Object body;
 
-    public static BasicResponse BasicResponse (final String code, String message, final Object body) {
+    public static BasicResponse Body (final String code, String message, final Object body) {
         return BasicResponse.builder()
-                .header(new BasicHeader(code, message))
+                .header(BasicHeader.Header(code, message))
                 .body(body)
                 .build();
     }
