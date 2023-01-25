@@ -4,6 +4,8 @@
   border: 1px solid white;
   padding: 10px 30px;
   border-radius: 8px;
+  width: 70%;
+  transition-duration:0.5s;
 }
 .apply-button:hover {
   color: #574b9f;
@@ -41,13 +43,13 @@
 .skill-meeting-section {
   display: flex;
   justify-content: space-around;
-  padding: 2em 0em;
+  padding: 1em 0em;
 }
 
 .position-section,
 .content-section,
 .question-answer-section {
-  padding: 2em 24px;
+  padding: 1em 1.2em;
 }
 
 .exp-section,
@@ -81,13 +83,26 @@
 .submit-button {
   text-align: center;
 }
-.submit-button > .apply-button {
-  width: 70%;
-}
-
 .question-label {
   font-size: 18px;
   padding-bottom: 20px;
   color: #574b9f;
   font-weight: bold;
+}
+
+.plus-button:hover,
+.minus-button:hover{
+  cursor: pointer;
+}
+
+.career-div,
+.exp-div{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.minus-button-section{
+  display: flex;
+  align-items: center;
 }
