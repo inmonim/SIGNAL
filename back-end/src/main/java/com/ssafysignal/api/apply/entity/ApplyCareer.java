@@ -14,19 +14,21 @@ import javax.persistence.*;
 @Table(name = "apply_career")
 public class ApplyCareer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "apply_career_seq")
     private Integer applyCareerSeq;
+
+    @Column(name = "apply_seq")
+    private Integer applySeq;
+
+    @Column(name = "content")
     private String content;
 
-//    @ManyToOne
-//    private Apply apply;
-
     @Builder
-    public ApplyCareer(final Integer applyCareerSeq, final String content
-//            ,final Apply apply
-    ) {
+    public ApplyCareer(final Integer applyCareerSeq, final Integer applySeq, final String content) {
         this.applyCareerSeq = applyCareerSeq;
+        this.applySeq = applySeq;
         this.content = content;
-//        this.apply = apply
     }
 
 }
