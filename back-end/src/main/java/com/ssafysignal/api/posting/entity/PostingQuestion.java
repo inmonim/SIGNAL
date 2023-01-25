@@ -4,12 +4,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "posting_question")
 public class PostingQuestion {
 
@@ -18,21 +22,20 @@ public class PostingQuestion {
     @Column(name = "posting_question_seq")
     private Integer postingQuestionSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "posting_seq")
-    private Posting posting;
+    @Column(name = "posting_seq")
+    private Integer postingSeq;
 
-    @Column(name = "order")
-    private Integer order;
+    @Column(name = "num")
+    private Integer num;
 
     @Column(name = "content")
     private String content;
 
     @Builder
-    public PostingQuestion(final Integer postingQuestionSeq, final Posting posting, final Integer order, final String content){
+    public PostingQuestion(final Integer postingQuestionSeq, final Integer postingSeq, final Integer num, final String content){
         this.postingQuestionSeq = postingQuestionSeq;
-        this.posting = posting;
-        this.order = order;
+        this.postingSeq = postingSeq;
+        this.num = num;
         this.content = content;
     }
 }

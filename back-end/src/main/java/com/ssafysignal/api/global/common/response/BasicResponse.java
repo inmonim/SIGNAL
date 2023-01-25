@@ -1,6 +1,5 @@
-package com.ssafysignal.api.global.response;
+package com.ssafysignal.api.global.common.response;
 
-import com.ssafysignal.api.posting.entity.Posting;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
