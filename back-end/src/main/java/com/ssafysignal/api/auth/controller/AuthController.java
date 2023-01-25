@@ -3,8 +3,7 @@ package com.ssafysignal.api.auth.controller;
 import com.ssafysignal.api.auth.dto.response.CheckRes;
 import com.ssafysignal.api.auth.dto.response.FindEmailRes;
 import com.ssafysignal.api.auth.service.AuthService;
-import com.ssafysignal.api.global.response.BasicHeader;
-import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.common.response.BasicResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,14 +17,15 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-@Tag(name = "인증", description = "회원 인증 및 확인이 가능한 controller")
+@Tag(name = "인증", description = "회원 인증 및 인가 API")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
     AuthService service;
 
-    @Operation(summary = "email 중복 확인", description = "해당 email의 유저가 있는지 확인.")
+    @Tag(name = "인증")
+    @Operation(summary = "email 중복 확인", description = "해당 email의 유저가 있는지 확인한다")
     @GetMapping("/{email}")
     private ResponseEntity<BasicResponse> checkEmail(@Parameter(description = "이메일", required = true) @PathVariable String email) {
         log.info("findUser - Call");
@@ -37,7 +37,8 @@ public class AuthController {
     }
 
 
-    @Operation(summary = "email 찾기", description = "이름과 전화번호로 이메일 찾기")
+    @Tag(name = "인증")
+    @Operation(summary = "email 찾기", description = "이름과 전화번호로 이메일을 찾는다.")
     @PostMapping ("/email")
     private ResponseEntity<BasicResponse> findEmail(@RequestBody Map<String, Object> requestData) {
         log.info("findUser - Call");

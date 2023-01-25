@@ -1,19 +1,21 @@
 package com.ssafysignal.api.posting.entity;
 
-import com.ssafysignal.api.global.db.entity.CommonCode;
-import com.ssafysignal.api.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "posting")
 public class Posting {
 
@@ -21,10 +23,6 @@ public class Posting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "posting_seq")
     private Integer postingSeq;
-
-    @OneToOne
-    @JoinColumn(name = "user_seq")
-    private User user;
 
     @Column(name = "content")
     private String content;
@@ -38,16 +36,39 @@ public class Posting {
     @Column(name = "level")
     private Integer level;
 
-    @OneToOne
-    @JoinColumn(name = "posting_seq")
-    private CommonCode postingCode;
-
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
+    @Column(name = "posting_code")
+    private String postingCode;
+
+    @Column(name = "user_seq")
+    private Integer user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
+    private List<PostingSkill> postingSkillList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
+    private List<PostingMeeting> postingMeetingList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
+    private List<PostingPosition> postingPositionList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
+    private List<PostingQuestion> postingQuestionList = new ArrayList<>();
+
+    public void setPostingCode(String postingCode) {
+        this.postingCode = postingCode;
+    }
+
     @Builder
-    public Posting(final Integer postingSeq, final User user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
-                    final Integer level, final CommonCode postingCode, final LocalDateTime regDt) {
+    public Posting(final Integer postingSeq, final Integer user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
+                    final Integer level, final String postingCode, final LocalDateTime regDt,
+                   final List<PostingSkill> postingSkillList, final List<PostingMeeting> postingMeetingList, final List<PostingPosition> postingPositionList, final List<PostingQuestion> postingQuestionList) {
         this.postingSeq = postingSeq;
         this.user = user;
         this.content = content;
@@ -56,6 +77,10 @@ public class Posting {
         this.level = level;
         this.postingCode = postingCode;
         this.regDt = regDt;
+        this.postingSkillList = postingSkillList;
+        this.postingMeetingList = postingMeetingList;
+        this.postingPositionList = postingPositionList;
+        this.postingQuestionList = postingQuestionList;
     }
 
 }
