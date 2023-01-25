@@ -2,6 +2,8 @@ package com.ssafysignal.api.user.entity;
 
 import com.ssafysignal.api.global.common.db.entity.CommonCode;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "user")
 public class User {
     @Id
@@ -17,6 +21,7 @@ public class User {
     private int userSeq;
     private String name;
     private String email;
+    private String password;
     private String nickname;
     int birthYear;
     int birthMonth;
@@ -29,10 +34,12 @@ public class User {
     private int heartCnt;
 
     @Builder
-    public User(int userSeq, String name, String email, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, CommonCode userCode, int heartCnt) {
+
+    public User(int userSeq, String name, String email, String password, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, CommonCode userCode, int heartCnt) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.nickname = nickname;
         this.birthYear = birthYear;
         this.birthMonth = birthMonth;
