@@ -44,9 +44,12 @@ public class AuthController {
         log.info("findUser - Call");
         String name = (String)requestData.get("name");
         String phone = (String)requestData.get("phone");
-        System.out.println(name+","+phone);
-        FindEmailRes resDto = service.findEmail(name,phone);
 
+        FindEmailRes resDto = service.findEmail(name,phone);
+        
+        if(resDto == null){ //해당 이메일 없음
+            return ResponseEntity.ok().body(BasicResponse.Body("success", "해당 정보의 이메일이 없습니다.", null));
+        }
         return ResponseEntity.ok().body(BasicResponse.Body("success", "해당 정보의 이메일이 있습니다.", resDto));
 
     }

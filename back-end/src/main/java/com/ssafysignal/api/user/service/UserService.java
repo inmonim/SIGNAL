@@ -30,7 +30,7 @@ public class UserService {
         return user.get();
     }*/
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public FindUserRes findUser(final int userSeq) {
 
         FindUserRes user = userRepository.findByUserSeq(userSeq);
@@ -41,7 +41,7 @@ public class UserService {
         return user;
     }
     
-    @Transactional(readOnly = true)
+    @Transactional()
     public User registUser(final User user) {
     	
     	User ret = userRepository.save(user);
