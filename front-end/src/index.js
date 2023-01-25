@@ -1,13 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import MainPage from './pages/MainPage'
-import Posting from './pages/posting/Posting'
-
+import MainPage from 'pages/MainPage'
+import App from 'App'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <MainPage />
-    <Posting />
+    <App />
   </React.StrictMode>
 )
 
