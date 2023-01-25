@@ -9,16 +9,7 @@
 }
 
 @font-face {
-  font-family: 'stylish';
-  src: url('Stylish-Regular.ttf') format('truetype');
-}
-
-@font-face {
   font-family: 'dohyeon';
   src: url('DoHyeon-Regular.ttf') format('truetype');
 }
 
-@font-face {
-  font-family: 'notosans';
-  src: url('NotoSansKR-Medium.otf') format('truetype');
-}
