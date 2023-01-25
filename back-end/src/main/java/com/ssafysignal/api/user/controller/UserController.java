@@ -3,6 +3,7 @@ package com.ssafysignal.api.user.controller;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
+import com.ssafysignal.api.user.dto.response.UserFindAllResponse;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,15 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    /*
-    @Operation(summary = "전체 회원 조회", description = "페이지와 사이즈 기준으로 페이지 네이션을 통해 전체 회원 목록을 조회한다.")
-    @GetMapping("")
-    private ResponseEntity<UserFindAllResponse> findAllUsers(int page, int size) {
-
-        log.info("findAllUsers - Call");
-
-        return ResponseEntity.ok().body(userService.findAllUsers(page, size));
-    }*/
 
     @Tag(name = "회원")
     @Operation(summary = "특정 회원 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
