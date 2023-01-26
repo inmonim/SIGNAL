@@ -1,8 +1,13 @@
 package com.ssafysignal.api.posting.controller;
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
+import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
+import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
 import com.ssafysignal.api.posting.service.PostingService;
+import com.ssafysignal.api.project.entity.Project;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,10 +17,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +34,7 @@ import java.util.Map;
 @RequestMapping("/posting")
 public class PostingController {
 
-    @Autowired
-    private PostingService postingService;
+    private final PostingService postingService;
 
     @Tag(name = "공고")
     @Operation(summary = "공고 등록", description = "공고를 등록한다.")
@@ -40,9 +46,12 @@ public class PostingController {
     private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingRegistRequest) {
         log.info("registPosting - Call");
 
-        BasicResponse response = postingService.registPosting(postingRegistRequest);
-
-        return ResponseEntity.ok().body(response);
+        try {
+            postingService.registPosting(postingRegistRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
     }
 
     @Tag(name = "공고")
@@ -65,9 +74,12 @@ public class PostingController {
         if (fieldCode != null && !fieldCode.equals("")) searchKeys.put("fieldCode", fieldCode);
         if (postingSkillList != null && postingSkillList.size() > 0) searchKeys.put("postingSkillList", postingSkillList);
 
-        BasicResponse response = postingService.findAllPosting(page, size, searchKeys);
-
-        return ResponseEntity.ok().body(response);
+        try {
+            Page<Project> findProjectList = postingService.findAllPosting(page, size, searchKeys);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, PostingFindAllResponse.fromEntity(findProjectList)));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
     }
 
     @Tag(name = "공고")
@@ -76,12 +88,15 @@ public class PostingController {
             @ApiResponse(responseCode = "200", description = "공고 상세 조회 완료"),
             @ApiResponse(responseCode = "400", description = "공고 상세 조회 중 오류 발생")})
     @GetMapping("/{postingSeq}")
-    private ResponseEntity<BasicResponse> findPosting(@Parameter(description = "공고 Seq", required = true) @PathVariable() Integer postingSeq) {
+    private ResponseEntity<BasicResponse> findPosting(@Parameter(description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq) {
         log.info("findPosting - Call");
 
-        BasicResponse response = postingService.findPosting(postingSeq);
-
-        return ResponseEntity.ok().body(response);
+        try {
+            Project project = postingService.findPosting(postingSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, PostingFindResponse.fromEntity(project)));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        }
     }
 
     @Tag(name = "공고")
@@ -95,9 +110,14 @@ public class PostingController {
                                                         @Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingModifyRequest){
         log.info("modifyPosting - Call");
 
-        BasicResponse response = postingService.modifyPosting(postingSeq, postingModifyRequest);
-
-        return ResponseEntity.ok().body(response);
+        try {
+            postingService.modifyPosting(postingSeq, postingModifyRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
     }
 
     @Tag(name = "공고")
@@ -111,8 +131,69 @@ public class PostingController {
     private ResponseEntity<BasicResponse> canclePosting(@Parameter(description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq){
         log.info("canclePosting - Call");
 
-        BasicResponse response = postingService.canclePosting(postingSeq);
-
-        return ResponseEntity.ok().body(response);
+        try {
+            postingService.canclePosting(postingSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
     }
+
+    @Tag(name = "공고")
+    @Operation(summary = "팀원 선택", description = "한명의 팀원을 선택 또는 선택해제 한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팀원 선택 완료"),
+            @ApiResponse(responseCode = "400", description = "팀원 선택 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @PutMapping("/member/{applySeq}")
+    private ResponseEntity<BasicResponse> applySelect(@Parameter(description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq,
+                                                      @Parameter(description = "선택 여부") @RequestParam boolean isSelect){
+        log.info("applySelect - Call");
+
+        try {
+            log.info("isSelect : " + String.valueOf(isSelect));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
+    }
+    @Tag(name = "공고")
+    @Operation(summary = "지원한 공고 목록 조회", description = "지원한 공고 전체 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원한 공고 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "지원한 공고 목록 조회 중 오류 발생")})
+    @GetMapping(value = "/apply/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllApplyPosting(@Parameter(description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("findAllApplyPosting - Call");
+
+        try {
+            log.info("userSeq : " + userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "공고")
+    @Operation(summary = "작성한 공고 목록 조회", description = "작성한 공고 전체 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "작성한 공고 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "작성한 공고 목록 조회 중 오류 발생")})
+    @GetMapping(value = "/post/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllPostPosting(@Parameter(description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("findAllPostPosting - Call");
+
+        try {
+            log.info("userSeq : " + userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+
 }

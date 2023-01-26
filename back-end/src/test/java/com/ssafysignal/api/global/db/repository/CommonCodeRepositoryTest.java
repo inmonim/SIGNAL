@@ -1,7 +1,7 @@
 package com.ssafysignal.api.global.db.repository;
 
-import com.ssafysignal.api.global.common.db.entity.CommonCode;
-import com.ssafysignal.api.global.common.db.repository.CommonCodeRepository;
+import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.common.repository.CommonCodeRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

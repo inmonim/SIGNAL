@@ -22,13 +22,13 @@ public class ApplySkill {
     @Column(name = "apply_seq")
     private Integer applySeq;
 
-    @Column(name = "common_code")
-    private String commonCode;
+    @Column(name = "skill_code")
+    private String skillCode;
 
     @Builder
-    public ApplySkill(final Integer applySkillSeq, final Integer applySeq, final String commonCode) {
+    public ApplySkill(final Integer applySkillSeq, final Integer applySeq, final String skillCode) {
         this.applySkillSeq = applySkillSeq;
         this.applySeq = applySeq;
-        this.commonCode = commonCode;
+        this.skillCode = skillCode;
     }
 }
