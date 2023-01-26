@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-// import FromLetterList from './FromLetterList
+import React, { useEffect, useState } from 'react'
+import FromLetterList from './FromLetterList'
 // import axios from 'axios'
 
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080'
@@ -18,10 +18,11 @@ function FromLetter() {
   //     })
   // }, [])
 
+  const [data, setData] = useState([])
   // const [title, setTitle] = useState([])
   // const [fromNickname, setFromNickname] = useState([])
   // const [regDt, setRegDt] = useState([])
-  useEffect((i) => {
+  useEffect(() => {
     // getLetter()
     // axios.get(SERVER_URL + PARAM_URL).then((res) => console.log(res))
     fetch(`http://tableminpark.iptime.org:8080/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=7`, {
@@ -29,7 +30,8 @@ function FromLetter() {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.body[0])
+        console.log(res.body)
+        setData(res.body)
         // const letter = res.body[i]
         // setTitle(res.body[i].title)
         // setFromNickname(res.body[i].fromNickname)
@@ -47,7 +49,7 @@ function FromLetter() {
         {/* {inputData.map((letter) => (
           <FromLetterList key={letter.userSeq} letter={letter} />
         ))} */}
-        {/* <FromLetterList></FromLetterList> */}
+        <FromLetterList data={data}></FromLetterList>
       </div>
       {/* <getLetter>
         {getLetterList.map((letter, i) => (
