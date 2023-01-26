@@ -7,12 +7,19 @@ const inputStyle = {
   width: '22rem',
 }
 
-function Career(props) {
+function Career({ career, onRemove }) {
   return (
     <div className="career-div">
-      <TextField id="outlined-basic" variant="outlined" defaultValue={props.career.title} style={inputStyle} />
+      <TextField id="outlined-basic" variant="outlined" value={career.title} style={inputStyle} />
       <div className="minus-button-section">
-        <img src={minusButton} alt="minusButton" className="minus-button" />
+        <img
+          src={minusButton}
+          alt="minusButton"
+          className="minus-button"
+          onClick={() => {
+            onRemove(career.id)
+          }}
+        />
       </div>
     </div>
   )
