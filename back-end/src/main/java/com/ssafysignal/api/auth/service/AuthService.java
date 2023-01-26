@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.message.AuthException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -51,11 +53,17 @@ public class AuthService {
         return user.getEmail();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void emailAuth(final String authCode) throws RuntimeException {
         Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
                 // 인증이 이미 되었거나 코드가 없는 경우
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        //유저 권한 승급
+        User user = userRepository.findByUserSeq(auth.getUserSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        user.giveAuth();
+        userRepository.save(user);
 
         auth.setAuth(true);
         authRepository.save(auth);
@@ -63,9 +71,10 @@ public class AuthService {
 
     @Transactional
     public void findPassword(final String email) throws Exception {
+        System.out.println(email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-
+        System.out.println(user);
         String authCode = UUID.randomUUID().toString();
 
         Auth auth = Auth.builder()
@@ -75,15 +84,50 @@ public class AuthService {
                 .build();
         // 인증 코드 등록
         authRepository.save(auth);
-        
-        // 이메일 전송 코드 필요
+
+        // 인증을 위한 이메일 전송
         emailService.sendMail(
                 EmailDto.builder()
                         .receiveAddress(email)
-                        .title("시그널 비밀번호 변경")
-                        .text("비밀번호 변경")
+                        .title("Signal 비밀번호 찾기 - 이메일 인증")
+                        .text("url을 클릭하여 임시 비밀번호를 이메일로 받을 수 있습니다.")
                         .host(beHost)
-                        .url(String.format("/auth/findPassword?code=%s", authCode))
+                        .url(String.format("/auth/password/%s", authCode))
                         .build());
+    }
+
+
+    @Transactional
+    public void getTempPassword(final String authCode) throws Exception {
+        Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
+                // 인증이 이미 되었거나 코드가 없는 경우
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        String tempPassword = UUID.randomUUID().toString().substring(0,6);
+
+        //임시 비밀번호로 변경
+        User user = userRepository.findByUserSeq(auth.getUserSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        user.modifyPassword(tempPassword);
+        userRepository.save(user);
+
+        //임시 비밀번호 전송
+        emailService.sendMail(
+                EmailDto.builder()
+                        .receiveAddress(user.getEmail())
+                        .title("Signal 임시 비밀 번호")
+                        .text("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : "+tempPassword)
+                        .build());
+    }
+    @Transactional
+    public void login(final String email, final String password) throws AuthException {
+        User user = userRepository.findByEmailAndPassword(email, password)
+                //잘못된 정보
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        String userCode = user.getUserCode();
+        if(userCode.equals("US103")){ //이메일 인증 안된경우
+            throw new AuthException();
+        }
+
     }
 }
