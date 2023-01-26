@@ -6,12 +6,19 @@ const inputStyle = {
   width: '22rem',
 }
 
-function Exp(props) {
+function Exp({ exp, onRemove }) {
   return (
     <div className="exp-div">
-      <TextField id="outlined-basic" variant="outlined" defaultValue={props.exp.title} style={inputStyle} />
+      <TextField id="outlined-basic" variant="outlined" value={exp.title} style={inputStyle} />
       <div className="minus-button-section">
-        <img src={minusButton} alt="minusButton" className="minus-button" />
+        <img
+          src={minusButton}
+          alt="minusButton"
+          className="minus-button"
+          onClick={() => {
+            onRemove(exp.id)
+          }}
+        />
       </div>
     </div>
   )

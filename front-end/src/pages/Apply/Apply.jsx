@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
-import ExpList from '../../components/Layout/ExpList'
-import CareerList from '../../components/Layout/CareerList'
+import ExpList from '../../components/Apply/ExpList'
+import CareerList from '../../components/Apply/CareerList'
 
 import '../../assets/styles/apply.css'
 import styled from 'styled-components'
@@ -49,8 +49,23 @@ const Apply = () => {
   const [email, setEmail] = useState([])
   const [position, setPosition] = useState('frontEnd')
   const [post, setPost] = useState([])
-  //post body 확인하고 nickname처럼 나눌지 말지 결정
-  const [content, setContent] = userState([])
+  const [content, setContent] = useState([])
+  const [expIndex, setExpIndex] = useState(2)
+  const [careerIndex, setCareerIndex] = useState(0)
+
+  const [careerList, setCareerList] = useState([])
+
+  const [expList, setExpList] = useState([
+    {
+      id: 0,
+      title: 'exp0',
+    },
+    {
+      id: 1,
+      title: 'exp1',
+    },
+  ])
+
   const positionList = [
     {
       key: 1,
@@ -82,14 +97,17 @@ const Apply = () => {
     setPosition(event.target.value)
   }
 
-  const [expList, setExpList] = useState([])
-
   // userFetch : setNickName, setPhone, setEmail
   const userFetch = async () => {
-    const res = await axios.get(SERVER_URL + PARAM_URL)
-    setNickname(res.data.body.nickname)
-    setPhone(res.data.body.phone)
-    setEmail(res.data.body.email)
+    try {
+      const res = await axios.get(SERVER_URL + PARAM_URL)
+      setNickname(res.data.body.nickname)
+      setPhone(res.data.body.phone)
+      setEmail(res.data.body.email)
+      console.log('userFetch response')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const postFetch = async () => {
@@ -98,22 +116,25 @@ const Apply = () => {
     console.log(res)
     console.log(post.postingQuestionList)
   }
-  const handleExpAdd = (event) => {
+
+  const handleExpAdd = () => {
     const expArr = [...expList]
     const exp = {
-      title: 'exp',
+      id: expIndex,
+      title: 'exp' + expIndex,
     }
+    setExpIndex(expIndex + 1)
     expArr.push(exp)
     setExpList(expArr)
   }
 
-  const [careerList, setCareerList] = useState([])
-
-  const handleCareerAdd = (event) => {
+  const handleCareerAdd = () => {
     const careerArr = [...careerList]
     const career = {
-      title: 'career',
+      id: careerIndex,
+      title: 'career' + careerIndex,
     }
+    setCareerIndex(careerIndex + 1)
     careerArr.push(career)
     setCareerList(careerArr)
   }
@@ -146,7 +167,7 @@ const Apply = () => {
         applyCode: 'AS101',
         applyExpList: expList,
         applySkillList: ['string'],
-        content: content,
+        content,
         memo: '이 지원자는 열정이 있음',
         positionCode: 'PO100',
         postingSeq: 1,
@@ -162,6 +183,22 @@ const Apply = () => {
     }
   }
 
+  const handleExpRemove = (id) => {
+    setExpList(
+      expList.filter((exp) => {
+        return exp.id !== id
+      })
+    )
+  }
+
+  const handleCareerRemove = (id) => {
+    setCareerList(
+      careerList.filter((career) => {
+        return career.id !== id
+      })
+    )
+  }
+
   useEffect(() => {
     userFetch()
     postFetch()
@@ -169,6 +206,7 @@ const Apply = () => {
     // setPostion("1");
     // expListFetch();
   }, [])
+
   return (
     <Container>
       <div>
@@ -237,7 +275,7 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <CareerList careerList={careerList}></CareerList>
+              <CareerList careerList={careerList} onRemove={handleCareerRemove}></CareerList>
             </div>
             <div className="exp-section">
               <div>
@@ -247,7 +285,7 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <ExpList expList={expList}></ExpList>
+              <ExpList expList={expList} onRemove={handleExpRemove}></ExpList>
             </div>
           </div>
 
