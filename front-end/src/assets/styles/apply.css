@@ -1,72 +1,108 @@
-.Button {
+.apply-button {
   color: white;
   background-color: #574b9f;
   border: 1px solid white;
   padding: 10px 30px;
   border-radius: 8px;
+  width: 70%;
+  transition-duration:0.5s;
 }
-
-.Button:hover {
+.apply-button:hover {
   color: #574b9f;
   background-color: white;
   border: 1px solid #574b9f;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .input {
   width: 160px !important;
-  font-size: 13px;
+  /* font-size: 13px; */
 }
 
-hr {
+/* hr {
   border: 1.5px solid #dddbec;
-  margin-top: 2%;
-}
+  margin: 0% 3%;
+} */
 
 .container {
   padding: 5% 30% 5% 30%;
-  font-size: 16px;
+  /* font-size: 16px; */
   line-height: 40px;
+  width: 100%;
+  /* background: linear-gradient(89.98deg, rgba(255, 255, 255, 0), #bcb7d9 99.99%); */
+  border-radius: 0px;
 }
 
 .application-section {
   background: #ffffff;
-  box-shadow: 0px 100px 118px rgba(0, 0, 0, 0.07),
-    0px 42.901px 54.555px rgba(0, 0, 0, 0.0522789),
-    0px 24.0259px 31.2151px rgba(0, 0, 0, 0.0452643),
-    0px 14.6546px 18.9473px rgba(0, 0, 0, 0.0400527),
-    0px 8.95783px 11.4166px rgba(0, 0, 0, 0.0348643),
-    0px 5.07954px 6.35751px rgba(0, 0, 0, 0.0284313),
-    0px 2.22716px 2.73432px rgba(0, 0, 0, 0.0188555);
-  padding: 5%;
 }
 
 .career-exp-section,
-.phone-email-section,
+.user-detail-section,
 .skill-meeting-section {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding: 1em 0em;
+}
+
+.position-section,
+.content-section,
+.question-answer-section {
+  padding: 1em 1.2em;
 }
 
 .exp-section,
 .career-section,
-.phone-section,
-.email-section,
 .meeting-section,
 .skill-section {
   width: 45%;
 }
 
+.label {
+  padding-bottom: 20px;
+  font-weight: bold;
+}
+
+.phone-section,
+.email-section {
+  width: 45%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
 .career-label,
 .exp-label {
+  font-weight: bold;
+
   display: flex;
   justify-content: space-between;
 }
 
-.SubmitButton {
+.submit-button {
   text-align: center;
 }
+.question-label {
+  font-size: 18px;
+  padding-bottom: 20px;
+  color: #574b9f;
+  font-weight: bold;
+}
 
-.SubmitButton > .Button {
-  width: 70%;
+.plus-button:hover,
+.minus-button:hover{
+  cursor: pointer;
+}
+
+.career-div,
+.exp-div{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.minus-button-section{
+  display: flex;
+  align-items: center;
 }
