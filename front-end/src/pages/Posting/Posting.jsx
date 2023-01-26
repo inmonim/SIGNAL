@@ -31,6 +31,7 @@ function Posting() {
   // 버튼 색 변경
   const skillBtnList = ['JavaScript', 'React', 'Java', 'Python', 'Node.js', 'Vue']
   // console.log(...skillBtnList)
+  const [local, setLocal] = useState('')
   const [skillImgIs, setSkillImgIst] = useState({
     0: false,
     1: false,
@@ -54,13 +55,16 @@ function Posting() {
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+  const handleChangeLocal = (e) => {
+    setLocal(e.target.value)
+  }
   const postList = async () => {
     const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FI100')
     setPostingList(res.data.body.postingList)
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `http://tableminpark.iptime.org:8080/posting?page=1&size=16&localCode=11&fieldCode=${value}`
+      `http://tableminpark.iptime.org:8080/posting?page=1&size=16&localCode=${local}&fieldCode=${value}`
     )
     setPostingList(res.data.body.postingList)
   }
@@ -68,8 +72,11 @@ function Posting() {
     postList()
   }, [])
   useEffect(() => {
-    console.log(postingList, 'ed')
-  }, [postingList])
+    btnClickAxios()
+  }, [value])
+  useEffect(() => {
+    btnClickAxios()
+  }, [local])
   return (
     <div>
       <Banner />
@@ -82,11 +89,11 @@ function Posting() {
                 aria-label="lab API tabs example"
                 TabIndicatorProps={{ style: { background: '#574B9F' } }}
               >
-                <Tab2 label="Web" value="FI100" onClick={btnClickAxios} />
-                <Tab2 label="안드로이드" value="FI101" onClick={btnClickAxios} />
-                <Tab2 label="IOS" value="FI102" onClick={btnClickAxios} />
-                <Tab2 label="IoT" value="FI104" onClick={btnClickAxios} />
-                <Tab2 label="AI" value="FI105" onClick={btnClickAxios} />
+                <Tab2 label="Web" value="FI100" />
+                <Tab2 label="안드로이드" value="FI101" />
+                <Tab2 label="IOS" value="FI102" />
+                <Tab2 label="IoT" value="FI104" />
+                <Tab2 label="AI" value="FI105" />
               </TabList>
             </Box>
           </TabContext>
@@ -132,7 +139,7 @@ function Posting() {
         <SkillSelectBox>
           {skillBtnList.map((ele, i) => (
             <Skillbtn
-              style={{ backgroundColor: skillImgIs[i] ? 'red' : null }}
+              style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
               onClick={() => {
                 changeSkillBtn(i)
                 const copy = [...skillList]
@@ -152,11 +159,12 @@ function Posting() {
             </Skillbtn>
           ))}
         </SkillSelectBox>
-        <FilterSelect>
-          <option value="">부산관역시</option>
-          <option value="">서울특별시</option>
-          <option value="">잉이잉</option>
-          <option value="">옹옹</option>
+        <FilterSelect onChange={handleChangeLocal}>
+          <option value="">전체지역</option>
+          <option value="11">부산관역시</option>
+          <option value="서울특별시">서울특별시</option>
+          <option value="잉잉">잉이잉</option>
+          <option value="웅웅">옹옹</option>
         </FilterSelect>
         <PostList>
           {postingList.map((post, i) => (
