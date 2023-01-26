@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
 
 const Posting = lazy(() => import('./pages/Posting/Posting'))
+const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/posting" element={<Posting />} />
+          <Route path="/posting/:postingSeq" element={<PostingDetail />} />
         </Routes>
       </BrowserRouter>
     </div>
