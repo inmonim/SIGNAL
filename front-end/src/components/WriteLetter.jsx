@@ -37,7 +37,7 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
   },
 }))
 
-function WriteLetter() {
+function WriteLetter({ handleMenuListItemClick }) {
   //   const form = useRef()
   const [alertOpen, setAlertOpen] = useState(false)
   const [inputs, setInputs] = useState({
@@ -75,9 +75,9 @@ function WriteLetter() {
       })
   }
 
-  const handleToSend = ({ index }) => {
+  const handleToSend = () => {
     setAlertOpen(false)
-    // index = 1
+    handleMenuListItemClick(1)
   }
   return (
     <div className="write-form">
