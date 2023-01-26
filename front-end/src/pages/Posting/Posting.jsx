@@ -110,7 +110,7 @@ function Posting() {
             <SkillText>JavaScript</SkillText>
           </Skillbtn>
           <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em', color: !isValid ? 'red' : null }} />
+            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em', color: !value ? 'red' : null }} />
             <SkillText>React</SkillText>
           </Skillbtn>
           <Skillbtn>
