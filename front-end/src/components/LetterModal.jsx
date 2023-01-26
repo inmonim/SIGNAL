@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles'
 import FromLetter from 'components/FromLetter'
 import ToLetter from 'components/ToLetter'
 import TrashLetter from 'components/TrashLetter'
+import WriteLetter from 'components/WriteLetter'
 // import Divider from '@mui/material/Divider'
 
 import closeBtn from 'assets/image/x.png'
@@ -67,7 +68,13 @@ function LetterModal({ open, onClose }) {
               borderRight: '1px solid #616161',
             }}
           >
-            <SignalBtn style={{ margin: '30px auto', display: 'block' }}>쪽지 쓰기</SignalBtn>
+            <SignalBtn
+              style={{ margin: '30px auto', display: 'block' }}
+              selected={selectedListIndex === 3}
+              onClick={(event) => handleMenuListItemClick(event, 3)}
+            >
+              쪽지 쓰기
+            </SignalBtn>
             <List>
               <ListItem disablePadding>
                 <ListItemButton
@@ -137,8 +144,10 @@ function LetterModal({ open, onClose }) {
               <FromLetter></FromLetter>
             ) : selectedListIndex === 1 ? (
               <ToLetter></ToLetter>
-            ) : (
+            ) : selectedListIndex === 2 ? (
               <TrashLetter></TrashLetter>
+            ) : (
+              <WriteLetter></WriteLetter>
             )}
           </div>
         </Box>

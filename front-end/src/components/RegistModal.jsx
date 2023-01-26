@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+// import { useDispatch } from 'react-redux'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
@@ -55,8 +56,6 @@ const listStyle = {
 }
 
 const SignalBtn = styled(Btn)(({ theme }) => ({
-  fontFamily: 'dohyeon',
-  fontColor: theme.palette.getContrastText('#574B9F'),
   backgroundColor: '#574B9F',
   width: '173px',
   height: '90px',
@@ -87,49 +86,53 @@ function RegistModal({ open, onClose }) {
     <>
       <Modal hideBackdrop open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
         <Box sx={style}>
-          <img
-            style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
-            src={closeBtn}
-            alt="closeBtn"
-            onClick={onClose}
-          />
-          <Typography
-            id="modal-title"
-            sx={{ textAlign: 'center', fontSize: '47px', fontWeight: 'bold', marginTop: '50px' }}
-          >
-            회원가입
-          </Typography>
-          <div id="modal-desc" style={listStyle}>
-            <TextField id="filled-multiline-flexible" label="E-mail" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Password" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Password Check" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Name" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Nickname" multiline sx={inputStyle} />
-            <PatternFormat
-              format="### - #### - ####"
-              customInput={TextField}
-              label="Phone Number"
-              sx={inputStyle}
-            ></PatternFormat>
-            {/* <TextField id="filled-multiline-flexible" label="PhoneNumber ( 010-0000-0000 )" multiline sx={inputStyle} /> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Birth"
-                inputFormat="YYYY / MM / DD"
-                value={value}
-                onChange={(newValue) => {
-                  setValue(newValue)
-                }}
-                renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
-              />
-            </LocalizationProvider>
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <SignalBtn variant="contained" onClick={handleAlertOpen}>
+          <form id="formElem" onSubmit={handleAlertOpen}>
+            <img
+              style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
+              src={closeBtn}
+              alt="closeBtn"
+              onClick={onClose}
+            />
+            <Typography
+              id="modal-title"
+              sx={{ textAlign: 'center', fontSize: '47px', fontWeight: 'bold', marginTop: '50px' }}
+            >
               회원가입
-            </SignalBtn>
-            <AlertModal open={alertOpen} onClick={handleToLogin}></AlertModal>
-          </div>
+            </Typography>
+            <div id="modal-desc" style={listStyle}>
+              <TextField id="filled-multiline-flexible" label="E-mail" name="email" multiline sx={inputStyle} />
+              <TextField id="filled-multiline-flexible" label="Password" name="password" multiline sx={inputStyle} />
+              <TextField id="filled-multiline-flexible" label="Password Check" multiline sx={inputStyle} />
+              <TextField id="filled-multiline-flexible" label="Name" name="name" multiline sx={inputStyle} />
+              <TextField id="filled-multiline-flexible" label="Nickname" name="nickname" multiline sx={inputStyle} />
+              <PatternFormat
+                format="### - #### - ####"
+                customInput={TextField}
+                label="Phone Number"
+                name="phone"
+                sx={inputStyle}
+              ></PatternFormat>
+              {/* <TextField id="filled-multiline-flexible" label="PhoneNumber ( 010-0000-0000 )" multiline sx={inputStyle} /> */}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Birth"
+                  name="birth"
+                  inputFormat="YYYY / MM / DD"
+                  value={value}
+                  onChange={(newValue) => {
+                    setValue(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
+                />
+              </LocalizationProvider>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+              <SignalBtn variant="contained" onClick={handleAlertOpen}>
+                회원가입
+              </SignalBtn>
+              <AlertModal open={alertOpen} onClick={handleToLogin}></AlertModal>
+            </div>
+          </form>
         </Box>
       </Modal>
     </>
