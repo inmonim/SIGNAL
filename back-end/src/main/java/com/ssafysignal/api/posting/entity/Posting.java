@@ -1,5 +1,6 @@
 package com.ssafysignal.api.posting.entity;
 
+import com.ssafysignal.api.apply.entity.Apply;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,7 +13,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
@@ -61,14 +61,18 @@ public class Posting {
     @JoinColumn(name = "posting_seq")
     private List<PostingQuestion> postingQuestionList = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
+    private List<Apply> applyList = new ArrayList<>();
+
     public void setPostingCode(String postingCode) {
         this.postingCode = postingCode;
     }
 
     @Builder
-    public Posting(final Integer postingSeq, final Integer user, final String content, final LocalDateTime postingStartDt, final LocalDateTime postingEndDt,
-                    final Integer level, final String postingCode, final LocalDateTime regDt,
-                   final List<PostingSkill> postingSkillList, final List<PostingMeeting> postingMeetingList, final List<PostingPosition> postingPositionList, final List<PostingQuestion> postingQuestionList) {
+    public Posting(Integer postingSeq, Integer user, String content, LocalDateTime postingStartDt, LocalDateTime postingEndDt,
+                    Integer level, String postingCode, LocalDateTime regDt,
+                   List<PostingSkill> postingSkillList, List<PostingMeeting> postingMeetingList, List<PostingPosition> postingPositionList, List<PostingQuestion> postingQuestionList, List<Apply> applyList) {
         this.postingSeq = postingSeq;
         this.user = user;
         this.content = content;
@@ -81,6 +85,7 @@ public class Posting {
         this.postingMeetingList = postingMeetingList;
         this.postingPositionList = postingPositionList;
         this.postingQuestionList = postingQuestionList;
+        this.applyList = applyList;
     }
 
 }

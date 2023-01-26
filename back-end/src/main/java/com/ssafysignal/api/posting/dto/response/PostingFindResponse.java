@@ -36,13 +36,13 @@ public class PostingFindResponse {
     @Schema(description = "프로젝트 난이도", example = "5", required = true)
     private Integer level;
     @Schema(description = "공고 기술 스택")
-    private List<PostingSkill> postingSkillList = new ArrayList<>();
+    private final List<PostingSkill> postingSkillList;
     @Schema(description = "공고 사전 미팅 시간")
-    private List<PostingMeeting> postingMeetingList = new ArrayList<>();
+    private List<PostingMeeting> postingMeetingList;
     @Schema(description = "공고 포지션")
-    private List<PostingPosition> postingPositionList = new ArrayList<>();
+    private List<PostingPosition> postingPositionList;
     @Schema(description = "공고 사전 질문")
-    private List<PostingQuestion> postingQuestionList = new ArrayList<>();
+    private List<PostingQuestion> postingQuestionList;
 
     public static PostingFindResponse fromEntity(final Project project) {
         return PostingFindResponse.builder()

@@ -1,11 +1,12 @@
 package com.ssafysignal.api.apply.service;
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindRes;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
-import com.ssafysignal.api.user.dto.response.FindUserRes;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +22,12 @@ import java.util.*;
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
-
     private final ApplyCareerRepository applyCareerRepository;
-
     private final ApplyExpRepository applyExpRepository;
-
     private final ApplySkillRepository applySkillRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public BasicResponse registApply(ApplyBasicRequest applyRegistRequest) {
+    public void registApply(ApplyBasicRequest applyRegistRequest) throws RuntimeException {
 
         // 지원서 등록
         Apply apply = Apply.builder()
@@ -66,80 +63,71 @@ public class ApplyService {
                     .build()
             );
         }
-        return BasicResponse.Body("success", "지원서 등록 성공", null);
-
     }
 
     @Transactional(readOnly = true)
-    public BasicResponse findApply(Integer applySeq) {
-        if (applyRepository.findById(applySeq).isPresent()) {
-            Apply apply = applyRepository.findByApplySeq(applySeq).get();
-            FindUserRes user = userRepository.findByUserSeq(apply.getUser());
-            user.getEmail();
-            return BasicResponse.Body("success", "지원서 상세 조회 성공", ApplyFindRes.fromEntity(apply));
-        }
-
-        return BasicResponse.Body("fail", "지원서 상세 조회 실패", null);
+    public Apply findApply(Integer applySeq) {
+        Apply apply = applyRepository.findByApplySeq(applySeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        return apply;
     }
 
     @Transactional
-    public BasicResponse modifyApply(Integer applySeq, ApplyBasicRequest applyModifyRequest) {
-        if (applyRepository.findById(applySeq).isPresent()) {
-            // 지원서 수정
-            Apply apply = applyRepository.findById(applySeq).get();
-            apply.setContent(applyModifyRequest.getContent());
-            apply.setPositionCode(applyModifyRequest.getPositionCode());
+    public void modifyApply(Integer applySeq, ApplyBasicRequest applyModifyRequest) throws RuntimeException {
 
-            // 기술 스택
-            List<ApplySkill> applySkillList = apply.getApplySkillList();
-            applySkillList.clear();
-            for (String skill : applyModifyRequest.getApplySkillList()) {
-                applySkillList.add(ApplySkill.builder()
-                        .applySeq(applySeq)
-                        .skillCode(skill)
-                        .build()
-                );
-            }
-            apply.setApplySkillList(applySkillList);
+        // 지원서 수정
+        Apply apply = applyRepository.findById(applySeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-            // 이전 프로젝트 경험
-            List<ApplyExp> applyExpList = apply.getApplyExpList();
-            for (String exp : applyModifyRequest.getApplyExpList()) {
-                applyExpList.add(ApplyExp.builder()
-                        .applySeq(applySeq)
-                        .content(exp)
-                        .build()
-                );
-            }
-            apply.setApplyExpList(applyExpList);
+        apply.setContent(applyModifyRequest.getContent());
+        apply.setPositionCode(applyModifyRequest.getPositionCode());
 
-            // 경력
-            List<ApplyCareer> applyCareerList = apply.getApplyCareerList();
-            for (String career : applyModifyRequest.getApplyCareerList()) {
-                applyCareerList.add(ApplyCareer.builder()
-                        .applySeq(applySeq)
-                        .content(career)
-                        .build()
-                );
-            }
-            apply.setApplyCareerList(applyCareerList);
-
-            return BasicResponse.Body("success", "지원서 수정 완료", null);
+        // 기술 스택
+        List<ApplySkill> applySkillList = apply.getApplySkillList();
+        applySkillList.clear();
+        for (String skill : applyModifyRequest.getApplySkillList()) {
+            applySkillList.add(ApplySkill.builder()
+                    .applySeq(applySeq)
+                    .skillCode(skill)
+                    .build()
+            );
         }
+        apply.setApplySkillList(applySkillList);
 
-        return BasicResponse.Body("fail", "지원서 수정 실패", null);
+        // 이전 프로젝트 경험
+        List<ApplyExp> applyExpList = apply.getApplyExpList();
+        applyExpList.clear();
+        for (String exp : applyModifyRequest.getApplyExpList()) {
+            applyExpList.add(ApplyExp.builder()
+                    .applySeq(applySeq)
+                    .content(exp)
+                    .build()
+            );
+        }
+        apply.setApplyExpList(applyExpList);
+
+        // 경력
+        List<ApplyCareer> applyCareerList = apply.getApplyCareerList();
+        applyCareerList.clear();
+        for (String career : applyModifyRequest.getApplyCareerList()) {
+            applyCareerList.add(ApplyCareer.builder()
+                    .applySeq(applySeq)
+                    .content(career)
+                    .build()
+            );
+        }
+        apply.setApplyCareerList(applyCareerList);
+
+        applyRepository.save(apply);
     }
 
 
     @Transactional
-    public BasicResponse cancleApply(Integer applySeq) {
-        if (applyRepository.findById(applySeq).isPresent()) {
-            Apply apply = applyRepository.findById(applySeq).get();
-            apply.setApplyCode("PAS104");
-            applyRepository.save(apply);
-            return BasicResponse.Body("success", "지원 취소 성공", null);
-        }
-        return BasicResponse.Body("fail", "지원 취소 실패", null);
-    }
+    public void cancleApply(Integer applySeq) throws RuntimeException {
+        Apply apply = applyRepository.findById(applySeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
+        apply.setApplyCode("PAS104");
+        applyRepository.save(apply);
+    }
 }
