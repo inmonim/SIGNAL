@@ -27,6 +27,36 @@ public class AuthController {
     private final AuthService authService;
 
     @Tag(name = "인증")
+    @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
+    @PostMapping("/auth")
+    private ResponseEntity<BasicResponse> login(@Parameter(description = "이메일", required = true) @RequestParam String email,
+                                                @Parameter(description = "비밀번호", required = true) @RequestParam String password) {
+        log.info("login - Call");
+
+        try {
+            log.info(String.format("email : %s / password : %s", email, password));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+        }
+    }
+
+    @Tag(name = "인증")
+    @Operation(summary = "로그아웃", description = "사용자 Seq를 이용해 로그아웃한다.")
+    @PostMapping("/auth/{userSeq}")
+    private ResponseEntity<BasicResponse> logout(@Parameter(description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("logout - Call");
+
+        try {
+            log.info("userSeq : " + userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+        }
+    }
+
+
+    @Tag(name = "인증")
     @Operation(summary = "이메일 중복 확인", description = "이메일이 중복되는지 확인한다.")
     @GetMapping("/email/{email}")
     private ResponseEntity<BasicResponse> checkEmail(@Parameter(description = "이메일", required = true) @PathVariable String email) {
