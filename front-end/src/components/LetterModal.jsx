@@ -147,7 +147,7 @@ function LetterModal({ open, onClose }) {
             ) : selectedListIndex === 2 ? (
               <TrashLetter></TrashLetter>
             ) : (
-              <WriteLetter></WriteLetter>
+              <WriteLetter handleMenuListItemClick={handleMenuListItemClick}></WriteLetter>
             )}
           </div>
         </Box>
