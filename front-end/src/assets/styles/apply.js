@@ -16,11 +16,6 @@ export const Input = styled.input.attrs({ type: 'text' })`
   }
 `
 
-export const Exp = styled.div`
-  display: flex;
-  margin-bottom: 10px;
-`
-
 export const MultilineInput = styled.input.attrs({ type: 'text' })`
   display: flex;
   flex-direction: column;
