@@ -44,7 +44,7 @@ function WriteLetter({ handleMenuListItemClick }) {
     nickname: '',
     title: '',
     content: '',
-    userSeq: 1,
+    userSeq: sessionStorage.getItem('userSeq'),
   })
 
   const handleInput = (e) => {
@@ -75,7 +75,7 @@ function WriteLetter({ handleMenuListItemClick }) {
       })
   }
 
-  const handleToSend = () => {
+  const handleToSend = (e) => {
     setAlertOpen(false)
     handleMenuListItemClick(1)
   }
@@ -94,7 +94,14 @@ function WriteLetter({ handleMenuListItemClick }) {
         <br />
         <label>내용</label>
         <br />
-        <TextField id="filled-multiline-flexible" multiline sx={inputStyle} name="content" onChange={handleInput} />
+        <TextField
+          id="filled-multiline-flexible"
+          rows={10}
+          multiline
+          sx={inputStyle}
+          name="content"
+          onChange={handleInput}
+        />
       </div>
       {/* </form> */}
       <SignalBtn onClick={handleSend}>전송</SignalBtn>

@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, TextField } from '@mui/material'
-// import FormGroup from '@mui/material/FormGroup'
 import Checkbox from '@mui/material/Checkbox'
 import 'assets/font/font.css'
 import Btn from '@mui/material/Button'
@@ -22,16 +19,18 @@ const style = {
   border: 'none',
   boxShadow: 24,
   p: 4,
-  position: 'absolute',
+  position: 'relative',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  alignItems: 'center',
 }
 
 const inputStyle = {
   backgroundColor: '#DDDBEC',
   width: '549px',
-  marginBottom: '38px',
+  marginBottom: '28px',
   '& label.Mui-focused': {
     color: '#574b9f',
   },
@@ -68,44 +67,109 @@ function LoginModal({ open, onClose }) {
     setRegOpen(false)
   }
   const handleToMain = () => {
-    onClose(onClose(true))
+    console.log('click login')
+    console.log('Email: ', inputEmail)
+    console.log('Pwd: ', inputPwd)
+    if (inputEmail === 'gurrms@naver.com' && inputPwd === 'gurrms123.') {
+      console.log('로그인 성공')
+      sessionStorage.setItem('userEmail', inputEmail)
+      sessionStorage.setItem('username', '혁근')
+      sessionStorage.setItem('userSeq', 1)
+      onClose(onClose(true))
+      return
+    }
+    console.log('로그인 실패')
+  }
+
+  const [inputEmail, setInputEmail] = useState('gurrms@naver.com')
+  const [inputPwd, setInputPwd] = useState('gurrms123.')
+
+  const handleInputEmail = (e) => {
+    setInputEmail(e.target.value)
+  }
+  const handleInputPwd = (e) => {
+    setInputPwd(e.target.value)
   }
   return (
     <>
-      <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
+      <Modal open={open} onClose={onClose}>
         <Box sx={style}>
-          <img
-            style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
-            src={closeBtn}
-            alt="closeBtn"
-            onClick={onClose}
-          />
-          <Typography id="modal-title" sx={{ textAlign: 'center', margin: '50px 0px' }}>
-            <img style={{ width: '409px', height: '205px' }} src={modalLogo} alt="modalLogo" />
-          </Typography>
-          <div id="modal-desc" style={{ textAlign: 'center' }}>
-            <TextField id="filled-multiline-flexible" label="E-mail" multiline sx={inputStyle} />
-            <TextField id="filled-multiline-flexible" label="Password" multiline sx={inputStyle} />
-            <FormControlLabel
-              style={{ color: '#574b9f' }}
-              label="자동로그인"
-              control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+          <div className="close">
+            <img
+              className="closeimg"
+              style={{
+                cursor: 'pointer',
+                display: 'inline-block',
+                position: 'absolute',
+                left: '90%',
+                bottom: '90%',
+                transform: 'translate(-50%, 0%)',
+              }}
+              src={closeBtn}
+              alt="closeBtn"
+              onClick={onClose}
             />
-            <Link>이메일 / 비밀번호 찾기 </Link>
-            <div style={{ fontSize: '20px' }}>
-              계정이 없으신가요?
-              <span
-                style={{ margin: '0px 30px', textDecoration: 'underline', cursor: 'pointer' }}
-                onClick={handleRegOpen}
-              >
-                회원가입
-              </span>
-              <RegistModal open={regOpen} onClose={handleRegClose}></RegistModal>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div className="login-logo" style={{ display: 'inline-block' }}>
+              <img style={{ width: '409px', height: '205px', margin: '30px 0px' }} src={modalLogo} alt="modalLogo" />
             </div>
-            <div style={{ margin: '30px 0px' }}>
-              <SignalBtn variant="contained" onClick={handleToMain}>
-                로그인
-              </SignalBtn>
+            <div className="login-input" style={{ display: 'inline-block' }}>
+              <TextField
+                id="filled-multiline-flexible"
+                label="E-mail"
+                multiline
+                sx={inputStyle}
+                onChange={handleInputEmail}
+              />
+              <TextField
+                id="filled-multiline-flexible"
+                label="Password"
+                multiline
+                sx={inputStyle}
+                onChange={handleInputPwd}
+              />
+              <div className="login-under1" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <FormControlLabel
+                  style={{ color: '#574b9f' }}
+                  label={<span style={{ fontSize: 20 }}>자동로그인</span>}
+                  control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    color: '#574b9f',
+                    fontSize: '20px',
+                  }}
+                >
+                  이메일 / 비밀번호 찾기 {'>>'}
+                </div>
+              </div>
+              <div className="login-under2">
+                <div style={{ fontSize: '22px', display: 'inline-block' }}>
+                  계정이 없으신가요?
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      margin: '0px 30px',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                    onClick={handleRegOpen}
+                  >
+                    회원가입
+                  </div>
+                  <RegistModal open={regOpen} onClose={handleRegClose}></RegistModal>
+                </div>
+              </div>
+              <div className="login-btn" style={{ margin: '30px 0px' }}>
+                <SignalBtn variant="contained" onClick={handleToMain}>
+                  로그인
+                </SignalBtn>
+              </div>
             </div>
           </div>
         </Box>
