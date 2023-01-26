@@ -24,27 +24,52 @@ const Tab2 = styled(Tab)(({ theme }) => ({
 }))
 
 function Posting() {
+  // 카드 리스트 정보
   const [postingList, setPostingList] = useState([])
+  // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('FI100')
-  console.log(value)
+  // 버튼 색 변경
+  const skillBtnList = ['JavaScript', 'React', 'Java', 'Python', 'Node.js', 'Vue']
+  // console.log(...skillBtnList)
+  const [skillImgIs, setSkillImgIst] = useState({
+    0: false,
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false,
+    7: false,
+    8: false,
+    9: false,
+  })
+  const changeSkillBtn = (index) => {
+    const copy = { ...skillImgIs }
+    copy[index] = !copy[index]
+    setSkillImgIst(copy)
+  } // 클릭했을때 async 요청보내는 리액트 코드
+  // 버튼 누르면 데이터 담기게 state
+  const [skillList, setSkillList] = useState([])
+  // 테이블 값적용
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
   const postList = async () => {
-    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FL100')
+    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FI100')
     setPostingList(res.data.body.postingList)
   }
-
-  // const changList = async () => {
-  //   const res = await axios.get(SERVER_URL + '?page=1&size=16' + '' + fieldSelect)
-  //   setPostingList(res.data.body.postingList)
-  // }
+  const btnClickAxios = async () => {
+    const res = await axios.get(
+      `http://tableminpark.iptime.org:8080/posting?page=1&size=16&localCode=11&fieldCode=${value}`
+    )
+    setPostingList(res.data.body.postingList)
+  }
   useEffect(() => {
     postList()
   }, [])
   useEffect(() => {
-    // changList()
-  }, [])
+    console.log(postingList, 'ed')
+  }, [postingList])
   return (
     <div>
       <Banner />
@@ -57,11 +82,11 @@ function Posting() {
                 aria-label="lab API tabs example"
                 TabIndicatorProps={{ style: { background: '#574B9F' } }}
               >
-                <Tab2 label="Web" value="FI100" />
-                <Tab2 label="안드로이드" value="FI101" />
-                <Tab2 label="IOS" value="FI102" />
-                <Tab2 label="IoT" value="FI104" />
-                <Tab2 label="AI" value="FI105" />
+                <Tab2 label="Web" value="FI100" onClick={btnClickAxios} />
+                <Tab2 label="안드로이드" value="FI101" onClick={btnClickAxios} />
+                <Tab2 label="IOS" value="FI102" onClick={btnClickAxios} />
+                <Tab2 label="IoT" value="FI104" onClick={btnClickAxios} />
+                <Tab2 label="AI" value="FI105" onClick={btnClickAxios} />
               </TabList>
             </Box>
           </TabContext>
@@ -105,30 +130,27 @@ function Posting() {
         </Field>
         <hr />
         <SkillSelectBox>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-            <SkillText>JavaScript</SkillText>
-          </Skillbtn>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em', color: !value ? 'red' : null }} />
-            <SkillText>React</SkillText>
-          </Skillbtn>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-            <SkillText>Java</SkillText>
-          </Skillbtn>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-            <SkillText>Python</SkillText>
-          </Skillbtn>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-            <SkillText>Node.js</SkillText>
-          </Skillbtn>
-          <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-            <SkillText>Vue</SkillText>
-          </Skillbtn>
+          {skillBtnList.map((ele, i) => (
+            <Skillbtn
+              style={{ backgroundColor: skillImgIs[i] ? 'red' : null }}
+              onClick={() => {
+                changeSkillBtn(i)
+                const copy = [...skillList]
+                const set = new Set(copy)
+                if (set.has(ele)) {
+                  set.delete(ele)
+                } else {
+                  set.add(ele)
+                }
+                const copy2 = Array.from(set)
+                setSkillList(copy2)
+              }}
+              key={i}
+            >
+              <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
+              {ele}
+            </Skillbtn>
+          ))}
         </SkillSelectBox>
         <FilterSelect>
           <option value="">부산관역시</option>
@@ -207,14 +229,14 @@ const Skillbtn = styled.div`
     box-shadow: inset 0 0 0 1px#bcb7d9;
   }
 `
-const SkillText = styled.p`
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19px;
-  color: #000000;
-`
+// const SkillText = styled.p`
+//   font-family: 'Roboto';
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 16px;
+//   line-height: 19px;
+//   color: #000000;
+// `
 const PostList = styled.div`
   display: flex;
   flex-wrap: wrap;
