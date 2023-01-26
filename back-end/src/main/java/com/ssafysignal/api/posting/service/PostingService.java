@@ -1,6 +1,8 @@
 package com.ssafysignal.api.posting.service;
 
-import com.ssafysignal.api.global.common.response.BasicResponse;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
 import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,21 +27,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PostingService {
 
-    @Autowired
     private final ProjectRepository projectRepository;
-    @Autowired
     private final PostingRepository postingRepository;
-    @Autowired
     private final PostingSkillRepository postingSkillRepository;
-    @Autowired
     private final PostingMeetingRepository postingMeetingRepository;
-    @Autowired
     private final PostingPositionRepository postingPositionRepository;
-    @Autowired
     private final PostingQuestionRepository postingQuestionRepository;
 
     @Transactional
-    public BasicResponse registPosting(PostingBasicRequest postingRegistRequest) {
+    public void registPosting(PostingBasicRequest postingRegistRequest) throws RuntimeException {
 
         // 공고 등록
         Posting posting = Posting.builder()
@@ -95,37 +92,32 @@ public class PostingService {
                 .term(10)
                 .build();
         projectRepository.save(project);
-
-        return BasicResponse.Body("success", "공고 등록 성공", null);
     }
 
     @Transactional(readOnly = true)
-    public BasicResponse findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys){
-        Page<Project> findProjectList = projectRepository.findAll(ProjectSpecification.searchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
-        return BasicResponse.Body("success", "공고 상세 조회 성공", PostingFindAllResponse.fromEntity(findProjectList));
+    public Page<Project> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys) throws RuntimeException {
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.searchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
+        return projectList;
     }
 
     @Transactional(readOnly = true)
-    public BasicResponse findPosting(Integer postingSeq){
-        if (postingRepository.findById(postingSeq).isPresent()){
-            Project project = projectRepository.findByPostingSeq(postingSeq).get();
-            return BasicResponse.Body("success", "공고 상세 조회 성공", PostingFindResponse.fromEntity(project));
-        }
-
-        return BasicResponse.Body("fail", "공고 상세 조회 실패", null);
+    public Project findPosting(Integer postingSeq){
+        Project project = projectRepository.findByPostingSeq(postingSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        return project;
     }
 
     @Transactional
-    public BasicResponse modifyPosting(Integer postingSeq, PostingBasicRequest postingModifyRequest){
+    public void modifyPosting(Integer postingSeq, PostingBasicRequest postingModifyRequest) throws RuntimeException {
         if (postingRepository.findById(postingSeq).isPresent()) {
             // 공고 수정
-            Posting posting = postingRepository.findById(postingSeq).get();
+            Posting posting = postingRepository.findById(postingSeq)
+                            .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
             posting.setContent(postingModifyRequest.getContent());
             posting.setPostingEndDt(postingModifyRequest.getPostingEndDt());
             posting.setLevel(postingModifyRequest.getLevel());
 
             // 기술 스택
-//            List<PostingSkill> postingSkillList = new ArrayList<>();
             List<PostingSkill> postingSkillList = posting.getPostingSkillList();
             postingSkillList.clear();
             for (String skill : postingModifyRequest.getPostingSkillList()) {
@@ -138,7 +130,6 @@ public class PostingService {
             posting.setPostingSkillList(postingSkillList);
 
             // 사전 미팅
-//            List<PostingMeeting> postingMeetingList = new ArrayList<>();
             List<PostingMeeting> postingMeetingList = posting.getPostingMeetingList();
             postingMeetingList.clear();
             for (LocalDateTime meeting : postingModifyRequest.getPostingMeetingList()) {
@@ -152,7 +143,6 @@ public class PostingService {
             posting.setPostingMeetingList(postingMeetingList);
 
             // 포지션
-//            List<PostingPosition> postingPositionList = new ArrayList<>();
             List<PostingPosition> postingPositionList = posting.getPostingPositionList();
             postingPositionList.clear();
             for (Map<String, Object> position : postingModifyRequest.getPostingPositionList()) {
@@ -166,7 +156,6 @@ public class PostingService {
             posting.setPostingPositionList(postingPositionList);
 
             // 사전 질문
-//            List<PostingQuestion> postingQuestionList = new ArrayList<>();
             List<PostingQuestion> postingQuestionList = posting.getPostingQuestionList();
             postingQuestionList.clear();
             for (Map<String, Object> question : postingModifyRequest.getPostingQuestionList()) {
@@ -181,27 +170,26 @@ public class PostingService {
             postingRepository.save(posting);
 
             // 프로젝트 수정
-            Project project = projectRepository.findByPostingSeq(postingSeq).get();
+            Project project = projectRepository.findByPostingSeq(postingSeq)
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
             project.setSubject(postingModifyRequest.getSubject());
             project.setLocalCode(postingModifyRequest.getLocalCode());
             project.setFieldCode(postingModifyRequest.getFieldCode());
             project.setContact(postingModifyRequest.getIsContact());
             project.setTerm(postingModifyRequest.getTerm());
             projectRepository.save(project);
-
-            return BasicResponse.Body("success", "공고 수정 성공", null);
         }
-        return BasicResponse.Body("fail", "공고 수정 실패", null);
+        throw new NotFoundException(ResponseCode.NOT_FOUND);
     }
 
     @Transactional
-    public BasicResponse canclePosting(Integer postingSeq) {
+    public void canclePosting(Integer postingSeq) throws RuntimeException {
         if (postingRepository.findById(postingSeq).isPresent()){
-            Posting posting = postingRepository.findById(postingSeq).get();
+            Posting posting = postingRepository.findById(postingSeq)
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
             posting.setPostingCode("PPS100");
             postingRepository.save(posting);
-            return BasicResponse.Body("success", "공고 취소 성공", null);
         }
-        return BasicResponse.Body("fail", "공고 취소 실패", null);
+        throw new NotFoundException(ResponseCode.NOT_FOUND);
     }
 }
