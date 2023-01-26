@@ -10,12 +10,19 @@ import TabList from '@mui/lab/TabList'
 
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
 
-const Tab1 = styled(Tab)`
-  && {
-    font-size: 1em;
-    font-weight: 800;
-  }
-`
+const Tab2 = styled(Tab)(({ theme }) => ({
+  fontSize: '21px',
+  fontcolor: '#000000',
+  '&.Mui-selected': {
+    color: '#574B9F',
+    fontWeight: 'bold',
+  },
+  '&:hover': {
+    color: '#574B9F',
+    opacity: 1,
+  },
+}))
+
 function Posting() {
   const [postingList, setPostingList] = useState([])
   const [value, setValue] = React.useState('FI100')
@@ -24,7 +31,7 @@ function Posting() {
     setValue(newValue)
   }
   const postList = async () => {
-    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&localCode=FL100')
+    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FL100')
     setPostingList(res.data.body.postingList)
   }
 
@@ -45,12 +52,16 @@ function Posting() {
         <Box sx={{ width: '100%' }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1.5, color: '#bcb7d9' }}>
-              <TabList onChange={handleChange} aria-label="lab API tabs example">
-                <Tab1 label="Web" value="FI100" />
-                <Tab1 label="안드로이드" value="FI101" />
-                <Tab1 label="IOS" value="FI102" />
-                <Tab1 label="IoT" value="FI104" />
-                <Tab1 label="AI" value="FI105" />
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                TabIndicatorProps={{ style: { background: '#574B9F' } }}
+              >
+                <Tab2 label="Web" value="FI100" />
+                <Tab2 label="안드로이드" value="FI101" />
+                <Tab2 label="IOS" value="FI102" />
+                <Tab2 label="IoT" value="FI104" />
+                <Tab2 label="AI" value="FI105" />
               </TabList>
             </Box>
           </TabContext>
@@ -99,7 +110,7 @@ function Posting() {
             <SkillText>JavaScript</SkillText>
           </Skillbtn>
           <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
+            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em', color: !value ? 'red' : null }} />
             <SkillText>React</SkillText>
           </Skillbtn>
           <Skillbtn>
