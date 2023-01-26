@@ -1,32 +1,30 @@
-import React from "react";
-import { useState, useEffect } from "react";
-
-import styled, { css } from "styled-components";
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
 const SelectBox = styled.div`
   position: relative;
-  width: 150px;
+  width: 180px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid #ced4da;
-
   background-color: #f3f5f7;
   align-self: center;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   &::before {
-    content: "⌵";
+    content: '⌵';
     position: absolute;
     right: 8px;
     bottom: 5px;
     color: #574b9f;
     font-size: 20px;
   }
-`;
+`
 const Label = styled.label`
-  font-size: 13px;
+  font-size: 17px;
   margin-left: 16px;
   text-align: center;
-`;
+`
 const SelectOptions = styled.ul`
   position: absolute;
   top: 30px;
@@ -34,7 +32,7 @@ const SelectOptions = styled.ul`
   width: 150px;
   height: 150px;
   overflow: auto;
-  max-height: ${(props) => (props.show ? "none" : "0")};
+  max-height: ${(props) => (props.show ? 'none' : '0')};
   padding: 0px;
   border-radius: 8px;
   background-color: #f3f5f7;
@@ -50,7 +48,7 @@ const SelectOptions = styled.ul`
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
   }
-`;
+`
 
 const Option = styled.li`
   font-size: 14px;
@@ -60,31 +58,27 @@ const Option = styled.li`
   &:hover {
     background-color: #dddbec;
   }
-`;
+`
 const CustomSelect = ({ optionData, position }) => {
-  const [currentValue, setCurrentValue] = useState(position);
-  const [showOptions, setShowOptions] = useState(false);
+  const [currentValue, setCurrentValue] = useState(position)
+  const [showOptions, setShowOptions] = useState(false)
 
   const handleOnChangeSelectValue = (e) => {
-    setCurrentValue(e.target.getAttribute("value"));
-  };
+    setCurrentValue(e.target.getAttribute('value'))
+  }
 
   return (
     <SelectBox onClick={() => setShowOptions((prev) => !prev)}>
       <Label>{currentValue}</Label>
       <SelectOptions show={showOptions}>
         {optionData.map((data) => (
-          <Option
-            key={data.key}
-            value={data.name}
-            onClick={handleOnChangeSelectValue}
-          >
+          <Option key={data.key} value={data.name} onClick={handleOnChangeSelectValue}>
             {data.name}
           </Option>
         ))}
       </SelectOptions>
     </SelectBox>
-  );
-};
+  )
+}
 
-export default CustomSelect;
+export default CustomSelect
