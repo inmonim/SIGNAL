@@ -36,6 +36,7 @@ public class ApplyController {
     private ResponseEntity<BasicResponse> registApply(@Parameter(description = "지원서 작성을 위한 정보")
                                                           @RequestBody ApplyBasicRequest applyRegistRequest) {
         log.info("regeistApply - Call");
+        System.out.println("어플라이 컨트롤러");
 
         try {
             applyService.registApply(applyRegistRequest);
@@ -59,4 +60,9 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
+//    @Tag(name = "지원")
+//    @Operation(summary = "공고 작성자의 지원서 상세 조회", description = "공고 작성자의 지원서 상세 조회")
+//    @GetMapping("/writer/{postingSeq}")
+//    private ResponseEntity<BasicResponse> findWriterApply(@Parameter(description = ))
 }

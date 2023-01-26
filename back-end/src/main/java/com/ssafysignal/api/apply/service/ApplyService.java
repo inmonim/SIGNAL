@@ -7,6 +7,8 @@ import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.posting.entity.Posting;
+import com.ssafysignal.api.posting.repository.PostingRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +27,14 @@ public class ApplyService {
     private final ApplyCareerRepository applyCareerRepository;
     private final ApplyExpRepository applyExpRepository;
     private final ApplySkillRepository applySkillRepository;
+    private final PostingRepository postingRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest) throws RuntimeException {
 
         // 지원서 등록
         Apply apply = Apply.builder()
+                .userSeq(applyRegistRequest.getUserSeq())
                 .content(applyRegistRequest.getContent())
                 .positionCode(applyRegistRequest.getPositionCode())
                 .build();
@@ -46,6 +50,8 @@ public class ApplyService {
             );
         }
 
+        System.out.println("기술 스택");
+
         // 이전 프로젝트 경험
         for (String exp : applyRegistRequest.getApplyExpList()) {
             applyExpRepository.save(ApplyExp.builder()
@@ -55,6 +61,8 @@ public class ApplyService {
             );
         }
 
+        System.out.println("이전 프로젝트 경험");
+
         // 경력
         for (String career : applyRegistRequest.getApplyCareerList()) {
             applyCareerRepository.save(ApplyCareer.builder()
@@ -63,6 +71,7 @@ public class ApplyService {
                     .build()
             );
         }
+        System.out.println("경력");
     }
 
     @Transactional(readOnly = true)
@@ -71,6 +80,14 @@ public class ApplyService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         return apply;
     }
+
+//    @Transactional(readOnly = true)
+//    public Apply findWriterApply(Integer postingSeq, Integer applySeq) {
+//        Posting posting = postingRepository.findById(postingSeq).get();
+//        Apply apply = applyRepository.findByApplySeq(applySeq).get();
+//        Integer posting posting.getPostingSeq()
+//    }
+
 
     @Transactional
     public void modifyApply(Integer applySeq, ApplyBasicRequest applyModifyRequest) throws RuntimeException {

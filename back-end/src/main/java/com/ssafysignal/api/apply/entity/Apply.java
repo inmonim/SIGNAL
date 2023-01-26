@@ -47,13 +47,13 @@ public class Apply {
     @Column(name = "user_seq")
     private Integer userSeq;
 
-    @Column(name = "posting_seq")
-    private Integer postingSeq;
-
-    // Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
+//     Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
 //    @ManyToOne(targetEntity = Posting.class, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "posting_seq")
 //    private Posting posting;
+
+    @Column(name = "posting_seq")
+    private Integer postingSeq;
 
     @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
