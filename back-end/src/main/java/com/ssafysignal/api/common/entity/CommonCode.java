@@ -1,4 +1,4 @@
-package com.ssafysignal.api.global.common.db.entity;
+package com.ssafysignal.api.common.entity;
 
 import lombok.*;
 

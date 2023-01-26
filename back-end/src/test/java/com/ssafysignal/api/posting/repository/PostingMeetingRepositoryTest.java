@@ -23,7 +23,7 @@ class PostingMeetingRepositoryTest {
 
     @Test
     void find() {
-        List<PostingMeeting> postingMeetingList = postingMeetingRepository.findPostingMeetingsByPostingSeq(1).get();
+        List<PostingMeeting> postingMeetingList = postingMeetingRepository.findPostingMeetingsByPostingSeq(1);
         assertTrue(postingMeetingList.size() == 3);
     }
 
