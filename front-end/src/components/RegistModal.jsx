@@ -86,22 +86,6 @@ function RegistModal({ open, onClose }) {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    // if (checkemail(nextInputs.email) === false) {
-    //   setMsg1('이메일 형식을 확인해주세요.')
-    // } else {
-    //   setMsg1('')
-    // }
-    // if (checkpass(nextInputs.password) === false) {
-    //   setMsg2('8자리 이상 영어, 숫자, 특수문자 조합')
-    //   console.log('xxx')
-    // } else {
-    //   setMsg2('')
-    // }
-    // if (nextInputs.password !== nextInputs.passwordCheck) {
-    //   setMsg3('비밀번호가 일치하지 않습니다.')
-    // } else {
-    //   setMsg3('')
-    // }
     console.log(nextInputs)
   }
 
