@@ -5,6 +5,7 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.entity.ApplyCareer;
 import com.ssafysignal.api.apply.entity.ApplyExp;
 import com.ssafysignal.api.apply.entity.ApplySkill;
+import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.user.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +54,7 @@ public class ApplyFindRes {
     @Schema(description = "지원자의 기술 스택 리스트")
     private List<ApplySkill> applySkillList = new ArrayList<>();
 
-    public static ApplyFindRes fromEntity(final Apply apply) {
+    public static ApplyFindRes fromEntity(final Apply apply, final Posting posting) {
         return ApplyFindRes.builder()
                 .content(apply.getContent())
                 .memo(apply.getMemo())
@@ -61,7 +62,7 @@ public class ApplyFindRes {
                 .regDt(apply.getRegDt())
                 .applyCode(apply.getApplyCode())
                 .positionCode(apply.getPositionCode())
-                .postingSeq(apply.getPostingSeq())
+                .postingSeq(posting.getPostingSeq())
                 .applyCareerList(apply.getApplyCareerList())
                 .applyExpList(apply.getApplyExpList())
                 .applySkillList(apply.getApplySkillList())
