@@ -15,4 +15,5 @@ public interface LetterRepository extends JpaRepository<Letter, Integer> {
     List<Letter> findAllByToUserSeqAndIsTrash(int userSeq, boolean isTrash, PageRequest pg);
 
     Letter findByLetterSeq(int letterSeq);
+    Long countByToUserSeqAndIsRead(int userSeq, boolean isRead);
 }

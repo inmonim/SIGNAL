@@ -5,6 +5,7 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListReq;
 import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqReq;
 import com.ssafysignal.api.letter.dto.request.SendLetterReq;
+import com.ssafysignal.api.letter.dto.response.CountNotReadLetterRes;
 import com.ssafysignal.api.letter.dto.response.FindLetterRes;
 import com.ssafysignal.api.letter.entity.Letter;
 import com.ssafysignal.api.letter.service.LetterService;
@@ -31,9 +32,9 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "쪽지 전송", description = "사용자 nickname을 기준으로 쪽지 전송")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> sendLetter(@Parameter(description = "전송 쪽지", required = true) @RequestBody SendLetterReq sendLette) {
+    private ResponseEntity<BasicResponse> sendLetter(@Parameter(description = "전송 쪽지", required = true) @RequestBody SendLetterReq sendLetter) {
         log.info("sendLetter - Call");
-        String nickname = sendLette.getNickname();
+        String nickname = sendLetter.getNickname();
         User toUser = letterService.findUserSeq(nickname);
         if(toUser == null){
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LETTERSEND_FAIL, null));
@@ -41,10 +42,10 @@ public class LetterController {
         int toUserSeq = toUser.getUserSeq();
 
         Letter letter = Letter.builder()
-                .fromUserSeq(sendLette.getUserSeq())
+                .fromUserSeq(sendLetter.getUserSeq())
                 .toUserSeq(toUserSeq)
-                .title(sendLette.getTitle())
-                .content(sendLette.getContent())
+                .title(sendLetter.getTitle())
+                .content(sendLetter.getContent())
                 .build();
         //System.out.println("letter:"+letter);
         Letter ret = letterService.registLetter(letter);
@@ -116,4 +117,19 @@ public class LetterController {
         }
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
+
+
+    @Tag(name = "쪽지")
+    @Operation(summary = "안읽은 쪽지 갯수 구하기", description = "유저seq가 받은 쪽지 중 안읽은 쪽지 갯수 구하기")
+    @GetMapping("/read/{userSeq}")
+    private ResponseEntity<BasicResponse> countNotReadLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq){
+        Long cnt = letterService.countNotReadLetter(userSeq);
+
+        CountNotReadLetterRes res = CountNotReadLetterRes.builder()
+                .count(cnt)
+                .build();
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
+    }
+
+    
 }

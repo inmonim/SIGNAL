@@ -122,5 +122,9 @@ public class LetterService {
         return letter;
     }
 
+    @Transactional
+    public Long countNotReadLetter(int userSeq){
+        return letterRepository.countByToUserSeqAndIsRead(userSeq, false);
+    }
 
 }
