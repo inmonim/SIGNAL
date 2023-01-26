@@ -1,5 +1,6 @@
 package com.ssafysignal.api.user.controller;
 
+import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
@@ -31,17 +32,23 @@ public class UserController {
         FindUserRes resDto= userService.findUser(userSeq);
         
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resDto));
-        //잘못된 조회 return 넣기
     }
 
     @Tag(name = "회원")
     @Operation(summary = "회원가입", description = "입력된 정보로 회원가입한다.")
-    @PostMapping("")   //실제로는 이메일 인증 url로 가입하도록 하기!!
+    @PostMapping("")
     private ResponseEntity<BasicResponse> registUser(@RequestBody User user) {
         log.info("joinUser - Call");
         System.out.println(user);
-        User dto= userService.registUser(user);
+        User dto=null;
+        try {
+            dto = userService.registUser(user);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MAILSEND_FAIL, null));
+        }
 
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, dto));
     }
+
+
 }

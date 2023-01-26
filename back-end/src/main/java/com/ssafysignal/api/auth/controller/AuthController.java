@@ -6,6 +6,7 @@ import com.ssafysignal.api.auth.service.AuthService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.message.AuthException;
 import java.util.Map;
 
 @Slf4j
@@ -28,16 +30,20 @@ public class AuthController {
 
     @Tag(name = "인증")
     @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
-    @PostMapping("/auth")
-    private ResponseEntity<BasicResponse> login(@Parameter(description = "이메일", required = true) @RequestParam String email,
-                                                @Parameter(description = "비밀번호", required = true) @RequestParam String password) {
+    @PostMapping("")
+    private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true)@RequestBody Map<String,Object> info) {
         log.info("login - Call");
 
+        String email = (String)info.get("email");
+        String password = (String)info.get("password");
+
         try {
-            log.info(String.format("email : %s / password : %s", email, password));
+            authService.login(email,password);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+        }catch (AuthException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, false));
         }
     }
 
@@ -74,7 +80,7 @@ public class AuthController {
     @Operation(summary = "닉네임 중복 확인", description = "닉네임이 중복되는지 확인한다.")
     @GetMapping("/nickname/{nickname}")
     private ResponseEntity<BasicResponse> checkNickname(@Parameter(description = "닉네임", required = true) @PathVariable String nickname) {
-        log.info("checkEmail - Call");
+        log.info("checkNickname - Call");
 
         try {
             authService.checkNickname(nickname);
@@ -99,8 +105,8 @@ public class AuthController {
     }
 
     @Tag(name = "인증")
-    @Operation(summary = "이메일 인증", description = "사용자를 이메일 인증 처리한다.")
-    @GetMapping("/emailAuth/{authCode}")
+    @Operation(summary = "이메일 인증", description = "회원가입 사용자 이메일 인증 처리한다.")
+    @GetMapping("/emailauth/{authCode}")
     private ResponseEntity<BasicResponse> emailAuth(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode) {
         log.info("emailAuth - Call");
 
@@ -112,14 +118,16 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
+
+        //이메일 인증 후 리다이렉트 해주기??
     }
 
     @Tag(name = "인증")
     @Operation(summary = "비밀번호 찾기", description = "이메일로 비밀번호를 변경할 수 있는 링크를 전송한다.")
-    @PostMapping ("/password/email")
-    private ResponseEntity<BasicResponse> findPassword(@RequestParam String email) {
+    @PostMapping ("/password")
+    private ResponseEntity<BasicResponse> findPassword(@Parameter(description = "이메일", required = true) @RequestBody Map<String,Object> param) {
         log.info("findPassword - Call");
-
+        String email =(String) param.get("email");
         try {
             authService.findPassword(email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, email));
@@ -129,4 +137,22 @@ public class AuthController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MAILSEND_FAIL, null));
         }
     }
+
+    @Tag(name = "인증")
+    @Operation(summary = "임시 비밀번호 받기", description = "authCode 대조후 유효하면 임시 비밀번호 쏴주기")
+    @GetMapping("/password/{authCode}")
+    private ResponseEntity<BasicResponse> getTempPassword(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode) {
+        log.info("emailAuth - Call");
+
+        try {
+            authService.getTempPassword(authCode);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
+        }
+
+    }
+    
 }

@@ -32,4 +32,6 @@ public class CommonCode {
         this.groupCode = groupCode;
         this.groupName = groupName;
     }
+
+
 }
