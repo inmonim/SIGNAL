@@ -8,6 +8,9 @@ import CareerList from '../../components/Apply/CareerList'
 import '../../assets/styles/apply.css'
 import styled from 'styled-components'
 
+// import { useSelector } from 'react-redux'
+// import { fetchPostionCode } from '../../store/redux'
+
 const userSeq = '1'
 const SERVER_URL = 'http://tableminpark.iptime.org:8080'
 const PARAM_URL = `/user/${userSeq}`
@@ -111,10 +114,14 @@ const Apply = () => {
   }
 
   const postFetch = async () => {
-    const res = await axios.get(SERVER_URL + '/posting/1')
-    setPost(res.data.body)
-    console.log(res)
-    console.log(post.postingQuestionList)
+    try {
+      const res = await axios.get(SERVER_URL + '/posting/1')
+      setPost(res.data.body)
+      console.log('durl' + post.postingQuestionList)
+      // console.log(res.data.body.postingQuestionList)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleExpAdd = () => {
@@ -207,11 +214,24 @@ const Apply = () => {
     // expListFetch();
   }, [])
 
+  // const state = useSelector((state) => {
+  //   return state
+  // })
+  // // const dispatch = useDispatch()
+
+  // const reduxConsole = () => {
+  //   // dispatch(fetchPostionCode())
+  //   // console.log('되냐?', state.positionCode.id)
+  //   // console.log(state.positionCode.id, '이거')
+  //   // console.log(state.user.phone)
+  // }
+
   return (
     <Container>
       <div>
         <div>
           <Title>{nickname} 님의지원서</Title>
+          {/* {postionRedux} */}
         </div>
         <div>
           <div className="user-detail-section">
@@ -301,12 +321,12 @@ const Apply = () => {
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              {post.postingQuestionList.map((props) => (
+              {/* {post.postingQuestionList.map((props) => (
                 <div key={props.postingSeq}>
                   <Label className="question-label">{props.content}</Label>
                   <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
         </div>
