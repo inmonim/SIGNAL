@@ -2,10 +2,9 @@ package com.ssafysignal.api.apply.entity;
 
 import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,9 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "apply")
 public class Apply {
     @Id
@@ -42,40 +45,33 @@ public class Apply {
     private String applyCode;
 
     @Column(name = "user_seq")
-    private Integer user;
+    private Integer userSeq;
 
-//    @Column(name = "posting_seq")
-//    private Integer postingSeq;
+//     Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
+//    @ManyToOne(targetEntity = Posting.class, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "posting_seq")
+//    private Posting posting;
 
-    // Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
-    @ManyToOne(targetEntity = Posting.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "posting_seq")
-    private Posting posting;
+    @Column(name = "posting_seq")
+    private Integer postingSeq;
 
-//    @OneToMany
-//    private List<ApplyAnswer> applyAnswerList;
-
-    @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true)
+    @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
     private List<ApplyCareer> applyCareerList = new ArrayList<>();
-    @OneToMany
+    @OneToMany(targetEntity = ApplyExp.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
     private List<ApplyExp> applyExpList = new ArrayList<>();
-    @OneToMany
+    @OneToMany(targetEntity = ApplySkill.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
     private List<ApplySkill> applySkillList = new ArrayList<>();
 
-//    public void setApplyCode(String applyCode) { this.applyCode = applyCode; }
-
     @Builder
-    public Apply(final Integer applySeq, final Integer user, final Posting posting, final String content, final String memo, final String positionCode, final boolean isSelect, final LocalDateTime regDt,
-                  final String applyCode,
-    //      final List<ApplyAnswer> applyAnswerList,
-            final List<ApplyCareer> applyCareerList, final List<ApplyExp> applyExpList, final List<ApplySkill> applySkillList
+    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, String content, String memo, String positionCode, boolean isSelect, LocalDateTime regDt,
+                  String applyCode, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
     ) {
         this.applySeq = applySeq;
-        this.user = user;
-        this.posting = posting;
+        this.userSeq = userSeq;
+        this.postingSeq = postingSeq;
         this.content = content;
         this.positionCode = positionCode;
         this.memo = memo;
