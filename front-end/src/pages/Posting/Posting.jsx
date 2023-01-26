@@ -1,39 +1,107 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-// import axios from 'axios'
+import styled from '@emotion/styled'
+import axios from 'axios'
 import JavaScript from '../../assets/image/JavaScript.png'
 import PostingCardItem from 'components/Posting/PostingCardItem'
+import Box from '@mui/material/Box'
+import Tab from '@mui/material/Tab'
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+
+// const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
+
+const Tab2 = styled(Tab)(({ theme }) => ({
+  fontSize: '21px',
+  fontcolor: '#000000',
+  '&.Mui-selected': {
+    color: '#574B9F',
+    fontWeight: 'bold',
+  },
+  '&:hover': {
+    color: '#574B9F',
+    opacity: 1,
+  },
+}))
 
 function Posting() {
-  const [test] = useState()
-  console.log(test)
-  useEffect(() => {
-    // axios
-    //   .get('http://localhost:4000/api/todo')
-    //   .then((res) => {
-    //     const copy = [...res.data]
-    //     setTest(copy)
-    //   })
-    //   .catch((error) => console.log(error))
-  }, [])
-  // const sa = 2
+  const [postingList, setPostingList] = useState([])
+  const [value, setValue] = React.useState('FI100')
+  console.log(value)
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
+  const postList = async () => {
+    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FL100')
+    setPostingList(res.data.body.postingList)
+  }
 
+  // const changList = async () => {
+  //   const res = await axios.get(SERVER_URL + '?page=1&size=16' + '' + fieldSelect)
+  //   setPostingList(res.data.body.postingList)
+  // }
+  useEffect(() => {
+    postList()
+  }, [])
+  useEffect(() => {
+    // changList()
+  }, [])
   return (
     <div>
       <Banner />
       <Container>
+        <Box sx={{ width: '100%' }}>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1.5, color: '#bcb7d9' }}>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+                TabIndicatorProps={{ style: { background: '#574B9F' } }}
+              >
+                <Tab2 label="Web" value="FI100" />
+                <Tab2 label="안드로이드" value="FI101" />
+                <Tab2 label="IOS" value="FI102" />
+                <Tab2 label="IoT" value="FI104" />
+                <Tab2 label="AI" value="FI105" />
+              </TabList>
+            </Box>
+          </TabContext>
+        </Box>
         <Field>
-          <Fieldtext
+          {/* <Fieldtext
             onClick={() => {
-              console.log('WEbb')
+              setFieldSelect('FI100')
             }}
           >
             Web
           </Fieldtext>
-          <Fieldtext>안드로이드</Fieldtext>
-          <Fieldtext>IOS</Fieldtext>
-          <Fieldtext>IoT</Fieldtext>
-          <Fieldtext>AI</Fieldtext>
+          <Fieldtext
+            onClick={() => {
+              setFieldSelect('FI101')
+            }}
+          >
+            안드로이드
+          </Fieldtext>
+          <Fieldtext
+            onClick={() => {
+              setFieldSelect('FI102')
+            }}
+          >
+            IOS
+          </Fieldtext>
+          <Fieldtext
+            onClick={() => {
+              setFieldSelect('FI104')
+            }}
+          >
+            IoT
+          </Fieldtext>
+          <Fieldtext
+            onClick={() => {
+              setFieldSelect('FI105')
+            }}
+          >
+            AI
+          </Fieldtext> */}
         </Field>
         <hr />
         <SkillSelectBox>
@@ -42,7 +110,7 @@ function Posting() {
             <SkillText>JavaScript</SkillText>
           </Skillbtn>
           <Skillbtn>
-            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
+            <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em', color: !value ? 'red' : null }} />
             <SkillText>React</SkillText>
           </Skillbtn>
           <Skillbtn>
@@ -69,14 +137,9 @@ function Posting() {
           <option value="">옹옹</option>
         </FilterSelect>
         <PostList>
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
-          <PostingCardItem />
+          {postingList.map((post, i) => (
+            <PostingCardItem post={post} key={post.postingSeq} />
+          ))}
         </PostList>
       </Container>
     </div>
@@ -90,7 +153,7 @@ const Container = styled.div`
   padding: 30px;
   border: 1px solid #574B9F;
   border-radius: 4px;
-  flex-direction: column;
+  flex-direction: column; 
   }
 `
 const Banner = styled.div`
@@ -105,21 +168,24 @@ const Field = styled.div`
   padding: 3px 29px;
   flex-wrap: wrap;
 `
-const Fieldtext = styled.div`
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 26px;
-  line-height: 33px;
-  color: #848484;
-  @media (max-width: 876px) {
-    font-size: 15px;
-  }
-  @media (max-width: 590px) {
-    font-size: 14px;
-  }
-  margin-right: 2rem;
-`
+// const Fieldtext = styled.div`
+//   font-family: 'Roboto';
+//   font-style: normal;
+//   font-weight: 400;
+//   font-size: 26px;
+//   line-height: 33px;
+//   color: #848484;
+//   &:hover {
+//     color: #574b9f;
+//   }
+//   @media (max-width: 876px) {
+//     font-size: 15px;
+//   }
+//   @media (max-width: 590px) {
+//     font-size: 14px;
+//   }
+//   margin-right: 2rem;
+// `
 const SkillSelectBox = styled.div`
   display: flex;
   flex-wrap: wrap;
