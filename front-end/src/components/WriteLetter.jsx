@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Typography, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
 import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import './WriteLetter.css'
@@ -38,7 +38,6 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
 }))
 
 function WriteLetter({ handleMenuListItemClick }) {
-  //   const form = useRef()
   const [alertOpen, setAlertOpen] = useState(false)
   const [inputs, setInputs] = useState({
     nickname: '',
@@ -55,7 +54,7 @@ function WriteLetter({ handleMenuListItemClick }) {
   }
 
   const handleSend = () => {
-    fetch('http://tableminpark.iptime.org:8080/letter', {
+    fetch(process.env.REACT_APP_API_URL + '/letter', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -81,29 +80,32 @@ function WriteLetter({ handleMenuListItemClick }) {
   }
   return (
     <div className="write-form">
-      <Typography sx={{ textAlign: 'left', fontSize: '44px', fontWeight: 'bold' }}>쪽지 쓰기</Typography>
-      {/* <form ref={form} onSubmit={sendLetter}> */}
-      <div className="send">
-        <label>받는 사람</label>
-        <br />
-        <TextField id="filled-multiline-flexible" sx={inputStyle} name="nickname" onChange={handleInput} />
-        <br />
-        <label>제목</label>
-        <br />
-        <TextField id="filled-multiline-flexible" sx={inputStyle} name="title" onChange={handleInput} />
-        <br />
-        <label>내용</label>
-        <br />
-        <TextField
-          id="filled-multiline-flexible"
-          rows={10}
-          multiline
-          sx={inputStyle}
-          name="content"
-          onChange={handleInput}
-        />
+      <div style={{ textAlign: 'left' }}>
+        <div style={{ display: 'inline-block', fontSize: '44px', fontWeight: 'bold', marginBottom: '26px' }}>
+          쪽지 쓰기
+        </div>
+        <div className="send">
+          <label>받는 사람</label>
+          <br />
+          <TextField id="filled-multiline-flexible" sx={inputStyle} name="nickname" onChange={handleInput} />
+          <br />
+          <label>제목</label>
+          <br />
+          <TextField id="filled-multiline-flexible" sx={inputStyle} name="title" onChange={handleInput} />
+          <br />
+          <label>내용</label>
+          <br />
+          <TextField
+            id="filled-multiline-flexible"
+            rows={10}
+            multiline
+            sx={inputStyle}
+            name="content"
+            onChange={handleInput}
+          />
+        </div>
       </div>
-      {/* </form> */}
+
       <SignalBtn onClick={handleSend}>전송</SignalBtn>
       <AlertModal open={alertOpen} onClick={handleToSend} msg="전송되었습니다."></AlertModal>
     </div>

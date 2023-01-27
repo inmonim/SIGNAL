@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import FromLetterList from './FromLetterList'
-// import axios from 'axios'
-
-// const SERVER_URL = 'http://tableminpark.iptime.org:8080'
-// const PARAM_URL = `/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=7`
+import { DataGrid } from '@mui/x-data-grid'
+import LetterDetail from './LetterDetail'
 
 function FromLetter() {
-  // useEffect(() => {
-  //   // getLetter()
-  //   // axios.get(SERVER_URL + PARAM_URL).then((res) => console.log(res))
-  //   fetch(`http://tableminpark.iptime.org:8080/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=7`, {
-  //     method: 'GET',
-  //   })
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       console.log(1, res)
-  //     })
-  // }, [])
-
   const [data, setData] = useState([])
+  const [viewDetail, setViewDetail] = useState('')
   useEffect(() => {
-    fetch(`http://tableminpark.iptime.org:8080/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
+    fetch(process.env.REACT_APP_API_URL + `/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
       method: 'GET',
     })
       .then((res) => res.json())
@@ -30,14 +16,53 @@ function FromLetter() {
       })
   }, [])
 
+  const columns = [
+    { headerName: '제목', field: 'title', width: 500 },
+    { headerName: '보낸 사람', field: 'fromNickname', width: 130 },
+    { headerName: '날짜', field: 'regDt', width: 130 },
+  ]
+  const rows = []
+  Array.from(data).forEach((item) => {
+    rows.push({ id: item.letterSeq, title: item.title, fromNickname: item.fromNickname, regDt: item.regDt })
+  })
+  const handleLetterDetail = (e) => {
+    const rowId = e.id
+    const nextViewDetail = { ...viewDetail, rowId }
+    setViewDetail(nextViewDetail.rowId)
+    console.log(nextViewDetail.rowId)
+  }
   return (
     <>
-      <div style={{ textAlign: 'left' }}>
-        <div style={{ display: 'inline-block', fontSize: '44px', fontWeight: 'bold', marginBottom: '26px' }}>
-          받은쪽지함
+      {viewDetail === '' ? (
+        <div style={{ textAlign: 'left' }}>
+          <div style={{ display: 'inline-block', fontSize: '44px', fontWeight: 'bold', marginBottom: '26px' }}>
+            받은쪽지함
+          </div>
+          {/* <FromLetterList data={data}></FromLetterList> */}
+          <div>
+            <div style={{ height: '487px' }}>
+              <DataGrid
+                sx={{
+                  '& .MuiDataGrid-columnHeaderTitle': { fontSize: '22px', fontWeight: 'bold' },
+                  '& .MuiDataGrid-cellContent': { fontSize: '22px', marginLeft: '20px' },
+                  '& .MuiDataGrid-columnHeaderTitleContainer': { justifyContent: 'center' },
+                }}
+                rows={rows}
+                columns={columns}
+                pageSize={7}
+                rowsPerPageOptions={[7]}
+                checkboxSelection
+                disableSelectionOnClick
+                disableColumnMenu
+                onRowClick={handleLetterDetail}
+                getRowId={(row) => row.id}
+              />
+            </div>
+          </div>
         </div>
-        <FromLetterList data={data}></FromLetterList>
-      </div>
+      ) : (
+        <LetterDetail viewDetail={viewDetail}></LetterDetail>
+      )}
     </>
   )
 }
