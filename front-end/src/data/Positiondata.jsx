@@ -35,8 +35,6 @@ function getPositionName(code) {
   let name = 'error'
   positionData.forEach(function (item) {
     if (item.code === code) name = item.name
-
-    console.log(item.code)
   })
   return name
 }
