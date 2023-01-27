@@ -1,5 +1,6 @@
 package com.ssafysignal.api.board.entity;
 
+import io.swagger.models.auth.In;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -30,14 +31,18 @@ public class Notice {
     private String content;
 
     @Column(name = "view")
-    private String view;
+    private Integer view;
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
+    public void setView(Integer view) {
+        this.view = view+1;
+    }
+
     @Builder
     public Notice(Integer noticeSeq, Integer userSeq, String title, String content,
-                  String view, LocalDateTime regDt) {
+                  Integer view, LocalDateTime regDt) {
         this.noticeSeq = noticeSeq;
         this.userSeq = userSeq;
         this.title = title;

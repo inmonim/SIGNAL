@@ -8,17 +8,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final NoticeRepository noticeRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Notice findNotice(Integer noticeSeq) {
         Notice notice = noticeRepository.findByNoticeSeq(noticeSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        System.out.println(notice);
-        return notice;
+        notice.setView(notice.getView());
+        return noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public List<Notice> findAllNotice() throws RuntimeException {
+        List<Notice> noticeList = noticeRepository.findAllNotice();
+        return noticeList;
     }
 }
