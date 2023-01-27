@@ -24,10 +24,11 @@ const style = {
   border: 'none',
   boxShadow: 24,
   p: 4,
-  position: 'absolute',
+  position: 'relative',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  display: 'flex',
 }
 
 const SignalBtn = styled(Btn)(({ theme }) => ({
@@ -52,13 +53,29 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
 
 function LetterModal({ open, onClose }) {
   const [selectedListIndex, setSelectedListIndex] = useState(0)
-  const handleMenuListItemClick = (e, index) => {
+  const handleMenuListItemClick = (index) => {
     setSelectedListIndex(index)
   }
   return (
     <>
       <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
         <Box sx={style}>
+          <div className="close">
+            <img
+              className="closeimg"
+              style={{
+                cursor: 'pointer',
+                display: 'inline-block',
+                position: 'absolute',
+                left: '95%',
+                bottom: '90%',
+                transform: 'translate(-50%, 0%)',
+              }}
+              src={closeBtn}
+              alt="closeBtn"
+              onClick={onClose}
+            />
+          </div>
           <div
             className="letter-modal-left"
             style={{
@@ -71,16 +88,13 @@ function LetterModal({ open, onClose }) {
             <SignalBtn
               style={{ margin: '30px auto', display: 'block' }}
               selected={selectedListIndex === 3}
-              onClick={(event) => handleMenuListItemClick(event, 3)}
+              onClick={() => setSelectedListIndex(3)}
             >
               쪽지 쓰기
             </SignalBtn>
             <List>
               <ListItem disablePadding>
-                <ListItemButton
-                  selected={selectedListIndex === 0}
-                  onClick={(event) => handleMenuListItemClick(event, 0)}
-                >
+                <ListItemButton selected={selectedListIndex === 0} onClick={() => setSelectedListIndex(0)}>
                   <ListItemIcon>
                     <img src={fromimg} alt="fromimg" />
                   </ListItemIcon>
@@ -93,10 +107,7 @@ function LetterModal({ open, onClose }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton
-                  selected={selectedListIndex === 1}
-                  onClick={(event) => handleMenuListItemClick(event, 1)}
-                >
+                <ListItemButton selected={selectedListIndex === 1} onClick={() => setSelectedListIndex(1)}>
                   <ListItemIcon>
                     <img src={toimg} alt="toimg" />
                   </ListItemIcon>
@@ -109,10 +120,7 @@ function LetterModal({ open, onClose }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton
-                  selected={selectedListIndex === 2}
-                  onClick={(event) => handleMenuListItemClick(event, 2)}
-                >
+                <ListItemButton selected={selectedListIndex === 2} onClick={() => setSelectedListIndex(2)}>
                   <ListItemIcon>
                     <img src={trashimg} alt="trashimg" />
                   </ListItemIcon>
@@ -132,14 +140,9 @@ function LetterModal({ open, onClose }) {
               float: 'left',
               width: '80%',
               height: '100%',
+              padding: '50px',
             }}
           >
-            <img
-              style={{ cursor: 'pointer', position: 'relative', float: 'right' }}
-              src={closeBtn}
-              alt="closeBtn"
-              onClick={onClose}
-            />
             {selectedListIndex === 0 ? (
               <FromLetter></FromLetter>
             ) : selectedListIndex === 1 ? (
@@ -147,7 +150,7 @@ function LetterModal({ open, onClose }) {
             ) : selectedListIndex === 2 ? (
               <TrashLetter></TrashLetter>
             ) : (
-              <WriteLetter></WriteLetter>
+              <WriteLetter handleMenuListItemClick={handleMenuListItemClick}></WriteLetter>
             )}
           </div>
         </Box>
