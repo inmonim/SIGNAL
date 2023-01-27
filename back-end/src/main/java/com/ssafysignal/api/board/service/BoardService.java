@@ -26,7 +26,7 @@ public class BoardService {
 
     @Transactional
     public List<Notice> findAllNotice() throws RuntimeException {
-        List<Notice> noticeList = noticeRepository.findAllNotice();
+        List<Notice> noticeList = null;// = noticeRepository.findAllNotice();
         return noticeList;
     }
 }

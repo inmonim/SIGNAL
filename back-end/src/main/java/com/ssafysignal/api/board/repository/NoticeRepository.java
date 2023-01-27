@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice, Integer>{
     Optional<Notice> findByNoticeSeq(Integer noticeSeq);
 
-    List<Notice> findAllNotice();
+    // JPA 는 데이터베이스 컬럼 기준으로 받아와야되서 Notice 라고 선언하면 빌드 에러는 안나지면 빌드 돌아가면서 JPA 에서 에러터짐!
+//    List<Notice> findAllNotice();
 }
