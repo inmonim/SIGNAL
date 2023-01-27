@@ -4,12 +4,13 @@ import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/mater
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/apply.css'
 import styled from 'styled-components'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchPostionCode } from '../../store/redux'
+import Skilldata from 'data/Skilldata'
 
 const userSeq = '1'
 const SERVER_URL = 'http://tableminpark.iptime.org:8080'
@@ -55,9 +56,7 @@ const Apply = () => {
   const [content, setContent] = useState([])
   const [expIndex, setExpIndex] = useState(2)
   const [careerIndex, setCareerIndex] = useState(0)
-
   const [careerList, setCareerList] = useState([])
-
   const [expList, setExpList] = useState([
     {
       id: 0,
@@ -69,34 +68,7 @@ const Apply = () => {
     },
   ])
 
-  const positionList = [
-    {
-      key: 1,
-      name: 'frontEnd',
-    },
-    {
-      key: 2,
-      name: 'backEnd',
-    },
-    {
-      key: 3,
-      name: 'pm',
-    },
-    {
-      key: 4,
-      name: 'da',
-    },
-    {
-      key: 5,
-      name: 'designer',
-    },
-    {
-      key: 6,
-      name: '기획',
-    },
-  ]
-
-  // const [positionList, setPositionList] = useState([])
+  const [positionList, setPositionList] = useState([])
   const handlePositionChange = (event) => {
     setPosition(event.target.value)
     console.log(position)
@@ -184,7 +156,21 @@ const Apply = () => {
         select: true,
         userSeq: 1,
       }
-      await axios.post(SERVER_URL + '/apply', req)
+      console.log('careerList')
+      console.log(careerList)
+      console.log('expList')
+      console.log(expList)
+      console.log('regDtreq')
+      console.log(regDtreq)
+      const config = { 'Content-Type': 'application/json' }
+      await axios
+        .post(SERVER_URL + '/apply', req, config)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
       console.log('지원서 post')
     } catch (error) {
@@ -222,16 +208,22 @@ const Apply = () => {
   }, [])
 
   const reduxConsole = () => {
-    // console.log('되냐?', state.positionCode.id)
-    // console.log(state.positionCode.id, '이거')
-
     console.log('apply')
     console.log(state)
-    // state.positionCode.then((e) => {
-    //   setPositionList(e)
-    //   console.log(positionList)
-    // })
+    state.positionCode.then((e) => {
+      setPositionList(e)
+      console.log(e)
+      console.log(positionList)
+    })
   }
+
+  const skillSearchFilter = createFilterOptions({
+    matchFrom: 'start',
+    stringify: (option) => option.name,
+  })
+
+  const [skillvalue, setSkillvalue] = useState(Skilldata[0].name)
+  const [skillinputValue, setSkillinpuValeu] = useState('')
 
   return (
     <Container>
@@ -270,7 +262,7 @@ const Apply = () => {
                     }}
                   ></MenuItem>
                   {positionList.map((props, index) => (
-                    <MenuItem value={props.key} key={index}>
+                    <MenuItem value={props.name} key={index}>
                       {props.name}
                     </MenuItem>
                   ))}
@@ -282,13 +274,27 @@ const Apply = () => {
           <div className="skill-meeting-section">
             <div className="skill-section">
               <Label className="label">사용기술</Label>
-              {/* <Autocomplete
+              <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={top100Films}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Movie" />}
-              /> */}
+                options={Skilldata}
+                getOptionLabel={(option) => option.name}
+                filterOptions={skillSearchFilter}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    value={skillvalue}
+                    onChange={(event, newValue) => {
+                      setSkillvalue(newValue)
+                    }}
+                    inputValue={skillinputValue}
+                    onInputChange={(event, newInputValue) => {
+                      setSkillinpuValeu(newInputValue)
+                    }}
+                  />
+                )}
+              />
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
