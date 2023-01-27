@@ -26,18 +26,79 @@ export const { changeName, changeAge } = user.actions
 
 const positionCode = createSlice({
   name: 'positionCode',
-  initialState: [{ id: '왜?' }],
+  initialState: [],
   reducers: {
-    async fetchPostionCode(state) {
+    async fetchPostionCode() {
       const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=PO')
-      state = res.data.body
-      console.log('state')
-      console.log(state)
+      console.log('redux positionCode')
+      console.log(res.data.body)
+      return res.data.body
     },
   },
 })
 
 export const { fetchPostionCode } = positionCode.actions
+
+// getSkillCommonCode //
+const getWESkill = async () => {
+  const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=WE')
+  console.log('redux skillCode')
+  console.log(res.data.body)
+  return res.data.body
+}
+
+const getAISkill = async () => {
+  const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=AI')
+  console.log('redux skillCode')
+  console.log(res.data.body)
+  return res.data.body
+}
+
+const getDBSkill = async () => {
+  const res = axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=DB')
+  console.log('redux skillCode')
+  console.log(res.data.body)
+  return res.data.body
+}
+
+const getPLSkill = async () => {
+  const res = axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=PL')
+  console.log('redux skillCode')
+  console.log(res.data.body)
+  return res.data.body
+}
+
+const skillCode = createSlice({
+  name: 'skillCode',
+  initialState: [],
+  reducers: {
+    fetchSkillCode(state) {
+      state.push(getWESkill())
+      state.push(getAISkill)
+      state.push(getDBSkill())
+      state.push(getPLSkill())
+      console.log(state)
+      return state
+    },
+  },
+})
+
+export const { fetchSkillCode } = positionCode.actions
+
+// ..getSkillCommonCode //
+
+const posting = createSlice({
+  name: 'posting',
+  initialState: [],
+  reducers: {
+    async fetchPostingDetail(state) {
+      const res = axios.get('http://tableminpark.iptime.org:8080/posting/1')
+      console.log(res.data.body)
+    },
+  },
+})
+
+export const { fetchPostingDetail } = posting.actions
 
 const stock = createSlice({
   name: 'stock',
@@ -58,5 +119,7 @@ export default configureStore({
     stock: stock.reducer,
     jang: jang.reducer,
     positionCode: positionCode.reducer,
+    skillCode: skillCode.reducer,
+    posting: posting.reducer,
   },
 })
