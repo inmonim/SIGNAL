@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
 
 const Posting = lazy(() => import('./pages/Posting/Posting'))
+const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 const Apply = lazy(() => import('./pages/Apply/Apply'))
 const Application = lazy(() => import('./pages/Apply/Application'))
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/posting" element={<Posting />} />
+          <Route path="/posting/:postingSeq" element={<PostingDetail />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/application" element={<Application />} />
         </Routes>
