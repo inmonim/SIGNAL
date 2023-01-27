@@ -1,4 +1,4 @@
-const Positiondata = [
+const positionData = [
   {
     code: 'PO100',
     name: 'frontend',
@@ -31,4 +31,14 @@ const Positiondata = [
   },
 ]
 
-export default Positiondata
+function getPositionName(code) {
+  let name = 'error'
+  positionData.forEach(function (item) {
+    if (item.code === code) name = item.name
+
+    console.log(item.code)
+  })
+  return name
+}
+
+export { positionData, getPositionName }
