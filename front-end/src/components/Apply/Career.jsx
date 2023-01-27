@@ -10,7 +10,13 @@ const inputStyle = {
 function Career({ career, onRemove }) {
   return (
     <div className="career-div">
-      <TextField id="outlined-basic" variant="outlined" value={career.title} style={inputStyle} />
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        defaultValue={career.title}
+        inputProps={career.title}
+        style={inputStyle}
+      />
       <div className="minus-button-section">
         <img
           src={minusButton}
