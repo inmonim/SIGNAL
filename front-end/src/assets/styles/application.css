@@ -1,31 +1,23 @@
 .project-name-label {
   color: #574b9f;
+  margin-bottom: 10px;
 }
 
 .project-name {
-  display: flex;
+  display: flex;  
 }
 
 .container {
   padding: 5% 30% 5% 30%;
-  line-height: 40px;
   width: 100%;
-  border-radius: 0px;
+  font-size : 25px;
 }
-
-.project-name-section {
-  border-bottom: 1px solid #574b9f;
-}
-
 .name-section {
   display: flex;
-  justify-content: space-between;
 }
 
 .position-section {
   display: flex;
-  justify-content: flex-start;
-  width: 300px;
 }
 
 .name-position-section {
@@ -33,10 +25,17 @@
   justify-content: space-between;
 }
 
+.name-section,
+.position-section{
+  width: 45%;
+}
+
 .career-exp-section {
   display: flex;
   justify-content: space-between;
 }
+
+
 
 .exp-section,
 .career-section {
@@ -51,5 +50,51 @@
 
 .label {
   width: 120px;
+  color: #463C7F;
+}
+
+.content-section > .label,
+.question-answer-section > .label{
+  width: 100%;
+  font-size: 30px;
+}
+
+hr{
+  border-color:#463C7F;
+}
+
+.apply-section{
+  margin : 20px;
+}
+
+.name-position-section > div,
+.phone-section > div,
+.email-section > div,
+.skill-section > div,
+.career-exp-section > div,
+.content-section > div,
+.question-answer-section > div{
+  margin: 15px 0px;
+}
+
+.exp,
+.career,
+.content{
+  padding: 10px 5px;
+  font-size: 20px;
+}
+
+.submit-section{
+  display: flex;
+  justify-content: center;
+  padding: 20px 0px;
+}
+
+.submit-section > Button { 
+  width: 60%;
+}
+
+.title{
+  font-size: 1.5em;
   font-weight: bold;
 }
