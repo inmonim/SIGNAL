@@ -37,14 +37,14 @@ const SignalBtn = styled(Btn)(({ theme }) => ({
   },
 }))
 
-function WriteLetter() {
+function WriteLetter({ handleMenuListItemClick }) {
   //   const form = useRef()
   const [alertOpen, setAlertOpen] = useState(false)
   const [inputs, setInputs] = useState({
     nickname: '',
     title: '',
     content: '',
-    userSeq: 1,
+    userSeq: sessionStorage.getItem('userSeq'),
   })
 
   const handleInput = (e) => {
@@ -75,9 +75,9 @@ function WriteLetter() {
       })
   }
 
-  const handleToSend = ({ index }) => {
+  const handleToSend = (e) => {
     setAlertOpen(false)
-    // index = 1
+    handleMenuListItemClick(1)
   }
   return (
     <div className="write-form">
@@ -94,7 +94,14 @@ function WriteLetter() {
         <br />
         <label>내용</label>
         <br />
-        <TextField id="filled-multiline-flexible" multiline sx={inputStyle} name="content" onChange={handleInput} />
+        <TextField
+          id="filled-multiline-flexible"
+          rows={10}
+          multiline
+          sx={inputStyle}
+          name="content"
+          onChange={handleInput}
+        />
       </div>
       {/* </form> */}
       <SignalBtn onClick={handleSend}>전송</SignalBtn>
