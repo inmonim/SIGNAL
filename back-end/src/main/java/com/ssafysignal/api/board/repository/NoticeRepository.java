@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface NoticeRepository extends JpaRepository<Notice, Integer>{
     Optional<Notice> findByNoticeSeq(Integer noticeSeq);
 
-    List<Notice> findNoticesBy
+    List<Notice> findAllNotice();
 }
