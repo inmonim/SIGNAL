@@ -9,7 +9,13 @@ const inputStyle = {
 function Exp({ exp, onRemove }) {
   return (
     <div className="exp-div">
-      <TextField id="outlined-basic" variant="outlined" value={exp.title} style={inputStyle} />
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        defaultValue={exp.title}
+        inputProps={exp.title}
+        style={inputStyle}
+      />
       <div className="minus-button-section">
         <img
           src={minusButton}

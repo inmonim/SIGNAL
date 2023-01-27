@@ -4,12 +4,13 @@ import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/mater
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/apply.css'
 import styled from 'styled-components'
 
-// import { useSelector } from 'react-redux'
-// import { fetchPostionCode } from '../../store/redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchPostionCode } from '../../store/redux'
+import Skilldata from 'data/Skilldata'
 
 const userSeq = '1'
 const SERVER_URL = 'http://tableminpark.iptime.org:8080'
@@ -51,13 +52,11 @@ const Apply = () => {
   const [phone, setPhone] = useState([])
   const [email, setEmail] = useState([])
   const [position, setPosition] = useState('frontEnd')
-  const [post, setPost] = useState([])
+  const [posting, setPosting] = useState([{}])
   const [content, setContent] = useState([])
   const [expIndex, setExpIndex] = useState(2)
   const [careerIndex, setCareerIndex] = useState(0)
-
   const [careerList, setCareerList] = useState([])
-
   const [expList, setExpList] = useState([
     {
       id: 0,
@@ -69,35 +68,10 @@ const Apply = () => {
     },
   ])
 
-  const positionList = [
-    {
-      key: 1,
-      name: 'frontEnd',
-    },
-    {
-      key: 2,
-      name: 'backEnd',
-    },
-    {
-      key: 3,
-      name: 'pm',
-    },
-    {
-      key: 4,
-      name: 'dm',
-    },
-    {
-      key: 5,
-      name: 'designer',
-    },
-    {
-      key: 6,
-      name: '기획',
-    },
-  ]
-
+  const [positionList, setPositionList] = useState([])
   const handlePositionChange = (event) => {
     setPosition(event.target.value)
+    console.log(position)
   }
 
   // userFetch : setNickName, setPhone, setEmail
@@ -113,11 +87,11 @@ const Apply = () => {
     }
   }
 
-  const postFetch = async () => {
+  const postingFetch = async () => {
     try {
       const res = await axios.get(SERVER_URL + '/posting/1')
-      setPost(res.data.body)
-      console.log('durl' + post.postingQuestionList)
+      setPosting(res.data.body)
+      console.log('durl' + posting.postingQuestionList)
       // console.log(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
@@ -182,7 +156,21 @@ const Apply = () => {
         select: true,
         userSeq: 1,
       }
-      await axios.post('SERVER_URL' + '/apply', req)
+      console.log('careerList')
+      console.log(careerList)
+      console.log('expList')
+      console.log(expList)
+      console.log('regDtreq')
+      console.log(regDtreq)
+      const config = { 'Content-Type': 'application/json' }
+      await axios
+        .post(SERVER_URL + '/apply', req, config)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
       console.log('지원서 post')
     } catch (error) {
@@ -205,33 +193,43 @@ const Apply = () => {
       })
     )
   }
+  const dispatch = useDispatch()
+  const state = useSelector((state) => {
+    return state
+  })
 
   useEffect(() => {
     userFetch()
-    postFetch()
+    postingFetch()
+    dispatch(fetchPostionCode())
     // positionListFetch();
     // setPostion("1");
     // expListFetch();
   }, [])
 
-  // const state = useSelector((state) => {
-  //   return state
-  // })
-  // // const dispatch = useDispatch()
+  const reduxConsole = () => {
+    console.log('apply')
+    console.log(state)
+    state.positionCode.then((e) => {
+      setPositionList(e)
+      console.log(e)
+      console.log(positionList)
+    })
+  }
 
-  // const reduxConsole = () => {
-  //   // dispatch(fetchPostionCode())
-  //   // console.log('되냐?', state.positionCode.id)
-  //   // console.log(state.positionCode.id, '이거')
-  //   // console.log(state.user.phone)
-  // }
+  const skillSearchFilter = createFilterOptions({
+    matchFrom: 'start',
+    stringify: (option) => option.name,
+  })
+
+  const [skillvalue, setSkillvalue] = useState(Skilldata[0].name)
+  const [skillinputValue, setSkillinpuValeu] = useState('')
 
   return (
     <Container>
       <div>
         <div>
           <Title>{nickname} 님의지원서</Title>
-          {/* {postionRedux} */}
         </div>
         <div>
           <div className="user-detail-section">
@@ -244,7 +242,6 @@ const Apply = () => {
               <TextField disabled value={email} style={inputStyle} />
             </div>
           </div>
-          {/* //전화번호 & 이메일 입력 */}
           <div className="position-section">
             <div>
               <Label className="label">원하는 포지션</Label>
@@ -265,7 +262,7 @@ const Apply = () => {
                     }}
                   ></MenuItem>
                   {positionList.map((props, index) => (
-                    <MenuItem value={props.key} key={index}>
+                    <MenuItem value={props.name} key={index}>
                       {props.name}
                     </MenuItem>
                   ))}
@@ -277,12 +274,33 @@ const Apply = () => {
           <div className="skill-meeting-section">
             <div className="skill-section">
               <Label className="label">사용기술</Label>
-              {/* autoComplete */}
-              <TextField style={inputStyle} />
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                sx={{ width: 300 }}
+                options={Skilldata}
+                getOptionLabel={(option) => option.name}
+                filterOptions={skillSearchFilter}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    value={skillvalue}
+                    onChange={(event, newValue) => {
+                      setSkillvalue(newValue)
+                    }}
+                    inputValue={skillinputValue}
+                    onInputChange={(event, newInputValue) => {
+                      setSkillinpuValeu(newInputValue)
+                    }}
+                  />
+                )}
+              />
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
-              <button className="apply-button">시간선택</button>
+              <button className="apply-button" onClick={reduxConsole}>
+                시간선택
+              </button>
             </div>
           </div>
 
@@ -321,12 +339,13 @@ const Apply = () => {
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              {/* {post.postingQuestionList.map((props) => (
-                <div key={props.postingSeq}>
-                  <Label className="question-label">{props.content}</Label>
-                  <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
-                </div>
-              ))} */}
+              {posting.postingQuestionList &&
+                posting.postingQuestionList.map((props) => (
+                  <div key={props.postingSeq}>
+                    <Label className="question-label">{props.content}</Label>
+                    <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
+                  </div>
+                ))}
             </div>
           </div>
         </div>
