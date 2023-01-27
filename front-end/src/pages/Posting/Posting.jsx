@@ -76,7 +76,7 @@ function Posting() {
     setLocal(e.target.value)
   }
   const postList = async () => {
-    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=200')
+    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting?page=1&size=200')
     setPostingList(res.data.body.postingList)
   }
   const btnClickAxios = async () => {
@@ -290,41 +290,13 @@ function Posting() {
             </TabPanel>
           </TabContext>
         </Box>
-        {/* <SkillSelectBox>
-          {skillBtnList.map((ele, i) => (
-            <Skillbtn
-              style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-              onClick={() => {
-                changeSkillBtn(i)
-                const copy = [...skillList]
-                const set = new Set(copy)
-                if (set.has(ele)) {
-                  set.delete(ele)
-                } else {
-                  set.add(ele)
-                }
-                const copy2 = Array.from(set)
-                setSkillList(copy2)
-              }}
-              key={i}
-            >
-              <img src={JavaScript} alt="JavaScript" style={{ marginRight: '1em' }} />
-              {ele}
-            </Skillbtn>
-          ))}
-        </SkillSelectBox> */}
         <FilterSelect onChange={handleChangeLocal}>
           <option value="">전체지역</option>
-          {Object.keys(Localdata).map(
-            (ele, i) => (
-              <option key={i} value={ele}>
-                {Localdata[ele].name}
-              </option>
-            )
-            // <option key={i} value={ele}>
-            //   {Localdata[ele]}
-            // </option>
-          )}
+          {Object.keys(Localdata).map((ele, i) => (
+            <option key={i} value={ele}>
+              {Localdata[ele].name}
+            </option>
+          ))}
         </FilterSelect>
         <PostList>
           {postingList.map((post, i) => (
