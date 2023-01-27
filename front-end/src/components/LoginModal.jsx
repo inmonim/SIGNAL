@@ -77,6 +77,13 @@ function LoginModal({ open, onClose }) {
       sessionStorage.setItem('userSeq', 1)
       onClose(onClose(true))
       return
+    } else if (inputEmail === 'jim@naver.com' && inputPwd === 'jimjim1!') {
+      console.log('로그인 성공')
+      sessionStorage.setItem('userEmail', inputEmail)
+      sessionStorage.setItem('username', 'jim')
+      sessionStorage.setItem('userSeq', 2)
+      onClose(onClose(true))
+      return
     }
     console.log('로그인 실패')
   }

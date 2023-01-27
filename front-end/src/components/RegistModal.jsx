@@ -118,7 +118,7 @@ function RegistModal({ open, onClose }) {
       return
     }
     setAlertOpen(true)
-    fetch('http://tableminpark.iptime.org:8080/user', {
+    fetch(process.env.REACT_APP_API_URL + '/user', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
