@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -20,5 +22,11 @@ public class BoardService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         notice.setView(notice.getView());
         return noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public List<Notice> findAllNotice() throws RuntimeException {
+        List<Notice> noticeList = noticeRepository.findAllNotice();
+        return noticeList;
     }
 }
