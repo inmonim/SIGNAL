@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
 import axios from 'axios'
-import JavaScript from '../../assets/image/JavaScript.png'
+// import JavaScript from '../../assets/image/Skilltest'
 import PostingCardItem from 'components/Posting/PostingCardItem'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
-
+import Localdata from 'data/Localdata'
+import TabPanel from '@mui/lab/TabPanel'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
 
 const Tab2 = styled(Tab)(({ theme }) => ({
@@ -29,7 +30,23 @@ function Posting() {
   // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('FI100')
   // 버튼 색 변경
-  const skillBtnList = ['JavaScript', 'React', 'Java', 'Python', 'Node.js', 'Vue']
+  const skillBtnList1 = ['JavaScript', 'React', 'Java', 'Nodejs', 'Vue', 'Spring', 'Typescript']
+  const skillBtnList2 = ['Java', 'Flutter', 'Kotlin']
+  const skillBtnList3 = ['React', 'Flutter', 'Swift']
+  const skillBtnList4 = ['Java']
+  const skillBtnList5 = ['Java', 'Flutter']
+  const skillBtnList6 = [
+    'JavaScript',
+    'React',
+    'Java',
+    'Flutter',
+    'Nodejs',
+    'Vue',
+    'Kotlin',
+    'Spring',
+    'Swift',
+    'Typescript',
+  ]
   // console.log(...skillBtnList)
   const [local, setLocal] = useState('')
   const [skillImgIs, setSkillImgIst] = useState({
@@ -59,12 +76,12 @@ function Posting() {
     setLocal(e.target.value)
   }
   const postList = async () => {
-    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=16&FieldCode=FI100')
+    const res = await axios.get('http://tableminpark.iptime.org:8080/posting?page=1&size=200')
     setPostingList(res.data.body.postingList)
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `http://tableminpark.iptime.org:8080/posting?page=1&size=16&localCode=${local}&fieldCode=${value}`
+      `http://tableminpark.iptime.org:8080/posting?page=1&size=200&localCode=${local}&fieldCode=${value}`
     )
     setPostingList(res.data.body.postingList)
   }
@@ -81,62 +98,199 @@ function Posting() {
     <div>
       <Banner />
       <Container>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', mb: 2 }}>
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1.5, color: '#bcb7d9' }}>
+            <Box sx={{ borderBottom: 2, color: '#574B9F' }}>
               <TabList
                 onChange={handleChange}
                 aria-label="lab API tabs example"
                 TabIndicatorProps={{ style: { background: '#574B9F' } }}
               >
                 <Tab2 label="Web" value="FI100" />
-                <Tab2 label="안드로이드" value="FI101" />
-                <Tab2 label="IOS" value="FI102" />
+                <Tab2 label="android" value="FI101" />
+                <Tab2 label="iOS" value="FI102" />
                 <Tab2 label="IoT" value="FI104" />
                 <Tab2 label="AI" value="FI105" />
+                <Tab2 label="All" value=" " />
               </TabList>
             </Box>
+            <TabPanel value="FI100">
+              <SkillSelectBox>
+                {skillBtnList1.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI101">
+              <SkillSelectBox>
+                {skillBtnList2.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI102">
+              <SkillSelectBox>
+                {skillBtnList3.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI104">
+              <SkillSelectBox>
+                {skillBtnList4.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI105">
+              <SkillSelectBox>
+                {skillBtnList5.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value=" ">
+              <SkillSelectBox>
+                {skillBtnList6.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele)) {
+                        set.delete(ele)
+                      } else {
+                        set.add(ele)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
           </TabContext>
         </Box>
-        <Field>
-          {/* <Fieldtext
-            onClick={() => {
-              setFieldSelect('FI100')
-            }}
-          >
-            Web
-          </Fieldtext>
-          <Fieldtext
-            onClick={() => {
-              setFieldSelect('FI101')
-            }}
-          >
-            안드로이드
-          </Fieldtext>
-          <Fieldtext
-            onClick={() => {
-              setFieldSelect('FI102')
-            }}
-          >
-            IOS
-          </Fieldtext>
-          <Fieldtext
-            onClick={() => {
-              setFieldSelect('FI104')
-            }}
-          >
-            IoT
-          </Fieldtext>
-          <Fieldtext
-            onClick={() => {
-              setFieldSelect('FI105')
-            }}
-          >
-            AI
-          </Fieldtext> */}
-        </Field>
-        <hr />
-        <SkillSelectBox>
+        {/* <SkillSelectBox>
           {skillBtnList.map((ele, i) => (
             <Skillbtn
               style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
@@ -158,13 +312,19 @@ function Posting() {
               {ele}
             </Skillbtn>
           ))}
-        </SkillSelectBox>
+        </SkillSelectBox> */}
         <FilterSelect onChange={handleChangeLocal}>
           <option value="">전체지역</option>
-          <option value="11">부산관역시</option>
-          <option value="서울특별시">서울특별시</option>
-          <option value="잉잉">잉이잉</option>
-          <option value="웅웅">옹옹</option>
+          {Object.keys(Localdata).map(
+            (ele, i) => (
+              <option key={i} value={ele}>
+                {Localdata[ele].name}
+              </option>
+            )
+            // <option key={i} value={ele}>
+            //   {Localdata[ele]}
+            // </option>
+          )}
         </FilterSelect>
         <PostList>
           {postingList.map((post, i) => (
@@ -192,12 +352,12 @@ const Banner = styled.div`
   background: linear-gradient(89.98deg, rgba(255, 255, 255, 0) 0.02%, #bcb7d9 99.99%);
   border-radius: 0px;
 `
-const Field = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 3px 29px;
-  flex-wrap: wrap;
-`
+// const Field = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   padding: 3px 29px;
+//   flex-wrap: wrap;
+// `
 // const Fieldtext = styled.div`
 //   font-family: 'Roboto';
 //   font-style: normal;
@@ -236,6 +396,7 @@ const Skillbtn = styled.div`
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
   }
+  cursor: pointer;
 `
 // const SkillText = styled.p`
 //   font-family: 'Roboto';
