@@ -38,7 +38,7 @@ function FromLetterList({ data }) {
   return (
     <div>
       <div style={{ height: '487px' }}>
-        <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} checkboxSelection />
+        <DataGrid rows={rows} columns={columns} pageSize={7} rowsPerPageOptions={[7]} checkboxSelection />
       </div>
     </div>
   )

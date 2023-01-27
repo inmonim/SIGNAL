@@ -19,23 +19,14 @@ function FromLetter() {
   // }, [])
 
   const [data, setData] = useState([])
-  // const [title, setTitle] = useState([])
-  // const [fromNickname, setFromNickname] = useState([])
-  // const [regDt, setRegDt] = useState([])
   useEffect(() => {
-    // getLetter()
-    // axios.get(SERVER_URL + PARAM_URL).then((res) => console.log(res))
-    fetch(`http://tableminpark.iptime.org:8080/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=7`, {
+    fetch(`http://tableminpark.iptime.org:8080/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
         console.log(res.body)
         setData(res.body)
-        // const letter = res.body[i]
-        // setTitle(res.body[i].title)
-        // setFromNickname(res.body[i].fromNickname)
-        // setRegDt(res.body[i].regDt)
       })
   }, [])
 
@@ -45,17 +36,8 @@ function FromLetter() {
         <div style={{ display: 'inline-block', fontSize: '44px', fontWeight: 'bold', marginBottom: '26px' }}>
           받은쪽지함
         </div>
-
-        {/* {inputData.map((letter) => (
-          <FromLetterList key={letter.userSeq} letter={letter} />
-        ))} */}
         <FromLetterList data={data}></FromLetterList>
       </div>
-      {/* <getLetter>
-        {getLetterList.map((letter, i) => (
-          <LetterList letter={letter} key={letter.letterSeq} />
-        ))}
-      </getLetter> */}
     </>
   )
 }
