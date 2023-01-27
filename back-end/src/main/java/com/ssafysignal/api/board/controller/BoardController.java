@@ -1,5 +1,6 @@
 package com.ssafysignal.api.board.controller;
 
+import com.ssafysignal.api.board.repository.NoticeRepository;
 import com.ssafysignal.api.board.service.BoardService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -12,8 +13,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,12 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/board")
 public class BoardController {
-
-    private BoardService boardService;
-
-
-    @Autowired
-    public BoardController(BoardService boardService) { this.boardService = boardService; }
+    private final BoardService boardService;
 
     @Tag(name = "공지사항 조회")
     @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
@@ -42,4 +41,15 @@ public class BoardController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
+    @Tag(name = "공지사항 조회")
+    @Operation(summary = "공지사항 조회", description = "공지사항을 조회합니다.")
+    @GetMapping("notice")
+    private ResponseEntity<BasicResponse> findAllNotice() {
+        log.info("findAllNotice - Call");
+
+        List<Notice> noticeList = boardService.findAllNotice();
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, noticeList));
+    }
+
 }
