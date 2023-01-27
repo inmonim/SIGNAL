@@ -98,3 +98,16 @@ hr{
   font-size: 1.5em;
   font-weight: bold;
 }
+
+.cancle-button {
+  width: 40px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.cancle-title{
+  position: relative;
+  margin: 20px 50px;
+  top:25px;
+}
