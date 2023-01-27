@@ -128,7 +128,7 @@ public class LetterController {
         CountNotReadLetterRes res = CountNotReadLetterRes.builder()
                 .count(cnt)
                 .build();
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));     
     }
 
     
