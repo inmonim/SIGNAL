@@ -27,7 +27,6 @@ public class ApplyService {
     private final ApplyCareerRepository applyCareerRepository;
     private final ApplyExpRepository applyExpRepository;
     private final ApplySkillRepository applySkillRepository;
-    private final PostingRepository postingRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest) throws RuntimeException {

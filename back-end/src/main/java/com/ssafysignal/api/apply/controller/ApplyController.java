@@ -33,10 +33,8 @@ public class ApplyController {
     @Tag(name = "지원")
     @Operation(summary = "지원서 등록",  description = "지원서를 등록한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registApply(@Parameter(description = "지원서 작성을 위한 정보")
-                                                          @RequestBody ApplyBasicRequest applyRegistRequest) {
+    private ResponseEntity<BasicResponse> registApply(@Parameter(description = "지원서 작성을 위한 정보") @RequestBody ApplyBasicRequest applyRegistRequest) {
         log.info("regeistApply - Call");
-        System.out.println("어플라이 컨트롤러");
 
         try {
             applyService.registApply(applyRegistRequest);
