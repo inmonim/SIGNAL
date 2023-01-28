@@ -88,7 +88,7 @@ public class PostingController {
             @ApiResponse(responseCode = "200", description = "공고 상세 조회 완료"),
             @ApiResponse(responseCode = "400", description = "공고 상세 조회 중 오류 발생")})
     @GetMapping("/{postingSeq}")
-    private ResponseEntity<BasicResponse> findPosting(@Parameter(description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq) {
+    private ResponseEntity<BasicResponse> findPosting(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq) {
         log.info("findPosting - Call");
 
         try {
@@ -106,7 +106,7 @@ public class PostingController {
             @ApiResponse(responseCode = "400", description = "공고 수정 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
     @PutMapping("/{postingSeq}")
-    private ResponseEntity<BasicResponse> modifyPosting(@Parameter(description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq,
+    private ResponseEntity<BasicResponse> modifyPosting(@Parameter(name = "postingSeq", description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq,
                                                         @Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingModifyRequest){
         log.info("modifyPosting - Call");
 
@@ -128,7 +128,7 @@ public class PostingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @DeleteMapping("/{postingSeq}")
-    private ResponseEntity<BasicResponse> canclePosting(@Parameter(description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq){
+    private ResponseEntity<BasicResponse> canclePosting(@Parameter(name = "postingSeq", description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq){
         log.info("canclePosting - Call");
 
         try {
@@ -149,8 +149,8 @@ public class PostingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PutMapping("/member/{applySeq}")
-    private ResponseEntity<BasicResponse> applySelect(@Parameter(description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq,
-                                                      @Parameter(description = "선택 여부") @RequestParam boolean isSelect){
+    private ResponseEntity<BasicResponse> applySelect(@Parameter(name = "applySeq", description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq,
+                                                      @Parameter(description = "선택 여부") @RequestParam("isSelect") boolean isSelect){
         log.info("applySelect - Call");
 
         try {
@@ -168,7 +168,7 @@ public class PostingController {
             @ApiResponse(responseCode = "200", description = "지원한 공고 목록 조회 완료"),
             @ApiResponse(responseCode = "400", description = "지원한 공고 목록 조회 중 오류 발생")})
     @GetMapping(value = "/apply/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllApplyPosting(@Parameter(description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> findAllApplyPosting(@Parameter(name = "userSeq", description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllApplyPosting - Call");
 
         try {
@@ -185,7 +185,7 @@ public class PostingController {
             @ApiResponse(responseCode = "200", description = "작성한 공고 목록 조회 완료"),
             @ApiResponse(responseCode = "400", description = "작성한 공고 목록 조회 중 오류 발생")})
     @GetMapping(value = "/post/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllPostPosting(@Parameter(description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> findAllPostPosting(@Parameter(name = "userSeq", description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllPostPosting - Call");
 
         try {
