@@ -56,6 +56,10 @@ function LetterModal({ open, onClose }) {
   const handleMenuListItemClick = (index) => {
     setSelectedListIndex(index)
   }
+  const [view, setView] = useState(0)
+  const handleChangeView = (n) => {
+    setView(n)
+  }
   return (
     <>
       <Modal open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
@@ -94,7 +98,14 @@ function LetterModal({ open, onClose }) {
             </SignalBtn>
             <List>
               <ListItem disablePadding>
-                <ListItemButton selected={selectedListIndex === 0} onClick={() => setSelectedListIndex(0)}>
+                <ListItemButton
+                  selected={selectedListIndex === 0}
+                  onClick={() => {
+                    setSelectedListIndex(0)
+                    setView(0)
+                    console.log(view)
+                  }}
+                >
                   <ListItemIcon>
                     <img src={fromimg} alt="fromimg" />
                   </ListItemIcon>
@@ -107,7 +118,14 @@ function LetterModal({ open, onClose }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton selected={selectedListIndex === 1} onClick={() => setSelectedListIndex(1)}>
+                <ListItemButton
+                  selected={selectedListIndex === 1}
+                  onClick={() => {
+                    console.log('뇸')
+                    setSelectedListIndex(1)
+                    setView(0)
+                  }}
+                >
                   <ListItemIcon>
                     <img src={toimg} alt="toimg" />
                   </ListItemIcon>
@@ -120,7 +138,13 @@ function LetterModal({ open, onClose }) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton selected={selectedListIndex === 2} onClick={() => setSelectedListIndex(2)}>
+                <ListItemButton
+                  selected={selectedListIndex === 2}
+                  onClick={() => {
+                    setSelectedListIndex(2)
+                    setView(0)
+                  }}
+                >
                   <ListItemIcon>
                     <img src={trashimg} alt="trashimg" />
                   </ListItemIcon>
@@ -144,11 +168,19 @@ function LetterModal({ open, onClose }) {
             }}
           >
             {selectedListIndex === 0 ? (
-              <FromLetter></FromLetter>
+              <FromLetter
+                handleChangeView={handleChangeView}
+                view={view}
+                handleMenuListItemClick={handleMenuListItemClick}
+              ></FromLetter>
             ) : selectedListIndex === 1 ? (
-              <ToLetter></ToLetter>
+              <ToLetter
+                handleChangeView={handleChangeView}
+                view={view}
+                handleMenuListItemClick={handleMenuListItemClick}
+              ></ToLetter>
             ) : selectedListIndex === 2 ? (
-              <TrashLetter></TrashLetter>
+              <TrashLetter handleChangeView={handleChangeView} view={view}></TrashLetter>
             ) : (
               <WriteLetter handleMenuListItemClick={handleMenuListItemClick}></WriteLetter>
             )}

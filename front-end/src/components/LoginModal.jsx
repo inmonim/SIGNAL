@@ -88,6 +88,12 @@ function LoginModal({ open, onClose }) {
     console.log('로그인 실패')
   }
 
+  const activeEnter = (e) => {
+    if (e.key === 'Enter') {
+      handleToMain()
+    }
+  }
+
   const [inputEmail, setInputEmail] = useState('gurrms@naver.com')
   const [inputPwd, setInputPwd] = useState('gurrms123.')
 
@@ -135,6 +141,7 @@ function LoginModal({ open, onClose }) {
                 multiline
                 sx={inputStyle}
                 onChange={handleInputPwd}
+                onKeyDown={(e) => activeEnter(e)}
               />
               <div className="login-under1" style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <FormControlLabel
