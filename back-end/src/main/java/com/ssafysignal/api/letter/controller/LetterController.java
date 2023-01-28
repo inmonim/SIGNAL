@@ -2,11 +2,11 @@ package com.ssafysignal.api.letter.controller;
 
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListReq;
-import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqReq;
-import com.ssafysignal.api.letter.dto.request.SendLetterReq;
-import com.ssafysignal.api.letter.dto.response.CountNotReadLetterRes;
-import com.ssafysignal.api.letter.dto.response.FindLetterRes;
+import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListRequest;
+import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqRequest;
+import com.ssafysignal.api.letter.dto.request.SendLetterRequest;
+import com.ssafysignal.api.letter.dto.response.CountNotReadLetterResponse;
+import com.ssafysignal.api.letter.dto.response.FindLetterResponse;
 import com.ssafysignal.api.letter.entity.Letter;
 import com.ssafysignal.api.letter.service.LetterService;
 import com.ssafysignal.api.user.entity.User;
@@ -32,7 +32,7 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "쪽지 전송", description = "사용자 nickname을 기준으로 쪽지 전송")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> sendLetter(@Parameter(description = "전송 쪽지", required = true) @RequestBody SendLetterReq sendLetter) {
+    private ResponseEntity<BasicResponse> sendLetter(@Parameter(description = "전송 쪽지", required = true) @RequestBody SendLetterRequest sendLetter) {
         log.info("sendLetter - Call");
         String nickname = sendLetter.getNickname();
         User toUser = letterService.findUserSeq(nickname);
@@ -59,7 +59,7 @@ public class LetterController {
     private ResponseEntity<BasicResponse> findAllFromLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
                                                             @Parameter(description = "page", required = true)  int page,
                                                             @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterRes> letterList= letterService.findFromLetter(userSeq,page,size);
+        List<FindLetterResponse> letterList= letterService.findFromLetter(userSeq,page,size);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
@@ -70,7 +70,7 @@ public class LetterController {
     private ResponseEntity<BasicResponse> findAllToLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
                                                           @Parameter(description = "page", required = true)  int page,
                                                           @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterRes> letterList= letterService.findAllToLetter(userSeq,page,size);
+        List<FindLetterResponse> letterList= letterService.findAllToLetter(userSeq,page,size);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
@@ -81,7 +81,7 @@ public class LetterController {
     private ResponseEntity<BasicResponse> findAllTrashLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
                                                              @Parameter(description = "page", required = true)  int page,
                                                              @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterRes> letterList= letterService.findAllTrashLetter(userSeq,page,size);
+        List<FindLetterResponse> letterList= letterService.findAllTrashLetter(userSeq,page,size);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
@@ -90,7 +90,7 @@ public class LetterController {
     @Operation(summary = "쪽지 상세 조회", description = "쪽지 seq로 쪽지 상세 조회")
     @GetMapping("/{letterSeq}")
     private ResponseEntity<BasicResponse> findLetter(@Parameter(description = "쪽지seq", required = true) @PathVariable int letterSeq){
-        FindLetterRes res = letterService.findLetter(letterSeq);
+        FindLetterResponse res = letterService.findLetter(letterSeq);
         if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
 
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
@@ -109,10 +109,10 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "쪽지 리스트 휴지통 보내기", description = "쪽지seq 리스트에 해당하는 쪽지 휴지통 보내기")
     @DeleteMapping("/list")
-    private ResponseEntity<BasicResponse> deleteListLetter(@Parameter(description = "쪽지seq 리스트", required = true)@RequestBody DeleteLetterSeqListReq deleteLetterSeqList){
-        List<DeleteLetterSeqReq> letterSeqList = deleteLetterSeqList.getLetterSeqList();
-        for(DeleteLetterSeqReq deleteLetterSeqReq : letterSeqList){
-            int letterSeq = deleteLetterSeqReq.getLetterSeq();
+    private ResponseEntity<BasicResponse> deleteListLetter(@Parameter(description = "쪽지seq 리스트", required = true)@RequestBody DeleteLetterSeqListRequest deleteLetterSeqList){
+        List<DeleteLetterSeqRequest> letterSeqList = deleteLetterSeqList.getLetterSeqList();
+        for(DeleteLetterSeqRequest deleteLetterSeqRequest : letterSeqList){
+            int letterSeq = deleteLetterSeqRequest.getLetterSeq();
             letterService.deleteLetter(letterSeq);
         }
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
@@ -125,7 +125,7 @@ public class LetterController {
     private ResponseEntity<BasicResponse> countNotReadLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq){
         Long cnt = letterService.countNotReadLetter(userSeq);
 
-        CountNotReadLetterRes res = CountNotReadLetterRes.builder()
+        CountNotReadLetterResponse res = CountNotReadLetterResponse.builder()
                 .count(cnt)
                 .build();
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));     
