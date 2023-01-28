@@ -34,7 +34,7 @@ public class ProfileController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/{userSeq}")
-    private ResponseEntity<BasicResponse> findProfile(@Parameter(name = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
+    private ResponseEntity<BasicResponse> findProfile(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") int userSeq){
         log.info("findProfile - Call");
 
         try {
@@ -53,8 +53,8 @@ public class ProfileController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/position/{userSeq}")
-    private ResponseEntity<BasicResponse> RegistrofilePostion(@Parameter(name = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq,
-                                                              @Parameter(name = "포지션 코드", required = true) @RequestBody Map<String, Object> param){
+    private ResponseEntity<BasicResponse> RegistrofilePostion(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq,
+                                                              @Parameter(description = "포지션 코드", required = true) @RequestBody Map<String, Object> param){
         log.info("RegistrofilePostion - Call");
 
         try {
@@ -64,5 +64,4 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
-
 }
