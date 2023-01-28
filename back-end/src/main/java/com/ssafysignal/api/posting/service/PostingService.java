@@ -96,7 +96,7 @@ public class PostingService {
 
     @Transactional(readOnly = true)
     public Page<Project> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys) throws RuntimeException {
-        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.searchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
         return projectList;
     }
 

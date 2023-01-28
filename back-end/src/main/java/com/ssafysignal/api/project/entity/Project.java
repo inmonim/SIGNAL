@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -60,6 +61,10 @@ public class Project {
     @JoinColumn(name = "posting_seq", insertable = false, updatable = false)
     private Posting posting;
 
+    @OneToMany
+    @JoinColumn(name = "project_seq", insertable = false, updatable = false)
+    private List<ProjectUser> projectUserList;
+
     @OneToOne
     @JoinColumn(name = "project_image_file_seq")
     private ImageFile imageFile;
@@ -67,7 +72,7 @@ public class Project {
 
     @Builder
     public Project(Integer projectSeq, Integer postingSeq, String subject, boolean isContact, Integer weekCnt, Integer term, Posting posting,
-                   String localCode, String fieldCode, String projectCode, ImageFile imageFile,
+                   String localCode, String fieldCode, String projectCode, ImageFile imageFile, List<ProjectUser> projectUserList,
                    String gitUrl, String content, LocalDateTime evaluationDt) {
         this.projectSeq = projectSeq;
         this.subject = subject;
@@ -79,6 +84,7 @@ public class Project {
         this.localCode = localCode;
         this.fieldCode = fieldCode;
         this.projectCode = projectCode;
+        this.projectUserList = projectUserList;
         this.imageFile = imageFile;
         this.gitUrl = gitUrl;
         this.content = content;

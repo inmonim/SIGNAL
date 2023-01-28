@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProjectSpecification {
-    public static Specification<Project> searchWord(Map<String, Object> searchKey){
+    public static Specification<Project> bySearchWord(Map<String, Object> searchKey){
         return ((root, query, criteriaBuilder) -> {
             Predicate projectList = criteriaBuilder.conjunction();
 
@@ -25,6 +25,20 @@ public class ProjectSpecification {
                 Join<Posting, PostingSkill> postingSkillJoin = postingJoin.join("postingSkillList");
                 projectList = criteriaBuilder.and(projectList, postingSkillJoin.get("skillCode").in(skills));
             }
+            return projectList;
+        });
+    }
+
+    public static Specification<Project> byUserSeq(Integer userSeq, String projectCode){
+        return ((root, query, criteriaBuilder) -> {
+            Predicate projectList = criteriaBuilder.conjunction();
+
+            // 프로젝트 코드가 일치하고
+            projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("projectCode"), projectCode));
+
+            Join<Project, ProjectUser> projectUserJoin = root.join("projectUserList");
+            projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(projectUserJoin.get("userSeq"), userSeq));
+
             return projectList;
         });
     }
