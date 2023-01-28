@@ -1,6 +1,7 @@
 package com.ssafysignal.api.apply.entity;
 
 import com.ssafysignal.api.posting.entity.Posting;
+import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -46,14 +47,12 @@ public class Apply {
 
     @Column(name = "user_seq")
     private Integer userSeq;
-
-//     Posting과 양방향으로 연결하고 주인은 Posting이 가져야할듯?
-//    @ManyToOne(targetEntity = Posting.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "posting_seq")
-//    private Posting posting;
-
     @Column(name = "posting_seq")
     private Integer postingSeq;
+
+    @OneToOne(targetEntity = PostingMeeting.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "applySeq")
+    private PostingMeeting postingMeeting;
 
     @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
@@ -67,7 +66,7 @@ public class Apply {
 
     @Builder
     public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, String content, String memo, String positionCode, boolean isSelect, LocalDateTime regDt,
-                  String applyCode, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
+                  PostingMeeting postingMeeting, String applyCode, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
     ) {
         this.applySeq = applySeq;
         this.userSeq = userSeq;
@@ -77,7 +76,7 @@ public class Apply {
         this.memo = memo;
         this.isSelect = isSelect;
         this.applyCode = applyCode;
-        this.regDt = regDt;
+        this.postingMeeting = postingMeeting;
         this.applyCareerList = applyCareerList;
         this.applyExpList = applyExpList;
         this.applySkillList = applySkillList;

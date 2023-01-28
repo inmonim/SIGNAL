@@ -4,11 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CountNotReadLetterRes {
+public class CountNotReadLetterResponse {
     private long count;
 
     @Builder
-    public CountNotReadLetterRes(long count) {
+    public CountNotReadLetterResponse(long count) {
         this.count = count;
     }
 }
