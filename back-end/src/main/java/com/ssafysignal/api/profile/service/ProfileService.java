@@ -1,6 +1,7 @@
 package com.ssafysignal.api.profile.service;
 
-import com.ssafysignal.api.profile.dto.response.ProfileFindResponse;
+import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
+import com.ssafysignal.api.profile.entity.UserSkill;
 import com.ssafysignal.api.profile.repository.UserCareerRepository;
 import com.ssafysignal.api.profile.repository.UserExpRepository;
 import com.ssafysignal.api.profile.repository.UserPositionRepository;
@@ -21,9 +22,9 @@ public class ProfileService {
     private final UserSkillRepository userSkillRepository;
 
     @Transactional
-    public ProfileFindResponse findProfile(Integer userSeq) throws RuntimeException {
+    public ProfileBasicResponse findProfile(Integer userSeq) throws RuntimeException {
 
-        return ProfileFindResponse.builder()
+        return ProfileBasicResponse.builder()
                 .userCareerList(userCareerRepository.findByUserSeq(userSeq))
                 .userExpList(userExpRepository.findByUserSeq(userSeq))
                 .userPositionList(userPositionRepository.findByUserSeq(userSeq))
@@ -31,5 +32,31 @@ public class ProfileService {
                 .build();
     }
 
+    @Transactional
+    public ProfileBasicResponse findAllPosition(Integer userSeq) throws RuntimeException {
+        return ProfileBasicResponse.builder()
+                .userPositionList(userPositionRepository.findByUserSeq(userSeq))
+                .build();
+    }
 
+    @Transactional
+    public ProfileBasicResponse findAllSkill(Integer userSeq) throws RuntimeException {
+        return ProfileBasicResponse.builder()
+                .userSkillList(userSkillRepository.findByUserSeq(userSeq))
+                .build();
+    }
+
+    @Transactional
+    public ProfileBasicResponse findAllCareer(Integer userSeq) throws RuntimeException {
+        return ProfileBasicResponse.builder()
+                .userCareerList(userCareerRepository.findByUserSeq(userSeq))
+                .build();
+    }
+
+    @Transactional
+    public ProfileBasicResponse findAllExp(Integer userSeq) throws RuntimeException {
+        return ProfileBasicResponse.builder()
+                .userExpList(userExpRepository.findByUserSeq(userSeq))
+                .build();
+    }
 }

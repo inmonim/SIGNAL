@@ -2,6 +2,8 @@ package com.ssafysignal.api.apply.controller;
 
 
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
+import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
 import com.ssafysignal.api.apply.entity.Apply;
@@ -37,11 +39,6 @@ public class ApplyController {
 
     private ApplyService applyService;
 
-    @Autowired
-    public ApplyController(ApplyService applyService) {
-        this.applyService = applyService;
-    }
-
     @Tag(name = "지원")
     @Operation(summary = "지원서 등록",  description = "지원서를 등록한다.")
     @ApiResponses({
@@ -49,7 +46,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "400", description = "지원서 등록 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
     @PostMapping("/{postingSeq}")
-    private ResponseEntity<BasicResponse> registApply(@Parameter(description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
+    private ResponseEntity<BasicResponse> registApply(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
                                                       @Parameter(description = "지원서 작성을 위한 정보", required = true) @RequestBody ApplyBasicRequest applyRegistRequest) {
         log.info("regeistApply - Call");
 
@@ -69,7 +66,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PutMapping("/{applySeq}")
-    private ResponseEntity<BasicResponse> modifyApply(@Parameter(description = "지원서 Seq", required = true) @PathVariable(name = "applySeq") Integer applySeq,
+    private ResponseEntity<BasicResponse> modifyApply(@Parameter(name = "applySeq", description = "지원서 Seq", required = true) @PathVariable(name = "applySeq") Integer applySeq,
                                                       @Parameter(description = "지원서 수정 정보", required = true) @RequestBody ApplyBasicRequest applyBasicRequest) {
 
         log.info("modifyApply - Call");
@@ -91,7 +88,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/{applySeq}")
-    private ResponseEntity<BasicResponse> findApply(@Parameter(description = "지원 Seq", required = true) @PathVariable("applySeq") Integer applySeq) {
+    private ResponseEntity<BasicResponse> findApply(@Parameter(name = "applySeq", description = "지원 Seq", required = true) @PathVariable("applySeq") Integer applySeq) {
 
         log.info("findApply - Call");
 
@@ -148,7 +145,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @DeleteMapping("/{applySeq}")
-    private ResponseEntity<BasicResponse> deleteApply(@Parameter(description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq){
+    private ResponseEntity<BasicResponse> deleteApply(@Parameter(name = "applySeq", description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq){
         log.info("deleteApply - Call");
 
         try {
@@ -169,7 +166,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/writer/{postingSeq}")
-    private ResponseEntity<BasicResponse> findAllApplyWriter(@Parameter(description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
+    private ResponseEntity<BasicResponse> findAllApplyWriter(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
                                                              @Parameter(description = "페이지", required = true) Integer page,
                                                              @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findALlApplyToWriter - Call");
@@ -180,18 +177,75 @@ public class ApplyController {
 
             for (int i = 0; i < size; i++){
                 applyList.add(ApplyWriterFindResponse.builder()
-                    .applySeq(i)
-                    .subject("작성자 지원서 목록 조회 더미 " + i)
-                    .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
-                    .meetingDt(LocalDateTime.now())
-                    .build());
+                        .applySeq(i)
+                        .userSeq(1)
+                        .nickname("혁근띠")
+                        .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
+                        .build());
             }
+
 
 //            List<ApplyWriterFindResponse> applyList = applyService.findAllApplyWriter(postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
+    }
+
+    @Tag(name = "지원")
+    @Operation(summary = "지원자 지원서 목록 조회", description = "지원자 기준으로 지원서 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원서 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "지원서 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/applyer/{postingSeq}")
+    private ResponseEntity<BasicResponse> findAllApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
+                                                              @Parameter(description = "페이지", required = true) Integer page,
+                                                              @Parameter(description = "사이즈", required = true) Integer size) {
+        log.info("findAllApplyApplyer - Call");
+
+        try {
+            // dummy
+            List<ApplyApplyerFindResponse> applyList = new ArrayList<>();
+
+            for (int i = 0; i < size; i++){
+                applyList.add(ApplyApplyerFindResponse.builder()
+                        .applySeq(i)
+                        .subject("작성자 지원서 목록 조회 더미 " + i)
+                        .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
+                        .meetingDt(LocalDateTime.now())
+                        .build());
+            }
+
+//            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyWriter(postingSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        }
+    }
+
+    @Tag(name = "지원")
+    @Operation(summary = "지원서 메모 등록", description = "지원서 메모 등록한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원서 메모 등록 완료"),
+            @ApiResponse(responseCode = "400", description = "지원서 메모 등록 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @PutMapping("/applyer/memo")
+    private ResponseEntity<BasicResponse> modifyApplyMemo(@Parameter(description = "지원서 메모 정보") @RequestBody ApplyMemoRequest applyMemoRequest){
+        log.info("modifyApplyMemo - Call");
+
+        try {
+            log.info(applyMemoRequest.toString());
+
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
+
     }
 
 }
