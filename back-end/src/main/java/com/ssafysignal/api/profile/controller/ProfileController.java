@@ -39,7 +39,7 @@ public class ProfileController {
 
         try {
             ProfileBasicResponse profileBasicResponse = profileService.findProfile(userSeq);
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -59,7 +59,7 @@ public class ProfileController {
 
         try {
             log.info(userSeq + " " + param.get("positionCode").toString());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
@@ -78,7 +78,7 @@ public class ProfileController {
 
         try {
             ProfileBasicResponse profileBasicResponse = profileService.findAllSkill(userSeq);
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -97,7 +97,7 @@ public class ProfileController {
 
         try {
             ProfileBasicResponse profileBasicResponse = profileService.findAllCareer(userSeq);
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -116,7 +116,7 @@ public class ProfileController {
 
         try {
             ProfileBasicResponse profileBasicResponse = profileService.findAllExp(userSeq);
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

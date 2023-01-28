@@ -49,7 +49,7 @@ class ProjectRepositoryTest {
         searchWord.put("localCode", localCode);
         searchWord.put("fieldCode", fieldCode);
         searchWord.put("postingSkillList", postingSkillList);
-        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.searchWord(searchWord), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchWord), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
 
         assertTrue(projectList.getSize() == 1);
     }
