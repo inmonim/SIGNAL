@@ -5,7 +5,7 @@ import '../../assets/styles/skill.css'
 function SkillList({ skillList }) {
   return (
     <div className="skillList-section">
-      {skillList && skillList.map((item, index) => <Skill skill={item} id={index} key={item}></Skill>)}
+      {skillList && skillList.map((item, index) => <Skill skill={item} id={index} key={index}></Skill>)}
     </div>
   )
 }
