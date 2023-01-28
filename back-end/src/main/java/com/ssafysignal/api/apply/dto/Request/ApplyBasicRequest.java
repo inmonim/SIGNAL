@@ -34,4 +34,6 @@ public class ApplyBasicRequest {
     private List<String> applyExpList;
     @Schema(description = "지원자의 기술 스택 리스트")
     private List<String> applySkillList;
+    @Schema(description = "지원자의 사전 질문 답변")
+    private List<Map<String, Object>> applyAnswerLIst;
 }

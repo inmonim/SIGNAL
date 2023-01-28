@@ -1,16 +1,10 @@
 package com.ssafysignal.api.apply.service;
 
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
-import com.ssafysignal.api.apply.dto.Response.ApplyFindRes;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.global.exception.NotFoundException;
-import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.posting.entity.Posting;
-import com.ssafysignal.api.posting.repository.PostingRepository;
-import com.ssafysignal.api.user.entity.User;
-import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,15 +23,15 @@ public class ApplyService {
     private final ApplySkillRepository applySkillRepository;
 
     @Transactional
-    public void registApply(ApplyBasicRequest applyRegistRequest) throws RuntimeException {
+    public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
 
         // 지원서 등록
         Apply apply = Apply.builder()
                 .userSeq(applyRegistRequest.getUserSeq())
+                .postingSeq(postingSeq)
                 .content(applyRegistRequest.getContent())
                 .positionCode(applyRegistRequest.getPositionCode())
                 .build();
-
         applyRepository.save(apply);
 
         // 기술 스택
@@ -49,8 +43,6 @@ public class ApplyService {
             );
         }
 
-        System.out.println("기술 스택");
-
         // 이전 프로젝트 경험
         for (String exp : applyRegistRequest.getApplyExpList()) {
             applyExpRepository.save(ApplyExp.builder()
@@ -60,8 +52,6 @@ public class ApplyService {
             );
         }
 
-        System.out.println("이전 프로젝트 경험");
-
         // 경력
         for (String career : applyRegistRequest.getApplyCareerList()) {
             applyCareerRepository.save(ApplyCareer.builder()
@@ -70,7 +60,6 @@ public class ApplyService {
                     .build()
             );
         }
-        System.out.println("경력");
     }
 
     @Transactional(readOnly = true)
