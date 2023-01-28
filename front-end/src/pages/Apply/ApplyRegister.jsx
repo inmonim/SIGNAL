@@ -10,8 +10,10 @@ import styled from 'styled-components'
 
 import Skilldata from 'data/Skilldata'
 import { getPositionName } from 'data/Positiondata'
+import QnAList from 'components/Apply/QnaList'
+import SkillList from 'components/Apply/SkillList'
+import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
 
-const SERVER_URL = 'http://tableminpark.iptime.org:8080'
 const Container = styled.section`
   padding: 100px 25em;
 `
@@ -32,6 +34,7 @@ const Label = styled.h1`
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
+  position: 'static',
 }
 
 const textAreaStyle = {
@@ -41,12 +44,13 @@ const textAreaStyle = {
 const positionSelectStyle = {
   backgroundColor: '#f3f5f7',
   width: '11.5em',
+  position: 'static',
 }
 
 const Apply = () => {
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  // const [profile, setProfile] = useState([])
+  const [profile, setProfile] = useState([])
 
   const [position, setPosition] = useState(['frontend'])
   // default 값 front-end
@@ -54,7 +58,11 @@ const Apply = () => {
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
 
+  // const [answerList, setAnswerList] = useState([])
+  const [skillList, setSkillList] = useState([])
+
   const [content, setContent] = useState([])
+  const [qnaList, setQnaList] = useState([])
 
   const handlePositionChange = (event) => {
     setPosition(event.target.value)
@@ -74,21 +82,25 @@ const Apply = () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
       setPosting(res.data.body)
+      const qnaArr = []
+      res.data.body.postingQuestionList.map(() => qnaArr.push(''))
+      setQnaList(qnaArr)
+      console.log(res.data.body)
     } catch (error) {
       console.log(error)
     }
   }
-  // <프로필 조회>
-  // const profileFetch = async () => {
-  //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-  //     setProfile(res.data.body)
-  //     console.log(profile)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  // </프로필 조회>
+
+  const profileFetch = async () => {
+    try {
+      const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+      setProfile(res.data.body)
+      console.log(res)
+      console.log(profile)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleExpAdd = () => {
     const expArr = [...expList]
@@ -124,33 +136,27 @@ const Apply = () => {
       ':' +
       regDt.getMinutes() +
       ':' +
-      regDt.getSeconds() +
-      '.' +
-      regDt.getMilliseconds()
-
+      regDt.getSeconds()
     try {
       const req = {
+        applyAnswerList: [],
         applyCareerList: careerList,
-        applyCode: 'AS101',
         applyExpList: expList,
-        applySkillList: ['string'],
+        applySkillList: [],
         content,
+        fieldCode: 'FI100',
+        applyCode: 'AS101',
+        meetingDt: '2023-01-01 11:00:00.000',
         memo: '이 지원자는 열정이 있음',
         positionCode: 'PO100',
         postingSeq: 1,
-        regDt: regDtreq,
-        select: true,
         userSeq: 1,
       }
-      console.log('careerList')
-      console.log(careerList)
-      console.log('expList')
-      console.log(expList)
       console.log('regDtreq')
       console.log(regDtreq)
       const config = { 'Content-Type': 'application/json' }
       await axios
-        .post(SERVER_URL + '/apply', req, config)
+        .post('.', req, config)
         .then((res) => {
           console.log(res)
         })
@@ -172,22 +178,15 @@ const Apply = () => {
     )
   }
 
-  const handleCareerRemove = (id) => {
-    setCareerList(
-      careerList.filter((career) => {
-        return career.id !== id
-      })
-    )
-  }
-
-  const handleMeetingSelect = () => {
-    console.log('a')
+  const handleCareerRemove = () => {
+    const careerArr = [...careerList]
+    setCareerList(careerArr) ///
   }
 
   useEffect(() => {
     userFetch()
     postingFetch()
-    // profileFetch()
+    profileFetch()
   }, [])
 
   const skillSearchFilter = createFilterOptions({
@@ -195,13 +194,30 @@ const Apply = () => {
     stringify: (option) => option.name,
   })
 
-  const [skillvalue, setSkillvalue] = useState(Skilldata[0].name)
-  const [skillinputValue, setSkillInputValue] = useState('')
-
   const handleCareerInput = (value, key) => {
     const careerArr = [...careerList]
     careerArr.splice(key, 1, value)
     setCareerList(careerArr)
+  }
+
+  const handleExpInput = (value, key) => {
+    const expArr = [...expList]
+    expArr.splice(key, 1, value)
+    setExpList(expArr)
+  }
+
+  const handleQnAChange = (value, key) => {
+    const qnaArr = [...qnaList]
+    qnaArr.splice(key, 1, value)
+    setQnaList(qnaArr)
+    console.log(qnaList)
+  }
+
+  const handleSkillInput = (value) => {
+    const skillArr = [...skillList]
+    skillArr.push(value)
+    setSkillList(skillArr)
+    console.log(skillArr)
   }
 
   return (
@@ -214,18 +230,18 @@ const Apply = () => {
           <div className="user-detail-section">
             <div className="phone-section">
               <Label>전화번호 </Label>
-              <TextField disabled value={user.phone} style={inputStyle} />
+              <TextField disabled value={user.phone} sx={inputStyle} />
             </div>
             <div className="email-section">
               <Label>이메일</Label>
-              <TextField disabled value={user.email} style={inputStyle} />
+              <TextField disabled value={user.email} sx={inputStyle} />
             </div>
           </div>
           <div className="position-section">
             <div>
               <Label className="label">원하는 포지션</Label>
               <FormControl style={positionSelectStyle}>
-                <InputLabel id="demo-simple-select-label" style={positionSelectStyle}></InputLabel>
+                <InputLabel id="demo-simple-select-label" sx={{ inputStyle, width: '11.5em' }}></InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -257,22 +273,21 @@ const Apply = () => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    value={skillvalue}
-                    inputValue={skillinputValue}
-                    onChange={(event, newInputValue) => {
-                      setSkillInputValue(newInputValue)
-                      setSkillvalue(newInputValue)
+                    onKeyUp={(e) => {
+                      if (e.key === 'Enter') {
+                        console.log('enter')
+                        console.log(e.target.value)
+                        handleSkillInput(e.target.value)
+                      }
                     }}
                   />
                 )}
               />
-              <div>기술</div>
+              <SkillList skillList={skillList}></SkillList>
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
-              <button className="apply-button" onClick={handleMeetingSelect}>
-                시간선택
-              </button>
+              <MeetingDtSelect></MeetingDtSelect>
             </div>
           </div>
 
@@ -299,7 +314,7 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <ExpList expList={expList} onRemove={handleExpRemove}></ExpList>
+              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpInput}></ExpList>
             </div>
           </div>
 
@@ -315,13 +330,7 @@ const Apply = () => {
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              {posting.postingQuestionList &&
-                posting.postingQuestionList.map((props, index) => (
-                  <div key={props.postingSeq + index}>
-                    <Label className="question-label">{props.content}</Label>
-                    <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
-                  </div>
-                ))}
+              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList>
             </div>
           </div>
         </div>
