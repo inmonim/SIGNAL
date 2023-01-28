@@ -99,11 +99,11 @@ public class ApplyController {
             List<String> expList = new ArrayList<>();
             List<CommonCode> skillList = new ArrayList<>();
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 1; i <= 5; i++) {
                 applyAnswerList.add(ApplyAnswer.builder()
-                                .applyAnswerSeq(1)
+                                .applyAnswerSeq(i)
                                 .postingSeq(1)
-                                .postingQuestionSeq(11)
+                                .postingQuestionSeq(10 + i)
                                 .content("질문 답변 테스트 " + i)
                                 .regDt(LocalDateTime.now())
                                 .build());

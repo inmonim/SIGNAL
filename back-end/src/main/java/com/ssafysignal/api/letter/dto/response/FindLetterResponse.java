@@ -9,8 +9,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Setter
-@ToString
 @Data
 @ApiModel(value = "FindFromLetterRes", description = "보낸 쪽지 목록")
 public class FindLetterResponse {
