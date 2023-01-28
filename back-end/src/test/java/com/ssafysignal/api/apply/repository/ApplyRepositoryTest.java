@@ -18,7 +18,7 @@ class ApplyRepositoryTest {
     void saveTest() {
         Apply apply = Apply.builder()
                 .content("지원서 테스트2")
-                .user(1)
+                .userSeq(1)
                 .build();
         applyRepository.save(apply);
     }

@@ -3,6 +3,7 @@ package com.ssafysignal.api.posting.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@Builder
 @ApiModel(value = "PostingBasicRequest", description = "공고 등록, 공고 수정을 위한 정보")
 public class PostingBasicRequest {
     @Schema(description = "공고 작성자 Seq", example = "1", required = true)
