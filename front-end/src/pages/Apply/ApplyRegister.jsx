@@ -5,17 +5,13 @@ import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
-import '../../assets/styles/apply.css'
+import '../../assets/styles/applyRegister.css'
 import styled from 'styled-components'
 
-import { useSelector, useDispatch } from 'react-redux'
-import { fetchPostionCode } from '../../store/redux'
 import Skilldata from 'data/Skilldata'
+import { getPositionName } from 'data/Positiondata'
 
-const userSeq = '1'
 const SERVER_URL = 'http://tableminpark.iptime.org:8080'
-const PARAM_URL = `/user/${userSeq}`
-
 const Container = styled.section`
   padding: 100px 25em;
 `
@@ -48,40 +44,27 @@ const positionSelectStyle = {
 }
 
 const Apply = () => {
-  const [nickname, setNickname] = useState([])
-  const [phone, setPhone] = useState([])
-  const [email, setEmail] = useState([])
-  const [position, setPosition] = useState('frontEnd')
+  const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  const [content, setContent] = useState([])
-  const [expIndex, setExpIndex] = useState(2)
-  const [careerIndex, setCareerIndex] = useState(0)
-  const [careerList, setCareerList] = useState([])
-  const [expList, setExpList] = useState([
-    {
-      id: 0,
-      title: 'exp0',
-    },
-    {
-      id: 1,
-      title: 'exp1',
-    },
-  ])
+  // const [profile, setProfile] = useState([])
 
-  const [positionList, setPositionList] = useState([])
+  const [position, setPosition] = useState(['frontend'])
+  // default 값 front-end
+
+  const [careerList, setCareerList] = useState([])
+  const [expList, setExpList] = useState([])
+
+  const [content, setContent] = useState([])
+
   const handlePositionChange = (event) => {
     setPosition(event.target.value)
-    console.log(position)
   }
 
-  // userFetch : setNickName, setPhone, setEmail
   const userFetch = async () => {
     try {
-      const res = await axios.get(SERVER_URL + PARAM_URL)
-      setNickname(res.data.body.nickname)
-      setPhone(res.data.body.phone)
-      setEmail(res.data.body.email)
-      console.log('userFetch response')
+      const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
+      setUser(res.data.body)
+      console.log(user)
     } catch (error) {
       console.log(error)
     }
@@ -89,35 +72,38 @@ const Apply = () => {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get(SERVER_URL + '/posting/1')
+      const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
       setPosting(res.data.body)
-      console.log('durl' + posting.postingQuestionList)
-      // console.log(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
   }
+  // <프로필 조회>
+  // const profileFetch = async () => {
+  //   try {
+  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+  //     setProfile(res.data.body)
+  //     console.log(profile)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+  // </프로필 조회>
 
   const handleExpAdd = () => {
     const expArr = [...expList]
-    const exp = {
-      id: expIndex,
-      title: 'exp' + expIndex,
-    }
-    setExpIndex(expIndex + 1)
+    const exp = ''
     expArr.push(exp)
     setExpList(expArr)
+    console.log(expList)
   }
 
   const handleCareerAdd = () => {
     const careerArr = [...careerList]
-    const career = {
-      id: careerIndex,
-      title: 'career' + careerIndex,
-    }
-    setCareerIndex(careerIndex + 1)
+    const career = ''
     careerArr.push(career)
     setCareerList(careerArr)
+    console.log(careerList)
   }
 
   const handleContent = (event) => {
@@ -193,26 +179,16 @@ const Apply = () => {
       })
     )
   }
-  const dispatch = useDispatch()
-  const state = useSelector((state) => {
-    return state
-  })
+
+  const handleMeetingSelect = () => {
+    console.log('a')
+  }
 
   useEffect(() => {
     userFetch()
     postingFetch()
-    dispatch(fetchPostionCode())
+    // profileFetch()
   }, [])
-
-  const reduxConsole = () => {
-    console.log('apply')
-    console.log(state)
-    state.positionCode.then((e) => {
-      setPositionList(e)
-      console.log(e)
-      console.log(positionList)
-    })
-  }
 
   const skillSearchFilter = createFilterOptions({
     matchFrom: 'start',
@@ -220,23 +196,29 @@ const Apply = () => {
   })
 
   const [skillvalue, setSkillvalue] = useState(Skilldata[0].name)
-  const [skillinputValue, setSkillinpuValeu] = useState('')
+  const [skillinputValue, setSkillInputValue] = useState('')
+
+  const handleCareerInput = (value, key) => {
+    const careerArr = [...careerList]
+    careerArr.splice(key, 1, value)
+    setCareerList(careerArr)
+  }
 
   return (
     <Container>
       <div>
         <div>
-          <Title>{nickname} 님의지원서</Title>
+          <Title>{user.nickname} 님의지원서</Title>
         </div>
         <div>
           <div className="user-detail-section">
             <div className="phone-section">
               <Label>전화번호 </Label>
-              <TextField disabled value={phone} style={inputStyle} />
+              <TextField disabled value={user.phone} style={inputStyle} />
             </div>
             <div className="email-section">
               <Label>이메일</Label>
-              <TextField disabled value={email} style={inputStyle} />
+              <TextField disabled value={user.email} style={inputStyle} />
             </div>
           </div>
           <div className="position-section">
@@ -251,18 +233,12 @@ const Apply = () => {
                   onChange={handlePositionChange}
                   inputProps={{ 'aria-label': 'Without label' }}
                 >
-                  <MenuItem
-                    disabled
-                    value={position}
-                    sx={{
-                      display: 'none',
-                    }}
-                  ></MenuItem>
-                  {positionList.map((props, index) => (
-                    <MenuItem value={props.name} key={index}>
-                      {props.name}
-                    </MenuItem>
-                  ))}
+                  {posting.postingPositionList &&
+                    posting.postingPositionList.map((item, index) => (
+                      <MenuItem value={getPositionName(item.positionCode)} key={item.positionCode + index}>
+                        {getPositionName(item.positionCode)}
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </div>
@@ -282,20 +258,19 @@ const Apply = () => {
                   <TextField
                     {...params}
                     value={skillvalue}
-                    onChange={(event, newValue) => {
-                      setSkillvalue(newValue)
-                    }}
                     inputValue={skillinputValue}
-                    onInputChange={(event, newInputValue) => {
-                      setSkillinpuValeu(newInputValue)
+                    onChange={(event, newInputValue) => {
+                      setSkillInputValue(newInputValue)
+                      setSkillvalue(newInputValue)
                     }}
                   />
                 )}
               />
+              <div>기술</div>
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
-              <button className="apply-button" onClick={reduxConsole}>
+              <button className="apply-button" onClick={handleMeetingSelect}>
                 시간선택
               </button>
             </div>
@@ -310,7 +285,11 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <CareerList careerList={careerList} onRemove={handleCareerRemove}></CareerList>
+              <CareerList
+                careerList={careerList}
+                onRemove={handleCareerRemove}
+                onChange={handleCareerInput}
+              ></CareerList>
             </div>
             <div className="exp-section">
               <div>
@@ -337,8 +316,8 @@ const Apply = () => {
             </div>
             <div className="answer-section">
               {posting.postingQuestionList &&
-                posting.postingQuestionList.map((props) => (
-                  <div key={props.postingSeq}>
+                posting.postingQuestionList.map((props, index) => (
+                  <div key={props.postingSeq + index}>
                     <Label className="question-label">{props.content}</Label>
                     <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
                   </div>

@@ -1,11 +1,12 @@
 import React from 'react'
 import Career from './Career'
 
-function CareerList({ careerList, onRemove }) {
+function CareerList({ careerList, onRemove, onChange }) {
+  console.log('careerList: ', careerList)
   return (
     <div>
       {careerList.map((item, index) => (
-        <Career career={item} key={index} onRemove={onRemove}></Career>
+        <Career career={item} id={index} key={index} onRemove={onRemove} onChange={onChange}></Career>
       ))}
     </div>
   )
