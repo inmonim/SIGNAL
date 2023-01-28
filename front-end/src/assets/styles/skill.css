@@ -1,0 +1,18 @@
+.skill{
+  display: flex;
+  align-items: center;
+}
+
+
+.skill-image{
+  height: 35px;
+}
+
+.skill> img,
+.skill > span {
+  margin: 10px 5px;
+}
+
+.skillList-section{
+  display: flex;
+}
