@@ -5,6 +5,6 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class DeleteLetterSeqListReq {
-    private List<DeleteLetterSeqReq> letterSeqList;
+public class DeleteLetterSeqListRequest {
+    private List<DeleteLetterSeqRequest> letterSeqList;
 }

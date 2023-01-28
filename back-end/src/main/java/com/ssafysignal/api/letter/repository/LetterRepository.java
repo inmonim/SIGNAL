@@ -1,6 +1,5 @@
 package com.ssafysignal.api.letter.repository;
 
-import com.ssafysignal.api.letter.dto.response.FindLetterRes;
 import com.ssafysignal.api.letter.entity.Letter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
