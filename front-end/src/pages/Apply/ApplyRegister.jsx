@@ -405,6 +405,7 @@ const Apply = () => {
               ></ExpList>
             </div>
           </div>
+
           <div className="content-section">
             <Label className="label">하고싶은 말</Label>
             <div>
@@ -417,6 +418,7 @@ const Apply = () => {
               />
             </div>
           </div>
+
           <div className="question-answer-section">
             <div className="question-section">
               <Label className="label">지원자에게 궁금한 점</Label>
