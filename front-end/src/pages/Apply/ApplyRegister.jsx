@@ -48,6 +48,8 @@ const positionSelectStyle = {
 }
 
 const Apply = () => {
+  // start >> useState
+
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [profile, setProfile] = useState([])
@@ -64,15 +66,14 @@ const Apply = () => {
   const [content, setContent] = useState([])
   const [qnaList, setQnaList] = useState([])
 
-  const handlePositionChange = (event) => {
-    setPosition(event.target.value)
-  }
+  // ene >> useState
+
+  // start >> Fetch
 
   const userFetch = async () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
       setUser(res.data.body)
-      console.log(user)
     } catch (error) {
       console.log(error)
     }
@@ -85,7 +86,6 @@ const Apply = () => {
       const qnaArr = []
       res.data.body.postingQuestionList.map(() => qnaArr.push(''))
       setQnaList(qnaArr)
-      console.log(res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -95,20 +95,51 @@ const Apply = () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
       setProfile(res.data.body)
-      console.log(res)
+      console.log(res.data.body)
       console.log(profile)
+      careerFetchFilter(res.data.body.userCareerList)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleExpAdd = () => {
-    const expArr = [...expList]
-    const exp = ''
-    expArr.push(exp)
-    setExpList(expArr)
-    console.log(expList)
+  // end >> Fetch
+
+  // start >> handle position
+
+  const handlePositionChange = (event) => {
+    setPosition(event.target.value)
   }
+  // end >> handle position
+
+  // start >> handle skill
+
+  const handleSkillInput = (value) => {
+    const skillArr = [...skillList]
+    skillArr.push(value)
+    setSkillList(skillArr)
+    console.log(skillArr)
+  }
+
+  const handleSkillRemove = (id) => {
+    setSkillList(
+      skillList.filter((skill) => {
+        return skill !== id
+      })
+    )
+  }
+
+  // start >> skill filter
+  const skillSearchFilter = createFilterOptions({
+    matchFrom: 'start',
+    stringify: (option) => option.name,
+  })
+
+  // end >> skill filter
+
+  // end >> handle skill
+
+  // start >> handle career
 
   const handleCareerAdd = () => {
     const careerArr = [...careerList]
@@ -116,6 +147,44 @@ const Apply = () => {
     careerArr.push(career)
     setCareerList(careerArr)
     console.log(careerList)
+  }
+
+  const handleCareerRemove = () => {
+    const careerArr = [...careerList]
+    setCareerList(careerArr)
+  }
+
+  const handleCareerInput = (value, key) => {
+    const careerArr = [...careerList]
+    careerArr.splice(key, 1, value)
+    setCareerList(careerArr)
+  }
+
+  // start >> career filter
+
+  const careerFetchFilter = (list) => {
+    const careerArr = [...careerList]
+
+    list.map((item) =>
+      careerArr.push({
+        careerSeq: item.userCareerSeq,
+        content: item.content,
+      })
+    )
+
+    setCareerList(careerArr)
+  }
+
+  // end >> career filter
+
+  // end >> handle career
+
+  const handleExpAdd = () => {
+    const expArr = [...expList]
+    const exp = ''
+    expArr.push(exp)
+    setExpList(expArr)
+    console.log(expList)
   }
 
   const handleContent = (event) => {
@@ -178,27 +247,11 @@ const Apply = () => {
     )
   }
 
-  const handleCareerRemove = () => {
-    const careerArr = [...careerList]
-    setCareerList(careerArr) ///
-  }
-
   useEffect(() => {
     userFetch()
     postingFetch()
     profileFetch()
   }, [])
-
-  const skillSearchFilter = createFilterOptions({
-    matchFrom: 'start',
-    stringify: (option) => option.name,
-  })
-
-  const handleCareerInput = (value, key) => {
-    const careerArr = [...careerList]
-    careerArr.splice(key, 1, value)
-    setCareerList(careerArr)
-  }
 
   const handleExpInput = (value, key) => {
     const expArr = [...expList]
@@ -211,13 +264,6 @@ const Apply = () => {
     qnaArr.splice(key, 1, value)
     setQnaList(qnaArr)
     console.log(qnaList)
-  }
-
-  const handleSkillInput = (value) => {
-    const skillArr = [...skillList]
-    skillArr.push(value)
-    setSkillList(skillArr)
-    console.log(skillArr)
   }
 
   return (
@@ -283,7 +329,7 @@ const Apply = () => {
                   />
                 )}
               />
-              <SkillList skillList={skillList}></SkillList>
+              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
