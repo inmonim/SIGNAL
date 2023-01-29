@@ -64,9 +64,8 @@ public class ApplyService {
 
     @Transactional(readOnly = true)
     public Apply findApply(Integer applySeq) {
-        Apply apply = applyRepository.findByApplySeq(applySeq)
+        return applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        return apply;
     }
 
 //    @Transactional(readOnly = true)

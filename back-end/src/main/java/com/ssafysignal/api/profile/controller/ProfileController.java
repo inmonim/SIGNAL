@@ -3,7 +3,7 @@ package com.ssafysignal.api.profile.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.profile.dto.response.ProfileFindResponse;
+import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
 import com.ssafysignal.api.profile.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,12 +34,12 @@ public class ProfileController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/{userSeq}")
-    private ResponseEntity<BasicResponse> findProfile(@Parameter(name = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
+    private ResponseEntity<BasicResponse> findProfile(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
         log.info("findProfile - Call");
 
         try {
-            ProfileFindResponse profileFindResponse = profileService.findProfile(userSeq);
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, profileFindResponse));
+            ProfileBasicResponse profileBasicResponse = profileService.findProfile(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -53,15 +53,72 @@ public class ProfileController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/position/{userSeq}")
-    private ResponseEntity<BasicResponse> RegistrofilePostion(@Parameter(name = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq,
-                                                              @Parameter(name = "포지션 코드", required = true) @RequestBody Map<String, Object> param){
-        log.info("RegistrofilePostion - Call");
+    private ResponseEntity<BasicResponse> RegistProfilePostion(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq,
+                                                              @Parameter(description = "포지션 코드", required = true) @RequestBody Map<String, Object> param){
+        log.info("RegistProfilePostion - Call");
 
         try {
             log.info(userSeq + " " + param.get("positionCode").toString());
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        }
+    }
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "프로필 기술스택 목록 조회", description = "프로필 기술스택 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 기술스택 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "프로필 기술스택 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/skill/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllSkill(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
+        log.info("findAllSkill - Call");
+
+        try {
+            ProfileBasicResponse profileBasicResponse = profileService.findAllSkill(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "프로필 경력 목록 조회", description = "프로필 경력 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 경력 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "프로필 경력 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/career/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllCareer(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
+        log.info("findAllSkill - Call");
+
+        try {
+            ProfileBasicResponse profileBasicResponse = profileService.findAllCareer(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "프로필 경험 목록 조회", description = "프로필 경험 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 경험 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "프로필 경험 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/exp/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllExp(@Parameter(name = "userSeq", description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq){
+        log.info("findAllSkill - Call");
+
+        try {
+            ProfileBasicResponse profileBasicResponse = profileService.findAllExp(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 
