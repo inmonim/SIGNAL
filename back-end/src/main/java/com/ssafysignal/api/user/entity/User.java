@@ -50,6 +50,19 @@ public class User {
     public void giveAuth(){
         this.userCode = "US100";
     }
+    
+    public void deleteAuth() {
+    	this.userCode = "US102";
+    }
+    
+    public void modifyUser(String name, String nickname,String phone, int birthYear, int birthMonth, int birthDay) {
+    	this.name = name;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.birthYear = birthYear;
+        this.birthMonth = birthMonth;
+        this.birthDay = birthDay;
+    }
 
     public void modifyPassword(String password){
         this.password = password;

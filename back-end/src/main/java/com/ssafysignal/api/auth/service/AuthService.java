@@ -125,7 +125,7 @@ public class AuthService {
                 //잘못된 정보
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         String userCode = user.getUserCode();
-        if(userCode.equals("US103")){ //이메일 인증 안된경우
+        if(userCode.equals("US103") || userCode.equals("US102")){ //이메일 인증 안된경우, 삭제된 유저인경우
             throw new AuthException();
         }
 
