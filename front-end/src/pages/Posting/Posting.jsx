@@ -120,13 +120,10 @@ function Posting() {
   }, [])
   useEffect(() => {
     btnClickAxios()
-  }, [value])
-  useEffect(() => {
-    btnClickAxios()
-  }, [local])
-  useEffect(() => {
-    btnClickAxios()
-  }, [Title])
+  }, [value, local, Title])
+  // useEffect(() => {
+  //   btnClickAxios()
+  // }, [local])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [Title])
