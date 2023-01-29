@@ -15,7 +15,7 @@ import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
 
 const Container = styled.section`
-  padding: 100px 25em;
+  // padding: 100px;
 `
 
 const Title = styled.h1`
@@ -53,17 +53,15 @@ const Apply = () => {
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [profile, setProfile] = useState([])
-
   const [position, setPosition] = useState('')
-
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
-
-  // const [answerList, setAnswerList] = useState([])
   const [skillList, setSkillList] = useState([])
-
   const [content, setContent] = useState([])
   const [qnaList, setQnaList] = useState([])
+
+  // DateFormat : yyyy.MM.dd HH:mm:ss.SSS
+  const [meetingList, setMeetingList] = useState([])
 
   // ene >> useState
 
@@ -80,11 +78,12 @@ const Apply = () => {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
+      const res = await axios.get('http://www.ssafysignal.site:8080/posting/458')
       setPosting(res.data.body)
       const qnaArr = []
       res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-      setQnaList(qnaArr)
+      setMeetingList(['2023.01.29 11:11:11.111', '2023.01.29 13:11:11.111', '2023.01.22 11:11:11.111'])
+      setQnaList(res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -129,8 +128,6 @@ const Apply = () => {
     )
     setExpList(expArr)
   }
-
-  // end >> Data filter
 
   // start >> handle position
 
@@ -248,38 +245,49 @@ const Apply = () => {
 
   // end >> handle qna
 
-  const handleApplySubmit = async (event) => {
-    const regDt = new Date()
-    console.log(regDt)
-    const regDtreq =
-      regDt.getFullYear() +
-      '-' +
-      regDt.getMonth() +
-      '-' +
-      regDt.getDate() +
-      ' ' +
-      regDt.getHours() +
-      ':' +
-      regDt.getMinutes() +
-      ':' +
-      regDt.getSeconds()
+  const CareerPostFilter = (list) => {
+    const careerArr = []
+    list.map((item) => careerArr.push(item.content))
+    return careerArr
+  }
+
+  const ExpPostFilter = (list) => {
+    const expArr = []
+    list.map((item) => expArr.push(item.content))
+    return expArr
+  }
+
+  const handleApplySubmit = async () => {
+    const meetingDt = new Date().toISOString().substr(0, 23).replace('T', ' ')
+    console.log(qnaList)
+    console.log(CareerPostFilter(careerList))
+    console.log(ExpPostFilter(expList))
+    console.log(skillList)
+    console.log(content)
+    console.log('filedCode')
+    console.log(meetingDt)
+    console.log('positionCode')
+    console.log('userseq')
     try {
       const req = {
-        applyAnswerList: [],
-        applyCareerList: careerList,
-        applyExpList: expList,
-        applySkillList: [],
-        content,
+        applyAnswerList: [
+          {
+            additionalProp1: {},
+            additionalProp2: {},
+            additionalProp3: {},
+          },
+        ],
+        applyCareerList: CareerPostFilter(careerList),
+        applyExpList: ExpPostFilter(expList),
+        applySkillList: skillList,
+        content: skillList,
         fieldCode: 'FI100',
-        applyCode: 'AS101',
         meetingDt: '2023-01-01 11:00:00.000',
-        memo: '이 지원자는 열정이 있음',
         positionCode: 'PO100',
         postingSeq: 1,
         userSeq: 1,
       }
-      console.log('regDtreq')
-      console.log(regDtreq)
+
       const config = { 'Content-Type': 'application/json' }
       await axios
         .post('.', req, config)
@@ -341,7 +349,6 @@ const Apply = () => {
               </FormControl>
             </div>
           </div>
-
           <div className="skill-meeting-section">
             <div className="skill-section">
               <Label className="label">사용기술</Label>
@@ -369,10 +376,9 @@ const Apply = () => {
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
-              <MeetingDtSelect></MeetingDtSelect>
+              <MeetingDtSelect open={open} meetingList={meetingList}></MeetingDtSelect>
             </div>
           </div>
-
           <div className="career-exp-section">
             <div className="career-section">
               <div>
@@ -405,7 +411,6 @@ const Apply = () => {
               ></ExpList>
             </div>
           </div>
-
           <div className="content-section">
             <Label className="label">하고싶은 말</Label>
             <div>
@@ -418,13 +423,12 @@ const Apply = () => {
               />
             </div>
           </div>
-
           <div className="question-answer-section">
             <div className="question-section">
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList>
+              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange} key={posting}></QnAList>
             </div>
           </div>
         </div>
