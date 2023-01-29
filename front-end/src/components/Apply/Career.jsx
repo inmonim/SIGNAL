@@ -7,7 +7,7 @@ const inputStyle = {
   width: '22rem',
 }
 
-function Career({ career, onRemove, onChange, id }) {
+function Career({ career, id, onRemove, onChange }) {
   const handleCareerChange = (event) => {
     console.log(event.target.value)
     onChange(event.target.value, id)

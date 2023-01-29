@@ -54,8 +54,7 @@ const Apply = () => {
   const [posting, setPosting] = useState([{}])
   const [profile, setProfile] = useState([])
 
-  const [position, setPosition] = useState(['frontend'])
-  // default 값 front-end
+  const [position, setPosition] = useState('')
 
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
@@ -98,12 +97,40 @@ const Apply = () => {
       console.log(res.data.body)
       console.log(profile)
       careerFetchFilter(res.data.body.userCareerList)
+      expFetchFilter(res.data.body.userExpList)
     } catch (error) {
       console.log(error)
     }
   }
 
   // end >> Fetch
+
+  // start >> Data filter
+
+  const careerFetchFilter = (list) => {
+    const careerArr = []
+    list.map((item, index) =>
+      careerArr.push({
+        seq: index,
+        content: item.content,
+      })
+    )
+
+    setCareerList(careerArr)
+  }
+
+  const expFetchFilter = (list) => {
+    const expArr = []
+    list.map((item, index) =>
+      expArr.push({
+        seq: index,
+        content: item.content,
+      })
+    )
+    setExpList(expArr)
+  }
+
+  // end >> Data filter
 
   // start >> handle position
 
@@ -143,53 +170,83 @@ const Apply = () => {
 
   const handleCareerAdd = () => {
     const careerArr = [...careerList]
-    const career = ''
+    const career = {
+      seq: careerArr[careerArr.length - 1].seq + 1,
+      content: '',
+    }
     careerArr.push(career)
     setCareerList(careerArr)
     console.log(careerList)
   }
 
-  const handleCareerRemove = () => {
+  const handleCareerChange = (value, key) => {
     const careerArr = [...careerList]
-    setCareerList(careerArr)
+    const newCareerArr = [...careerList]
+
+    for (let index = 0; index < careerArr.length; index++) {
+      if (careerArr[index].seq === key) {
+        newCareerArr.splice(index, 1, { seq: key, content: value })
+      }
+    }
+
+    setCareerList(newCareerArr)
   }
 
-  const handleCareerInput = (value, key) => {
-    const careerArr = [...careerList]
-    careerArr.splice(key, 1, value)
-    setCareerList(careerArr)
+  const handleCareerRemove = (key) => {
+    setCareerList(careerList.filter((career) => career.seq !== key))
   }
-
-  // start >> career filter
-
-  const careerFetchFilter = (list) => {
-    const careerArr = [...careerList]
-
-    list.map((item) =>
-      careerArr.push({
-        careerSeq: item.userCareerSeq,
-        content: item.content,
-      })
-    )
-
-    setCareerList(careerArr)
-  }
-
-  // end >> career filter
 
   // end >> handle career
 
+  // start >> handle exp
+
   const handleExpAdd = () => {
     const expArr = [...expList]
-    const exp = ''
+    const exp = {
+      seq: expArr[expArr.length - 1].seq + 1,
+      content: '',
+    }
     expArr.push(exp)
     setExpList(expArr)
     console.log(expList)
   }
 
-  const handleContent = (event) => {
+  const handleExpChange = (value, key) => {
+    const expArr = [...expList]
+    const newExpArr = [...expList]
+
+    for (let index = 0; index < expArr.length; index++) {
+      if (expArr[index].seq === key) {
+        newExpArr.splice(index, 1, { seq: key, content: value })
+      }
+    }
+    setExpList(newExpArr)
+  }
+
+  const handleExpRemove = (key) => {
+    setExpList(expList.filter((exp) => exp.seq !== key))
+  }
+
+  // end >> handle exp
+
+  // start >> handle content
+
+  const handleContentChange = (event) => {
     setContent(event.target.value)
   }
+
+  // end >> handle content
+
+  // start >> handle qna
+
+  const handleQnAChange = (value, key) => {
+    const qnaArr = [...qnaList]
+    qnaArr.splice(key, 1, value)
+    setQnaList(qnaArr)
+    console.log(qnaList)
+  }
+
+  // end >> handle qna
 
   const handleApplySubmit = async (event) => {
     const regDt = new Date()
@@ -239,32 +296,11 @@ const Apply = () => {
     }
   }
 
-  const handleExpRemove = (id) => {
-    setExpList(
-      expList.filter((exp) => {
-        return exp.id !== id
-      })
-    )
-  }
-
   useEffect(() => {
     userFetch()
     postingFetch()
     profileFetch()
   }, [])
-
-  const handleExpInput = (value, key) => {
-    const expArr = [...expList]
-    expArr.splice(key, 1, value)
-    setExpList(expArr)
-  }
-
-  const handleQnAChange = (value, key) => {
-    const qnaArr = [...qnaList]
-    qnaArr.splice(key, 1, value)
-    setQnaList(qnaArr)
-    console.log(qnaList)
-  }
 
   return (
     <Container>
@@ -276,11 +312,11 @@ const Apply = () => {
           <div className="user-detail-section">
             <div className="phone-section">
               <Label>전화번호 </Label>
-              <TextField disabled value={user.phone} sx={inputStyle} />
+              <TextField disabled value={user.phone || ''} sx={inputStyle} />
             </div>
             <div className="email-section">
               <Label>이메일</Label>
-              <TextField disabled value={user.email} sx={inputStyle} />
+              <TextField disabled value={user.email || ''} sx={inputStyle} />
             </div>
           </div>
           <div className="position-section">
@@ -291,13 +327,13 @@ const Apply = () => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={position}
+                  value={position || ''}
                   onChange={handlePositionChange}
                   inputProps={{ 'aria-label': 'Without label' }}
                 >
                   {posting.postingPositionList &&
                     posting.postingPositionList.map((item, index) => (
-                      <MenuItem value={getPositionName(item.positionCode)} key={item.positionCode + index}>
+                      <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
                         {getPositionName(item.positionCode)}
                       </MenuItem>
                     ))}
@@ -349,7 +385,8 @@ const Apply = () => {
               <CareerList
                 careerList={careerList}
                 onRemove={handleCareerRemove}
-                onChange={handleCareerInput}
+                onChange={handleCareerChange}
+                key={careerList[0]}
               ></CareerList>
             </div>
             <div className="exp-section">
@@ -360,17 +397,26 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpInput}></ExpList>
+              <ExpList
+                expList={expList}
+                onRemove={handleExpRemove}
+                onChange={handleExpChange}
+                key={expList[0]}
+              ></ExpList>
             </div>
           </div>
-
           <div className="content-section">
             <Label className="label">하고싶은 말</Label>
             <div>
-              <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="5" onChange={handleContent} />
+              <TextField
+                style={textAreaStyle}
+                fullWidth={true}
+                multiline={true}
+                minRows="5"
+                onChange={handleContentChange}
+              />
             </div>
           </div>
-
           <div className="question-answer-section">
             <div className="question-section">
               <Label className="label">지원자에게 궁금한 점</Label>
