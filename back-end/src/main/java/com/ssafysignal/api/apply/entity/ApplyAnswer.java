@@ -28,9 +28,6 @@ public class ApplyAnswer {
     private String content;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-    @OneToOne
-    @JoinColumn(name = "posting_question_seq",  insertable = false, updatable = false)
-    private PostingQuestion postingQuestion;
 
     @Builder
     public ApplyAnswer(Integer applyAnswerSeq, Integer postingSeq, Integer postingQuestionSeq, String content,LocalDateTime regDt, PostingQuestion postingQuestion) {
@@ -39,6 +36,5 @@ public class ApplyAnswer {
         this.postingQuestionSeq = postingQuestionSeq;
         this.content = content;
         this.regDt = regDt;
-        this.postingQuestion = postingQuestion;
     }
 }

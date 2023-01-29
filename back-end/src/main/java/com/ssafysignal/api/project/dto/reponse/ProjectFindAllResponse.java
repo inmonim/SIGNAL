@@ -12,7 +12,7 @@ import java.util.List;
 @ApiModel(value = "ProjectFindAllResponse", description = "프로젝트 목록 정보")
 public class ProjectFindAllResponse {
     @Schema(description = "완료 된 프로젝트")
-    private List<ProjectFindAllResponseItem> endProjectList;
+    private List<ProjectFindAllDto> endProjectList;
     @Schema(description = "진행 중인 프로젝트")
-    private List<ProjectFindAllResponseItem> ingProjectList;
+    private List<ProjectFindAllDto> ingProjectList;
 }

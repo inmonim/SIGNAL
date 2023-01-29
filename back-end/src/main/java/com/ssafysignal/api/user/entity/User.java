@@ -1,6 +1,7 @@
 package com.ssafysignal.api.user.entity;
 
 import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -30,6 +31,10 @@ public class User {
     private LocalDateTime regDt;
     private String userCode;
     private int heartCnt;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_image_file_seq")
+    private ImageFile imageFile;
+
 
     @Builder
     public User(int userSeq, String name, String email, String password, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, String userCode, int heartCnt) {

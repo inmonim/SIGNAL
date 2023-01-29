@@ -17,6 +17,10 @@ import java.util.List;
 public class ProjectRegistRequest {
     @Schema(description = "공고 Seq")
     private Integer postingSeq;
+    @Schema(description = "팀장 Seq")
+    private Integer userSeq;
+    @Schema(description = "팀장 포지션")
+    private String positionCode;
     @Schema(description = "선정된 지원서 목록")
     private List<Integer> applyList;
 }
