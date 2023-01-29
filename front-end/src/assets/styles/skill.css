@@ -1,0 +1,32 @@
+.skill{
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 10em;
+  height: 50px;
+  margin-left: 5px;
+}
+
+
+.skill-image{
+  height: 35px;
+}
+
+.skill> img,
+.skill > span {
+  margin: 10px 5px;
+}
+
+.skillList-section{
+  display: flex;
+  margin: 10px 0px;
+}
+
+.delete-button{
+  margin: 10px 5px;
+  height: 30px;
+}
+
+.delete-button:hover{
+  cursor: pointer;
+}
