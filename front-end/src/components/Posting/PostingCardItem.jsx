@@ -5,9 +5,24 @@ import Typography from '@mui/material/Typography'
 import Localdata from 'data/Localdata'
 import Fielddata from 'data/Fielddata'
 import { Box } from '@mui/system'
+import { useNavigate } from 'react-router-dom'
 export default function PostingCardItem({ post }) {
+  const navigate = useNavigate()
   return (
-    <Card sx={{ minWidth: 275, mb: 2, mr: 2 }}>
+    <Card
+      sx={{
+        minWidth: 275,
+        mb: 2,
+        mr: 2,
+        '&:hover': {
+          boxShadow: '0 0 0 2px #bcb7d9',
+          cursor: 'pointer',
+        },
+      }}
+      onClick={() => {
+        navigate(`/posting/${post.postingSeq}`)
+      }}
+    >
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
           {post.subject}

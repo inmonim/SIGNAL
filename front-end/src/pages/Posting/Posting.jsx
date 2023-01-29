@@ -9,6 +9,12 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import Localdata from 'data/Localdata'
 import TabPanel from '@mui/lab/TabPanel'
+import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@mui/material/TextField'
+import Skilldata from 'data/Skilldata'
+import '../../assets/styles/posting.css'
+import { useNavigate } from 'react-router-dom'
+
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
@@ -24,6 +30,24 @@ const Tab2 = styled(Tab)(({ theme }) => ({
     opacity: 1,
   },
 }))
+const skillStyle = {
+  width: '100%',
+  maxwidth: '378px',
+  height: '42px',
+  padding: '0 14px',
+  border: '1px solid #d7e2eb',
+  borderradius: '4px',
+  boxsizing: 'border-box',
+  backgroundcolor: '#fbfbfd',
+  fontsize: '16px',
+  fontweight: '500',
+  lineheight: '1.6',
+  color: '#263747',
+  '& : hover': {
+    border: '1px solid #3396f4',
+    boxshadow: 'inset 0 0 0 1px#3396f4',
+  },
+}
 
 function Posting() {
   // 카드 리스트 정보
@@ -35,7 +59,7 @@ function Posting() {
   // )
   // `${process.env.REACT_APP_API_URL}/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
   // console.log(result.data?.body?.postingList)
-
+  const navigate = useNavigate()
   const [postingList, setPostingList] = useState([])
   // result.data && setPostingList(result.data?.body?.postingList)
   // 테이블 코드 state Field 코드
@@ -79,6 +103,12 @@ function Posting() {
   } // 클릭했을때 async 요청보내는 리액트 코드
   // 버튼 누르면 데이터 담기게 state
   const [skillList, setSkillList] = useState([])
+  const [skillListauto, setSkillListauto] = useState([])
+  const handleChangeSkill = (value) => {
+    const copy = value.map((ele) => ele.code)
+    console.log(copy)
+    setSkillListauto(copy)
+  }
   // 테이블 값적용
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -96,7 +126,7 @@ function Posting() {
   }
   const [Title, setTitle] = useState('')
   const printValue = useCallback(
-    debounceFuntion((Title) => setTitle(Title), 500),
+    debounceFuntion((Title) => setTitle(Title), 200),
     []
   )
   const handleChangeTitle = (e) => {
@@ -110,23 +140,24 @@ function Posting() {
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `http://www.ssafysignal.site:8080/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
+      `http://www.ssafysignal.site:8080/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
     )
     setPostingList(res.data.body.postingList)
-    console.log(Title)
+    // console.log(Title)/
   }
   useEffect(() => {
     postList()
   }, [])
   useEffect(() => {
     btnClickAxios()
-  }, [value, local, Title])
+  }, [value, local, Title, skillListauto])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [local])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [Title])
+
   return (
     <div>
       <Banner />
@@ -323,21 +354,48 @@ function Posting() {
             </TabPanel>
           </TabContext>
         </Box>
-        <SearchForms>
-          <FilterSelect onChange={handleChangeLocal}>
-            <option value="">전체지역</option>
-            {Object.keys(Localdata).map((ele, i) => (
-              <option key={i} value={ele}>
-                {Localdata[ele].name}
-              </option>
-            ))}
-          </FilterSelect>
-          <FilterInput type="text" placeholder="프로젝트 제목 검색" onChange={handleChangeTitle} />
-          {Title}
-        </SearchForms>
+        <Box sx={{ display: 'flex' }}>
+          <Autocomplete
+            multiple
+            limitTags={3}
+            size="small"
+            id="multiple-limit-tags"
+            options={Skilldata}
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              console.log(newValue)
+              handleChangeSkill(newValue)
+            }}
+            renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+            sx={{ skillStyle, width: 1 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
+          />
+          {/* <div style={{ width: '50%' }}>dd</div> */}
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <SearchForms sx={{ flexGrow: 1 }}>
+            <FilterSelect onChange={handleChangeLocal}>
+              <option value="">전체지역</option>
+              {Object.keys(Localdata).map((ele, i) => (
+                <option key={i} value={ele}>
+                  {Localdata[ele].name}
+                </option>
+              ))}
+            </FilterSelect>
+            <FilterInput type="text" placeholder="프로젝트 제목 검색" onChange={handleChangeTitle} />
+          </SearchForms>
+
+          <button
+            className="post-button"
+            onClick={() => {
+              navigate('/postingregister')
+            }}
+          >
+            공고등록
+          </button>
+        </Box>
         <PostList>
           {postingList.map((post, i) => (
-            <PostingCardItem post={post} key={post.postingSeq} />
+            <PostingCardItem post={post} key={i} />
           ))}
         </PostList>
       </Container>
@@ -401,6 +459,7 @@ const Skillbtn = styled.div`
   border-radius: 100px;
   padding: 1em;
   justify-content: space-between;
+  transition-duration: 0.5s;
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
@@ -450,6 +509,8 @@ const FilterSelect = styled.select`
   }
 `
 const SearchForms = styled.div`
+  margin: 0;
+  width: 70%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;

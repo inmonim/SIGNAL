@@ -46,7 +46,7 @@ const positionSelectStyle = {
   position: 'static',
 }
 
-const Apply = () => {
+const PostingRegister = () => {
   // start >> useState
 
   const [user, setUser] = useState([])
@@ -436,4 +436,4 @@ const Apply = () => {
   )
 }
 
-export default Apply
+export default PostingRegister
