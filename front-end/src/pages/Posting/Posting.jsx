@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from '@emotion/styled'
 import axios from 'axios'
 // import JavaScript from '../../assets/image/Skilltest'
@@ -9,8 +9,9 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import Localdata from 'data/Localdata'
 import TabPanel from '@mui/lab/TabPanel'
+// import { useQuery } from 'react-query'
+// import { Input } from 'assets/styles/apply'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
-
 const Tab2 = styled(Tab)(({ theme }) => ({
   fontSize: '21px',
   fontcolor: '#000000',
@@ -26,7 +27,17 @@ const Tab2 = styled(Tab)(({ theme }) => ({
 
 function Posting() {
   // 카드 리스트 정보
+  // const { status, data, error, isFetching } = useQuery('postlist', async () => {
+  // const result = useQuery('postlist', () =>
+  //   axios.get(`http://www.ssafysignal.site:8080/posting?page=1&size=100&fieldCode=FI100`).then((a) => {
+  //     return a.data
+  //   })
+  // )
+  // `${process.env.REACT_APP_API_URL}/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
+  // console.log(result.data?.body?.postingList)
+
   const [postingList, setPostingList] = useState([])
+  // result.data && setPostingList(result.data?.body?.postingList)
   // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('FI100')
   // 버튼 색 변경
@@ -75,15 +86,34 @@ function Posting() {
   const handleChangeLocal = (e) => {
     setLocal(e.target.value)
   }
+  // search from
+  const debounceFuntion = (callack, delay) => {
+    let timer
+    return (...args) => {
+      clearTimeout(timer)
+      timer = setTimeout(() => callack(...args), delay)
+    }
+  }
+  const [Title, setTitle] = useState('')
+  const printValue = useCallback(
+    debounceFuntion((Title) => setTitle(Title), 500),
+    []
+  )
+  const handleChangeTitle = (e) => {
+    printValue(e.target.value)
+    // setTitle(e.target.value)
+  }
+
   const postList = async () => {
-    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting?page=1&size=200')
+    const res = await axios.get('http://www.ssafysignal.site:8080/posting?page=1&size=100&fieldCode=FI100')
     setPostingList(res.data.body.postingList)
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `http://tableminpark.iptime.org:8080/posting?page=1&size=200&localCode=${local}&fieldCode=${value}`
+      `http://www.ssafysignal.site:8080/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
     )
     setPostingList(res.data.body.postingList)
+    console.log(Title)
   }
   useEffect(() => {
     postList()
@@ -94,6 +124,12 @@ function Posting() {
   useEffect(() => {
     btnClickAxios()
   }, [local])
+  useEffect(() => {
+    btnClickAxios()
+  }, [Title])
+  // useEffect(() => {
+  //   btnClickAxios()
+  // }, [Title])
   return (
     <div>
       <Banner />
@@ -111,7 +147,7 @@ function Posting() {
                 <Tab2 label="iOS" value="FI102" />
                 <Tab2 label="IoT" value="FI104" />
                 <Tab2 label="AI" value="FI105" />
-                <Tab2 label="All" value=" " />
+                <Tab2 label="All" value="" />
               </TabList>
             </Box>
             <TabPanel value="FI100">
@@ -259,7 +295,7 @@ function Posting() {
                 ))}
               </SkillSelectBox>
             </TabPanel>
-            <TabPanel value=" ">
+            <TabPanel value="">
               <SkillSelectBox>
                 {skillBtnList6.map((ele, i) => (
                   <Skillbtn
@@ -290,14 +326,18 @@ function Posting() {
             </TabPanel>
           </TabContext>
         </Box>
-        <FilterSelect onChange={handleChangeLocal}>
-          <option value="">전체지역</option>
-          {Object.keys(Localdata).map((ele, i) => (
-            <option key={i} value={ele}>
-              {Localdata[ele].name}
-            </option>
-          ))}
-        </FilterSelect>
+        <SearchForms>
+          <FilterSelect onChange={handleChangeLocal}>
+            <option value="">전체지역</option>
+            {Object.keys(Localdata).map((ele, i) => (
+              <option key={i} value={ele}>
+                {Localdata[ele].name}
+              </option>
+            ))}
+          </FilterSelect>
+          <FilterInput type="text" placeholder="프로젝트 제목 검색" onChange={handleChangeTitle} />
+          {Title}
+        </SearchForms>
         <PostList>
           {postingList.map((post, i) => (
             <PostingCardItem post={post} key={post.postingSeq} />
@@ -406,9 +446,33 @@ const FilterSelect = styled.select`
   font-weight: 500;
   line-height: 1.6;
   color: #263747;
-
+  margin-right: 2em;
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+`
+const SearchForms = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+`
+const FilterInput = styled.input`
+  width: 100%;
+  max-width: 378px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d7e2eb;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fbfbfd;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #263747;
+  &:hover {
+    border: 1px solid #3396f4;
+    box-shadow: inset 0 0 0 1px#3396f4;
   }
 `
