@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @ToString
@@ -47,6 +48,10 @@ public class Qna {
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
+
+    public void addView(Integer view) {
+        this.view = view+1;
+    }
 
     @Builder
     public Qna(Integer qnaSeq, Integer userSeq, String title, String content,
