@@ -9,7 +9,7 @@ const Posting = lazy(() => import('./pages/Posting/Posting'))
 const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 const ApplyRegister = lazy(() => import('./pages/Apply/ApplyRegister'))
 const ApplyDetail = lazy(() => import('./pages/Apply/ApplyDetail'))
-const TeamSelect = lazy(() => import('./pages/TeamSelect/TeamSelect'))
+// const TeamSelect = lazy(() => import('./pages/TeamSelect/TeamSelect'))
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
           <Route path="/posting/:postingSeq" element={<PostingDetail />} />
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
-          <Route path="/teamselect" element={<TeamSelect />} />
+          {/* <Route path="/teamselect" element={<TeamSelect />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
