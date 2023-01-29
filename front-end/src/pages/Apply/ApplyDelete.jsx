@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -6,7 +6,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import cancleButton from '../../assets/image/x.png'
-import '../../assets/styles/application.css'
+import '../../assets/styles/applyDetail.css'
+// import axios from 'axios'
 
 const CancleButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FF4242',
@@ -27,7 +28,7 @@ const DeleteButton = styled(Button)(({ theme }) => ({
 }))
 
 export default function ApplyDelete() {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
     setOpen(true)
@@ -35,6 +36,16 @@ export default function ApplyDelete() {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleApplyDelete = async () => {
+    console.log('지원서 삭제')
+    // 지원서 삭제 axios //
+    // try {
+    //   await axios.delete('http://www.ssafysignal.site:8080/apply/1')
+    // } catch (error) {
+    //   console.log(error)
+    // }
   }
 
   return (
@@ -55,7 +66,7 @@ export default function ApplyDelete() {
           </DialogTitle>
           <img src={cancleButton} alt="plusButton" className="cancle-button" onClick={handleClose} />
           <DialogActions className="delete-button">
-            <DeleteButton onClick={handleClose}>삭제</DeleteButton>
+            <DeleteButton onClick={handleApplyDelete}>삭제</DeleteButton>
           </DialogActions>
         </div>
       </Dialog>
