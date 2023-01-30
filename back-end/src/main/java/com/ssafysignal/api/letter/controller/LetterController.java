@@ -56,10 +56,8 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "보낸 쪽지 목록 조희", description = "userSeq 기준으로 보낸 쪽지 목록 조회")
     @GetMapping("/from/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllFromLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
-                                                            @Parameter(description = "page", required = true)  int page,
-                                                            @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterResponse> letterList= letterService.findFromLetter(userSeq,page,size);
+    private ResponseEntity<BasicResponse> findAllFromLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq) {
+        List<FindLetterResponse> letterList= letterService.findFromLetter(userSeq);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
@@ -67,10 +65,8 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "받은 쪽지 목록 조희", description = "userSeq 기준으로 받은 쪽지 목록 조회")
     @GetMapping("/to/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllToLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
-                                                          @Parameter(description = "page", required = true)  int page,
-                                                          @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterResponse> letterList= letterService.findAllToLetter(userSeq,page,size);
+    private ResponseEntity<BasicResponse> findAllToLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq) {
+        List<FindLetterResponse> letterList= letterService.findAllToLetter(userSeq);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
@@ -78,10 +74,8 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "휴지통 쪽지 목록 조희", description = "받은 쪽지 중 휴지통 쪽지 목록 조회")
     @GetMapping("/trash/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllTrashLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq,
-                                                             @Parameter(description = "page", required = true)  int page,
-                                                             @Parameter(description = "size", required = true)  int size) {
-        List<FindLetterResponse> letterList= letterService.findAllTrashLetter(userSeq,page,size);
+    private ResponseEntity<BasicResponse> findAllTrashLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq) {
+        List<FindLetterResponse> letterList= letterService.findAllTrashLetter(userSeq);
         //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
