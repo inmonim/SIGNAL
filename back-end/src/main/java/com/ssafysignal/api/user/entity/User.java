@@ -72,4 +72,9 @@ public class User {
     public void modifyPassword(String password){
         this.password = password;
     }
+
+
+    // 하트 충전
+
+    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
 }
