@@ -1,30 +1,27 @@
-package com.ssafysignal.api.posting.entity;
+package com.ssafysignal.api.project.entity;
 
-import com.ssafysignal.api.apply.entity.ApplyAnswer;
 import com.ssafysignal.api.common.entity.CommonCode;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "posting_position")
-public class PostingPosition {
+@Table(name = "project_position")
+public class ProjectPosition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "posting_position_seq")
-    private Integer postingPositionSeq;
-    @Column(name = "posting_seq")
-    private Integer postingSeq;
+    @Column(name = "project_position_seq")
+    private Integer ProjectEvaluationSeq;
+    @Column(name = "project_seq")
+    private Integer projectSeq;
     @Column(name = "position_code")
     private String positionCode;
     @Column(name = "position_cnt")
@@ -34,9 +31,9 @@ public class PostingPosition {
     private CommonCode code;
 
     @Builder
-    public PostingPosition(Integer postingPositionSeq, Integer postingSeq, String positionCode, Integer positionCnt, CommonCode code) {
-        this.postingPositionSeq = postingPositionSeq;
-        this.postingSeq = postingSeq;
+    public ProjectPosition(Integer projectEvaluationSeq, Integer projectSeq, String positionCode, Integer positionCnt, CommonCode code) {
+        ProjectEvaluationSeq = projectEvaluationSeq;
+        this.projectSeq = projectSeq;
         this.positionCode = positionCode;
         this.positionCnt = positionCnt;
         this.code = code;

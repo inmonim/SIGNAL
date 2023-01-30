@@ -1,5 +1,6 @@
 package com.ssafysignal.api.apply.entity;
 
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.user.entity.User;
@@ -26,59 +27,71 @@ public class Apply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_seq")
     private Integer applySeq;
-
-    @Column(name = "content")
-    private String content;
-
-    @Column(name = "memo")
-    private String memo;
-
-    @Column(name = "is_select")
-    private boolean isSelect;
-
-    @Column(name = "reg_dt")
-    private LocalDateTime regDt;
-
-    @Column(name = "position_code")
-    private String positionCode;
-
-    @Column(name = "apply_code")
-    private String applyCode;
-
     @Column(name = "user_seq")
     private Integer userSeq;
     @Column(name = "posting_seq")
     private Integer postingSeq;
-
-    @OneToOne(targetEntity = PostingMeeting.class, orphanRemoval = true, cascade = CascadeType.ALL)
-    @JoinColumn(name = "applySeq")
+    @Column(name = "posting_meeting_seq")
+    private Integer postingMeetingSeq;
+    @Column(name = "content")
+    private String content;
+    @Column(name = "position_code")
+    private String positionCode;
+    @Column(name = "memo")
+    private String memo;
+    @Column(name = "is_select")
+    private boolean isSelect;
+    @Column(name = "apply_code")
+    private String applyCode;
+    @Column(name = "reg_dt")
+    private LocalDateTime regDt;
+    
+    // 1 : 1 관계
+    @OneToOne
+    @JoinColumn(name = "position_code", insertable = false, updatable = false)
+    private CommonCode code;
+    @OneToOne
+    @JoinColumn(name = "posting_seq", insertable = false, updatable = false)
+    private Posting posting;
+    @OneToOne
+    @JoinColumn(name = "user_seq", insertable = false, updatable = false)
+    private User user;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_meeting_seq", insertable = false, updatable = false)
     private PostingMeeting postingMeeting;
-
+    
+    // 1 : N 관계
     @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
-    private List<ApplyCareer> applyCareerList = new ArrayList<>();
+    private List<ApplyCareer> applyCareerList;
     @OneToMany(targetEntity = ApplyExp.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
-    private List<ApplyExp> applyExpList = new ArrayList<>();
+    private List<ApplyExp> applyExpList;
     @OneToMany(targetEntity = ApplySkill.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
-    private List<ApplySkill> applySkillList = new ArrayList<>();
+    private List<ApplySkill> applySkillList;
+    @OneToMany(targetEntity = ApplyAnswer.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "apply_seq")
+    private List<ApplyAnswer> applyAnswerList;
 
     @Builder
-    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, String content, String memo, String positionCode, boolean isSelect, LocalDateTime regDt,
-                  PostingMeeting postingMeeting, String applyCode, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
-    ) {
+    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, Integer postingMeetingSeq, String content, String positionCode, String memo, boolean isSelect, String applyCode, LocalDateTime regDt, CommonCode code, Posting posting, PostingMeeting postingMeeting, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList, List<ApplyAnswer> applyAnswerList) {
         this.applySeq = applySeq;
         this.userSeq = userSeq;
         this.postingSeq = postingSeq;
+        this.postingMeetingSeq = postingMeetingSeq;
         this.content = content;
         this.positionCode = positionCode;
         this.memo = memo;
         this.isSelect = isSelect;
         this.applyCode = applyCode;
+        this.regDt = regDt;
+        this.code = code;
+        this.posting = posting;
         this.postingMeeting = postingMeeting;
         this.applyCareerList = applyCareerList;
         this.applyExpList = applyExpList;
         this.applySkillList = applySkillList;
+        this.applyAnswerList = applyAnswerList;
     }
 }

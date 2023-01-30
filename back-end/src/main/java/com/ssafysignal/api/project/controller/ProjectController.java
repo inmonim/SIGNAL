@@ -38,8 +38,6 @@ public class ProjectController {
         log.info("registProject - Call");
 
         try {
-            System.out.println(projectRegistRequest);
-
             projectService.registProject(projectRegistRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {

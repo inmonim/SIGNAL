@@ -64,7 +64,7 @@ class ProjectRepositoryTest {
     @Test
     void regist() {
         Posting posting = Posting.builder()
-                .user(1)
+                .userSeq(1)
                 .content("프로젝트 생성 테스트")
                 .postingEndDt(LocalDateTime.now())
                 .level(5)
@@ -72,7 +72,6 @@ class ProjectRepositoryTest {
         postingRepository.save(posting);
 
         Project project = Project.builder()
-                .postingSeq(posting.getPostingSeq())
                 .subject("JPA 프로젝트 생성 테스트")
                 .localCode("11")
                 .fieldCode("FI100")
