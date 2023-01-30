@@ -3,10 +3,10 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import '../../assets/styles/Calendar.css'
 import moment from 'moment'
-import MeetingTimeSelect from './MeetingTimeList'
+import MeetingTimeList from './MeetingTimeList'
 
-function MeetingDtCalendar(meetingList) {
-  const [value, onChange] = useState(new Date())
+function MeetingDtCalendar(props) {
+  const [value, onValueChange] = useState(new Date())
   const [timeList, setTimeList] = useState([])
   const [meeting, setMeeting] = useState([])
 
@@ -17,18 +17,18 @@ function MeetingDtCalendar(meetingList) {
   }
 
   const handleCalendar = (e) => {
-    handleTimeListChange(moment(e).format('YYYY.MM.DD'))
-    onChange(e)
+    handleTimeListChange(moment(e).format('YYYY-MM-DD'))
+    onValueChange(e)
   }
 
   const handleTimeListChange = (value) => {
     const timeArr = []
-    meetingList.meetingList.map((e) => (e.slice(0, 10) === value ? timeArr.push(e) : 0))
+    props.meetingList.map((e, index) => (e.slice(0, 10) === value ? timeArr.push({ id: index, time: e }) : 0))
     setTimeList(timeArr)
   }
 
   useEffect(() => {
-    meetingListFilter(meetingList)
+    meetingListFilter(props)
   }, [])
 
   return (
@@ -47,7 +47,7 @@ function MeetingDtCalendar(meetingList) {
           // 추가할 html 태그를 변수 초기화
           const html = []
           // 현재 날짜가 post 작성한 날짜 배열(mark)에 있다면, dot div 추가
-          if (meeting.find((x) => x === moment(date).format('YYYY.MM.DD'))) {
+          if (meeting.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
             html.push(<div className="dot"></div>)
           }
           // 다른 조건을 주어서 html.push 에 추가적인 html 태그를 적용할 수 있음.
@@ -58,7 +58,7 @@ function MeetingDtCalendar(meetingList) {
           )
         }}
       ></Calendar>
-      <MeetingTimeSelect timeList={timeList}></MeetingTimeSelect>
+      <MeetingTimeList close={props.close} timeList={timeList} onChange={props.onChange}></MeetingTimeList>
     </div>
   )
 }

@@ -1,26 +1,18 @@
 import React from 'react'
-import Button from '@mui/material/Button'
+import '../../assets/styles/Calendar.css'
+import MeetingTime from './MeetingTime'
 
-function MeetingTimeSelect(meetingList) {
-  console.log(meetingList)
-
-  const timeFilter = (item) => {
-    console.log(item.slice(11, 13))
-    return item.slice(11, 13)
-  }
-  const style = {
-    display: 'flex',
-    alignItems: 'center',
-  }
+function MeetingTimeSelect(props) {
   return (
-    <div>
-      {meetingList.timeList.map((item, index) => (
-        <div style={style} key={index}>
-          <div>{timeFilter(item)} 시</div>
-          <Button variant="contained" value={timeFilter(item) || ''}>
-            선택
-          </Button>
-        </div>
+    <div className="time-list-section">
+      {props.timeList.map((item) => (
+        <MeetingTime
+          close={props.close}
+          item={item.time}
+          key={item.id}
+          id={item.id}
+          onChange={props.onChange}
+        ></MeetingTime>
       ))}
     </div>
   )
