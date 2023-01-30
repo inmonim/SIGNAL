@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
+import { TextField } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
-import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
+import moment from 'moment/moment'
 import '../../assets/styles/applyRegister.css'
 import styled from 'styled-components'
-
-import Skilldata from 'data/Skilldata'
-import { getPositionName } from 'data/Positiondata'
-import QnAList from 'components/Apply/QnaList'
-import SkillList from 'components/Apply/SkillList'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import Localdata from 'data/Localdata'
+// import { positionData } from 'data/Positiondata'
+import { Fielddata2 } from 'data/Fielddata'
+// import QnAList from 'components/Apply/QnaList'
 
 const Container = styled.section`
-  padding: 100px 25em;
+  // padding: 100px 25em;
 `
 
 const Title = styled.h1`
@@ -32,62 +33,76 @@ const Label = styled.h1`
 `
 
 const inputStyle = {
-  backgroundColor: '#f3f5f7',
+  backgroundColor: '#ffffff',
   position: 'static',
 }
 
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
 }
-
-const positionSelectStyle = {
-  backgroundColor: '#f3f5f7',
-  width: '11.5em',
-  position: 'static',
-}
-
+const hunjae = new Date()
+const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const PostingRegister = () => {
   // start >> useState
+  const [datevalue, setDateValue] = useState(humjaetime)
+  const [subject, setSubject] = useState('')
+  const [posting, setPosting] = useState({
+    userSeq: 1,
+    subject,
+    localCode: '39',
+    fieldCode: 'FI100',
+    Contact: true,
+    term: 10,
+    content: '공고 등록 테스트 본문',
+    postingEndDt: datevalue,
 
-  const [user, setUser] = useState([])
-  const [posting, setPosting] = useState([{}])
+    level: 5,
+    postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
+    postingSkillList: ['WE100', 'WE101'],
+    postingPositionList: [
+      {
+        positionCode: 'PO100',
+        positionCnt: 5,
+      },
+      {
+        positionCode: 'PO101',
+        positionCnt: 10,
+      },
+    ],
+    postingQuestionList: [
+      {
+        num: 1,
+        content: '질문 1',
+      },
+      {
+        num: 2,
+        content: '질문 2',
+      },
+    ],
+  })
   const [profile, setProfile] = useState([])
 
-  const [position, setPosition] = useState('')
-
   const [careerList, setCareerList] = useState([])
-  const [expList, setExpList] = useState([])
 
   // const [answerList, setAnswerList] = useState([])
-  const [skillList, setSkillList] = useState([])
 
-  const [content, setContent] = useState([])
-  const [qnaList, setQnaList] = useState([])
+  // const [qnaList, setQnaList] = useState([])
 
   // ene >> useState
 
   // start >> Fetch
 
-  const userFetch = async () => {
-    try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
-      setUser(res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const postingFetch = async () => {
-    try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
-      setPosting(res.data.body)
-      const qnaArr = []
-      res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-      setQnaList(qnaArr)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const postingFetch = async () => {
+  //   try {
+  //     const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
+  //     setPosting(res.data.body)
+  //     const qnaArr = []
+  //     res.data.body.postingQuestionList.map(() => qnaArr.push(''))
+  //     setQnaList(qnaArr)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const profileFetch = async () => {
     try {
@@ -126,40 +141,13 @@ const PostingRegister = () => {
         content: item.content,
       })
     )
-    setExpList(expArr)
   }
 
   // end >> Data filter
 
   // start >> handle position
 
-  const handlePositionChange = (event) => {
-    setPosition(event.target.value)
-  }
   // end >> handle position
-
-  // start >> handle skill
-
-  const handleSkillInput = (value) => {
-    const skillArr = [...skillList]
-    skillArr.push(value)
-    setSkillList(skillArr)
-    console.log(skillArr)
-  }
-
-  const handleSkillRemove = (id) => {
-    setSkillList(
-      skillList.filter((skill) => {
-        return skill !== id
-      })
-    )
-  }
-
-  // start >> skill filter
-  const skillSearchFilter = createFilterOptions({
-    matchFrom: 'start',
-    stringify: (option) => option.name,
-  })
 
   // end >> skill filter
 
@@ -199,105 +187,47 @@ const PostingRegister = () => {
 
   // start >> handle exp
 
-  const handleExpAdd = () => {
-    const expArr = [...expList]
-    const exp = {
-      seq: expArr[expArr.length - 1].seq + 1,
-      content: '',
-    }
-    expArr.push(exp)
-    setExpList(expArr)
-    console.log(expList)
-  }
-
-  const handleExpChange = (value, key) => {
-    const expArr = [...expList]
-    const newExpArr = [...expList]
-
-    for (let index = 0; index < expArr.length; index++) {
-      if (expArr[index].seq === key) {
-        newExpArr.splice(index, 1, { seq: key, content: value })
-      }
-    }
-    setExpList(newExpArr)
-  }
-
-  const handleExpRemove = (key) => {
-    setExpList(expList.filter((exp) => exp.seq !== key))
-  }
-
   // end >> handle exp
 
   // start >> handle content
 
-  const handleContentChange = (event) => {
-    setContent(event.target.value)
-  }
+  const handleContentChange = (event) => {}
 
   // end >> handle content
 
   // start >> handle qna
 
-  const handleQnAChange = (value, key) => {
-    const qnaArr = [...qnaList]
-    qnaArr.splice(key, 1, value)
-    setQnaList(qnaArr)
-    console.log(qnaList)
-  }
+  // const handleQnAChange = (value, key) => {
+  //   const qnaArr = [...qnaList]
+  //   qnaArr.splice(key, 1, value)
+  //   setQnaList(qnaArr)
+  //   console.log(qnaList)
+  // }
 
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    const regDt = new Date()
-    console.log(regDt)
-    const regDtreq =
-      regDt.getFullYear() +
-      '-' +
-      regDt.getMonth() +
-      '-' +
-      regDt.getDate() +
-      ' ' +
-      regDt.getHours() +
-      ':' +
-      regDt.getMinutes() +
-      ':' +
-      regDt.getSeconds()
     try {
-      const req = {
-        applyAnswerList: [],
-        applyCareerList: careerList,
-        applyExpList: expList,
-        applySkillList: [],
-        content,
-        fieldCode: 'FI100',
-        applyCode: 'AS101',
-        meetingDt: '2023-01-01 11:00:00.000',
-        memo: '이 지원자는 열정이 있음',
-        positionCode: 'PO100',
-        postingSeq: 1,
-        userSeq: 1,
-      }
-      console.log('regDtreq')
-      console.log(regDtreq)
       const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('.', req, config)
+        .post('/posting', posting, config)
         .then((res) => {
           console.log(res)
+          console.log(1)
         })
         .catch((err) => {
           console.log(err)
+          console.log('캐치')
         })
 
-      console.log('지원서 post')
+      console.log('공고 post')
     } catch (error) {
-      console.log(error)
+      console.log('에러')
     }
   }
 
   useEffect(() => {
-    userFetch()
-    postingFetch()
+    // postingFetch()
     profileFetch()
   }, [])
 
@@ -305,107 +235,128 @@ const PostingRegister = () => {
     <Container>
       <div>
         <div>
-          <Title>{user.nickname} 님의지원서</Title>
+          <Title>공고 등록</Title>
         </div>
         <div>
-          <div className="user-detail-section">
+          {/* 여기는 주제, 기간 */}
+          <div style={{ display: 'flex', marginBottom: '1em' }}>
             <div className="phone-section">
-              <Label>전화번호 </Label>
-              <TextField disabled value={user.phone || ''} sx={inputStyle} />
+              <Label>프로젝트 주제 </Label>
+              <TextField
+                sx={inputStyle}
+                onChange={(e) => {
+                  // console.log(e.target.value)
+                  setSubject(e.target.value)
+                  setPosting({ ...posting, subject: e.target.value })
+                  // console.log(subject)
+                }}
+              />
             </div>
             <div className="email-section">
-              <Label>이메일</Label>
-              <TextField disabled value={user.email || ''} sx={inputStyle} />
+              <Label>프로젝트 모집 기간</Label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="마감 날짜"
+                  value={datevalue}
+                  onChange={(newValue) => {
+                    const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
+                    setDateValue(time)
+                    setPosting({ ...posting, postingEndDt: time })
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
             </div>
           </div>
-          <div className="position-section">
+          {/* 여기는 진행지역,분야 */}
+          <div style={{ display: 'flex', marginBottom: '2em' }}>
+            <div className="phone-section">
+              <Label>진행 지역</Label>
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setPosting({ ...posting, localCode: e.target.value })
+                }}
+              >
+                {Object.keys(Localdata).map((ele, i) => (
+                  <option key={i} value={ele}>
+                    {Localdata[ele].name}
+                  </option>
+                ))}
+              </FilterSelect>
+            </div>
+            <div className="email-section">
+              <Label style={{ width: '10%' }}>분야</Label>
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setPosting({ ...posting, fieldCode: e.target.value })
+                }}
+              >
+                {Fielddata2.map((ele, i) => (
+                  <option key={ele.code} value={ele.code}>
+                    {ele.name}
+                  </option>
+                ))}
+              </FilterSelect>
+            </div>
+          </div>
+          {/* 여기는 진행유형,프로젝트기간 */}
+          <div style={{ display: 'flex', marginBottom: '2em' }}>
+            <div className="phone-section">
+              <Label>진행 유형 </Label>
+              <FilterSelect>
+                {Object.keys(Localdata).map((ele, i) => (
+                  <option key={i} value={ele}>
+                    {Localdata[ele].name}
+                  </option>
+                ))}
+              </FilterSelect>
+            </div>
+            <div className="email-section">
+              <Label>프로젝트 기간</Label>
+              <FilterSelect>
+                {Object.keys(Localdata).map((ele, i) => (
+                  <option key={i} value={ele}>
+                    {Localdata[ele].name}
+                  </option>
+                ))}
+              </FilterSelect>
+            </div>
+          </div>
+          {/* 여기는 포지션인원 , 예상난이도 */}
+          <div style={{ display: 'flex', marginBottom: '2em' }}>
+            <div className="phone-section">
+              <div>
+                <div>
+                  <div className="career-label">
+                    <Label>포지션 인원</Label>
+                    <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
+                  </div>
+                  <hr></hr>
+                </div>
+                <CareerList
+                  careerList={careerList}
+                  onRemove={handleCareerRemove}
+                  onChange={handleCareerChange}
+                  key={careerList[0]}
+                ></CareerList>
+              </div>
+            </div>
             <div>
-              <Label className="label">원하는 포지션</Label>
-              <FormControl style={positionSelectStyle}>
-                <InputLabel id="demo-simple-select-label" sx={{ inputStyle, width: '11.5em' }}></InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={position || ''}
-                  onChange={handlePositionChange}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                >
-                  {posting.postingPositionList &&
-                    posting.postingPositionList.map((item, index) => (
-                      <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
-                        {getPositionName(item.positionCode)}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
+              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>예상 난이도</Label>
+              <FilterSelect>
+                {Object.keys(Localdata).map((ele, i) => (
+                  <option key={i} value={ele}>
+                    {Localdata[ele].name}
+                  </option>
+                ))}
+              </FilterSelect>
             </div>
           </div>
-
-          <div className="skill-meeting-section">
-            <div className="skill-section">
-              <Label className="label">사용기술</Label>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                sx={{ width: 300 }}
-                options={Skilldata}
-                getOptionLabel={(option) => option.name}
-                filterOptions={skillSearchFilter}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    onKeyUp={(e) => {
-                      if (e.key === 'Enter') {
-                        console.log('enter')
-                        console.log(e.target.value)
-                        handleSkillInput(e.target.value)
-                      }
-                    }}
-                  />
-                )}
-              />
-              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
-            </div>
-            <div className="meeting-section">
-              <Label className="label">화상미팅 예약</Label>
-            </div>
-          </div>
-
-          <div className="career-exp-section">
-            <div className="career-section">
-              <div>
-                <div className="career-label">
-                  <Label>경력</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
-                </div>
-                <hr></hr>
-              </div>
-              <CareerList
-                careerList={careerList}
-                onRemove={handleCareerRemove}
-                onChange={handleCareerChange}
-                key={careerList[0]}
-              ></CareerList>
-            </div>
-            <div className="exp-section">
-              <div>
-                <div className="exp-label">
-                  <Label>경험</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleExpAdd} />
-                </div>
-                <hr></hr>
-              </div>
-              <ExpList
-                expList={expList}
-                onRemove={handleExpRemove}
-                onChange={handleExpChange}
-                key={expList[0]}
-              ></ExpList>
-            </div>
-          </div>
-
+          {/* 여기는 프로젝트 소개 */}
           <div className="content-section">
-            <Label className="label">하고싶은 말</Label>
+            <Label className="label">프로젝트 소개</Label>
             <div>
               <TextField
                 style={textAreaStyle}
@@ -416,16 +367,19 @@ const PostingRegister = () => {
               />
             </div>
           </div>
-
+          {/* 지원자에게 물어 보고 싶은 말   */}
           <div className="question-answer-section">
             <div className="question-section">
-              <Label className="label">지원자에게 궁금한 점</Label>
+              <Label className="label" style={{ width: '30%' }}>
+                지원자에게 물어 보고 싶은 말
+              </Label>
             </div>
             <div className="answer-section">
-              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList>
+              {/* <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList> */}
             </div>
           </div>
         </div>
+
         <div className="submit-button">
           <button className="apply-button" onClick={handleApplySubmit}>
             지원하기
@@ -435,5 +389,24 @@ const PostingRegister = () => {
     </Container>
   )
 }
-
+const FilterSelect = styled.select`
+  width: 100%;
+  max-width: 378px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d7e2eb;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-size: 0.625rem 0.3125rem;
+  background-color: #fbfbfd;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #263747;
+  margin-right: 2em;
+  &:hover {
+    border: 1px solid #848484;
+    box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+`
 export default PostingRegister
