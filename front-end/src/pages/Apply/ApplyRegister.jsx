@@ -88,8 +88,8 @@ const Apply = () => {
       res.data.body.postingQuestionList.map(() => answerArr.push(''))
       meetingFetchFilter(res.data.body.postingMeetingList)
       setAnswerList(answerArr)
+      console.log(answerArr)
       setQuestionList(res.data.body.postingQuestionList)
-      console(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -259,9 +259,13 @@ const Apply = () => {
 
   const handleQnAChange = (value, key) => {
     const answerArr = [...answerList]
-    answerArr.splice(key, 1, value)
-    setExpList(answerArr)
-    console.log('answerArr', answerArr)
+    questionList.forEach((item, index) => {
+      if (item.postingQuestionSeq === key) {
+        answerArr.splice(index, 1, value)
+      }
+    })
+
+    setAnswerList(answerArr)
   }
 
   // end >> handle qna
