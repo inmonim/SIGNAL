@@ -1,9 +1,6 @@
 package com.ssafysignal.api.board.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import jdk.vm.ci.meta.Local;
 import lombok.*;
-import org.hibernate.Interceptor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
