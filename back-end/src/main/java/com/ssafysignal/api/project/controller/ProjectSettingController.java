@@ -1,8 +1,6 @@
 package com.ssafysignal.api.project.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ssafysignal.api.global.exception.NotFoundException;
@@ -13,7 +11,6 @@ import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
-import com.ssafysignal.api.project.entity.ProjectEvaluation;
 import com.ssafysignal.api.project.service.ProjectSettingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
