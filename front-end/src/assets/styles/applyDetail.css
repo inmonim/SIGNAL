@@ -1,0 +1,113 @@
+.project-name-label {
+  color: #574b9f;
+  margin-bottom: 10px;
+}
+
+.project-name {
+  display: flex;  
+}
+
+.container {
+  padding: 5% 30% 5% 30%;
+  width: 100%;
+  font-size: 20px;
+}
+.name-section {
+  display: flex;
+}
+
+.position-section {
+  display: flex;
+}
+
+.name-position-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.name-section,
+.position-section{
+  width: 45%;
+}
+
+.career-exp-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+.exp-section,
+.career-section {
+  width: 45%;
+}
+
+.phone-section,
+.email-section {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  width: 120px;
+  color: #463C7F;  
+}
+
+.content-section > .label,
+.question-answer-section > .label{
+  width: 100%;
+  font-size: 25px;
+}
+
+hr{
+  border-color:#463C7F;
+}
+
+.apply-section{
+  margin : 20px;
+}
+
+.name-position-section > div,
+.phone-section > div,
+.email-section > div,
+.skill-section > div,
+.career-exp-section > div,
+.content-section > div,
+.question-answer-section > div{
+  margin: 15px 0px;
+}
+
+.exp,
+.career,
+.content{
+  padding: 10px 5px;
+  font-size: 20px;
+}
+
+.submit-section{
+  display: flex;
+  justify-content: center;
+  padding: 20px 0px;
+}
+
+.submit-section > Button { 
+  width: 60%;
+}
+
+.title{
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.cancle-button {
+  width: 40px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.cancle-title{
+  position: relative;
+  margin: 20px 50px;
+  top:25px;
+}
