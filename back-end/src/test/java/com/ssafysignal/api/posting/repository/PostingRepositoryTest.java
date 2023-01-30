@@ -30,7 +30,7 @@ class PostingRepositoryTest {
     @Test
     void regist() {
         Posting posting = Posting.builder()
-                .user(1)
+                .userSeq(1)
                 .content("프로젝트 생성 테스트")
                 .postingEndDt(LocalDateTime.now())
                 .level(5)

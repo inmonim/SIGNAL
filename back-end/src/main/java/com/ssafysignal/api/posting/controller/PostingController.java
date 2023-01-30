@@ -4,6 +4,7 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
+import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
 import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
 import com.ssafysignal.api.posting.service.PostingService;
@@ -73,8 +74,8 @@ public class PostingController {
         if (postingSkillList != null && postingSkillList.size() > 0) searchKeys.put("postingSkillList", postingSkillList);
 
         try {
-            Page<Project> findProjectList = postingService.findAllPosting(page, size, searchKeys);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, PostingFindAllResponse.fromEntity(findProjectList)));
+            List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
@@ -107,6 +108,8 @@ public class PostingController {
     private ResponseEntity<BasicResponse> modifyPosting(@Parameter(name = "postingSeq", description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq,
                                                         @Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingModifyRequest){
         log.info("modifyPosting - Call");
+
+        log.info(String.valueOf(postingSeq));
 
         try {
             postingService.modifyPosting(postingSeq, postingModifyRequest);
@@ -152,7 +155,7 @@ public class PostingController {
         log.info("applySelect - Call");
 
         try {
-            log.info("isSelect : " + String.valueOf(isSelect));
+            postingService.applySelect(applySeq, isSelect);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -170,8 +173,7 @@ public class PostingController {
         log.info("findAllApplyPosting - Call");
 
         try {
-            log.info("userSeq : " + userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingService.findAllApplyPosting(userSeq)); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
@@ -187,8 +189,7 @@ public class PostingController {
         log.info("findAllPostPosting - Call");
 
         try {
-            log.info("userSeq : " + userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingService.findAllPostPosting(userSeq)); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
