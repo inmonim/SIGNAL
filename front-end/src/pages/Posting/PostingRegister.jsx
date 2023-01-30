@@ -42,6 +42,11 @@ const textAreaStyle = {
 }
 const hunjae = new Date()
 const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
+const contactList = [
+  { name: '대면', status: true },
+  { name: '비대면', status: false },
+]
+
 const PostingRegister = () => {
   // start >> useState
   const [datevalue, setDateValue] = useState(humjaetime)
@@ -83,26 +88,6 @@ const PostingRegister = () => {
   const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
-
-  // const [answerList, setAnswerList] = useState([])
-
-  // const [qnaList, setQnaList] = useState([])
-
-  // ene >> useState
-
-  // start >> Fetch
-
-  // const postingFetch = async () => {
-  //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
-  //     setPosting(res.data.body)
-  //     const qnaArr = []
-  //     res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-  //     setQnaList(qnaArr)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
   const profileFetch = async () => {
     try {
@@ -289,7 +274,7 @@ const PostingRegister = () => {
               <Label style={{ width: '10%' }}>분야</Label>
               <FilterSelect
                 onChange={(e) => {
-                  console.log(e.target.value)
+                  // console.log(e.target.value)
                   setPosting({ ...posting, fieldCode: e.target.value })
                 }}
               >
@@ -305,10 +290,16 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '2em' }}>
             <div className="phone-section">
               <Label>진행 유형 </Label>
-              <FilterSelect>
-                {Object.keys(Localdata).map((ele, i) => (
-                  <option key={i} value={ele}>
-                    {Localdata[ele].name}
+              <FilterSelect
+                onChange={(e) => {
+                  // console.log(e.target.value)
+                  setPosting({ ...posting, isContact: e.target.value })
+                  // console.log(range(10, 3))
+                }}
+              >
+                {contactList.map((ele, i) => (
+                  <option key={i} value={ele.status}>
+                    {ele.name}
                   </option>
                 ))}
               </FilterSelect>
