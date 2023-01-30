@@ -7,7 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/applyDetail.css'
-// import axios from 'axios'
+import axios from 'axios'
 
 const CancleButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FF4242',
