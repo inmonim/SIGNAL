@@ -7,13 +7,12 @@ import 'assets/styles/notice.css'
 function Notice() {
   const [data, setData] = useState([])
 
-  const [size] = useState(7)
+  const [size] = useState(8)
   const [page, setPage] = useState(1)
-  const [count] = useState(50)
+  const [count, setCount] = useState(0)
 
   const handlePageChange = (page) => {
     setPage(page)
-    console.log(page)
   }
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/board/notice?page=${page}&size=${size}`, {
@@ -21,8 +20,14 @@ function Notice() {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.body.noticeList)
         setData(res.body.noticeList)
+      })
+    fetch(process.env.REACT_APP_API_URL + '/board/notice/count', {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setCount(res.body.count)
       })
   }, [page])
 
@@ -69,7 +74,7 @@ function Notice() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Paging page={page} count={count} setPage={handlePageChange} />
+          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
         </div>
       </div>
     </div>
