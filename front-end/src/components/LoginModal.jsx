@@ -40,23 +40,6 @@ const inputStyle = {
   },
 }
 
-// const SignalBtn = styled(Btn)(({ theme }) => ({
-//   fontFamily: 'dohyeon',
-//   fontColor: theme.palette.getContrastText('#574B9F'),
-//   backgroundColor: '#574B9F',
-//   width: '173px',
-//   height: '90px',
-//   fontSize: '44px',
-//   border: '1px solid #574B9F',
-//   borderRadius: 25,
-//   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
-//   '&:hover': {
-//     backgroundColor: '#fff',
-//     borderColor: '1px solid #574B9F',
-//     color: '#574B9F',
-//   },
-// }))
-
 function LoginModal({ open, onClose }) {
   const [regOpen, setRegOpen] = useState(false)
   const handleRegOpen = () => {
@@ -184,6 +167,7 @@ function LoginModal({ open, onClose }) {
                   sigheight="90px"
                   sigfontSize="44px"
                   sigBorderRadius={25}
+                  sigMargin="30px auto"
                   variant="contained"
                   onClick={handleToMain}
                 >

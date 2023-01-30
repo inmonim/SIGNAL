@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import 'assets/styles/notice.css'
 import view from 'assets/image/view.png'
+import commentimg from 'assets/image/comment.png'
+import EditIcon from '@mui/icons-material/Edit'
 
 function QnaDetail() {
   const location = useLocation()
@@ -20,17 +22,24 @@ function QnaDetail() {
   return (
     <div className="qna-page-container">
       <div className="qna-detail-container">
-        <div className="qna-detail-title">{data.title}</div>
-        <div className="qna-detail-middle">
-          <div className="qna-detail-middle-regDt">{data.regDt}</div>
-          <div className="qna-detail-middle-view">
-            <span>
-              <img src={view} alt="view" />
-            </span>
-            <span>{data.view}</span>
+        <div className="qna-detail-comment-container">
+          <div className="qna-detail-title">{data.title}</div>
+          <EditIcon></EditIcon>
+          <div className="qna-detail-middle">
+            <div className="qna-detail-middle-regDt">{data.regDt}</div>
+            <div className="qna-detail-middle-view">
+              <span>
+                <img src={view} alt="view" />
+              </span>
+              <span>{data.view}</span>
+            </div>
           </div>
+          <div className="qna-detail-content">{data.content}</div>
         </div>
-        <div className="qna-detail-content">{data.content}</div>
+        <div className="qna-detail-comment">
+          <img src={commentimg} alt="" />
+          {data.answer}
+        </div>
       </div>
     </div>
   )

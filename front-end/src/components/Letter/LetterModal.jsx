@@ -73,6 +73,7 @@ function LetterModal({ open, onClose }) {
               sigheight="55px"
               sigfontSize="29px"
               sigBorderRadius={15}
+              sigMargin="30px auto"
               selected={selectedListIndex === 3}
               onClick={() => setSelectedListIndex(3)}
             >

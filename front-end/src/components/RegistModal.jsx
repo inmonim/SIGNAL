@@ -215,6 +215,7 @@ function RegistModal({ open, onClose }) {
               sigheight="90px"
               sigfontSize="40px"
               sigBorderRadius={25}
+              sigMargin="30px auto"
               variant="contained"
               onClick={handleAlertOpen}
             >

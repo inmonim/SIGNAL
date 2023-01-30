@@ -3,6 +3,7 @@
   height: 90%;
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .qna-container {
@@ -11,16 +12,29 @@
 }
 
 .qna-header {
+  justify-content: center;
+  align-items: center;
+}
+
+.qna-header-title{
   font-size: 44px;
   display: flex;
   justify-content: center;
-  margin-bottom: 70px;
+}
+
+.qna-header-regist{
+  display: block;
+  float: right;
 }
 
 /* 테이블 헤더  */
 thead.MuiTableHead-root {
   border-bottom: 2px solid #796fb2;
 }
+/* 
+tr.MuiTableRow-root.css-1q1u3t4-MuiTableRow-root  {
+  height: 61.5px;
+} */
 
 th.MuiTableCell-root {
   font-size: 24px;
@@ -32,7 +46,7 @@ td.MuiTableCell-root {
 }
 
 tbody.MuiTableBody-root{
-  height: 430px;
+  height: 496px;
   border-top: 2px solid #796fb2;
   border-bottom: 2px solid #796fb2;
 }
@@ -46,11 +60,15 @@ a{
 /* qnaDetail */
 .qna-detail-container{
   width: 1125px;
-  height: 600px;
+  height: 535px;
   border-top: 2px solid #796fb2;
   border-bottom: 2px solid #796fb2;
   margin: auto;
 }
+
+/* .qna-detail-comment-container{
+
+} */
 
 .qna-detail-title{
   font-size: 44px;
@@ -76,6 +94,30 @@ a{
 }
 
 .qna-detail-content{
+  padding: 55px;
+  font-size: 24px;
+}
+
+.qna-detail-comment{
+  display: flex;
+}
+
+/* qnaRegist */
+.qna-regist-container{
+  width: 1125px;
+  height: 650px;
+  border-bottom: 2px solid #796fb2;
+  margin: auto;
+}
+.qna-regist-header{
+  font-size: 44px;
+  height: 67px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #796fb2;
+}
+
+.qna-regist-main{
   padding: 55px;
   font-size: 24px;
 }

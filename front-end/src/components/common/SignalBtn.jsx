@@ -1,7 +1,7 @@
 import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 
-const SignalBtn = styled(Btn)(({ theme, sigwidth, sigheight, sigfontSize, sigBorderRadius }) => ({
+const SignalBtn = styled(Btn)(({ theme, sigwidth, sigheight, sigfontSize, sigBorderRadius, sigMargin }) => ({
   fontFamily: 'dohyeon',
   fontColor: theme.palette.getContrastText('#574B9F'),
   backgroundColor: '#574B9F',
@@ -12,8 +12,8 @@ const SignalBtn = styled(Btn)(({ theme, sigwidth, sigheight, sigfontSize, sigBor
   borderRadius: sigBorderRadius,
   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
   color: '#fff',
-  margin: '30px auto',
-  display: 'block',
+  margin: sigMargin,
+  display: 'flex',
   '&:hover': {
     backgroundColor: '#fff',
     borderColor: '1px solid #574B9F',
