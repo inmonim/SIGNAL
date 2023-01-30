@@ -44,6 +44,7 @@ public class ProfileService {
         return ProfileBasicResponse.builder()
                 .userSkillList(userSkillRepository.findByUserSeq(userSeq))
                 .build();
+
     }
 
     @Transactional

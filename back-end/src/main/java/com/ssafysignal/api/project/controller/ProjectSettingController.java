@@ -11,6 +11,7 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
+import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
 import com.ssafysignal.api.project.entity.ProjectEvaluation;
 import com.ssafysignal.api.project.service.ProjectSettingService;
@@ -66,16 +67,16 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/setting/{projectSeq}")
     private ResponseEntity<BasicResponse> modifyProjectSetting(@Parameter(name = "projectSeq", description = "프로젝트 Seq") @PathVariable(name = "projectSeq") Integer projectSeq,
-                                                               @Parameter(name = "uploadImage", description = "프로젝트 대표 이미지 파일") @RequestPart("uploadImage") MultipartFile uploadImage,
+                                                               @Parameter(name = "uploadImage", description = "프로젝트 대표 이미지 파일") @RequestPart(value = "uploadImage", required = false) MultipartFile uploadImage,
                                                                @Parameter(name = "modifyData", description = "프로젝트 수정 정보") @RequestParam String modifyData) {
         log.info("modifyProjectSetting - Call");
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new SimpleModule());
-            ProjectSettingModifyRequest projectSettingModifyRequest = objectMapper.readValue(modifyData, new TypeReference<ProjectSettingModifyRequest>() {} );
+            ProjectSettingModifyRequest projectSettingModifyRequest = objectMapper.readValue(modifyData, new TypeReference<ProjectSettingModifyRequest>() {});
             projectSettingService.modifyProjectSetting(projectSeq, uploadImage, projectSettingModifyRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
-        }  catch (NotFoundException e){
+        } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
@@ -132,11 +133,11 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/evaluation")
-    private ResponseEntity<BasicResponse> registProjectUserEvaluation(@Parameter(name = "projectEvaluation", description = "프로젝트 평가 정보") @RequestBody ProjectEvaluation projectEvaluation) {
+    private ResponseEntity<BasicResponse> registProjectUserEvaluation(@Parameter(name = "projectEvaluation", description = "프로젝트 평가 정보") @RequestBody ProjectEvaluationRegistRequest projectEvaluationRegistRequest) {
         log.info("registProjectUserEvaluation - Call");
 
         try {
-            projectSettingService.registProjectUserEvaluation(projectEvaluation);
+            projectSettingService.registProjectUserEvaluation(projectEvaluationRegistRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         }  catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));

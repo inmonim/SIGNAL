@@ -41,7 +41,7 @@ public class QnaFindResponse {
     private Boolean isTop;
 
     @Schema(description = "작성시간")
-    @JsonFormat(pattern = "yyyy:MM:dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
 
     public static QnaFindResponse fromEntity(final Qna qna) {

@@ -51,4 +51,15 @@ public class ProjectSpecification {
             return projectUserList;
         });
     }
+
+    public static Specification<ProjectEvaluation> byFromUserSeqAndToUserSeq(Integer projectUserSeq, Integer toProjectUserSeq, Integer termCnt){
+        return ((root, query, criteriaBuilder) -> {
+            Predicate projectUserList = criteriaBuilder.conjunction();
+            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("termCnt"), termCnt));
+            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("fromUserSeq"), projectUserSeq));
+            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("toUserSeq"), toProjectUserSeq));
+
+            return projectUserList;
+        });
+    }
 }
