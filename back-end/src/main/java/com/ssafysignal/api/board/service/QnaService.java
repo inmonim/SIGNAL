@@ -3,7 +3,8 @@ package com.ssafysignal.api.board.service;
 import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
 import com.ssafysignal.api.board.entity.Notice;
 import com.ssafysignal.api.board.entity.Qna;
-import com.ssafysignal.api.board.repository.*;
+import com.ssafysignal.api.board.repository.NoticeRepository;
+import com.ssafysignal.api.board.repository.QnaRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -13,33 +14,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-public class BoardService {
-
-    private final NoticeRepository noticeRepository;
+public class QnaService {
 
     private final QnaRepository qnaRepository;
 
-
     @Transactional(readOnly = true)
-    public Page<Notice> findAllNotice(Integer page, Integer size) {
-        Page<Notice> noticeList = noticeRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.ASC, "noticeSeq"));
-        return noticeList;
+    public Integer countNotice() {
+        return qnaRepository.findAll().size();
     }
-
-
-    @Transactional
-    public Notice findNotice(Integer noticeSeq) throws NotFoundException {
-        Notice notice = noticeRepository.findByNoticeSeq(noticeSeq)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        notice.addView(notice.getView());
-        noticeRepository.save(notice);
-        return notice;
-    }
-
 
     @Transactional(readOnly = true)
     public Page<Qna> findAllQna(Integer page, Integer size) {
@@ -78,10 +62,8 @@ public class BoardService {
 
     @Transactional
     public void deleteQna(Integer qnaSeq) {
-        if (qnaRepository.findById(qnaSeq).isPresent()) {
-            Qna qna = qnaRepository.findById(qnaSeq)
-                    .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_FAIL));
-            qnaRepository.delete(qna);
-        }
+        Qna qna = qnaRepository.findById(qnaSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
+        qnaRepository.delete(qna);
     }
 }
