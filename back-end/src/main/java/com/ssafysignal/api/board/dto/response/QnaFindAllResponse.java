@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 public class QnaFindAllResponse {
 
     @Schema(description = "QnA 목록")
-    List<QnaFindResponse> qnaFindResponseList;
+    List<QnaFindResponse> qnaList;
 
     private QnaFindAllResponse(final List<QnaFindResponse> qnaList) {
-        this.qnaFindResponseList = qnaList;
+        this.qnaList = qnaList;
     }
 
     public static QnaFindAllResponse fromEntity(final Page<Qna> findQnaList) {
