@@ -7,7 +7,7 @@ function ToLetter({ handleChangeView, view, handleMenuListItemClick }) {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/letter/from/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
+    fetch(process.env.REACT_APP_API_URL + `/letter/from/${sessionStorage.getItem('userSeq')}`, {
       method: 'GET',
     })
       .then((res) => res.json())
