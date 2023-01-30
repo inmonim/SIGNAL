@@ -39,4 +39,12 @@ function getPositionName(code) {
   return name
 }
 
-export { positionData, getPositionName }
+function getPositionCode(name) {
+  let code = 'error'
+  positionData.forEach(function (item) {
+    if (item.name === name) code = item.code
+  })
+  return code
+}
+
+export { positionData, getPositionName, getPositionCode }

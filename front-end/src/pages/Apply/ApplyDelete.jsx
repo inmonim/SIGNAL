@@ -7,7 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/applyDetail.css'
-// import axios from 'axios'
+import axios from 'axios'
 
 const CancleButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FF4242',
@@ -27,7 +27,7 @@ const DeleteButton = styled(Button)(({ theme }) => ({
   },
 }))
 
-export default function ApplyDelete() {
+function ApplyDelete({ applySeq }) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
@@ -40,12 +40,11 @@ export default function ApplyDelete() {
 
   const handleApplyDelete = async () => {
     console.log('지원서 삭제')
-    // 지원서 삭제 axios //
-    // try {
-    //   await axios.delete('http://www.ssafysignal.site:8080/apply/1')
-    // } catch (error) {
-    //   console.log(error)
-    // }
+    try {
+      await axios.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -73,3 +72,5 @@ export default function ApplyDelete() {
     </CssVarsProvider>
   )
 }
+
+export default ApplyDelete
