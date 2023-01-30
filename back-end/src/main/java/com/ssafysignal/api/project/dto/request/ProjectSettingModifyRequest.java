@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -30,8 +31,4 @@ public class ProjectSettingModifyRequest {
     private String content;
     @Schema(description = "프로젝트 Git Url")
     private String gitUrl;
-    @Schema(description = "포지션 목록")
-    private List<ProjectMemberModifyDto> positionList;
-    @Schema(description = "프로젝트 대표 이미지")
-    private MultipartFile projectImage;
 }
