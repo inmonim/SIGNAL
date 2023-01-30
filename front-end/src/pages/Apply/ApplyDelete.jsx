@@ -64,7 +64,7 @@ export default function ApplyDelete() {
           <DialogTitle id="alert-dialog-title" className="cancle-title">
             지원을 취소하시겠습니까?
           </DialogTitle>
-          <img src={cancleButton} alt="plusButton" className="cancle-button" onClick={handleClose} />
+          <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
           <DialogActions className="delete-button">
             <DeleteButton onClick={handleApplyDelete}>삭제</DeleteButton>
           </DialogActions>
