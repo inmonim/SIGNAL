@@ -3,6 +3,7 @@ package com.ssafysignal.api.user.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.user.dto.request.ModifyUserReq;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.dto.response.UserFindAllResponse;
 import com.ssafysignal.api.user.entity.User;
@@ -25,20 +26,25 @@ public class UserController {
     private final UserService userService;
 
     @Tag(name = "회원")
-    @Operation(summary = "특정 회원 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
+    @Operation(summary = "회원 상세 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("findUser - Call");
-        FindUserRes resDto= userService.findUser(userSeq);
+        FindUserRes user=null;
+        try {
+        	user= userService.findUser(userSeq);
+        }catch(Exception e) {
+        	return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
         
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resDto));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, user));
     }
 
     @Tag(name = "회원")
-    @Operation(summary = "회원가입", description = "입력된 정보로 회원가입한다.")
+    @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registUser(@RequestBody User user) {
-        log.info("joinUser - Call");
+    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "가입정보", required = true)@RequestBody User user) {
+        log.info("registUser - Call");
         System.out.println(user);
         User dto=null;
         try {
@@ -49,6 +55,39 @@ public class UserController {
 
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, dto));
     }
+    
+    @Tag(name = "회원")
+    @Operation(summary = "회원 탈퇴", description = "회원의 권한을 탈퇴자로 변경.")
+    @DeleteMapping("/{userSeq}")
+    private ResponseEntity<BasicResponse> deleteUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
+        log.info("deleteUser - Call");
+        
+        try {
+            userService.deleteUser(userSeq);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
+        }
+
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+    }
+    
+    @Tag(name = "회원")
+    @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
+    @PostMapping("/{userSeq}")
+    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
+    													@Parameter(description = "회원 정보", required = true) @RequestBody ModifyUserReq userInfo) {
+        log.info("modifyUser - Call");
+        System.out.println(userInfo);
+        //service에서 파일 변경 추가하기
+        try {
+            userService.modifyUser(userSeq, userInfo);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+    }
+    
 
 
 }

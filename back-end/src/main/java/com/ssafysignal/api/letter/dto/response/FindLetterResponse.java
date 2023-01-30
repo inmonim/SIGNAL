@@ -1,5 +1,6 @@
 package com.ssafysignal.api.letter.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
@@ -8,21 +9,20 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Setter
-@ToString
 @Data
 @ApiModel(value = "FindFromLetterRes", description = "보낸 쪽지 목록")
-public class FindLetterRes {
+public class FindLetterResponse {
     int LetterSeq;
     String fromNickname;
     String toNickname;
     String title;
     String content;
     boolean isRead;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     LocalDateTime regDt;
 
     @Builder
-    public FindLetterRes(int letterSeq, String fromNickname, String toNickname, String title, String content, boolean isRead, LocalDateTime regDt) {
+    public FindLetterResponse(int letterSeq, String fromNickname, String toNickname, String title, String content, boolean isRead, LocalDateTime regDt) {
         LetterSeq = letterSeq;
         this.fromNickname = fromNickname;
         this.toNickname = toNickname;

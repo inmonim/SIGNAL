@@ -3,16 +3,21 @@ package com.ssafysignal.api.posting.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "PostingBasicRequest", description = "공고 등록, 공고 수정을 위한 정보")
 public class PostingBasicRequest {
-    @Schema(description = "공고 작성자 Seq", example = "1", required = true)
+    @Schema(description = "공고 작성자 Seq", example = "1")
     private Integer userSeq;
     @Schema(description = "프로젝트 주제", example = "프로젝트 팀 빌딩 시스템 시그널", required = true)
     private String subject;
@@ -21,7 +26,7 @@ public class PostingBasicRequest {
     @Schema(description = "분야 코드", example = "FI100", required = true)
     private String fieldCode;
     @Schema(description = "대면 여부", example = "true", required = true)
-    private Boolean isContact;
+    private boolean isContact;
     @Schema(description = "프로젝트 기간", example = "3", required = true)
     private Integer term;
     @Schema(description = "공고 설명", example = "1", required = true)
