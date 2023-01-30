@@ -32,8 +32,8 @@ public class PostingFindResponse {
     private Integer term;
     @Schema(description = "공고 설명", example = "1", required = true)
     private String content;
-    @Schema(description = "공고 모집 마감 일자", example = "2023-01-01 11:00:00", required = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Schema(description = "공고 모집 마감 일자", example = "2023-01-01 11:00:00.000", required = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime postingEndDt;
     @Schema(description = "프로젝트 난이도", example = "5", required = true)
     private Integer level;

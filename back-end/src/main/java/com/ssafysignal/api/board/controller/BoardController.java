@@ -2,6 +2,9 @@ package com.ssafysignal.api.board.controller;
 
 import com.ssafysignal.api.board.dto.response.NoticeFindAllResponse;
 import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
+import com.ssafysignal.api.board.dto.response.NoticeFindResponse;
+import com.ssafysignal.api.board.dto.response.QnaFindAllResponse;
+import com.ssafysignal.api.board.dto.response.QnaFindResponse;
 import com.ssafysignal.api.board.service.BoardService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -48,7 +51,7 @@ public class BoardController {
 
         try {
             Notice notice = boardService.findNotice(noticeSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, notice));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, NoticeFindResponse.fromEntity(notice)));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
@@ -72,11 +75,12 @@ public class BoardController {
     @Tag(name = "QnA")
     @Operation(summary = "QnA 목록조회", description = "QnA 목록을 조회합니다.")
     @GetMapping("qna")
-    private ResponseEntity<BasicResponse> findAllQna() {
+    private ResponseEntity<BasicResponse> findAllQna(@Parameter(description = "page") Integer page,
+                                                     @Parameter(description = "size") Integer size) {
         log.info("findAllQna - Call");
 
-        List<Qna> QnaList = boardService.findAllQna();
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaList));
+        Page<Qna> QnaList = boardService.findAllQna(page, size);
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaFindAllResponse.fromEntity(QnaList)));
     }
 
 
@@ -88,7 +92,7 @@ public class BoardController {
 
         try {
             Qna qna = boardService.findQna(qnaSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, qna));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaFindResponse.fromEntity(qna)));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

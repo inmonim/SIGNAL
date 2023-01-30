@@ -50,6 +50,7 @@ public class Qna {
         this.view = view+1;
     }
 
+
     @Builder
     public Qna(Integer qnaSeq, Integer userSeq, String title, String content,
                Boolean isTop, Integer view, String answer, Boolean isAnswer, LocalDateTime regDt)
