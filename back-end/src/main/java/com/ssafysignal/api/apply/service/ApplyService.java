@@ -125,7 +125,6 @@ public class ApplyService {
         applyRepository.save(apply);
     }
 
-
     @Transactional
     public void cancleApply(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
@@ -133,5 +132,13 @@ public class ApplyService {
 
         apply.setApplyCode("PAS104");
         applyRepository.save(apply);
+    }
+
+    @Transactional(readOnly = true)
+    public String findApplyMemo(Integer applySeq) {
+        Apply apply = applyRepository.findById(applySeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        return apply.getMemo();
     }
 }

@@ -30,7 +30,7 @@ public class PostingMeeting {
     @Column(name = "to_user_seq")
     private Integer toUserSeq;
     @Column(name = "meeting_dt")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime meetingDt;
     @Column(name = "posting_meeting_code")
     private String postingMeetingCode;
