@@ -1,4 +1,4 @@
-.container{
+.container {
   /* position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -16,15 +16,13 @@
   /* max-width: 1152px; */
 }
 
-.project-container{
+.project-container {
   width: 1150px;
   display: inline-block;
-  background-color: #DDDBEC; 
+  background-color: #dddbec;
   /* text-align: center;  */
   /* width: 1150px; */
   /* background-color: #DDDBEC; */
-
-  
 }
 
 .project-section {
@@ -34,7 +32,7 @@
   font-size: 20px;
   /* margin: 5% 0%; */
   /* width: 980px; */
-  
+
   /* display: absolute; */
   /* left: 50%; */
   /* transform: translateX(-50%); */
@@ -48,7 +46,7 @@
 }
 
 .project-name {
-  display: flex;  
+  display: flex;
 }
 
 .name-section {
@@ -65,7 +63,7 @@
 }
 
 .name-section,
-.position-section{
+.position-section {
   width: 45%;
 }
 
@@ -73,8 +71,6 @@
   display: flex;
   justify-content: space-between;
 }
-
-
 
 .exp-section,
 .career-section {
@@ -88,22 +84,21 @@
 }
 
 .label {
-  width: 120px;
-  color: #463C7F;  
+  color: #463c7f;
 }
 
 .content-section > .label,
-.question-answer-section > .label{
+.question-answer-section > .label {
   width: 100%;
   font-size: 25px;
 }
 
-hr{
-  border-color:#463C7F;
+hr {
+  border-color: #463c7f;
 }
 
-.apply-section{
-  margin : 20px;
+.apply-section {
+  margin: 20px;
 }
 
 .name-position-section > div,
@@ -112,28 +107,28 @@ hr{
 .skill-section > div,
 .career-exp-section > div,
 .content-section > div,
-.question-answer-section > div{
+.question-answer-section > div {
   margin: 15px 0px;
 }
 
 .exp,
 .career,
-.content{
+.content {
   padding: 10px 5px;
   font-size: 20px;
 }
 
-.submit-section{
+.submit-section {
   display: flex;
   justify-content: center;
   padding: 20px 0px;
 }
 
-.submit-section > Button { 
+.submit-section > Button {
   width: 60%;
 }
 
-.title{
+.title {
   font-size: 1.5em;
   font-weight: bold;
 }
@@ -145,8 +140,8 @@ hr{
   right: 5px;
 }
 
-.cancle-title{
+.cancle-title {
   position: relative;
   margin: 20px 50px;
-  top:25px;
+  top: 25px;
 }
