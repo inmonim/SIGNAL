@@ -4,6 +4,9 @@ import com.ssafysignal.api.auth.entity.Auth;
 import com.ssafysignal.api.auth.repository.AuthRepository;
 import com.ssafysignal.api.common.dto.EmailDto;
 import com.ssafysignal.api.common.service.EmailService;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.user.dto.request.ModifyUserReq;
 import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
@@ -85,6 +88,27 @@ public class UserService {
                         .build());
 
     	return ret;
+    }
+    
+    @Transactional
+    public void deleteUser(final int userSeq) {
+    	User user = userRepository.findByUserSeq(userSeq)
+    			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+    	user.deleteAuth();
+    	userRepository.save(user);
+    	
+    }
+    
+    @Transactional
+    public void modifyUser(final int userSeq, final ModifyUserReq userInfo) {
+    	User user = userRepository.findByUserSeq(userSeq)
+    			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+    	user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), 
+    			userInfo.getBirthYear(), userInfo.getBirthMonth(), userInfo.getBirthDay()); 
+    	
+    	userRepository.save(user);
+    	
+    	//파일 이미지  변경 코드 추가하기
     }
 
 
