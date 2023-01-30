@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Paging from 'components/Paging'
+import { Link } from 'react-router-dom'
 import 'assets/styles/qna.css'
 
 function Qna() {
   const [data, setData] = useState([])
-  const [size] = useState(7)
+
+  const [size] = useState(8)
   const [page, setPage] = useState(1)
-  const [count] = useState(50)
+  const [count, setCount] = useState(0)
 
   const handlePageChange = (page) => {
     setPage(page)
@@ -21,6 +23,13 @@ function Qna() {
       .then((res) => {
         console.log(res.body.qnaList)
         setData(res.body.qnaList)
+      })
+    fetch(process.env.REACT_APP_API_URL + '/board/qna/count', {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setCount(res.body.count)
       })
   }, [page])
 
@@ -53,7 +62,11 @@ function Qna() {
                 {rows.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="left">
+                      <Link to={`/qnaDetail`} state={{ id: row.id }}>
+                        {row.title}
+                      </Link>
+                    </TableCell>
                     <TableCell align="center">{row.regDt}</TableCell>
                     <TableCell align="center">{row.view}</TableCell>
                   </TableRow>
