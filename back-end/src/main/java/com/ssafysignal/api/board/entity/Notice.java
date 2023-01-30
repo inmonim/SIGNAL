@@ -36,7 +36,7 @@ public class Notice {
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
-    public void setView(Integer view) {
+    public void addView(Integer view) {
         this.view = view+1;
     }
 
