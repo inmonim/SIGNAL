@@ -32,6 +32,12 @@ public class PostingService {
     private final PostingRepository postingRepository;
     private final ApplyRepository applyRepository;
 
+
+    @Transactional
+    public Integer countPosting() {
+        return postingRepository.findAll().size();
+    }
+
     @Transactional
     public void registPosting(PostingBasicRequest postingRegistRequest) throws RuntimeException {
 
@@ -210,5 +216,4 @@ public class PostingService {
                 .map(PostingFindAllByUserSeq::toWriter)
                 .collect(Collectors.toList());
     }
-
 }

@@ -46,6 +46,8 @@ public class Project {
     private LocalDateTime evaluationDt;
     @Column(name = "project_code")
     private String projectCode;
+    @Column(name = "project_image_file_seq")
+    private Integer projectImageFileSeq;
 
     // 1 : 1 관계
     @OneToOne
@@ -58,7 +60,7 @@ public class Project {
     @JoinColumn(name = "project_code", insertable = false, updatable = false)
     private CommonCode code;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "project_image_file_seq")
+    @JoinColumn(name = "project_image_file_seq", insertable = false, updatable = false)
     private ImageFile imageFile;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "posting_seq", insertable = false, updatable = false)
