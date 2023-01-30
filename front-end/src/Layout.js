@@ -13,6 +13,7 @@ import Qna from 'pages/QnA/Qna'
 const Posting = lazy(() => import('./pages/Posting/Posting'))
 const ApplyRegister = lazy(() => import('./pages/Apply/ApplyRegister'))
 const ApplyDetail = lazy(() => import('./pages/Apply/ApplyDetail'))
+const ApplyModify = lazy(() => import('./pages/Apply/ApplyModify'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 // const PostingRegister = lazy(() => import('./pages/Posting/PostingRegister'))
 // usenavigate lazy 안되는듯 ?// const Board = lazy(() => import('./pages/Board/Board'))
@@ -29,6 +30,7 @@ function App() {
           <Route path="/postingregister" element={<PostingRegister />} />
           <Route path="/posting/:id" element={<Application />} />
           <Route path="/applyregister" element={<ApplyRegister />} />
+          <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
           <Route path="/notice" element={<Notice />} />
