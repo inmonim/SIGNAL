@@ -4,8 +4,7 @@ import Modal from '@mui/material/Modal'
 import { FormControlLabel, TextField } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
 import 'assets/font/font.css'
-import Btn from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import SignalBtn from './common/SignalBtn'
 import RegistModal from './RegistModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
@@ -41,22 +40,22 @@ const inputStyle = {
   },
 }
 
-const SignalBtn = styled(Btn)(({ theme }) => ({
-  fontFamily: 'dohyeon',
-  fontColor: theme.palette.getContrastText('#574B9F'),
-  backgroundColor: '#574B9F',
-  width: '173px',
-  height: '90px',
-  fontSize: '44px',
-  border: '1px solid #574B9F',
-  borderRadius: 25,
-  boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
-  '&:hover': {
-    backgroundColor: '#fff',
-    borderColor: '1px solid #574B9F',
-    color: '#574B9F',
-  },
-}))
+// const SignalBtn = styled(Btn)(({ theme }) => ({
+//   fontFamily: 'dohyeon',
+//   fontColor: theme.palette.getContrastText('#574B9F'),
+//   backgroundColor: '#574B9F',
+//   width: '173px',
+//   height: '90px',
+//   fontSize: '44px',
+//   border: '1px solid #574B9F',
+//   borderRadius: 25,
+//   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
+//   '&:hover': {
+//     backgroundColor: '#fff',
+//     borderColor: '1px solid #574B9F',
+//     color: '#574B9F',
+//   },
+// }))
 
 function LoginModal({ open, onClose }) {
   const [regOpen, setRegOpen] = useState(false)
@@ -179,8 +178,15 @@ function LoginModal({ open, onClose }) {
                   <RegistModal open={regOpen} onClose={handleRegClose}></RegistModal>
                 </div>
               </div>
-              <div className="login-btn" style={{ margin: '30px 0px' }}>
-                <SignalBtn variant="contained" onClick={handleToMain}>
+              <div className="login-btn">
+                <SignalBtn
+                  sigwidth="173px"
+                  sigheight="90px"
+                  sigfontSize="44px"
+                  sigBorderRadius={25}
+                  variant="contained"
+                  onClick={handleToMain}
+                >
                   로그인
                 </SignalBtn>
               </div>

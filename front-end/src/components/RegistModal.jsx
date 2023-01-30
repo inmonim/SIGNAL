@@ -4,8 +4,7 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
 import 'assets/font/font.css'
-import Btn from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import SignalBtn from './common/SignalBtn'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -53,21 +52,6 @@ const listStyle = {
   padding: '10px',
   scrollbarColor: '#574B9F',
 }
-
-const SignalBtn = styled(Btn)(({ theme }) => ({
-  backgroundColor: '#574B9F',
-  width: '173px',
-  height: '90px',
-  fontSize: '40px',
-  border: '1px solid #574B9F',
-  borderRadius: 25,
-  boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
-  '&:hover': {
-    backgroundColor: '#fff',
-    borderColor: '1px solid #574B9F',
-    color: '#574B9F',
-  },
-}))
 
 function RegistModal({ open, onClose }) {
   const [value, setValue] = useState(null)
@@ -226,7 +210,14 @@ function RegistModal({ open, onClose }) {
             </LocalizationProvider>
           </div>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <SignalBtn variant="contained" onClick={handleAlertOpen}>
+            <SignalBtn
+              sigwidth="173px"
+              sigheight="90px"
+              sigfontSize="40px"
+              sigBorderRadius={25}
+              variant="contained"
+              onClick={handleAlertOpen}
+            >
               회원가입
             </SignalBtn>
             <AlertModal msg="인증 메일이 전송되었습니다." open={alertOpen} onClick={handleToLogin}></AlertModal>
