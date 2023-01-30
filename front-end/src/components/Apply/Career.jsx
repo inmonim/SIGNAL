@@ -7,17 +7,29 @@ const inputStyle = {
   width: '22rem',
 }
 
-function Career({ career, onRemove }) {
+function Career({ career, id, onRemove, onChange }) {
+  const handleCareerChange = (event) => {
+    console.log(event.target.value)
+    onChange(event.target.value, id)
+  }
   return (
     <div className="career-div">
-      <TextField id="outlined-basic" variant="outlined" value={career.title} style={inputStyle} />
+      <TextField
+        id="outlined-basic"
+        variant="outlined"
+        defaultValue={career}
+        style={inputStyle}
+        onChange={(e) => {
+          handleCareerChange(e)
+        }}
+      />
       <div className="minus-button-section">
         <img
           src={minusButton}
           alt="minusButton"
           className="minus-button"
           onClick={() => {
-            onRemove(career.id)
+            onRemove(id)
           }}
         />
       </div>
