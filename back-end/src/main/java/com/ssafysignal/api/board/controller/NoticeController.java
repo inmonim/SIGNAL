@@ -49,7 +49,7 @@ public class NoticeController {
 
     @Tag(name = "공지사항")
     @Operation(summary = "공지사항 목록조회", description = "공지사항 목록을 조회합니다.")
-    @GetMapping("/notice")
+    @GetMapping("")
     private ResponseEntity<BasicResponse> findAllNotice(@Parameter(description = "페이지", required = true) Integer page,
                                                         @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findAllNotice - Call");
@@ -61,7 +61,7 @@ public class NoticeController {
 
     @Tag(name = "공지사항")
     @Operation(summary = "공지사항 상세조회", description = "공지사항을 조회합니다.")
-    @GetMapping("/notice/{noticeSeq}")
+    @GetMapping("/{noticeSeq}")
     private  ResponseEntity<BasicResponse> findNotice(@Parameter(description = "공지사항 Seq", required = true) @PathVariable("noticeSeq") Integer noticeSeq) {
 
         log.info("findNotice - Call");
