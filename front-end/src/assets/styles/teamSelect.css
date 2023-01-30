@@ -1,0 +1,9 @@
+.team-submit{
+  display: flex;
+  justify-content: center;
+  
+}
+
+.team-building-section > div {
+  margin : 20px 0px;
+}
