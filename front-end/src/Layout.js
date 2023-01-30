@@ -15,6 +15,7 @@ const Posting = lazy(() => import('./pages/Posting/Posting'))
 const ApplyRegister = lazy(() => import('./pages/Apply/ApplyRegister'))
 const ApplyDetail = lazy(() => import('./pages/Apply/ApplyDetail'))
 const ApplyModify = lazy(() => import('./pages/Apply/ApplyModify'))
+const TeamSelect = lazy(() => import('./pages/Project/TeamSelect'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 // const PostingRegister = lazy(() => import('./pages/Posting/PostingRegister'))
 // usenavigate lazy 안되는듯 ?// const Board = lazy(() => import('./pages/Board/Board'))
@@ -33,6 +34,7 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
+          <Route path="/teamselect" element={<TeamSelect />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />

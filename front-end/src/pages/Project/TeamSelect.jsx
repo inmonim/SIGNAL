@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@mui/material'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -8,14 +8,16 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 
-import Container from '@mui/material/Container'
 import emotion from '@emotion/styled'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 
 import '../../assets/styles/teamSelect.css'
-
-import memoButton from '../../assets/image/memo.png'
 import detailButton from '../../assets/image/detail.png'
+
+import MemoModal from '../../components/Memo/MemoModal'
+import axios from 'axios'
+import Styled from 'styled-components'
+import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 
 const Banner = emotion.div`
   width: 100%;
@@ -30,13 +32,21 @@ const Banner = emotion.div`
 const SubmitButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
   color: theme.vars.palette.common.white,
-  height: 30,
+  height: 40,
   '&:hover': {
     backgroundColor: theme.vars.palette.common.white,
     color: '#574B9F',
     border: '',
   },
 }))
+
+const Container = Styled.section`
+  padding: 20px 300px;
+`
+
+const width = {
+  minWidth: '800px',
+}
 
 const CommonButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -59,27 +69,31 @@ const ImageButton = styled(Button)(({ theme }) => ({
   },
 }))
 
-const MeetingButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#FF4242',
-  color: theme.vars.palette.common.white,
-  height: 30,
-  '&:hover': {
-    backgroundColor: theme.vars.palette.common.white,
-    color: '#FF4242',
-  },
-}))
-
 const Image = {
   width: '15px',
 }
 
-function createData(name, meetingTime, position, isSelect) {
-  return { name, meetingTime, position, isSelect }
-}
+const rows = [{}, {}, {}, {}, {}, {}, {}]
 
-const rows = [createData('나유진', '01/17 3:00', 'Front-End', '선택완료')]
+function TeamSelect() {
+  const postingSeq = 448
+  const [applyList, setApplyList] = useState([])
 
-export default function BasicTable() {
+  const applyListFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/project/applyer/' + postingSeq)
+      setApplyList(res.data.body)
+      console.log(res.data.body)
+      console.log(applyList)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    applyListFetch()
+  }, [])
+
   return (
     <CssVarsProvider>
       <div>
@@ -87,7 +101,7 @@ export default function BasicTable() {
           <div>팀 빌딩</div>
         </Banner>
         <Container>
-          <div className="team-building-section">
+          <div style={width}>
             <div>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650, height: 570 }} aria-label="simple table">
@@ -104,23 +118,21 @@ export default function BasicTable() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
-                      <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    {rows.map((row, index) => (
+                      <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                         <TableCell align="center">{row.name}</TableCell>
                         <TableCell align="center">
-                          <MeetingButton>사전미팅참가</MeetingButton>
+                          <MeetingConfirmModal></MeetingConfirmModal>
                         </TableCell>
                         <TableCell align="center">{row.meetingTime}</TableCell>
                         <TableCell align="center">{row.position}</TableCell>
                         <TableCell align="center">{row.isSelect}</TableCell>
                         <TableCell align="center">
-                          <ImageButton>
-                            <img src={memoButton} alt="memoButton" style={Image} />
-                          </ImageButton>
+                          <MemoModal applySeq={rows.applySeq}></MemoModal>
                         </TableCell>
                         <TableCell align="center">
                           <ImageButton>
-                            <img src={detailButton} alt="detailButton" style={Image} />
+                            <img src={detailButton} alt="memoButton" style={Image} />
                           </ImageButton>
                         </TableCell>
                         <TableCell align="center">
@@ -141,3 +153,5 @@ export default function BasicTable() {
     </CssVarsProvider>
   )
 }
+
+export default TeamSelect

@@ -1,0 +1,100 @@
+import React, { useState, useEffect } from 'react'
+import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
+import { Button, Modal, Box, Typography } from '@mui/material'
+import memoButton from '../../assets/image/memo.png'
+import cancleButton from '../../assets/image/x.png'
+// import axios from 'axios'
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: '#fff',
+  boxShadow: 24,
+  backgroundColor: '#DDDBEC',
+  borderRadius: 8,
+  p: 4,
+}
+
+const Image = {
+  width: '15px',
+}
+
+const cancleButtonStyle = {
+  width: ' 40px',
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  cursor: 'pointer',
+}
+
+const innerStlye = {
+  height: 300,
+  backgroundColor: '#ffffff',
+  mt: 2,
+  borderRadius: 2,
+  px: 3,
+  py: 3,
+}
+
+const ImageButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#574B9F',
+  color: theme.vars.palette.common.white,
+  height: 30,
+  '&:hover': {
+    backgroundColor: '#342D5F',
+    color: '#574B9F',
+  },
+}))
+
+function MemoModal() {
+  const [open, setOpen] = useState(false)
+  const [memo, setMemo] = useState('')
+
+  // const memoFetch = async () => {
+  //   try {
+  //     const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/memo' + props.applySeq)
+  //     setMemo(res.data.body.content)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
+  const handleOpen = () => {
+    console.log('memo')
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    console.log('memo')
+    console.log(open)
+  }
+
+  useEffect(() => {
+    setMemo('ddd')
+  }, [])
+
+  return (
+    <CssVarsProvider>
+      <ImageButton onClick={handleOpen}>
+        <img src={memoButton} alt="memoButton" style={Image} />
+      </ImageButton>
+      <Modal open={open}>
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" textAlign={'center'}>
+            사전 미팅 메모
+          </Typography>
+          <img src={cancleButton} alt="plusButton" style={cancleButtonStyle} onClick={handleClose} />
+          <Box sx={innerStlye}>
+            <div>{memo}</div>
+          </Box>
+        </Box>
+      </Modal>
+    </CssVarsProvider>
+  )
+}
+
+export default MemoModal
