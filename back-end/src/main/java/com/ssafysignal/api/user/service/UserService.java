@@ -58,6 +58,7 @@ public class UserService {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .phone(user.getPhone())
+                .heartCnt(user.getHeartCnt())
                 .build();
         return res;
     }
