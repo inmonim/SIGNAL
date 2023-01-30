@@ -3,7 +3,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Localdata from 'data/Localdata'
-import Fielddata from 'data/Fielddata'
+import { Fielddata } from 'data/Fielddata'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 export default function PostingCardItem({ post }) {

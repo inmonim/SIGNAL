@@ -10,7 +10,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import Localdata from 'data/Localdata'
-import QnAList from 'components/Apply/QnaList'
+// import { positionData } from 'data/Positiondata'
+import { Fielddata2 } from 'data/Fielddata'
+// import QnAList from 'components/Apply/QnaList'
 
 const Container = styled.section`
   // padding: 100px 25em;
@@ -38,10 +40,11 @@ const inputStyle = {
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
 }
-
+const hunjae = new Date()
+const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const PostingRegister = () => {
   // start >> useState
-  const [datevalue, setDateValue] = useState('')
+  const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
     userSeq: 1,
@@ -83,23 +86,23 @@ const PostingRegister = () => {
 
   // const [answerList, setAnswerList] = useState([])
 
-  const [qnaList, setQnaList] = useState([])
+  // const [qnaList, setQnaList] = useState([])
 
   // ene >> useState
 
   // start >> Fetch
 
-  const postingFetch = async () => {
-    try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
-      setPosting(res.data.body)
-      const qnaArr = []
-      res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-      setQnaList(qnaArr)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const postingFetch = async () => {
+  //   try {
+  //     const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
+  //     setPosting(res.data.body)
+  //     const qnaArr = []
+  //     res.data.body.postingQuestionList.map(() => qnaArr.push(''))
+  //     setQnaList(qnaArr)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const profileFetch = async () => {
     try {
@@ -194,12 +197,12 @@ const PostingRegister = () => {
 
   // start >> handle qna
 
-  const handleQnAChange = (value, key) => {
-    const qnaArr = [...qnaList]
-    qnaArr.splice(key, 1, value)
-    setQnaList(qnaArr)
-    console.log(qnaList)
-  }
+  // const handleQnAChange = (value, key) => {
+  //   const qnaArr = [...qnaList]
+  //   qnaArr.splice(key, 1, value)
+  //   setQnaList(qnaArr)
+  //   console.log(qnaList)
+  // }
 
   // end >> handle qna
 
@@ -214,17 +217,17 @@ const PostingRegister = () => {
         })
         .catch((err) => {
           console.log(err)
-          console.log(datevalue)
+          console.log('캐치')
         })
 
       console.log('공고 post')
     } catch (error) {
-      console.log(error)
+      console.log('에러')
     }
   }
 
   useEffect(() => {
-    postingFetch()
+    // postingFetch()
     profileFetch()
   }, [])
 
@@ -244,7 +247,8 @@ const PostingRegister = () => {
                 onChange={(e) => {
                   // console.log(e.target.value)
                   setSubject(e.target.value)
-                  console.log(subject)
+                  setPosting({ ...posting, subject: e.target.value })
+                  // console.log(subject)
                 }}
               />
             </div>
@@ -256,9 +260,8 @@ const PostingRegister = () => {
                   value={datevalue}
                   onChange={(newValue) => {
                     const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
-                    console.log(time)
-                    console.log(typeof time)
                     setDateValue(time)
+                    setPosting({ ...posting, postingEndDt: time })
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />
@@ -269,7 +272,12 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '2em' }}>
             <div className="phone-section">
               <Label>진행 지역</Label>
-              <FilterSelect>
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setPosting({ ...posting, localCode: e.target.value })
+                }}
+              >
                 {Object.keys(Localdata).map((ele, i) => (
                   <option key={i} value={ele}>
                     {Localdata[ele].name}
@@ -279,10 +287,15 @@ const PostingRegister = () => {
             </div>
             <div className="email-section">
               <Label style={{ width: '10%' }}>분야</Label>
-              <FilterSelect>
-                {Object.keys(Localdata).map((ele, i) => (
-                  <option key={i} value={ele}>
-                    {Localdata[ele].name}
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setPosting({ ...posting, fieldCode: e.target.value })
+                }}
+              >
+                {Fielddata2.map((ele, i) => (
+                  <option key={ele.code} value={ele.code}>
+                    {ele.name}
                   </option>
                 ))}
               </FilterSelect>
@@ -362,7 +375,7 @@ const PostingRegister = () => {
               </Label>
             </div>
             <div className="answer-section">
-              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList>
+              {/* <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList> */}
             </div>
           </div>
         </div>
