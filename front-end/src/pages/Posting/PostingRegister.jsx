@@ -3,7 +3,7 @@ import axios from 'axios'
 import { TextField } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
-
+import moment from 'moment/moment'
 import '../../assets/styles/applyRegister.css'
 import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -41,16 +41,48 @@ const textAreaStyle = {
 
 const PostingRegister = () => {
   // start >> useState
-  const [datevalue, setDateValue] = React.useState(null)
-  const [posting, setPosting] = useState([{}])
+  const [datevalue, setDateValue] = useState('')
+  const [subject, setSubject] = useState('')
+  const [posting, setPosting] = useState({
+    userSeq: 1,
+    subject,
+    localCode: '39',
+    fieldCode: 'FI100',
+    Contact: true,
+    term: 10,
+    content: '공고 등록 테스트 본문',
+    postingEndDt: datevalue,
+
+    level: 5,
+    postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
+    postingSkillList: ['WE100', 'WE101'],
+    postingPositionList: [
+      {
+        positionCode: 'PO100',
+        positionCnt: 5,
+      },
+      {
+        positionCode: 'PO101',
+        positionCnt: 10,
+      },
+    ],
+    postingQuestionList: [
+      {
+        num: 1,
+        content: '질문 1',
+      },
+      {
+        num: 2,
+        content: '질문 2',
+      },
+    ],
+  })
   const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
-  const [expList, setExpList] = useState([])
 
   // const [answerList, setAnswerList] = useState([])
 
-  const [content, setContent] = useState([])
   const [qnaList, setQnaList] = useState([])
 
   // ene >> useState
@@ -106,7 +138,6 @@ const PostingRegister = () => {
         content: item.content,
       })
     )
-    setExpList(expArr)
   }
 
   // end >> Data filter
@@ -157,9 +188,7 @@ const PostingRegister = () => {
 
   // start >> handle content
 
-  const handleContentChange = (event) => {
-    setContent(event.target.value)
-  }
+  const handleContentChange = (event) => {}
 
   // end >> handle content
 
@@ -175,48 +204,20 @@ const PostingRegister = () => {
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    const regDt = new Date()
-    console.log(regDt)
-    const regDtreq =
-      regDt.getFullYear() +
-      '-' +
-      regDt.getMonth() +
-      '-' +
-      regDt.getDate() +
-      ' ' +
-      regDt.getHours() +
-      ':' +
-      regDt.getMinutes() +
-      ':' +
-      regDt.getSeconds()
     try {
-      const req = {
-        applyAnswerList: [],
-        applyCareerList: careerList,
-        applyExpList: expList,
-        applySkillList: [],
-        content,
-        fieldCode: 'FI100',
-        applyCode: 'AS101',
-        meetingDt: '2023-01-01 11:00:00.000',
-        memo: '이 지원자는 열정이 있음',
-        positionCode: 'PO100',
-        postingSeq: 1,
-        userSeq: 1,
-      }
-      console.log('regDtreq')
-      console.log(regDtreq)
       const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('.', req, config)
+        .post('/posting', posting, config)
         .then((res) => {
           console.log(res)
+          console.log(1)
         })
         .catch((err) => {
           console.log(err)
+          console.log(datevalue)
         })
 
-      console.log('지원서 post')
+      console.log('공고 post')
     } catch (error) {
       console.log(error)
     }
@@ -238,7 +239,14 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '1em' }}>
             <div className="phone-section">
               <Label>프로젝트 주제 </Label>
-              <TextField sx={inputStyle} />
+              <TextField
+                sx={inputStyle}
+                onChange={(e) => {
+                  // console.log(e.target.value)
+                  setSubject(e.target.value)
+                  console.log(subject)
+                }}
+              />
             </div>
             <div className="email-section">
               <Label>프로젝트 모집 기간</Label>
@@ -247,8 +255,10 @@ const PostingRegister = () => {
                   label="마감 날짜"
                   value={datevalue}
                   onChange={(newValue) => {
-                    console.log(moment(newValue.$d))
-                    setDateValue(newValue)
+                    const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
+                    console.log(time)
+                    console.log(typeof time)
+                    setDateValue(time)
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />
