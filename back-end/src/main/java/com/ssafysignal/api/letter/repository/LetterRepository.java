@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface LetterRepository extends JpaRepository<Letter, Integer> {
-    List<Letter> findAllByFromUserSeqAndIsTrash(int userSeq, boolean isTrash, PageRequest pg);
+    List<Letter> findAllByFromUserSeqAndIsTrashOrderByLetterSeqDesc(int userSeq, boolean isTrash);
 
-    List<Letter> findAllByToUserSeqAndIsTrash(int userSeq, boolean isTrash, PageRequest pg);
+    List<Letter> findAllByToUserSeqAndIsTrashOrderByLetterSeqDesc(int userSeq, boolean isTrash);
 
     Letter findByLetterSeq(int letterSeq);
     Long countByToUserSeqAndIsRead(int userSeq, boolean isRead);

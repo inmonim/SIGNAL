@@ -36,8 +36,8 @@ public class LetterService {
     }
 
     @Transactional
-    public List<FindLetterResponse> findFromLetter(int userSeq, int page, int size){
-        List<Letter> letterList = letterRepository.findAllByFromUserSeqAndIsTrash(userSeq,false, PageRequest.of(page - 1, size, Sort.Direction.DESC, "letterSeq"));
+    public List<FindLetterResponse> findFromLetter(int userSeq){
+        List<Letter> letterList = letterRepository.findAllByFromUserSeqAndIsTrashOrderByLetterSeqDesc(userSeq,false);
         List<FindLetterResponse> ret = new ArrayList<>();
         for(Letter letter: letterList){
             FindLetterResponse element = FindLetterResponse.builder()
@@ -55,8 +55,8 @@ public class LetterService {
     }
 
     @Transactional
-    public List<FindLetterResponse> findAllToLetter(int userSeq, int page, int size){
-        List<Letter> letterList = letterRepository.findAllByToUserSeqAndIsTrash(userSeq,false, PageRequest.of(page - 1, size, Sort.Direction.DESC, "letterSeq"));
+    public List<FindLetterResponse> findAllToLetter(int userSeq){
+        List<Letter> letterList = letterRepository.findAllByToUserSeqAndIsTrashOrderByLetterSeqDesc(userSeq,false);
         List<FindLetterResponse> ret = new ArrayList<>();
         for(Letter letter: letterList){
             FindLetterResponse element = FindLetterResponse.builder()
@@ -74,8 +74,8 @@ public class LetterService {
     }
 
     @Transactional
-    public List<FindLetterResponse> findAllTrashLetter(int userSeq, int page, int size){
-        List<Letter> letterList = letterRepository.findAllByToUserSeqAndIsTrash(userSeq,true, PageRequest.of(page - 1, size, Sort.Direction.DESC, "letterSeq"));
+    public List<FindLetterResponse> findAllTrashLetter(int userSeq){
+        List<Letter> letterList = letterRepository.findAllByToUserSeqAndIsTrashOrderByLetterSeqDesc(userSeq,true);
         List<FindLetterResponse> ret = new ArrayList<>();
         for(Letter letter: letterList){
             FindLetterResponse element = FindLetterResponse.builder()
