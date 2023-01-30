@@ -9,7 +9,7 @@ import '../../assets/styles/applyRegister.css'
 import styled from 'styled-components'
 
 import Skilldata from 'data/Skilldata'
-import { getPositionName } from 'data/Positiondata'
+import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
@@ -51,7 +51,10 @@ const positionSelectStyle = {
   position: 'static',
 }
 
-const Apply = () => {
+function ApplyRegister() {
+  const userSeq = 1
+  const postingSeq = 458
+
   // start >> useState
 
   const [user, setUser] = useState([])
@@ -70,10 +73,9 @@ const Apply = () => {
   // ene >> useState
 
   // start >> Fetch
-
   const userFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
@@ -82,14 +84,19 @@ const Apply = () => {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/posting/458')
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       const answerArr = []
-      res.data.body.postingQuestionList.map(() => answerArr.push(''))
+      res.data.body.postingQuestionList.map((item) =>
+        answerArr.push({
+          postingQuestionSeq: item.postingQuestionSeq,
+          content: '',
+        })
+      )
       meetingFetchFilter(res.data.body.postingMeetingList)
       setAnswerList(answerArr)
+      console.log(res.data.body)
       setQuestionList(res.data.body.postingQuestionList)
-      console(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -97,7 +104,7 @@ const Apply = () => {
 
   const profileFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
       careerFetchFilter(res.data.body.userCareerList)
       expFetchFilter(res.data.body.userExpList)
     } catch (error) {
@@ -259,49 +266,42 @@ const Apply = () => {
 
   const handleQnAChange = (value, key) => {
     const answerArr = [...answerList]
-    answerArr.splice(key, 1, value)
-    setExpList(answerArr)
-    console.log('answerArr', answerArr)
+    answerList.forEach((item, index) => {
+      if (item.postingQuestionSeq === key) {
+        answerArr.splice(index, 1, {
+          postingQuestionSeq: key,
+          content: value,
+        })
+      }
+    })
+
+    setAnswerList(answerArr)
   }
 
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
     setMeeting(meetingList[key])
+    console.log(meetingList)
   }
 
   const handleApplySubmit = async () => {
     const userSeq = 1
     const postingSeq = 458
-    console.log('answerList', answerList)
-    console.log(CareerPostFilter(careerList))
-    console.log(ExpPostFilter(expList))
-    console.log(skillList)
-    console.log(content)
-    console.log('filedCode')
-    console.log(meeting)
-    console.log('positionCode')
-    console.log('userseq')
     try {
       const req = {
-        applyAnswerList: [
-          {
-            additionalProp1: {},
-            additionalProp2: {},
-            additionalProp3: {},
-          },
-        ],
+        applyAnswerList: answerList,
         applyCareerList: CareerPostFilter(careerList),
         applyExpList: ExpPostFilter(expList),
         applySkillList: skillList,
-        content: skillList,
-        fieldCode: 'FI100',
+        content: content,
+        fieldCode: posting.fieldCode,
         meetingDt: meeting,
-        positionCode: 'PO100',
+        positionCode: getPositionCode(position),
         postingSeq,
         userSeq,
       }
-
+      console.log(req)
       const config = { 'Content-Type': 'application/json' }
       await axios
         .post('.', req, config)
@@ -453,4 +453,4 @@ const Apply = () => {
   )
 }
 
-export default Apply
+export default ApplyRegister
