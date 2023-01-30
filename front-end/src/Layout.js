@@ -9,6 +9,7 @@ import Application from 'pages/Posting/PostingDetail'
 import Notice from 'pages/Notice/Notice'
 import NoticeDetail from 'pages/Notice/NoticeDetail'
 import Qna from 'pages/QnA/Qna'
+import QnaDetail from 'pages/QnA/QnaDetail'
 
 const Posting = lazy(() => import('./pages/Posting/Posting'))
 const ApplyRegister = lazy(() => import('./pages/Apply/ApplyRegister'))
@@ -36,6 +37,7 @@ function App() {
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />
           <Route path="/qna" element={<Qna />} />
+          <Route path="/qnaDetail" element={<QnaDetail />} />
         </Routes>
       </BrowserRouter>
     </div>
