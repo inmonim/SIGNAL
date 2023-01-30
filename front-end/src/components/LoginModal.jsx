@@ -77,10 +77,10 @@ function LoginModal({ open, onClose }) {
       sessionStorage.setItem('userSeq', 1)
       onClose(onClose(true))
       return
-    } else if (inputEmail === 'jim@naver.com' && inputPwd === 'jimjim1!') {
+    } else if (inputEmail === 'bbb@naver.com' && inputPwd === 'tkdals123.') {
       console.log('로그인 성공')
       sessionStorage.setItem('userEmail', inputEmail)
-      sessionStorage.setItem('username', 'jim')
+      sessionStorage.setItem('username', '상민')
       sessionStorage.setItem('userSeq', 2)
       onClose(onClose(true))
       return
@@ -94,8 +94,8 @@ function LoginModal({ open, onClose }) {
     }
   }
 
-  const [inputEmail, setInputEmail] = useState('gurrms@naver.com')
-  const [inputPwd, setInputPwd] = useState('gurrms123.')
+  const [inputEmail, setInputEmail] = useState('')
+  const [inputPwd, setInputPwd] = useState('')
 
   const handleInputEmail = (e) => {
     setInputEmail(e.target.value)

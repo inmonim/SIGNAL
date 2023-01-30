@@ -10,7 +10,7 @@ function FromLetter({ handleChangeView, view, handleMenuListItemClick }) {
   const [data, setData] = useState([])
   const [alertOpen, setAlertOpen] = useState(false)
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
+    fetch(process.env.REACT_APP_API_URL + `/letter/to/${sessionStorage.getItem('userSeq')}?page=1&size=30`, {
       method: 'GET',
     })
       .then((res) => res.json())
