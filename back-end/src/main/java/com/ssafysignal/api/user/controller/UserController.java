@@ -1,11 +1,10 @@
 package com.ssafysignal.api.user.controller;
 
-import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.request.ModifyUserReq;
-import com.ssafysignal.api.user.dto.response.FindUserRes;
-import com.ssafysignal.api.user.dto.response.UserFindAllResponse;
+import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
+import com.ssafysignal.api.user.dto.request.RegistUserRequest;
+import com.ssafysignal.api.user.dto.response.FindUserResponse;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,30 +29,32 @@ public class UserController {
     @GetMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("findUser - Call");
-        FindUserRes user=null;
         try {
-        	user= userService.findUser(userSeq);
+        	User user = userService.findUser(userSeq);
+            FindUserResponse findUserResponse = FindUserResponse.builder()
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .phone(user.getPhone())
+                    .heartCnt(user.getHeartCnt())
+                    .build();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findUserResponse));
         }catch(Exception e) {
         	return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
-        
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, user));
     }
 
     @Tag(name = "회원")
     @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "가입정보", required = true)@RequestBody User user) {
+    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "가입정보", required = true)@RequestBody RegistUserRequest registUserRequest) {
         log.info("registUser - Call");
-        System.out.println(user);
-        User dto=null;
-        try {
-            dto = userService.registUser(user);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MAILSEND_FAIL, null));
-        }
 
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, dto));
+        try {
+            userService.registUser(registUserRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
     }
     
     @Tag(name = "회원")
@@ -75,7 +76,7 @@ public class UserController {
     @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
     @PostMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
-    													@Parameter(description = "회원 정보", required = true) @RequestBody ModifyUserReq userInfo) {
+    													@Parameter(description = "회원 정보", required = true) @RequestBody ModifyUserRequest userInfo) {
         log.info("modifyUser - Call");
         System.out.println(userInfo);
         //service에서 파일 변경 추가하기

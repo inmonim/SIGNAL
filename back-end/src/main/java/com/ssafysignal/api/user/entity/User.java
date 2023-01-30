@@ -1,75 +1,120 @@
 package com.ssafysignal.api.user.entity;
 
-import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @ToString
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Entity
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userSeq;
+    @Column(name = "userSeq")
+    private Integer userSeq;
+    @Column(name = "name")
     private String name;
+    @Column(name = "email", unique = true)
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "nickname")
     private String nickname;
-    int birthYear;
-    int birthMonth;
-    int birthDay;
+    @Column(name = "birth")
+    private LocalDateTime birth;
+    @Column(name = "phone")
     private String phone;
+    @Column(name = "reg_dt")
     private LocalDateTime regDt;
-    private String userCode;
+    @Column(name = "heart_cnt")
     private int heartCnt;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_image_file_seq")
     private ImageFile imageFile;
 
-
     @Builder
-    public User(int userSeq, String name, String email, String password, String nickname, int birthYear, int birthMonth, int birthDay, String phone, LocalDateTime regDt, String userCode, int heartCnt) {
+    public User(Integer userSeq, String name, String email, String password, String nickname, LocalDateTime birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.birthYear = birthYear;
-        this.birthMonth = birthMonth;
-        this.birthDay = birthDay;
+        this.birth = birth;
         this.phone = phone;
         this.regDt = regDt;
-        this.userCode = userCode;
         this.heartCnt = heartCnt;
+        this.imageFile = imageFile;
     }
 
-    public void giveAuth(){
-        this.userCode = "US100";
-    }
-    
-    public void deleteAuth() {
-    	this.userCode = "US102";
-    }
-    
-    public void modifyUser(String name, String nickname,String phone, int birthYear, int birthMonth, int birthDay) {
-    	this.name = name;
+    public void modifyUser(String name, String nickname,String phone, LocalDateTime birth) {
+        this.name = name;
         this.nickname = nickname;
         this.phone = phone;
-        this.birthYear = birthYear;
-        this.birthMonth = birthMonth;
-        this.birthDay = birthDay;
+        this.birth = birth;
     }
 
     public void modifyPassword(String password){
         this.password = password;
+    }
+
+
+
+
+
+
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
