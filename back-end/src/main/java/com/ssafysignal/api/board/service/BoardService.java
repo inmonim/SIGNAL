@@ -26,7 +26,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Page<Notice> findAllNotice(Integer page, Integer size) {
-        Page<Notice> noticeList = noticeRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "noticeSeq"));
+        Page<Notice> noticeList = noticeRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.ASC, "noticeSeq"));
         return noticeList;
     }
 
@@ -43,7 +43,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Page<Qna> findAllQna(Integer page, Integer size) {
-        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "qnaSeq"));
+        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.ASC, "qnaSeq"));
         return QnaList;
     }
 

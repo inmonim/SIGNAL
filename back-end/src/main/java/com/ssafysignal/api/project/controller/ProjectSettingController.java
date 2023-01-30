@@ -1,5 +1,10 @@
 package com.ssafysignal.api.project.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
@@ -18,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,16 +66,21 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/setting/{projectSeq}")
     private ResponseEntity<BasicResponse> modifyProjectSetting(@Parameter(name = "projectSeq", description = "프로젝트 Seq") @PathVariable(name = "projectSeq") Integer projectSeq,
-                                                               @Parameter(name = "projectSettingModifyRequest", description = "프로젝트 수정 정보") @RequestBody ProjectSettingModifyRequest projectSettingModifyRequest) {
+                                                               @Parameter(name = "uploadImage", description = "프로젝트 대표 이미지 파일") @RequestPart("uploadImage") MultipartFile uploadImage,
+                                                               @Parameter(name = "modifyData", description = "프로젝트 수정 정보") @RequestParam String modifyData) {
         log.info("modifyProjectSetting - Call");
 
         try {
-            projectSettingService.modifyProjectSetting(projectSeq, projectSettingModifyRequest);
+            ObjectMapper objectMapper = new ObjectMapper().registerModule(new SimpleModule());
+            ProjectSettingModifyRequest projectSettingModifyRequest = objectMapper.readValue(modifyData, new TypeReference<ProjectSettingModifyRequest>() {} );
+            projectSettingService.modifyProjectSetting(projectSeq, uploadImage, projectSettingModifyRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         }  catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
 
