@@ -53,7 +53,7 @@ public class QnaController {
 
     @Tag(name = "QnA")
     @Operation(summary = "QnA 등록", description = "QnA를 등록합니다.")
-    @PostMapping("/qna")
+    @PostMapping("")
     private ResponseEntity<BasicResponse> registQna(@Parameter(description = "Qna 등록을 위한 정보") @RequestBody QnaRegistRequest qnaRegistRequest) {
         log.info("registQna - Call");
 
@@ -67,7 +67,7 @@ public class QnaController {
 
     @Tag(name = "QnA")
     @Operation(summary = "QnA 목록조회", description = "QnA 목록을 조회합니다.")
-    @GetMapping("/qna")
+    @GetMapping("")
     private ResponseEntity<BasicResponse> findAllQna(@Parameter(description = "page") Integer page,
                                                      @Parameter(description = "size") Integer size) {
         log.info("findAllQna - Call");
@@ -79,7 +79,7 @@ public class QnaController {
 
     @Tag(name = "QnA")
     @Operation(summary = "QnA 상세 조회", description = "QnA 항목을 상세 조회")
-    @GetMapping("/qna/{qnaSeq}")
+    @GetMapping("/{qnaSeq}")
     private ResponseEntity<BasicResponse> findQna(@Parameter(name = "qnaSeq", description = "QnA Seq", required = true) @PathVariable Integer qnaSeq) {
         log.info("findQna - Call");
 
@@ -93,7 +93,7 @@ public class QnaController {
 
     @Tag(name = "QnA")
     @Operation(summary = "QnA 수정", description = "작성자의 QnA 수정")
-    @PutMapping("/qna/{qnaSeq}")
+    @PutMapping("/{qnaSeq}")
     private ResponseEntity<BasicResponse> modifyQna(@Parameter(name = "qnaSeq", description = "QnA Seq", required = true) @PathVariable Integer qnaSeq,
                                                     @Parameter(description = "QnA 수정 정보", required = true) @RequestBody QnaRegistRequest qnaRegistRequest) {
         log.info("modifyQna - Call");
@@ -108,7 +108,7 @@ public class QnaController {
 
     @Tag(name = "QnA")
     @Operation(summary = "QnA 삭제", description = "QnA 삭제")
-    @DeleteMapping("/qna/{qnaSeq}")
+    @DeleteMapping("/{qnaSeq}")
     private ResponseEntity<BasicResponse> deleteQna(@Parameter(name = "qnaSeq", description = "QnA Seq", required = true) @PathVariable Integer qnaSeq) {
         log.info("deleteQna - Call");
 
