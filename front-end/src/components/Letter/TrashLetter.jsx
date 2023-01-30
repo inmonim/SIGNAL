@@ -5,7 +5,7 @@ import LetterDetail from './LetterDetail'
 function TrashLetter({ handleChangeView, view }) {
   const [data, setData] = useState([])
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/letter/trash/${sessionStorage.getItem('userSeq')}?page=1&size=10`, {
+    fetch(process.env.REACT_APP_API_URL + `/letter/trash/${sessionStorage.getItem('userSeq')}`, {
       method: 'GET',
     })
       .then((res) => res.json())

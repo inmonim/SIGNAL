@@ -1,17 +1,22 @@
 package com.ssafysignal.api.user.service;
 
-import com.ssafysignal.api.user.dto.Response.UserFindAllResponse;
-import com.ssafysignal.api.user.entity.FindUserRes;
+import com.ssafysignal.api.auth.entity.Auth;
+import com.ssafysignal.api.auth.repository.AuthRepository;
+import com.ssafysignal.api.common.dto.EmailDto;
+import com.ssafysignal.api.common.service.EmailService;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.user.dto.request.ModifyUserReq;
+import com.ssafysignal.api.user.dto.response.FindUserRes;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +24,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AuthRepository authRepository;
+    private final EmailService emailService;
+
+    @Value("${server.backend.host}")
+    private String beHost;
+
+    @Value("${server.frontend.host}")
+    private String feHost;
 
     /*@Transactional(readOnly = true)
     public UserFindAllResponse findAllUsers(int page, int size) {
@@ -36,22 +49,67 @@ public class UserService {
         return user.get();
     }*/
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public FindUserRes findUser(final int userSeq) {
 
-        FindUserRes user = userRepository.findByUserSeq(userSeq);
-        //        .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
-        //return UserFindResponse.fromEntity(user);
-        
-        //userSeq가 없는 경우 에러 처리 추가하기!!
-        return user;
+        User user = userRepository.findByUserSeq(userSeq)
+                .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
+        FindUserRes res = FindUserRes.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .phone(user.getPhone())
+                .heartCnt(user.getHeartCnt())
+                .build();
+        return res;
     }
     
-    @Transactional(readOnly = true)
-    public User joinUser(final User user) {
-    	
-    	User ret=userRepository.save(user);
+    @Transactional()
+    public User registUser(final User user) throws Exception {
+        String authCode = UUID.randomUUID().toString();
+
+    	User ret = userRepository.save(user);
+
+        Auth auth = Auth.builder()
+                .userSeq(ret.getUserSeq())
+                .authCode("AU101")
+                .code(authCode)
+                .build();
+
+        // 인증 코드 등록
+        authRepository.save(auth);
+
+        // 이메일 전송 코드 필요
+        emailService.sendMail(
+                EmailDto.builder()
+                        .receiveAddress(ret.getEmail())
+                        .title("Signal 회원가입 인증")
+                        .text("url을 클릭하면 인증이 완료됩니다.")
+                        .host(beHost)
+                        .url(String.format("/auth/emailauth/%s", authCode))
+                        .build());
+
     	return ret;
+    }
+    
+    @Transactional
+    public void deleteUser(final int userSeq) {
+    	User user = userRepository.findByUserSeq(userSeq)
+    			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+    	user.deleteAuth();
+    	userRepository.save(user);
+    	
+    }
+    
+    @Transactional
+    public void modifyUser(final int userSeq, final ModifyUserReq userInfo) {
+    	User user = userRepository.findByUserSeq(userSeq)
+    			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+    	user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), 
+    			userInfo.getBirthYear(), userInfo.getBirthMonth(), userInfo.getBirthDay()); 
+    	
+    	userRepository.save(user);
+    	
+    	//파일 이미지  변경 코드 추가하기
     }
 
 
