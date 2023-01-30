@@ -5,6 +5,10 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/Calendar.css'
+import moment from 'moment'
+import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
+import Button from '@mui/material/Button'
+import 'moment/locale/ko'
 
 const style = {
   position: 'absolute',
@@ -26,11 +30,29 @@ const cancleButtonStyle = {
   cursor: 'pointer',
 }
 
-function meetingDtSelet(meetingList) {
+const CommonButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#574B9F',
+  color: theme.vars.palette.common.white,
+  borderRadius: '8px',
+  border: '1px solid white',
+  '&:hover': {
+    backgroundColor: theme.vars.palette.common.white,
+    color: '#574B9F',
+    border: '1px solid #574b9f',
+    cursor: 'pointer',
+  },
+  width: '100%',
+}))
+
+const selectedTimeStyle = {
+  textAlign: 'center',
+  margin: '5px',
+}
+
+function meetingDtSelet(props) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
-    console.log(true)
     setOpen(true)
   }
 
@@ -39,26 +61,31 @@ function meetingDtSelet(meetingList) {
   }
 
   return (
-    <div>
-      <button className="apply-button" onClick={handleOpen}>
-        시간선택
-      </button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            미팅 시간 선택
-          </Typography>
-          <img src={cancleButton} alt="plusButton" style={cancleButtonStyle} onClick={handleClose} />
+    <CssVarsProvider>
+      <div>
+        <CommonButton onClick={handleOpen}>시간선택</CommonButton>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2" textAlign={'center'}>
+              미팅 시간 선택
+            </Typography>
+            <img src={cancleButton} alt="plusButton" style={cancleButtonStyle} onClick={handleClose} />
 
-          <MeetingDtCalendar open={open} meetingList={meetingList.meetingList}></MeetingDtCalendar>
-        </Box>
-      </Modal>
-    </div>
+            <MeetingDtCalendar
+              close={handleClose}
+              meetingList={props.meetingList}
+              onChange={props.onChange}
+            ></MeetingDtCalendar>
+          </Box>
+        </Modal>
+        <div style={selectedTimeStyle}>{props.meeting === '' ? '' : ` ${moment(props.meeting).format('LLL')}시`}</div>
+      </div>
+    </CssVarsProvider>
   )
 }
 export default meetingDtSelet
