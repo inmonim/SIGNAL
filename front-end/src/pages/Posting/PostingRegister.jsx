@@ -84,26 +84,6 @@ const PostingRegister = () => {
 
   const [careerList, setCareerList] = useState([])
 
-  // const [answerList, setAnswerList] = useState([])
-
-  // const [qnaList, setQnaList] = useState([])
-
-  // ene >> useState
-
-  // start >> Fetch
-
-  // const postingFetch = async () => {
-  //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/posting/1')
-  //     setPosting(res.data.body)
-  //     const qnaArr = []
-  //     res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-  //     setQnaList(qnaArr)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const profileFetch = async () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
