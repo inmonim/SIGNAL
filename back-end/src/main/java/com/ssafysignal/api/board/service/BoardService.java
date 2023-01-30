@@ -42,8 +42,8 @@ public class BoardService {
 
 
     @Transactional(readOnly = true)
-    public List<Qna> findAllQna() {
-        List<Qna> QnaList = qnaRepository.findAll();
+    public Page<Qna> findAllQna(Integer page, Integer size) {
+        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "qnaSeq"));
         return QnaList;
     }
 
