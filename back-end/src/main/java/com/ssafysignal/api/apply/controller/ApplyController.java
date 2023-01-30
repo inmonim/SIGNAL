@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +38,7 @@ import java.util.List;
 
 public class ApplyController {
 
-    private ApplyService applyService;
+    private final ApplyService applyService;
 
     @Tag(name = "지원")
     @Operation(summary = "지원서 등록",  description = "지원서를 등록한다.")
@@ -232,7 +233,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "400", description = "지원서 메모 등록 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
-    @PutMapping("/applyer/memo")
+    @PutMapping("/memo")
     private ResponseEntity<BasicResponse> modifyApplyMemo(@Parameter(description = "지원서 메모 정보") @RequestBody ApplyMemoRequest applyMemoRequest){
         log.info("modifyApplyMemo - Call");
 
@@ -245,7 +246,29 @@ public class ApplyController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
+    }
 
+    @Tag(name = "지원")
+    @Operation(summary = "지원서 메모 조회", description = "지원서 메모 조회한다..")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원서 메모 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "지원서 메모 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/memo/{applySeq}")
+    private ResponseEntity<BasicResponse> findApplyMemo(@Parameter(name = "applySeq", description = "지원서 Seq", required = true) @PathVariable("applySeq") Integer applySeq) {
+
+        log.info("findApplyMemo - Call");
+
+        try {
+            String memo = applyService.findApplyMemo(applySeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, String>() {{ put("memo", memo); }}));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
     }
 
 }
