@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Paging from 'components/Paging'
+import { Link } from 'react-router-dom'
 import 'assets/styles/notice.css'
 
 function Notice() {
@@ -34,6 +35,9 @@ function Notice() {
       view: item.view,
     })
   })
+
+  // const [selectedRow, setSelectedRow] = useState({})
+  // console.log(selectedRow.id)
   return (
     <div className="notice-page-container">
       <div className="notice-container">
@@ -51,9 +55,13 @@ function Notice() {
               </TableHead>
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableRow key={row.id}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="left">{row.title}</TableCell>
+                    <TableCell align="left">
+                      <Link to={`/noticeDetail`} state={{ id: row.id }}>
+                        {row.title}
+                      </Link>
+                    </TableCell>
                     <TableCell align="center">{row.regDt}</TableCell>
                     <TableCell align="center">{row.view}</TableCell>
                   </TableRow>

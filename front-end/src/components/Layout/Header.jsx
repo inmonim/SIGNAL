@@ -76,7 +76,7 @@ function Header() {
               </Link>
             </li>
             <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/board">
+              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
                 공지사항
               </Link>
             </li>
