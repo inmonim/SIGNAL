@@ -2,10 +2,8 @@ package com.ssafysignal.api.letter.dto.request;
 
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
-public class DeleteLetterSeqReq {
+public class DeleteLetterSeqRequest {
     private int letterSeq;
 }
 

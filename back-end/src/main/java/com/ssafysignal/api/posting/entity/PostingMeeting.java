@@ -1,5 +1,8 @@
 package com.ssafysignal.api.posting.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -16,40 +19,37 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @Table(name = "posting_meeting")
 public class PostingMeeting {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "posting_meeting_seq")
     private Integer postingMeetingSeq;
-
     @Column(name = "posting_seq")
     private Integer postingSeq;
-
     @Column(name = "from_user_seq")
     private Integer fromUserSeq;
-
     @Column(name = "to_user_seq")
     private Integer toUserSeq;
-
     @Column(name = "meeting_dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime meetingDt;
-
     @Column(name = "posting_meeting_code")
     private String postingMeetingCode;
-
-    public void setToUser(Integer toUserSeq) {
-        this.toUserSeq = toUserSeq;
-    }
+    @OneToOne
+    @JoinColumn(name = "posting_meeting_code", insertable = false, updatable = false)
+    private CommonCode code;
 
     @Builder
-    public PostingMeeting(final Integer postingMeetingSeq, final Integer postingSeq,
-                          final Integer fromUserSeq, final Integer toUserSeq,
-                          final LocalDateTime meetingDt, final String postingMeetingCode) {
+    public PostingMeeting(Integer postingMeetingSeq, Integer postingSeq, Integer fromUserSeq, Integer toUserSeq, LocalDateTime meetingDt, String postingMeetingCode, CommonCode code) {
         this.postingMeetingSeq = postingMeetingSeq;
         this.postingSeq = postingSeq;
         this.fromUserSeq = fromUserSeq;
         this.toUserSeq = toUserSeq;
         this.meetingDt = meetingDt;
         this.postingMeetingCode = postingMeetingCode;
+        this.code = code;
+    }
+
+    public void setToUser(Integer toUserSeq) {
+        this.toUserSeq = toUserSeq;
     }
 }

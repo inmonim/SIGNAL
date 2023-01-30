@@ -1,6 +1,8 @@
 package com.ssafysignal.api.posting.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.project.entity.Project;
 import io.swagger.annotations.ApiModel;
@@ -30,19 +32,33 @@ public class PostingFindResponse {
     private Integer term;
     @Schema(description = "공고 설명", example = "1", required = true)
     private String content;
-    @Schema(description = "공고 모집 마감 일자", example = "2023-01-01 11:00:00", required = true)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @Schema(description = "공고 모집 마감 일자", example = "2023-01-01 11:00:00.000", required = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime postingEndDt;
     @Schema(description = "프로젝트 난이도", example = "5", required = true)
     private Integer level;
     @Schema(description = "공고 기술 스택")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final List<PostingSkill> postingSkillList;
     @Schema(description = "공고 사전 미팅 시간")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingMeeting> postingMeetingList;
     @Schema(description = "공고 포지션")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingPosition> postingPositionList;
     @Schema(description = "공고 사전 질문")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingQuestion> postingQuestionList;
+
+    @Schema(description = "공고 상태 코드")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private CommonCode postingCode;
+    @Schema(description = "총 모집 인원")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer totalCnt;
+    @Schema(description = "모집 된 인원")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer selectCnt;
 
     public static PostingFindResponse fromEntity(final Project project) {
         return PostingFindResponse.builder()

@@ -16,18 +16,14 @@ import javax.persistence.*;
 @DynamicUpdate
 @Table(name = "posting_question")
 public class PostingQuestion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "posting_question_seq")
     private Integer postingQuestionSeq;
-
     @Column(name = "posting_seq")
     private Integer postingSeq;
-
     @Column(name = "num")
     private Integer num;
-
     @Column(name = "content")
     private String content;
 
