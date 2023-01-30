@@ -4,13 +4,18 @@ import Layout from 'Layout'
 import 'index.css'
 import redux from './store/redux'
 import { Provider } from 'react-redux'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <Provider store={redux}>
-      <Layout />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={redux}>
+        <Layout />
+      </Provider>
+    </QueryClientProvider>
   </React.StrictMode>
 )
 
