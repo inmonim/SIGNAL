@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Paging from 'components/Paging'
-import 'assets/styles/board.css'
+import 'assets/styles/notice.css'
 
-function Board() {
+function Notice() {
   const [data, setData] = useState([])
 
   const [size] = useState(7)
@@ -35,13 +35,13 @@ function Board() {
     })
   })
   return (
-    <div className="board-page-container">
-      <div className="board-container">
-        <div className="board-header">공지사항</div>
-        <div className="board-table">
+    <div className="notice-page-container">
+      <div className="notice-container">
+        <div className="notice-header">공지사항</div>
+        <div className="notice-table">
           <TableContainer>
             <Table>
-              <TableHead className="board-table-head">
+              <TableHead className="notice-table-head">
                 <TableRow>
                   <TableCell align="center">번호</TableCell>
                   <TableCell align="center">제목</TableCell>
@@ -68,4 +68,4 @@ function Board() {
   )
 }
 
-export default Board
+export default Notice

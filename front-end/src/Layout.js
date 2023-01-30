@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
 import PostingRegister from 'pages/Posting/PostingRegister'
 import Application from 'pages/Posting/PostingDetail'
-import Board from 'pages/Board/Board'
+import Notice from 'pages/Notice/Notice'
 import Qna from 'pages/QnA/Qna'
 
 const Posting = lazy(() => import('./pages/Posting/Posting'))
@@ -30,7 +30,7 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
-          <Route path="/board" element={<Board />} />
+          <Route path="/notice" element={<Notice />} />
           <Route path="/qna" element={<Qna />} />
         </Routes>
       </BrowserRouter>
