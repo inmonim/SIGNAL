@@ -7,6 +7,7 @@ public enum ResponseCode {
     NOT_FOUND("400", "조회 실패"),
     LIST_NOT_FOUND("400", "목록 조회 실패"),
     REGIST_NOT_FOUNT("500", "등록하기 위한 정보 조회 실패"),
+    REGIST_ALREADY("500", "이미 등록된 정보"),
     REGIST_FAIL("500", "등록 실패"),
     MODIFY_NOT_FOUND("400", "수정하기 위한 정보 조회 실패"),
     MODIFY_FAIL("500", "수정 실패"),

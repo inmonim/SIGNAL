@@ -34,6 +34,24 @@ import java.util.Map;
 public class PostingController {
 
     private final PostingService postingService;
+    @Tag(name = "공고")
+    @Operation(summary = "공고 전체 수", description = "공고 전체 수를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공고 전체 수를 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "공고 전체 수를 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+    @GetMapping("/count")
+    private ResponseEntity<BasicResponse> countPosting() {
+        log.info("countPosting - Call");
+
+            try {
+                Integer postingCount = postingService.countPosting();
+                return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Integer>() {{ put("count", postingCount); }}));
+            } catch (RuntimeException e) {
+                return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
+    }
+
 
     @Tag(name = "공고")
     @Operation(summary = "공고 등록", description = "공고를 등록한다.")
