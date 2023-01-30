@@ -294,7 +294,7 @@ function ApplyRegister() {
         applyCareerList: CareerPostFilter(careerList),
         applyExpList: ExpPostFilter(expList),
         applySkillList: skillList,
-        content: content,
+        content,
         fieldCode: posting.fieldCode,
         meetingDt: meeting,
         positionCode: getPositionCode(position),
