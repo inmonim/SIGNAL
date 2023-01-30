@@ -4,11 +4,10 @@ import logo from 'assets/image/Navlogo.png'
 import 'components/Layout/Header.css'
 import useDetectClose from 'hooks/useDetectClose'
 import LoginModal from 'components/LoginModal'
-import LetterModal from 'components/LetterModal'
+import LetterModal from 'components/Letter/LetterModal'
 import * as D from './DropDownStyle'
 import Badge from '@mui/material/Badge'
 import EmailIcon from '@mui/icons-material/Email'
-// import DraftsIcon from '@mui/icons-material/Drafts'
 
 function Header() {
   const [postingIsOpen, postingRef, postingHandler] = useDetectClose(false)
@@ -24,9 +23,17 @@ function Header() {
   const handleLetterClose = () => setLetterOpen(false)
 
   const [isLogin, setIsLogin] = useState(false)
+  const [letterCnt, setLetterCnt] = useState(0)
   useEffect(() => {
     if (sessionStorage.getItem('username') !== null) {
       setIsLogin(true)
+      fetch(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq'), {
+        method: 'GET',
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setLetterCnt(res.body.count)
+        })
     }
   })
 
@@ -69,12 +76,12 @@ function Header() {
               </Link>
             </li>
             <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/">
+              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
                 공지사항
               </Link>
             </li>
             <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/">
+              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/qna">
                 Q & A
               </Link>
             </li>
@@ -103,7 +110,7 @@ function Header() {
               <li>
                 <div style={{ cursor: 'pointer' }} className="header-nav-item" onClick={handleLetterOpen}>
                   <Badge
-                    badgeContent={4}
+                    badgeContent={letterCnt}
                     color="error"
                     anchorOrigin={{
                       vertical: 'bottom',

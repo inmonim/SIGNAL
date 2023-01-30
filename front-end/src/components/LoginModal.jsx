@@ -77,12 +77,25 @@ function LoginModal({ open, onClose }) {
       sessionStorage.setItem('userSeq', 1)
       onClose(onClose(true))
       return
+    } else if (inputEmail === 'bbb@naver.com' && inputPwd === 'tkdals123.') {
+      console.log('로그인 성공')
+      sessionStorage.setItem('userEmail', inputEmail)
+      sessionStorage.setItem('username', '상민')
+      sessionStorage.setItem('userSeq', 2)
+      onClose(onClose(true))
+      return
     }
     console.log('로그인 실패')
   }
 
-  const [inputEmail, setInputEmail] = useState('gurrms@naver.com')
-  const [inputPwd, setInputPwd] = useState('gurrms123.')
+  const activeEnter = (e) => {
+    if (e.key === 'Enter') {
+      handleToMain()
+    }
+  }
+
+  const [inputEmail, setInputEmail] = useState('')
+  const [inputPwd, setInputPwd] = useState('')
 
   const handleInputEmail = (e) => {
     setInputEmail(e.target.value)
@@ -128,6 +141,7 @@ function LoginModal({ open, onClose }) {
                 multiline
                 sx={inputStyle}
                 onChange={handleInputPwd}
+                onKeyDown={(e) => activeEnter(e)}
               />
               <div className="login-under1" style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <FormControlLabel
