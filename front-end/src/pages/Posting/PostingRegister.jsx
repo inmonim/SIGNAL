@@ -85,48 +85,48 @@ const PostingRegister = () => {
       },
     ],
   })
-  const [profile, setProfile] = useState([])
+  // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
 
-  const profileFetch = async () => {
-    try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-      setProfile(res.data.body)
-      console.log(res.data.body)
-      console.log(profile)
-      careerFetchFilter(res.data.body.userCareerList)
-      expFetchFilter(res.data.body.userExpList)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const profileFetch = async () => {
+  //   try {
+  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+  //     setProfile(res.data.body)
+  //     console.log(res.data.body)
+  //     console.log(profile)
+  //     careerFetchFilter(res.data.body.userCareerList)
+  //     expFetchFilter(res.data.body.userExpList)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   // end >> Fetch
 
   // start >> Data filter
 
-  const careerFetchFilter = (list) => {
-    const careerArr = []
-    list.map((item, index) =>
-      careerArr.push({
-        seq: index,
-        content: item.content,
-      })
-    )
+  // const careerFetchFilter = (list) => {
+  //   const careerArr = []
+  //   list.map((item, index) =>
+  //     careerArr.push({
+  //       seq: index,
+  //       content: item.content,
+  //     })
+  //   )
 
-    setCareerList(careerArr)
-  }
+  //   setCareerList(careerArr)
+  // }
 
-  const expFetchFilter = (list) => {
-    const expArr = []
-    list.map((item, index) =>
-      expArr.push({
-        seq: index,
-        content: item.content,
-      })
-    )
-  }
+  // const expFetchFilter = (list) => {
+  //   const expArr = []
+  //   list.map((item, index) =>
+  //     expArr.push({
+  //       seq: index,
+  //       content: item.content,
+  //     })
+  //   )
+  // }
 
   // end >> Data filter
 
@@ -213,7 +213,7 @@ const PostingRegister = () => {
 
   useEffect(() => {
     // postingFetch()
-    profileFetch()
+    // profileFetch()
   }, [])
 
   return (
@@ -306,10 +306,14 @@ const PostingRegister = () => {
             </div>
             <div className="email-section">
               <Label>프로젝트 기간</Label>
-              <FilterSelect>
-                {Object.keys(Localdata).map((ele, i) => (
-                  <option key={i} value={ele}>
-                    {Localdata[ele].name}
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                }}
+              >
+                {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
+                  <option key={i} value="ele">
+                    {ele}주
                   </option>
                 ))}
               </FilterSelect>
