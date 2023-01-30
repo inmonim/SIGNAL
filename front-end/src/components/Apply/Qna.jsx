@@ -13,23 +13,14 @@ const textAreaStyle = {
   backgroundColor: '#f3f5f7',
 }
 
-function Qna({ qna, onChange, id }) {
+function Qna({ question, id, onChange }) {
   const handleQnAChange = (event) => {
-    console.log(event.target.value)
     onChange(event.target.value, id)
   }
   return (
     <div>
-      <Label className="question-label">{qna.content}</Label>
-      <TextField
-        style={textAreaStyle}
-        fullWidth={true}
-        multiline={true}
-        minRows="1"
-        onChange={(e) => {
-          handleQnAChange(e)
-        }}
-      />
+      <Label className="question-label">{question.content}</Label>
+      <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" onChange={handleQnAChange} />
     </div>
   )
 }

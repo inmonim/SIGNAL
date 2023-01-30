@@ -15,8 +15,12 @@ import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
 
 const Container = styled.section`
-  // padding: 100px;
+  padding: 50px 500px;
 `
+
+const width = {
+  minWidth: '800px',
+}
 
 const Title = styled.h1`
   font-size: 2.5em;
@@ -52,17 +56,17 @@ const Apply = () => {
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  const [profile, setProfile] = useState([])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
-  const [qnaList, setQnaList] = useState([])
-
-  // DateFormat : yyyy.MM.dd HH:mm:ss.SSS
+  const [questionList, setQuestionList] = useState([])
+  const [answerList, setAnswerList] = useState([])
+  const [careerSeq, setCareerSeq] = useState(0)
+  const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
-
+  const [meeting, setMeeting] = useState('')
   // ene >> useState
 
   // start >> Fetch
@@ -80,10 +84,12 @@ const Apply = () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/posting/458')
       setPosting(res.data.body)
-      const qnaArr = []
-      res.data.body.postingQuestionList.map(() => qnaArr.push(''))
-      setMeetingList(['2023.01.29 11:11:11.111', '2023.01.29 13:11:11.111', '2023.01.22 11:11:11.111'])
-      setQnaList(res.data.body)
+      const answerArr = []
+      res.data.body.postingQuestionList.map(() => answerArr.push(''))
+      meetingFetchFilter(res.data.body.postingMeetingList)
+      setAnswerList(answerArr)
+      setQuestionList(res.data.body.postingQuestionList)
+      console(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -92,9 +98,6 @@ const Apply = () => {
   const profileFetch = async () => {
     try {
       const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-      setProfile(res.data.body)
-      console.log(res.data.body)
-      console.log(profile)
       careerFetchFilter(res.data.body.userCareerList)
       expFetchFilter(res.data.body.userExpList)
     } catch (error) {
@@ -114,7 +117,7 @@ const Apply = () => {
         content: item.content,
       })
     )
-
+    setCareerSeq(list.length)
     setCareerList(careerArr)
   }
 
@@ -126,7 +129,26 @@ const Apply = () => {
         content: item.content,
       })
     )
+    setExpSeq(list.length)
     setExpList(expArr)
+  }
+
+  const meetingFetchFilter = (list) => {
+    const meetingDtArr = []
+    list.map((item, index) => meetingDtArr.push(item.meetingDt))
+    setMeetingList(meetingDtArr)
+  }
+
+  const CareerPostFilter = (list) => {
+    const careerArr = []
+    list.map((item) => careerArr.push(item.content))
+    return careerArr
+  }
+
+  const ExpPostFilter = (list) => {
+    const expArr = []
+    list.map((item) => expArr.push(item.content))
+    return expArr
   }
 
   // start >> handle position
@@ -142,7 +164,6 @@ const Apply = () => {
     const skillArr = [...skillList]
     skillArr.push(value)
     setSkillList(skillArr)
-    console.log(skillArr)
   }
 
   const handleSkillRemove = (id) => {
@@ -168,12 +189,12 @@ const Apply = () => {
   const handleCareerAdd = () => {
     const careerArr = [...careerList]
     const career = {
-      seq: careerArr[careerArr.length - 1].seq + 1,
+      seq: careerSeq + 1,
       content: '',
     }
+    setCareerSeq(careerSeq + 1)
     careerArr.push(career)
     setCareerList(careerArr)
-    console.log(careerList)
   }
 
   const handleCareerChange = (value, key) => {
@@ -200,12 +221,12 @@ const Apply = () => {
   const handleExpAdd = () => {
     const expArr = [...expList]
     const exp = {
-      seq: expArr[expArr.length - 1].seq + 1,
+      seq: expSeq + 1,
       content: '',
     }
+    setExpSeq(expSeq + 1)
     expArr.push(exp)
     setExpList(expArr)
-    console.log(expList)
   }
 
   const handleExpChange = (value, key) => {
@@ -237,35 +258,28 @@ const Apply = () => {
   // start >> handle qna
 
   const handleQnAChange = (value, key) => {
-    const qnaArr = [...qnaList]
-    qnaArr.splice(key, 1, value)
-    setQnaList(qnaArr)
-    console.log(qnaList)
+    const answerArr = [...answerList]
+    answerArr.splice(key, 1, value)
+    setExpList(answerArr)
+    console.log('answerArr', answerArr)
   }
 
   // end >> handle qna
 
-  const CareerPostFilter = (list) => {
-    const careerArr = []
-    list.map((item) => careerArr.push(item.content))
-    return careerArr
-  }
-
-  const ExpPostFilter = (list) => {
-    const expArr = []
-    list.map((item) => expArr.push(item.content))
-    return expArr
+  const handleMeetingDtChange = (key) => {
+    setMeeting(meetingList[key])
   }
 
   const handleApplySubmit = async () => {
-    const meetingDt = new Date().toISOString().substr(0, 23).replace('T', ' ')
-    console.log(qnaList)
+    const userSeq = 1
+    const postingSeq = 458
+    console.log('answerList', answerList)
     console.log(CareerPostFilter(careerList))
     console.log(ExpPostFilter(expList))
     console.log(skillList)
     console.log(content)
     console.log('filedCode')
-    console.log(meetingDt)
+    console.log(meeting)
     console.log('positionCode')
     console.log('userseq')
     try {
@@ -282,10 +296,10 @@ const Apply = () => {
         applySkillList: skillList,
         content: skillList,
         fieldCode: 'FI100',
-        meetingDt: '2023-01-01 11:00:00.000',
+        meetingDt: meeting,
         positionCode: 'PO100',
-        postingSeq: 1,
-        userSeq: 1,
+        postingSeq,
+        userSeq,
       }
 
       const config = { 'Content-Type': 'application/json' }
@@ -312,7 +326,7 @@ const Apply = () => {
 
   return (
     <Container>
-      <div>
+      <div style={width}>
         <div>
           <Title>{user.nickname} 님의지원서</Title>
         </div>
@@ -364,8 +378,6 @@ const Apply = () => {
                     {...params}
                     onKeyUp={(e) => {
                       if (e.key === 'Enter') {
-                        console.log('enter')
-                        console.log(e.target.value)
                         handleSkillInput(e.target.value)
                       }
                     }}
@@ -376,7 +388,12 @@ const Apply = () => {
             </div>
             <div className="meeting-section">
               <Label className="label">화상미팅 예약</Label>
-              <MeetingDtSelect open={open} meetingList={meetingList}></MeetingDtSelect>
+              <MeetingDtSelect
+                open={open}
+                meetingList={meetingList}
+                onChange={handleMeetingDtChange}
+                meeting={meeting}
+              ></MeetingDtSelect>
             </div>
           </div>
           <div className="career-exp-section">
@@ -392,7 +409,6 @@ const Apply = () => {
                 careerList={careerList}
                 onRemove={handleCareerRemove}
                 onChange={handleCareerChange}
-                key={careerList[0]}
               ></CareerList>
             </div>
             <div className="exp-section">
@@ -403,12 +419,7 @@ const Apply = () => {
                 </div>
                 <hr></hr>
               </div>
-              <ExpList
-                expList={expList}
-                onRemove={handleExpRemove}
-                onChange={handleExpChange}
-                key={expList[0]}
-              ></ExpList>
+              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
             </div>
           </div>
           <div className="content-section">
@@ -428,7 +439,7 @@ const Apply = () => {
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange} key={posting}></QnAList>
+              <QnAList questionList={questionList} onChange={handleQnAChange}></QnAList>
             </div>
           </div>
         </div>
