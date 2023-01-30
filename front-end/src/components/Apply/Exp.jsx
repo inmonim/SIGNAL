@@ -6,15 +6,21 @@ const inputStyle = {
   width: '22rem',
 }
 
-function Exp({ exp, onRemove }) {
+function Exp({ exp, onRemove, onChange, id }) {
+  const handleExpChange = (event) => {
+    console.log(event.target.value)
+    onChange(event.target.value, id)
+  }
   return (
     <div className="exp-div">
       <TextField
         id="outlined-basic"
         variant="outlined"
-        defaultValue={exp.title}
-        inputProps={exp.title}
+        defaultValue={exp}
         style={inputStyle}
+        onChange={(e) => {
+          handleExpChange(e)
+        }}
       />
       <div className="minus-button-section">
         <img
@@ -22,7 +28,7 @@ function Exp({ exp, onRemove }) {
           alt="minusButton"
           className="minus-button"
           onClick={() => {
-            onRemove(exp.id)
+            onRemove(id)
           }}
         />
       </div>

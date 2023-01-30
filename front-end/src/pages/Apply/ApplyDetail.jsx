@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react'
 import '../../assets/styles/applyDetail.css'
 import '../../assets/styles/skill.css'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+
 import { getPositionName } from 'data/Positiondata'
 
+import ApplyDelete from './ApplyDelete'
 import skillImage from '../../assets/image/Skilltest/React.png'
 
 const Application = () => {
-  const { id } = useParams()
-  console.log(id)
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
@@ -121,9 +120,9 @@ const Application = () => {
           <div></div>
         </div>
       </div>
-      {/* <div className="submit-section">
+      <div className="submit-section">
         <ApplyDelete open={open}></ApplyDelete>
-      </div> */}
+      </div>
     </div>
   )
 }
