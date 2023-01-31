@@ -62,6 +62,7 @@ public class ApplyController {
         }
     }
 
+    
     @Tag(name = "지원")
     @Operation(summary = "지원서 수정", description = "지원서를 수정한다.")
     @ApiResponses({
@@ -72,11 +73,15 @@ public class ApplyController {
     @PutMapping("/{applySeq}")
     private ResponseEntity<BasicResponse> modifyApply(@Parameter(name = "applySeq", description = "지원서 Seq", required = true) @PathVariable(name = "applySeq") Integer applySeq,
                                                       @Parameter(description = "지원서 수정 정보", required = true) @RequestBody ApplyBasicRequest applyBasicRequest) {
-
+    	
         log.info("modifyApply - Call");
-
+        System.out.println(applyBasicRequest);
+        applyService.modifyApply(applyBasicRequest, applySeq);
         try {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        }
+        catch (DuplicateKeyException e) {
+        	return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
@@ -84,6 +89,7 @@ public class ApplyController {
         }
     }
 
+    
     @Tag(name = "지원")
     @Operation(summary = "지원서 상세 조회", description = "지원서 상세 정보를 조회한다.")
     @ApiResponses({
@@ -116,6 +122,7 @@ public class ApplyController {
         log.info("deleteApply - Call");
 
         try {
+        	applyService.cancleApply(applySeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
