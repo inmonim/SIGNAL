@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import { Button, Modal, Box, Typography } from '@mui/material'
 import memoButton from '../../assets/image/memo.png'
 import cancleButton from '../../assets/image/x.png'
-// import axios from 'axios'
+import axios from 'axios'
 
 const style = {
   position: 'absolute',
@@ -49,33 +49,27 @@ const ImageButton = styled(Button)(({ theme }) => ({
   },
 }))
 
-function MemoModal() {
+function MemoModal(props) {
   const [open, setOpen] = useState(false)
   const [memo, setMemo] = useState('')
 
-  // const memoFetch = async () => {
-  //   try {
-  //     const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/memo' + props.applySeq)
-  //     setMemo(res.data.body.content)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  const memoFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/memo/' + props.applySeq)
+      setMemo(res.data.body.content)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleOpen = () => {
-    console.log('memo')
     setOpen(true)
+    memoFetch()
   }
 
   const handleClose = () => {
     setOpen(false)
-    console.log('memo')
-    console.log(open)
   }
-
-  useEffect(() => {
-    setMemo('ddd')
-  }, [])
 
   return (
     <CssVarsProvider>

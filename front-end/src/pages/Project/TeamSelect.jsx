@@ -18,6 +18,7 @@ import MemoModal from '../../components/Memo/MemoModal'
 import axios from 'axios'
 import Styled from 'styled-components'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
+import moment from 'moment'
 
 const Banner = emotion.div`
   width: 100%;
@@ -73,16 +74,14 @@ const Image = {
   width: '15px',
 }
 
-const rows = [{}, {}, {}, {}, {}, {}, {}]
-
 function TeamSelect() {
-  const postingSeq = 448
+  const postingSeq = 458
   const [applyList, setApplyList] = useState([])
 
   const applyListFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/project/applyer/' + postingSeq)
-      setApplyList(res.data.body)
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/project/applyer/' + postingSeq + '?page=1&size=8')
+      setApplyList(res.data.body.applyerList)
       console.log(res.data.body)
       console.log(applyList)
     } catch (error) {
@@ -118,28 +117,31 @@ function TeamSelect() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row, index) => (
-                      <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell align="center">{row.name}</TableCell>
-                        <TableCell align="center">
-                          <MeetingConfirmModal></MeetingConfirmModal>
-                        </TableCell>
-                        <TableCell align="center">{row.meetingTime}</TableCell>
-                        <TableCell align="center">{row.position}</TableCell>
-                        <TableCell align="center">{row.isSelect}</TableCell>
-                        <TableCell align="center">
-                          <MemoModal applySeq={rows.applySeq}></MemoModal>
-                        </TableCell>
-                        <TableCell align="center">
-                          <ImageButton>
-                            <img src={detailButton} alt="memoButton" style={Image} />
-                          </ImageButton>
-                        </TableCell>
-                        <TableCell align="center">
-                          <CommonButton>선택</CommonButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {applyList &&
+                      applyList.map((apply, index) => (
+                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell align="center">{apply.nickname}</TableCell>
+                          <TableCell align="center">
+                            <MeetingConfirmModal></MeetingConfirmModal>
+                          </TableCell>
+                          <TableCell align="center">
+                            {moment(apply.postingMeeting.meetingDt).format('MM/DD HH')} 시
+                          </TableCell>
+                          <TableCell align="center">{apply.position.name}</TableCell>
+                          <TableCell align="center">seq : {apply.applySeq}</TableCell>
+                          <TableCell align="center">
+                            <MemoModal applySeq={apply.applySeq}></MemoModal>
+                          </TableCell>
+                          <TableCell align="center">
+                            <ImageButton>
+                              <img src={detailButton} alt="memoButton" style={Image} />
+                            </ImageButton>
+                          </TableCell>
+                          <TableCell align="center">
+                            <CommonButton>선택</CommonButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
