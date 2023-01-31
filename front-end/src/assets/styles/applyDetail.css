@@ -104,7 +104,6 @@ hr {
 .name-position-section > div,
 .phone-section > div,
 .email-section > div,
-.skill-section > div,
 .career-exp-section > div,
 .content-section > div,
 .question-answer-section > div {
@@ -138,10 +137,15 @@ hr {
   position: absolute;
   top: 5px;
   right: 5px;
+  cursor: pointer;
 }
 
 .cancle-title {
   position: relative;
   margin: 20px 50px;
   top: 25px;
+}
+.phone-section1,
+.email-section1 {
+  align-items: center;
 }

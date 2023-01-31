@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import 'assets/font/font.css'
-import Btn from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
+import SignalBtn from 'components/common/SignalBtn'
 import FromLetter from 'components/Letter/FromLetter'
 import ToLetter from 'components/Letter/ToLetter'
 import TrashLetter from 'components/Letter/TrashLetter'
@@ -30,26 +29,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   display: 'flex',
 }
-
-const SignalBtn = styled(Btn)(({ theme }) => ({
-  fontFamily: 'dohyeon',
-  fontColor: theme.palette.getContrastText('#574B9F'),
-  backgroundColor: '#574B9F',
-  width: '172px',
-  height: '55px',
-  fontSize: '29px',
-  border: '1px solid #574B9F',
-  borderRadius: 15,
-  boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
-  color: '#fff',
-  margin: '30px auto',
-  display: 'block',
-  '&:hover': {
-    backgroundColor: '#fff',
-    borderColor: '1px solid #574B9F',
-    color: '#574B9F',
-  },
-}))
 
 function LetterModal({ open, onClose }) {
   const [selectedListIndex, setSelectedListIndex] = useState(0)
@@ -90,7 +69,11 @@ function LetterModal({ open, onClose }) {
             }}
           >
             <SignalBtn
-              style={{ margin: '30px auto', display: 'block' }}
+              sigwidth="172px"
+              sigheight="55px"
+              sigfontSize="29px"
+              sigBorderRadius={15}
+              sigMargin="30px auto"
               selected={selectedListIndex === 3}
               onClick={() => setSelectedListIndex(3)}
             >
