@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
+import noImage from 'assets/image/noImage.png'
 import styled from 'styled-components'
 import 'assets/styles/myproject.css'
 import Paging from 'components/Paging'
@@ -11,6 +11,7 @@ const Container = styled.section`
 function MyProject() {
   const [endData, setEndData] = useState([])
   const [ingData, setIngData] = useState([])
+  // const [img, setImg] = useState('')
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`, {
       method: 'GET',
@@ -19,9 +20,11 @@ function MyProject() {
       .then((res) => {
         setEndData(res.body.endProjectList)
         setIngData(res.body.ingProjectList)
+        // setImg(res.body.endProjectList.projectImageUrl)
       })
   }, [])
-
+  // console.log(img)
+  console.log(endData)
   const [size] = useState(4)
   const [endPage, setEndPage] = useState(1)
   const handleEndPageChange = (page) => {
@@ -39,9 +42,11 @@ function MyProject() {
         <div className="project-list-container">
           {ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {
             return (
-              <div className="project-list-end" key={i}>
-                {v.projectImageUrl}
-                {v.subject}
+              <div className="project-list-ing" key={i}>
+                <div className="project-list-img">
+                  <img src={noImage} alt="signal" />
+                </div>
+                <div className="project-list-subject">{v.subject}</div>
               </div>
             )
           })}
@@ -53,15 +58,13 @@ function MyProject() {
           {endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, i) => {
             return (
               <div className="project-list-end" key={i}>
-                <div>
-                  <img src={require(`assets/image/${v.projectImageUrl}`)} alt="signal" />
-                  console.log()
+                <div className="project-list-img">
+                  <img src={noImage} alt="signal" />
                 </div>
-                {v.subject}
+                <div className="project-list-subject">{v.subject}</div>
               </div>
             )
           })}
-          {console.log(endData[0].projectImageUrl)}
         </div>
         <Paging page={endPage} count={endData.length} setPage={handleEndPageChange} size={size}></Paging>
         <hr />
