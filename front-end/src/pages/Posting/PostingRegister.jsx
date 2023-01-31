@@ -9,15 +9,34 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import Localdata from 'data/Localdata'
+import Autocomplete from '@mui/material/Autocomplete'
 // import { positionData } from 'data/Positiondata'
+import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
+import Skilldata from 'data/Skilldata'
 // import QnAList from 'components/Apply/QnaList'
 
 const Container = styled.section`
   // padding: 100px 25em;
 `
-
+const skillStyle = {
+  width: '100%',
+  maxwidth: '378px',
+  height: '42px',
+  padding: '0 14px',
+  border: '1px solid #d7e2eb',
+  borderradius: '4px',
+  boxsizing: 'border-box',
+  backgroundcolor: '#fbfbfd',
+  fontsize: '16px',
+  fontweight: '500',
+  lineheight: '1.6',
+  color: '#263747',
+  '& : hover': {
+    border: '1px solid #3396f4',
+    boxshadow: 'inset 0 0 0 1px#3396f4',
+  },
+}
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -67,11 +86,11 @@ const PostingRegister = () => {
     postingPositionList: [
       {
         positionCode: 'PO100',
-        positionCnt: 5,
+        positionCnt: 1,
       },
       {
         positionCode: 'PO101',
-        positionCnt: 10,
+        positionCnt: 2,
       },
     ],
     postingQuestionList: [
@@ -85,48 +104,48 @@ const PostingRegister = () => {
       },
     ],
   })
-  const [profile, setProfile] = useState([])
+  // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
 
-  const profileFetch = async () => {
-    try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-      setProfile(res.data.body)
-      console.log(res.data.body)
-      console.log(profile)
-      careerFetchFilter(res.data.body.userCareerList)
-      expFetchFilter(res.data.body.userExpList)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const profileFetch = async () => {
+  //   try {
+  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+  //     setProfile(res.data.body)
+  //     console.log(res.data.body)
+  //     console.log(profile)
+  //     careerFetchFilter(res.data.body.userCareerList)
+  //     expFetchFilter(res.data.body.userExpList)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   // end >> Fetch
 
   // start >> Data filter
 
-  const careerFetchFilter = (list) => {
-    const careerArr = []
-    list.map((item, index) =>
-      careerArr.push({
-        seq: index,
-        content: item.content,
-      })
-    )
+  // const careerFetchFilter = (list) => {
+  //   const careerArr = []
+  //   list.map((item, index) =>
+  //     careerArr.push({
+  //       seq: index,
+  //       content: item.content,
+  //     })
+  //   )
 
-    setCareerList(careerArr)
-  }
+  //   setCareerList(careerArr)
+  // }
 
-  const expFetchFilter = (list) => {
-    const expArr = []
-    list.map((item, index) =>
-      expArr.push({
-        seq: index,
-        content: item.content,
-      })
-    )
-  }
+  // const expFetchFilter = (list) => {
+  //   const expArr = []
+  //   list.map((item, index) =>
+  //     expArr.push({
+  //       seq: index,
+  //       content: item.content,
+  //     })
+  //   )
+  // }
 
   // end >> Data filter
 
@@ -139,7 +158,11 @@ const PostingRegister = () => {
   // end >> handle skill
 
   // start >> handle career
-
+  const handleChangeSkill = (value) => {
+    const copy = value.map((ele) => ele.code)
+    setPosting({ ...posting, postingSkillList: copy })
+  }
+  // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
   const handleCareerAdd = () => {
     const careerArr = [...careerList]
     const career = {
@@ -176,7 +199,9 @@ const PostingRegister = () => {
 
   // start >> handle content
 
-  const handleContentChange = (event) => {}
+  const handleContentChange = (event) => {
+    setPosting({ ...posting, content: event.target.value })
+  }
 
   // end >> handle content
 
@@ -195,14 +220,14 @@ const PostingRegister = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('/posting', posting, config)
+        .post('https://www.ssafysignal.site:8443/posting', posting, config)
         .then((res) => {
           console.log(res)
           console.log(1)
         })
         .catch((err) => {
           console.log(err)
-          console.log('캐치')
+          console.log(posting)
         })
 
       console.log('공고 post')
@@ -213,7 +238,7 @@ const PostingRegister = () => {
 
   useEffect(() => {
     // postingFetch()
-    profileFetch()
+    // profileFetch()
   }, [])
 
   return (
@@ -306,22 +331,64 @@ const PostingRegister = () => {
             </div>
             <div className="email-section">
               <Label>프로젝트 기간</Label>
-              <FilterSelect>
-                {Object.keys(Localdata).map((ele, i) => (
+              <FilterSelect
+                onChange={(e) => {
+                  // console.log(e.target.value)
+                  setPosting({ ...posting, term: e.target.value })
+                }}
+              >
+                {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
                   <option key={i} value={ele}>
-                    {Localdata[ele].name}
+                    {ele}주
                   </option>
                 ))}
               </FilterSelect>
             </div>
           </div>
-          {/* 여기는 포지션인원 , 예상난이도 */}
+          {/* 여기는 사용기술 , 시간선택 */}
           <div style={{ display: 'flex', marginBottom: '2em' }}>
             <div className="phone-section">
+              <Label>사용 기술 </Label>
+              <Autocomplete
+                multiple
+                limitTags={5}
+                size="small"
+                id="multiple-limit-tags"
+                options={Skilldata}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  console.log(newValue)
+                  // console.log(event.target)
+                  handleChangeSkill(newValue)
+                }}
+                renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
+              />
+            </div>
+            <div className="email-section">
+              <Label>화상 미팅 예약</Label>
+              <button>시간 선택</button>
+            </div>
+          </div>
+          {/* 여기는 포지션인원 , 예상난이도 */}
+          <div style={{ display: 'flex', marginBottom: '2em' }}>
+            <div className="phone-section1">
               <div>
                 <div>
                   <div className="career-label">
                     <Label>포지션 인원</Label>
+                    <FilterSelect
+                      onChange={(e) => {
+                        // console.log(e.target.value)
+                        setPosting({ ...posting, term: e.target.value })
+                      }}
+                    >
+                      {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
+                        <option key={i} value={ele}>
+                          {ele}주
+                        </option>
+                      ))}
+                    </FilterSelect>
                     <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
                   </div>
                   <hr></hr>
@@ -334,17 +401,23 @@ const PostingRegister = () => {
                 ></CareerList>
               </div>
             </div>
-            <div>
+            <div className="phone-section">
               <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>예상 난이도</Label>
-              <FilterSelect>
-                {Object.keys(Localdata).map((ele, i) => (
+              <FilterSelect
+                onChange={(e) => {
+                  console.log(e.target.value)
+                  setPosting({ ...posting, level: e.target.value })
+                }}
+              >
+                {[1, 2, 3, 4, 5].map((ele, i) => (
                   <option key={i} value={ele}>
-                    {Localdata[ele].name}
+                    LEVEL : {ele}
                   </option>
                 ))}
               </FilterSelect>
             </div>
           </div>
+
           {/* 여기는 프로젝트 소개 */}
           <div className="content-section">
             <Label className="label">프로젝트 소개</Label>
@@ -358,6 +431,7 @@ const PostingRegister = () => {
               />
             </div>
           </div>
+
           {/* 지원자에게 물어 보고 싶은 말   */}
           <div className="question-answer-section">
             <div className="question-section">

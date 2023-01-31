@@ -135,12 +135,12 @@ function Posting() {
   }
 
   const postList = async () => {
-    const res = await axios.get('http://www.ssafysignal.site:8080/posting?page=1&size=100&fieldCode=FI100')
+    const res = await axios.get('https://www.ssafysignal.site:8443/posting?page=1&size=100&fieldCode=FI100')
     setPostingList(res.data.body.postingList)
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `http://www.ssafysignal.site:8080/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
+      `https://www.ssafysignal.site:8443/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
     )
     setPostingList(res.data.body.postingList)
     // console.log(Title)/

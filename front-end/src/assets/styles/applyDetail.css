@@ -145,6 +145,10 @@ hr {
   margin: 20px 50px;
   top: 25px;
 }
+.phone-section1,
+.email-section1 {
+  align-items: center;
+}
 
 .apply-detail-container {
   padding: 100px 500px;
