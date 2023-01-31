@@ -1,5 +1,7 @@
 package com.ssafysignal.api.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -22,10 +24,10 @@ import java.util.stream.Collectors;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userSeq")
+    @Column(name = "user_seq")
     private Integer userSeq;
     @Column(name = "name")
     private String name;
@@ -36,6 +38,7 @@ public class User implements UserDetails {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "birth")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime birth;
     @Column(name = "phone")
     private String phone;
@@ -67,8 +70,22 @@ public class User implements UserDetails {
         this.phone = phone;
         this.birth = birth;
     }
-
+    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
     public void modifyPassword(String password){
         this.password = password;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private Set<UserAuth> authorities = new HashSet<>();
+
+    private void addAuthority(UserAuth authority) {
+        authorities.add(authority);
+    }
+
+    public List<String> getRoles() {
+        return authorities.stream()
+                .map(UserAuth::getRoles)
+                .collect(Collectors.toList());
     }
 }

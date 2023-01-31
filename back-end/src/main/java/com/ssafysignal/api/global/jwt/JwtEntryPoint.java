@@ -13,6 +13,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
+    // JWT 예외처리
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException authException) throws IOException, ServletException {
         log.error("Unauthorized error: {}", authException.getMessage());

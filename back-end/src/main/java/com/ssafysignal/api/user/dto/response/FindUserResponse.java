@@ -1,21 +1,15 @@
 package com.ssafysignal.api.user.dto.response;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
-
+@Data
+@Builder
 public class FindUserResponse {
     String nickname;
     String phone;
     String email;
-    int heartCnt;
-
-    @Builder
-    public FindUserResponse(String nickname, String phone, String email, int heartCnt) {
-        this.nickname = nickname;
-        this.phone = phone;
-        this.email = email;
-        this.heartCnt = heartCnt;
-    }
+    Integer heartCnt;
+    String userImageUrl;
 }
