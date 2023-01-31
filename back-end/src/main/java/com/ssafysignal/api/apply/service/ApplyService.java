@@ -1,9 +1,11 @@
 package com.ssafysignal.api.apply.service;
 
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.common.repository.CommonCodeRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
@@ -27,6 +29,7 @@ public class ApplyService {
     private final ApplySkillRepository applySkillRepository;
     private final ApplyAnswerRepository applyAnswerRepository;
     private final PostingMeetingRepository postingMeetingRepository;
+    private final CommonCodeRepository commonCodeRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
@@ -99,9 +102,48 @@ public class ApplyService {
     }
 
     @Transactional(readOnly = true)
-    public Apply findApply(Integer applySeq) {
-        return applyRepository.findById(applySeq)
+    public ApplyFindResponse findApply(Integer applySeq) {
+        Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        //포지션
+        String positionCode = apply.getPositionCode();
+        CommonCode code = commonCodeRepository.findById(positionCode).get();
+
+        //답변
+        List<ApplyAnswer> answerList = applyAnswerRepository.findAllByApplySeq(applySeq);
+
+        //경력
+        List<ApplyCareer> careerList = applyCareerRepository.findAllByApplySeq(applySeq);
+
+        //경험
+        List<ApplyExp> expList = applyExpRepository.findAllByApplySeq(applySeq);
+
+        //기술스택
+        List<ApplySkill> skillList = applySkillRepository.findAllByApplySeq(applySeq);
+        List<CommonCode> skillCommonCodeList = new ArrayList<>();
+        for(ApplySkill as : skillList){
+            String skillCode = as.getSkillCode();
+            CommonCode skillCommonCode = commonCodeRepository.findById(skillCode).get();
+            skillCommonCodeList.add(skillCommonCode);
+        }
+
+        //사전미팅
+        PostingMeeting postingMeeting = postingMeetingRepository.findByApplySeqAndToUserSeq(applySeq, apply.getUserSeq());
+
+        ApplyFindResponse res = ApplyFindResponse.builder()
+                .userSeq(apply.getUserSeq())
+                .postingSeq(apply.getPostingSeq())
+                .content(apply.getContent())
+                .position(code)
+                .answerList(answerList)
+                .careerList(careerList)
+                .expList(expList)
+                .skillList(skillCommonCodeList)
+                .postingMeeting(postingMeeting)
+                .build();
+        
+        return res;
     }
 
 //    @Transactional(readOnly = true)
@@ -161,10 +203,12 @@ public class ApplyService {
 
         applyRepository.save(apply);
 
+        //나중에 마무리하기
         //답변
         for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
             int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
             String content = (String)answerRequest.get("content");
+            //ApplyAnswer answer = applyAnswerRepository.findById()
         }
 
 

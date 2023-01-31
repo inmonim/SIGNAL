@@ -97,45 +97,8 @@ public class ApplyController {
         log.info("findApply - Call");
 
         try {
-
-            List<ApplyAnswer> applyAnswerList = new ArrayList<>();
-            List<String> careerList = new ArrayList<>();
-            List<String> expList = new ArrayList<>();
-            List<CommonCode> skillList = new ArrayList<>();
-
-            for (int i = 1; i <= 5; i++) {
-                applyAnswerList.add(ApplyAnswer.builder()
-                                .applyAnswerSeq(i)
-                                .postingSeq(1)
-                                .postingQuestionSeq(10 + i)
-                                .content("질문 답변 테스트 " + i)
-                                .regDt(LocalDateTime.now())
-                                .build());
-                careerList.add("커리어 테스트 " + i);
-                expList.add("경험 테스트 " + i);
-                skillList.add(CommonCode.builder()
-                                .code("AI100")
-                                .name("keras")
-                                .groupCode("AI")
-                                .groupName("인공지능 기술스택 구분")
-                                .build());
-            }
-
-            // dummy
-            ApplyFindResponse applyFindResponse = ApplyFindResponse.builder()
-                    .userSeq(1)
-                    .postingSeq(1)
-                    .content("지원서 상세 더미")
-                    .position(CommonCode.builder().code("PO100").name("frontend").groupCode("PO").groupName("포지션 구분").build())
-                    .fieldCode(CommonCode.builder().code("FI100").name("web").groupCode("FI").groupName("분야구분").build())
-                    .answerList(applyAnswerList)
-                    .careerList(careerList)
-                    .expList(expList)
-                    .skillList(skillList)
-                    .build();
-
-//            Apply apply = applyService.findApply(applySeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyFindResponse));
+            ApplyFindResponse res = applyService.findApply(applySeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
