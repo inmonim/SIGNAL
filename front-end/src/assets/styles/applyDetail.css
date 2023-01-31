@@ -149,3 +149,32 @@ hr {
 .email-section1 {
   align-items: center;
 }
+
+.apply-detail-container {
+  padding: 100px 500px;
+  font-size: 20px;
+}
+
+.apply-detail-width-section {
+  min-width: 1000px;
+}
+
+.apply-detail-section {
+}
+
+.apply-detail-project-name-section {
+  color: #574b9f;
+}
+
+.apply-detail-project-name-label {
+  margin-bottom: 10px;
+}
+
+.apply-detail-project-title {
+  color: #000000;
+  font-size: 30px;
+}
+
+.apply-detail-application-section {
+  margin: 20px;
+}
