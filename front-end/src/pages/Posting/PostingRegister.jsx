@@ -86,11 +86,11 @@ const PostingRegister = () => {
     postingPositionList: [
       {
         positionCode: 'PO100',
-        positionCnt: 5,
+        positionCnt: 1,
       },
       {
         positionCode: 'PO101',
-        positionCnt: 10,
+        positionCnt: 2,
       },
     ],
     postingQuestionList: [
@@ -158,11 +158,9 @@ const PostingRegister = () => {
   // end >> handle skill
 
   // start >> handle career
-  const [skillListauto, setSkillListauto] = useState([])
   const handleChangeSkill = (value) => {
     const copy = value.map((ele) => ele.code)
-    setSkillListauto(copy)
-    console.log(skillListauto)
+    setPosting({ ...posting, postingSkillList: copy })
   }
   // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
   const handleCareerAdd = () => {
@@ -222,14 +220,14 @@ const PostingRegister = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('/posting', posting, config)
+        .post('https://www.ssafysignal.site:8443/posting', posting, config)
         .then((res) => {
           console.log(res)
           console.log(1)
         })
         .catch((err) => {
           console.log(err)
-          console.log('캐치')
+          console.log(posting)
         })
 
       console.log('공고 post')
@@ -335,12 +333,12 @@ const PostingRegister = () => {
               <Label>프로젝트 기간</Label>
               <FilterSelect
                 onChange={(e) => {
-                  console.log(e.target.value)
+                  // console.log(e.target.value)
                   setPosting({ ...posting, term: e.target.value })
                 }}
               >
                 {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
-                  <option key={i} value="ele">
+                  <option key={i} value={ele}>
                     {ele}주
                   </option>
                 ))}
@@ -353,7 +351,7 @@ const PostingRegister = () => {
               <Label>사용 기술 </Label>
               <Autocomplete
                 multiple
-                limitTags={3}
+                limitTags={5}
                 size="small"
                 id="multiple-limit-tags"
                 options={Skilldata}
@@ -374,11 +372,23 @@ const PostingRegister = () => {
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
           <div style={{ display: 'flex', marginBottom: '2em' }}>
-            <div className="phone-section">
+            <div className="phone-section1">
               <div>
                 <div>
                   <div className="career-label">
                     <Label>포지션 인원</Label>
+                    <FilterSelect
+                      onChange={(e) => {
+                        // console.log(e.target.value)
+                        setPosting({ ...posting, term: e.target.value })
+                      }}
+                    >
+                      {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
+                        <option key={i} value={ele}>
+                          {ele}주
+                        </option>
+                      ))}
+                    </FilterSelect>
                     <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
                   </div>
                   <hr></hr>
@@ -391,15 +401,16 @@ const PostingRegister = () => {
                 ></CareerList>
               </div>
             </div>
-            <div>
+            <div className="phone-section">
               <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>예상 난이도</Label>
               <FilterSelect
                 onChange={(e) => {
+                  console.log(e.target.value)
                   setPosting({ ...posting, level: e.target.value })
                 }}
               >
                 {[1, 2, 3, 4, 5].map((ele, i) => (
-                  <option key={i} value="ele">
+                  <option key={i} value={ele}>
                     LEVEL : {ele}
                   </option>
                 ))}

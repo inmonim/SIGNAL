@@ -33,11 +33,11 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
-          <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/qnaDetail" element={<QnaDetail />} />
+          <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
     </div>
