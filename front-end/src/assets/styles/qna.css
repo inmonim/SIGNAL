@@ -3,6 +3,7 @@
   height: 90%;
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .qna-container {
@@ -11,16 +12,29 @@
 }
 
 .qna-header {
+  justify-content: center;
+  align-items: center;
+}
+
+.qna-header-title {
   font-size: 44px;
   display: flex;
   justify-content: center;
-  margin-bottom: 70px;
+}
+
+.qna-header-regist {
+  display: block;
+  float: right;
 }
 
 /* 테이블 헤더  */
 thead.MuiTableHead-root {
   border-bottom: 2px solid #796fb2;
 }
+/* 
+tr.MuiTableRow-root.css-1q1u3t4-MuiTableRow-root  {
+  height: 61.5px;
+} */
 
 th.MuiTableCell-root {
   font-size: 24px;
@@ -31,37 +45,65 @@ td.MuiTableCell-root {
   font-size: 20px;
 }
 
-tbody.MuiTableBody-root{
-  height: 430px;
+tbody.MuiTableBody-root {
+  height: 496px;
   border-top: 2px solid #796fb2;
   border-bottom: 2px solid #796fb2;
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
   cursor: pointer;
 }
 
 /* qnaDetail */
-.qna-detail-container{
+.qna-detail-container {
   width: 1125px;
-  height: 600px;
+  height: 535px;
   border-top: 2px solid #796fb2;
-  border-bottom: 2px solid #796fb2;
   margin: auto;
 }
 
-.qna-detail-title{
-  font-size: 44px;
+.qna-detail-comment-container{
+  border-bottom: 2px solid #796fb2;
+
+}
+
+.qna-detail-header {
   height: 109px;
   padding: 55px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #796fb2;
 }
 
-.qna-detail-middle{
+.qna-detail-title {
+  font-size: 44px;
+}
+
+.qna-detail-qnanum{
+  color: #463C7F
+}
+
+.qna-detail-qnaSeq {
+  font-size: 24px;
+}
+
+.qna-detail-modify {
+  cursor: pointer;
+  width: 26px;
+  margin: 0px 10px;
+}
+
+.qna-detail-delete {
+  cursor: pointer;
+  width: 26px;
+  margin: 0px 10px;
+}
+
+.qna-detail-middle {
   height: 52px;
   padding: 0px 45px;
   border-bottom: 1px solid #796fb2;
@@ -70,12 +112,59 @@ a{
   justify-content: space-between;
 }
 
-.qna-detail-middle-view{
+.qna-detail-middle-view {
   display: flex;
   align-items: center;
 }
 
-.qna-detail-content{
+.qna-detail-viewimg {
+  margin-right: 10px;
+}
+
+.qna-detail-content {
+  padding: 55px;
+  font-size: 24px;
+}
+
+.qna-detail-comment {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qna-detail-comment-left{
+  font-size: 44px;
+  margin-left: 20px;
+}
+
+.qna-detail-comment-right{
+  position: relative;
+}
+
+.qna-detail-comment-answer{
+  position: absolute;
+  top: 40px;
+  left: 150px;
+  font-size: 24px;
+}
+
+/* qnaRegist */
+.qna-regist-container {
+  width: 1125px;
+  height: 650px;
+  border-bottom: 2px solid #796fb2;
+  margin: auto;
+}
+.qna-regist-header {
+  font-size: 44px;
+  height: 67px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #796fb2;
+}
+
+.qna-regist-main {
   padding: 55px;
   font-size: 24px;
 }
