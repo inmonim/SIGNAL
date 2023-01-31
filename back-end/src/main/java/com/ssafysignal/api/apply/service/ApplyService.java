@@ -30,7 +30,7 @@ public class ApplyService {
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
-        System.out.println("applyRegistRequest"+applyRegistRequest);
+        //System.out.println("applyRegistRequest"+applyRegistRequest);
 
         // 지원서 등록
         Apply apply = Apply.builder()
@@ -113,7 +113,7 @@ public class ApplyService {
 
 
     @Transactional
-    public void modifyApply(Integer applySeq, ApplyBasicRequest applyModifyRequest) throws RuntimeException {
+    public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
 
         // 지원서 수정
         Apply apply = applyRepository.findById(applySeq)
@@ -121,6 +121,7 @@ public class ApplyService {
 
         apply.setContent(applyModifyRequest.getContent());
         apply.setPositionCode(applyModifyRequest.getPositionCode());
+        apply.setPostingMeetingSeq(applyModifyRequest.getPostingMeetingSeq());
 
         // 기술 스택
         List<ApplySkill> applySkillList = apply.getApplySkillList();
@@ -159,6 +160,16 @@ public class ApplyService {
         apply.setApplyCareerList(applyCareerList);
 
         applyRepository.save(apply);
+
+        //답변
+        for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
+            int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
+            String content = (String)answerRequest.get("content");
+        }
+
+
+        //미팅시간 설정
+
     }
 
     @Transactional
