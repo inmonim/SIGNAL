@@ -1,359 +1,458 @@
-// import React, { useState, useEffect } from 'react'
-// import axios from 'axios'
-// import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
-// import plusButton from '../../assets/image/plusButton.png'
-// import ExpList from '../../components/Apply/ExpList'
-// import CareerList from '../../components/Apply/CareerList'
-// import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
-// import '../../assets/styles/applyRegister.css'
-// import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
+import plusButton from '../../assets/image/plusButton.png'
+import ExpList from '../../components/Apply/ExpList'
+import CareerList from '../../components/Apply/CareerList'
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
+import '../../assets/styles/applyRegister.css'
+import styled from 'styled-components'
 
-// import { useSelector, useDispatch } from 'react-redux'
-// import { fetchPostionCode } from '../../store/redux'
-// import Skilldata from 'data/Skilldata'
+import Skilldata from 'data/Skilldata'
+import { getPositionName, getPositionCode } from 'data/Positiondata'
+import QnAList from 'components/Apply/QnaList'
+import SkillList from 'components/Apply/SkillList'
+import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
 
-// const userSeq = '1'
-// const SERVER_URL = 'http://tableminpark.iptime.org:8080'
-// const PARAM_URL = `/user/${userSeq}`
+const Container = styled.section`
+  padding: 50px 500px;
+`
 
-// const Container = styled.section`
-//   padding: 100px 25em;
-// `
+const width = {
+  minWidth: '800px',
+}
 
-// const Title = styled.h1`
-//   font-size: 2.5em;
-//   font-weight: bold;
-//   padding-bottom: 40px;
-//   border-bottom: 5px solid #796fb2;
-// `
+const Title = styled.h1`
+  font-size: 2.5em;
+  font-weight: bold;
+  padding-bottom: 40px;
+  border-bottom: 5px solid #796fb2;
+`
 
-// const Label = styled.h1`
-//   font-size: 20px;
-//   margin-right: 20px;
-//   display: flex;
-//   align-items: center;
-// `
+const Label = styled.h1`
+  font-size: 20px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+`
 
-// const inputStyle = {
-//   backgroundColor: '#f3f5f7',
-// }
+const inputStyle = {
+  backgroundColor: '#f3f5f7',
+  position: 'static',
+}
 
-// const textAreaStyle = {
-//   backgroundColor: '#f3f5f7',
-// }
+const textAreaStyle = {
+  backgroundColor: '#f3f5f7',
+}
 
-// const positionSelectStyle = {
-//   backgroundColor: '#f3f5f7',
-//   width: '11.5em',
-// }
+const positionSelectStyle = {
+  backgroundColor: '#f3f5f7',
+  width: '11.5em',
+  position: 'static',
+}
 
-// const Apply = () => {
-//   const [nickname, setNickname] = useState([])
-//   const [phone, setPhone] = useState([])
-//   const [email, setEmail] = useState([])
-//   const [position, setPosition] = useState('frontEnd')
-//   const [posting, setPosting] = useState([{}])
-//   const [content, setContent] = useState([])
-//   const [expIndex, setExpIndex] = useState(2)
-//   const [careerIndex, setCareerIndex] = useState(0)
-//   const [careerList, setCareerList] = useState([])
-//   const [expList, setExpList] = useState([
-//     {
-//       id: 0,
-//       title: 'exp0',
-//     },
-//     {
-//       id: 1,
-//       title: 'exp1',
-//     },
-//   ])
+function ApplyModify() {
+  const userSeq = 1
+  const postingSeq = 458
 
-//   const [positionList, setPositionList] = useState([])
-//   const handlePositionChange = (event) => {
-//     setPosition(event.target.value)
-//     console.log(position)
-//   }
+  // start >> useState
 
-//   // userFetch : setNickName, setPhone, setEmail
-//   const userFetch = async () => {
-//     try {
-//       const res = await axios.get(SERVER_URL + PARAM_URL)
-//       setNickname(res.data.body.nickname)
-//       setPhone(res.data.body.phone)
-//       setEmail(res.data.body.email)
-//       console.log('userFetch response')
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
+  const [user, setUser] = useState([])
+  const [posting, setPosting] = useState([{}])
+  const [position, setPosition] = useState('')
+  const [careerList, setCareerList] = useState([])
+  const [expList, setExpList] = useState([])
+  const [skillList, setSkillList] = useState([])
+  const [content, setContent] = useState([])
+  const [questionList, setQuestionList] = useState([])
+  const [answerList, setAnswerList] = useState([])
+  const [careerSeq, setCareerSeq] = useState(0)
+  const [expSeq, setExpSeq] = useState(0)
+  const [meetingList, setMeetingList] = useState([])
+  const [meeting, setMeeting] = useState('')
 
-//   const postingFetch = async () => {
-//     try {
-//       const res = await axios.get(SERVER_URL + '/posting/1')
-//       setPosting(res.data.body)
-//       console.log('durl' + posting.postingQuestionList)
-//       // console.log(res.data.body.postingQuestionList)
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
+  // ene >> useState
 
-//   const handleExpAdd = () => {
-//     const expArr = [...expList]
-//     const exp = {
-//       id: expIndex,
-//       title: 'exp' + expIndex,
-//     }
-//     setExpIndex(expIndex + 1)
-//     expArr.push(exp)
-//     setExpList(expArr)
-//   }
+  // start >> Fetch
+  const userFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
+      setUser(res.data.body)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-//   const handleCareerAdd = () => {
-//     const careerArr = [...careerList]
-//     const career = {
-//       id: careerIndex,
-//       title: 'career' + careerIndex,
-//     }
-//     setCareerIndex(careerIndex + 1)
-//     careerArr.push(career)
-//     setCareerList(careerArr)
-//   }
+  const postingFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      setPosting(res.data.body)
+      const answerArr = []
+      res.data.body.postingQuestionList.map((item) =>
+        answerArr.push({
+          postingQuestionSeq: item.postingQuestionSeq,
+          content: '',
+        })
+      )
+      meetingFetchFilter(res.data.body.postingMeetingList)
+      setQuestionList(res.data.body.postingQuestionList)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-//   const handleContent = (event) => {
-//     setContent(event.target.value)
-//   }
+  const applyFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + 1)
+      console.log(res.data.body)
+      setPosition(getPositionName(res.data.body.position.code))
+      setContent(res.data.body.content)
+      careerFetchFilter(res.data.body.careerList)
+      expFetchFilter(res.data.body.expList)
+      setAnswerList(res.data.body.answerList)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-//   const handleApplySubmit = async (event) => {
-//     const regDt = new Date()
-//     console.log(regDt)
-//     const regDtreq =
-//       regDt.getFullYear() +
-//       '-' +
-//       regDt.getMonth() +
-//       '-' +
-//       regDt.getDate() +
-//       ' ' +
-//       regDt.getHours() +
-//       ':' +
-//       regDt.getMinutes() +
-//       ':' +
-//       regDt.getSeconds() +
-//       '.' +
-//       regDt.getMilliseconds()
+  // end >> Fetch
 
-//     try {
-//       const req = {
-//         applyCareerList: careerList,
-//         applyCode: 'AS101',
-//         applyExpList: expList,
-//         applySkillList: ['string'],
-//         content,
-//         memo: '이 지원자는 열정이 있음',
-//         positionCode: 'PO100',
-//         postingSeq: 1,
-//         regDt: regDtreq,
-//         select: true,
-//         userSeq: 1,
-//       }
-//       console.log('careerList')
-//       console.log(careerList)
-//       console.log('expList')
-//       console.log(expList)
-//       console.log('regDtreq')
-//       console.log(regDtreq)
-//       const config = { 'Content-Type': 'application/json' }
-//       await axios
-//         .post(SERVER_URL + '/apply', req, config)
-//         .then((res) => {
-//           console.log(res)
-//         })
-//         .catch((err) => {
-//           console.log(err)
-//         })
+  // start >> Data filter
 
-//       console.log('지원서 post')
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
+  const careerFetchFilter = (list) => {
+    const careerArr = []
+    list.map((item, index) =>
+      careerArr.push({
+        seq: index,
+        content: item.content,
+      })
+    )
+    setCareerSeq(list.length)
+    setCareerList(careerArr)
+  }
 
-//   const handleExpRemove = (id) => {
-//     setExpList(
-//       expList.filter((exp) => {
-//         return exp.id !== id
-//       })
-//     )
-//   }
+  const expFetchFilter = (list) => {
+    const expArr = []
+    list.map((item, index) =>
+      expArr.push({
+        seq: index,
+        content: item.content,
+      })
+    )
+    setExpSeq(list.length)
+    setExpList(expArr)
+  }
 
-//   const handleCareerRemove = (id) => {
-//     setCareerList(
-//       careerList.filter((career) => {
-//         return career.id !== id
-//       })
-//     )
-//   }
-//   const dispatch = useDispatch()
-//   const state = useSelector((state) => {
-//     return state
-//   })
+  const meetingFetchFilter = (list) => {
+    const meetingDtArr = []
+    list.map((item, index) => meetingDtArr.push(item.meetingDt))
+    setMeetingList(meetingDtArr)
+  }
 
-//   useEffect(() => {
-//     userFetch()
-//     postingFetch()
-//     dispatch(fetchPostionCode())
-//   }, [])
+  const CareerPostFilter = (list) => {
+    const careerArr = []
+    list.map((item) => careerArr.push(item.content))
+    return careerArr
+  }
 
-//   const reduxConsole = () => {
-//     console.log('apply')
-//     console.log(state)
-//     state.positionCode.then((e) => {
-//       setPositionList(e)
-//       console.log(e)
-//       console.log(positionList)
-//     })
-//   }
+  const ExpPostFilter = (list) => {
+    const expArr = []
+    list.map((item) => expArr.push(item.content))
+    return expArr
+  }
 
-//   const skillSearchFilter = createFilterOptions({
-//     matchFrom: 'start',
-//     stringify: (option) => option.name,
-//   })
+  // start >> handle position
 
-//   const [skillvalue, setSkillvalue] = useState(Skilldata[0].name)
-//   const [skillinputValue, setSkillinpuValeu] = useState('')
+  const handlePositionChange = (event) => {
+    setPosition(event.target.value)
+  }
+  // end >> handle position
 
-//   return (
-//     <Container>
-//       <div>
-//         <div>
-//           <Title>{nickname} 님의지원서</Title>
-//         </div>
-//         <div>
-//           <div className="user-detail-section">
-//             <div className="phone-section">
-//               <Label>전화번호 </Label>
-//               <TextField disabled value={phone} style={inputStyle} />
-//             </div>
-//             <div className="email-section">
-//               <Label>이메일</Label>
-//               <TextField disabled value={email} style={inputStyle} />
-//             </div>
-//           </div>
-//           <div className="position-section">
-//             <div>
-//               <Label className="label">원하는 포지션</Label>
-//               <FormControl style={positionSelectStyle}>
-//                 <InputLabel id="demo-simple-select-label" style={positionSelectStyle}></InputLabel>
-//                 <Select
-//                   labelId="demo-simple-select-label"
-//                   id="demo-simple-select"
-//                   value={position}
-//                   onChange={handlePositionChange}
-//                   inputProps={{ 'aria-label': 'Without label' }}
-//                 >
-//                   <MenuItem
-//                     disabled
-//                     value={position}
-//                     sx={{
-//                       display: 'none',
-//                     }}
-//                   ></MenuItem>
-//                   {positionList.map((props, index) => (
-//                     <MenuItem value={props.name} key={index}>
-//                       {props.name}
-//                     </MenuItem>
-//                   ))}
-//                 </Select>
-//               </FormControl>
-//             </div>
-//           </div>
+  // start >> handle skill
 
-//           <div className="skill-meeting-section">
-//             <div className="skill-section">
-//               <Label className="label">사용기술</Label>
-//               <Autocomplete
-//                 disablePortal
-//                 id="combo-box-demo"
-//                 sx={{ width: 300 }}
-//                 options={Skilldata}
-//                 getOptionLabel={(option) => option.name}
-//                 filterOptions={skillSearchFilter}
-//                 renderInput={(params) => (
-//                   <TextField
-//                     {...params}
-//                     value={skillvalue}
-//                     onChange={(event, newValue) => {
-//                       setSkillvalue(newValue)
-//                     }}
-//                     inputValue={skillinputValue}
-//                     onInputChange={(event, newInputValue) => {
-//                       setSkillinpuValeu(newInputValue)
-//                     }}
-//                   />
-//                 )}
-//               />
-//             </div>
-//             <div className="meeting-section">
-//               <Label className="label">화상미팅 예약</Label>
-//               <button className="apply-button" onClick={reduxConsole}>
-//                 시간선택
-//               </button>
-//             </div>
-//           </div>
+  const handleSkillInput = (value) => {
+    const skillArr = [...skillList]
+    skillArr.push(value)
+    setSkillList(skillArr)
+  }
 
-//           <div className="career-exp-section">
-//             <div className="career-section">
-//               <div>
-//                 <div className="career-label">
-//                   <Label>경력</Label>
-//                   <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
-//                 </div>
-//                 <hr></hr>
-//               </div>
-//               <CareerList careerList={careerList} onRemove={handleCareerRemove}></CareerList>
-//             </div>
-//             <div className="exp-section">
-//               <div>
-//                 <div className="exp-label">
-//                   <Label>경험</Label>
-//                   <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleExpAdd} />
-//                 </div>
-//                 <hr></hr>
-//               </div>
-//               <ExpList expList={expList} onRemove={handleExpRemove}></ExpList>
-//             </div>
-//           </div>
+  const handleSkillRemove = (id) => {
+    setSkillList(
+      skillList.filter((skill) => {
+        return skill !== id
+      })
+    )
+  }
 
-//           <div className="content-section">
-//             <Label className="label">하고싶은 말</Label>
-//             <div>
-//               <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="5" onChange={handleContent} />
-//             </div>
-//           </div>
+  // start >> skill filter
+  const skillSearchFilter = createFilterOptions({
+    matchFrom: 'start',
+    stringify: (option) => option.name,
+  })
 
-//           <div className="question-answer-section">
-//             <div className="question-section">
-//               <Label className="label">지원자에게 궁금한 점</Label>
-//             </div>
-//             <div className="answer-section">
-//               {posting.postingQuestionList &&
-//                 posting.postingQuestionList.map((props) => (
-//                   <div key={props.postingSeq}>
-//                     <Label className="question-label">{props.content}</Label>
-//                     <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" />
-//                   </div>
-//                 ))}
-//             </div>
-//           </div>
-//         </div>
-//         <div className="submit-button">
-//           <button className="apply-button" onClick={handleApplySubmit}>
-//             지원하기
-//           </button>
-//         </div>
-//       </div>
-//     </Container>
-//   )
-// }
+  // end >> skill filter
 
-// export default Apply
+  // end >> handle skill
+
+  // start >> handle career
+
+  const handleCareerAdd = () => {
+    const careerArr = [...careerList]
+    const career = {
+      seq: careerSeq + 1,
+      content: '',
+    }
+    setCareerSeq(careerSeq + 1)
+    careerArr.push(career)
+    setCareerList(careerArr)
+  }
+
+  const handleCareerChange = (value, key) => {
+    const careerArr = [...careerList]
+    const newCareerArr = [...careerList]
+
+    for (let index = 0; index < careerArr.length; index++) {
+      if (careerArr[index].seq === key) {
+        newCareerArr.splice(index, 1, { seq: key, content: value })
+      }
+    }
+
+    setCareerList(newCareerArr)
+  }
+
+  const handleCareerRemove = (key) => {
+    setCareerList(careerList.filter((career) => career.seq !== key))
+  }
+
+  // end >> handle career
+
+  // start >> handle exp
+
+  const handleExpAdd = () => {
+    const expArr = [...expList]
+    const exp = {
+      seq: expSeq + 1,
+      content: '',
+    }
+    setExpSeq(expSeq + 1)
+    expArr.push(exp)
+    setExpList(expArr)
+  }
+
+  const handleExpChange = (value, key) => {
+    const expArr = [...expList]
+    const newExpArr = [...expList]
+
+    for (let index = 0; index < expArr.length; index++) {
+      if (expArr[index].seq === key) {
+        newExpArr.splice(index, 1, { seq: key, content: value })
+      }
+    }
+    setExpList(newExpArr)
+  }
+
+  const handleExpRemove = (key) => {
+    setExpList(expList.filter((exp) => exp.seq !== key))
+  }
+
+  // end >> handle exp
+
+  // start >> handle content
+
+  const handleContentChange = (event) => {
+    setContent(event.target.value)
+  }
+
+  // end >> handle content
+
+  // start >> handle qna
+
+  const handleQnAChange = (value, key) => {
+    const answerArr = [...answerList]
+    answerList.forEach((item, index) => {
+      if (item.postingQuestionSeq === key) {
+        answerArr.splice(index, 1, {
+          postingQuestionSeq: key,
+          content: value,
+        })
+      }
+    })
+
+    setAnswerList(answerArr)
+  }
+
+  // end >> handle qna
+
+  const handleMeetingDtChange = (key) => {
+    setMeeting(meetingList[key])
+  }
+
+  const handleApplySubmit = async () => {
+    const userSeq = 1
+    const postingSeq = 458
+    try {
+      const req = {
+        applyAnswerList: answerList,
+        applyCareerList: CareerPostFilter(careerList),
+        applyExpList: ExpPostFilter(expList),
+        applySkillList: skillList,
+        content,
+        fieldCode: posting.fieldCode,
+        meetingDt: meeting,
+        positionCode: getPositionCode(position),
+        postingSeq,
+        userSeq,
+      }
+      console.log(req)
+      const config = { 'Content-Type': 'application/json' }
+      await axios
+        .post('.', req, config)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+      console.log('지원서 post')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    userFetch()
+    postingFetch()
+    applyFetch()
+  }, [])
+
+  return (
+    <Container>
+      <div style={width}>
+        <div>
+          <Title>{user.nickname} 님의지원서</Title>
+        </div>
+        <div>
+          <div className="user-detail-section">
+            <div className="phone-section">
+              <Label>전화번호 </Label>
+              <TextField disabled value={user.phone || ''} sx={inputStyle} />
+            </div>
+            <div className="email-section">
+              <Label>이메일</Label>
+              <TextField disabled value={user.email || ''} sx={inputStyle} />
+            </div>
+          </div>
+          <div className="position-section">
+            <div>
+              <Label className="label">원하는 포지션</Label>
+              <FormControl style={positionSelectStyle}>
+                <InputLabel id="demo-simple-select-label" sx={{ inputStyle, width: '11.5em' }}></InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={position || ''}
+                  onChange={handlePositionChange}
+                  inputProps={{ 'aria-label': 'Without label' }}
+                >
+                  {posting.postingPositionList &&
+                    posting.postingPositionList.map((item, index) => (
+                      <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
+                        {getPositionName(item.positionCode)}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </div>
+          </div>
+          <div className="skill-meeting-section">
+            <div className="skill-section">
+              <Label className="label">사용기술</Label>
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                sx={{ width: 300 }}
+                options={Skilldata}
+                getOptionLabel={(option) => option.name}
+                filterOptions={skillSearchFilter}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    onKeyUp={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSkillInput(e.target.value)
+                      }
+                    }}
+                  />
+                )}
+              />
+              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
+            </div>
+            <div className="meeting-section">
+              <Label className="label">화상미팅 예약</Label>
+              <MeetingDtSelect
+                open={open}
+                meetingList={meetingList}
+                onChange={handleMeetingDtChange}
+                meeting={meeting}
+              ></MeetingDtSelect>
+            </div>
+          </div>
+          <div className="career-exp-section">
+            <div className="career-section">
+              <div>
+                <div className="career-label">
+                  <Label>경력</Label>
+                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
+                </div>
+                <hr></hr>
+              </div>
+              <CareerList
+                careerList={careerList}
+                onRemove={handleCareerRemove}
+                onChange={handleCareerChange}
+              ></CareerList>
+            </div>
+            <div className="exp-section">
+              <div>
+                <div className="exp-label">
+                  <Label>경험</Label>
+                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleExpAdd} />
+                </div>
+                <hr></hr>
+              </div>
+              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
+            </div>
+          </div>
+          <div className="content-section">
+            <Label className="label">하고싶은 말</Label>
+            <div>
+              <TextField
+                style={textAreaStyle}
+                fullWidth={true}
+                multiline={true}
+                minRows="5"
+                onChange={handleContentChange}
+              />
+            </div>
+          </div>
+          <div className="question-answer-section">
+            <div className="question-section">
+              <Label className="label">지원자에게 궁금한 점</Label>
+            </div>
+            <div className="answer-section">
+              <QnAList questionList={questionList} onChange={handleQnAChange}></QnAList>
+            </div>
+          </div>
+        </div>
+        <div className="submit-button">
+          <button className="apply-button" onClick={handleApplySubmit}>
+            지원하기
+          </button>
+        </div>
+      </div>
+    </Container>
+  )
+}
+
+export default ApplyModify

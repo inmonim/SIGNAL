@@ -14,7 +14,7 @@
   font-size: 44px;
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 70px;
 }
 
 /* 테이블 헤더  */
@@ -35,4 +35,47 @@ tbody.MuiTableBody-root {
   height: 430px;
   border-top: 2px solid #796fb2;
   border-bottom: 2px solid #796fb2;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+/* noticeDetail */
+.notice-detail-container{
+  width: 1125px;
+  height: 600px;
+  border-top: 2px solid #796fb2;
+  border-bottom: 2px solid #796fb2;
+  margin: auto;
+}
+
+.notice-detail-title{
+  font-size: 44px;
+  height: 109px;
+  padding: 55px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #796fb2;
+}
+
+.notice-detail-middle{
+  height: 52px;
+  padding: 0px 45px;
+  border-bottom: 1px solid #796fb2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notice-detail-middle-view{
+  display: flex;
+  align-items: center;
+}
+
+.notice-detail-content{
+  padding: 55px;
+  font-size: 24px;
 }

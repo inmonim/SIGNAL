@@ -9,14 +9,18 @@ import { getPositionName } from 'data/Positiondata'
 import ApplyDelete from './ApplyDelete'
 import skillImage from '../../assets/image/Skilltest/React.png'
 
-const Application = () => {
+function ApplyDetail({ match }) {
+  const applySeq = match.params.applySeq
+  const userSeq = match.params.applySeq.userSeq
+
+  console.log(applySeq)
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/apply/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
       console.log(res.data.body)
@@ -27,7 +31,7 @@ const Application = () => {
 
   const userFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
@@ -123,11 +127,11 @@ const Application = () => {
             </div>
           </div>
           <div className="submit-section">
-            <ApplyDelete open={open}></ApplyDelete>
+            <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
           </div>
         </div>
       </div>
     </div>
   )
 }
-export default Application
+export default ApplyDetail
