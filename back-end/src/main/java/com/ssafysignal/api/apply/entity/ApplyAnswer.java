@@ -20,6 +20,8 @@ public class ApplyAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_answer_seq")
     private Integer applyAnswerSeq;
+    @Column(name = "apply_seq")
+    private Integer applySeq;
     @Column(name = "posting_seq")
     private Integer postingSeq;
     @Column(name = "posting_question_seq")
@@ -30,8 +32,10 @@ public class ApplyAnswer {
     private LocalDateTime regDt;
 
     @Builder
-    public ApplyAnswer(Integer applyAnswerSeq, Integer postingSeq, Integer postingQuestionSeq, String content,LocalDateTime regDt, PostingQuestion postingQuestion) {
+
+    public ApplyAnswer(Integer applyAnswerSeq, Integer applySeq, Integer postingSeq, Integer postingQuestionSeq, String content, LocalDateTime regDt) {
         this.applyAnswerSeq = applyAnswerSeq;
+        this.applySeq = applySeq;
         this.postingSeq = postingSeq;
         this.postingQuestionSeq = postingQuestionSeq;
         this.content = content;
