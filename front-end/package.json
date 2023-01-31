@@ -19,6 +19,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
+    "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
     "react-js-pagination": "^3.0.3",
     "react-number-format": "^5.1.3",
