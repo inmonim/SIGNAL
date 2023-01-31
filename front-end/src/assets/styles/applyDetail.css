@@ -151,15 +151,12 @@ hr {
 }
 
 .apply-detail-container {
-  padding: 100px 500px;
+  width: 100%;
   font-size: 20px;
 }
 
 .apply-detail-width-section {
-  min-width: 1000px;
-}
-
-.apply-detail-section {
+  min-width: 800px;
 }
 
 .apply-detail-project-name-section {

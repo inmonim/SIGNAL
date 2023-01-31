@@ -16,7 +16,9 @@ function ApplyDetail() {
   // const applySeq = location.state.applySeq
 
   const userSeq = 1
-  const applySeq = 458
+  const applySeq = 22
+  const postingSeq = 458
+  const [posting, setPosting] = useState('458')
 
   console.log(applySeq)
   console.log(userSeq)
@@ -25,11 +27,13 @@ function ApplyDetail() {
   const [position, setPosition] = useState([])
 
   const applyFetch = async () => {
+    console.log(applySeq)
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
-      console.log(res.data.body)
+      postingFetch(res.data.body.postingSeq)
+      console.log('Apply', res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -39,6 +43,18 @@ function ApplyDetail() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const postingFetch = async () => {
+    console.log('postingSeq', postingSeq)
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      setPosting(res.data.body)
+      console.log(res.data.body)
+      console.log('posting', posting)
     } catch (error) {
       console.log(error)
     }
@@ -58,76 +74,84 @@ function ApplyDetail() {
           <hr />
         </div>
         <div className="apply-detail-application-section">
-          <div className="name-position-section">
-            <div className="name-section">
-              <div className="label">이름</div>
-              <div>이름{user.nickname}</div>
+          <div className="apply-detail-name-position-section">
+            <div className="apply-detail-name-section">
+              <div className="apply-detail-name-label">이름</div>
+              <div>{user.nickname}</div>
             </div>
-            <div className="position-section">
-              <div className="label">포지션</div>
+            <div className="apply-detail-position-section">
+              <div className="apply-detail-label">포지션</div>
               <div>{position}</div>
             </div>
           </div>
-          <div className="phone-section">
+          <div className="apply-detail-phone-section">
             <div className="label">전화번호</div>
-            <div>전화번호{user.phone}</div>
+            <div>{user.phone}</div>
           </div>
-          <div className="email-section">
-            <div className="label">이메일</div>
-            <div>이메일{user.email}</div>
+          <div className="apply-detail-email-section">
+            <div className="apply-detail-label">이메일</div>
+            <div>{user.email}</div>
           </div>
-          <div className="skill-section">
-            <div className="label">사용기술</div>
-            <div className="skillList-section">
+          <div className="apply-detail-skill-section">
+            <div className="apply-detail-label">사용기술</div>
+            <div className="apply-detail-skillList-section">
               {apply.skillList &&
                 apply.skillList.map((skill, index) => (
-                  <div className="skill" key={index}>
-                    <img src={skillImage} alt="skillImage" className="skill-image" />
+                  <div className="apply-detail-skill" key={index}>
+                    <img src={skillImage} alt="skillImage" className="apply-detail-skill-image" />
                     <span>{skill.name}</span>
                   </div>
                 ))}
             </div>
           </div>
-          <div className="career-exp-section">
-            <div className="career-section">
-              <div className="career-label">
-                <div className="label">경력</div>
+          <div className="apply-detail-career-exp-section">
+            <div className="apply-detail-career-section">
+              <div className="apply-detail-career-label">
+                <div className="apply-detail-label">경력</div>
                 <hr />
               </div>
               <div>
                 {apply.careerList &&
                   apply.careerList.map((career, index) => (
-                    <div className="career" key={index}>
+                    <div className="apply-detail-career" key={index}>
                       {career}
                     </div>
                   ))}
               </div>
             </div>
-            <div className="exp-section">
-              <div className="exp-label">
-                <div className="label">경험</div>
+            <div className="apply-detail-exp-section">
+              <div className="apply-detail-exp-label">
+                <div className="apply-detail-label">경험</div>
                 <hr />
               </div>
               <div>
                 {apply.expList &&
                   apply.expList.map((exp, index) => (
-                    <div className="exp" key={index}>
+                    <div className="apply-detail-exp" key={index}>
                       {exp}
                     </div>
                   ))}
               </div>
             </div>
           </div>
-          <div className="content-section">
-            <div className="label">하고싶은 말</div>
-            <div className="content">{apply.content}</div>
+          <div className="apply-detail-content-section">
+            <div className="apply-detail-label">하고싶은 말</div>
+            <div className="apply-detail-content">{apply.content}</div>
           </div>
-          <div className="question-answer-section">
-            <div className="label">공고 작성자가 궁금한 점</div>
-            <div>{/* <QnAList questionList={questionList} onChange={handleQnAChange}></QnAList> */}</div>
+          <div className="apply-detail-question-answer-section">
+            <div className="apply-detail-label">공고 작성자가 궁금한 점</div>
+            <div>
+              {posting.postingQuestionList &&
+                posting.postingQuestionList.map((question, index) => (
+                  <div key={index}>
+                    <div>{question.content}</div>
+                    <div>{apply.answerList[index].content}</div>
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
-        <div className="submit-section">
+        <div className="apply-detail-submit-section">
           <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
         </div>
       </div>
