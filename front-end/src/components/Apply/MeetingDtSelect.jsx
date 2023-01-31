@@ -83,7 +83,11 @@ function meetingDtSelet(props) {
             ></MeetingDtCalendar>
           </Box>
         </Modal>
-        <div style={selectedTimeStyle}>{props.meeting === '' ? '' : ` ${moment(props.meeting).format('LLL')}시`}</div>
+        <div style={selectedTimeStyle}>
+          {props.meetingList[props.meetingSeq] === ''
+            ? ''
+            : ` ${moment(props.meetingList[props.meetingSeq]).format('LLL')}시`}
+        </div>
       </div>
     </CssVarsProvider>
   )

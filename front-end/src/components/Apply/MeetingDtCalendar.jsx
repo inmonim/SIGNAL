@@ -10,6 +10,8 @@ function MeetingDtCalendar(props) {
   const [timeList, setTimeList] = useState([])
   const [meeting, setMeeting] = useState([])
 
+  console.log(props)
+
   const meetingListFilter = (list) => {
     const meetingArr = []
     list.meetingList.map((item) => meetingArr.push(item.slice(0, 10)))
