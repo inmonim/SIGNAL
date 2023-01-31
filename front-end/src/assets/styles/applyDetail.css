@@ -150,7 +150,7 @@ hr {
   align-items: center;
 }
 
-/* ------------------- */
+/* ----detail---- */
 
 .apply-detail-container {
   width: 900px;
@@ -179,6 +179,7 @@ hr {
 
 .apply-detail-label {
   color: #574b9f;
+  width: 25%;
 }
 
 .apply-detail-project-name-section{
@@ -203,13 +204,10 @@ hr {
   margin: 30px 0px;
 }
 
-.apply-detail-label {
-  width: 25%;
-}
-
 .apply-detail-skill-image{
   height: 35px;
 }
+
 .apply-detail-skill{
   width: 92px;
   display: inline-block;
@@ -230,9 +228,19 @@ hr {
   width: 97%;
 }
 
+.apply-detail-skill-label{
+  color: #574b9f;
+}
+
+.apply-detail-skill-section{
+  display: flex;
+  align-items: center;
+}
+
 .apply-detail-career-label,
 .apply-detail-exp-label{
-text-align: center;
+  text-align: center;
+  color: #574b9f;
 }
 
 .apply-detail-career,
@@ -253,7 +261,7 @@ text-align: center;
 }
 
 .apply-answer-content{
-   padding: 15px;
+  padding: 15px;
   height: 100px;
   background: #DDDBEC;  
   border-radius: 8px;
@@ -266,10 +274,15 @@ text-align: center;
 
 .apply-detail-hr-small{
   border: 1.5px solid #463c7f;
-
 }
 
-.apply-detail-submit-section{
+.apply-detail-cancle-section{
   display: flex;
-  align-items: center;
+  align-items: center; 
+}
+
+/* ----delete---- */
+
+.apply-delete-button{
+  position: static;
 }
