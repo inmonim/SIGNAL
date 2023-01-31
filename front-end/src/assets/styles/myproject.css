@@ -13,6 +13,7 @@
   border: 1px solid #796fb2;
   font-size: 0px;
   line-height: 0px;
+  margin-left: 42px;
 }
 
 hr {
@@ -21,10 +22,13 @@ hr {
 
 .project-list-container {
   display: flex;
+  justify-content: space-around;
 }
 
 .project-list-end {
-  border: 1px solid black;
+  border-radius: 8px;
+  background-color: #DDDBEC;
+  box-shadow: 0px 4px 4px 0px rgba(1, 1, 1, 0.25);
   display: flex;
   width: 281px;
   height: 223px;
