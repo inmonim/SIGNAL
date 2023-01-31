@@ -39,13 +39,13 @@ function App() {
           <Route path="/applydetail/:applySeq" element={<ApplyDetail />} />
           <Route path="/teamselect" element={<TeamSelect />} />
           <Route path="/myproject" element={<MyProject />} />
-          <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/qnaDetail" element={<QnaDetail />} />
           <Route path="/qnaRegist" element={<QnaRegist />} />
           <Route path="/qnaModify" element={<QnaModify />} />
+          <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
     </div>
