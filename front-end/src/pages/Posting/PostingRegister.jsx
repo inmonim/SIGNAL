@@ -17,11 +17,11 @@ import { Fielddata2 } from 'data/Fielddata'
 import Skilldata from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { add } from 'store/redux'
 
 const Container = styled.section`
-  // padding: 100px 25em;
+  padding: 100px 10em;
 `
 const skillStyle = {
   width: '100%',
@@ -131,36 +131,14 @@ const PostingRegister = () => {
 
   // start >> Data filter
 
-  // const careerFetchFilter = (list) => {
-  //   const careerArr = []
-  //   list.map((item, index) =>
-  //     careerArr.push({
-  //       seq: index,
-  //       content: item.content,
-  //     })
-  //   )
-
-  //   setCareerList(careerArr)
-  // }
-
-  // const expFetchFilter = (list) => {
-  //   const expArr = []
-  //   list.map((item, index) =>
-  //     expArr.push({
-  //       seq: index,
-  //       content: item.content,
-  //     })
-  //   )
-  // }
-
   // end >> Data filter
 
   // start >> handle position
-  const [posi, setPosi] = useState()
+  const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
+  const positionRedux = useSelector((state) => state.positionTodo)
   // end >> handle position
 
   // end >> skill filter
-
   // end >> handle skill
 
   // start >> handle career
@@ -215,8 +193,9 @@ const PostingRegister = () => {
   const handleApplySubmit = async (event) => {
     try {
       const config = { 'Content-Type': 'application/json' }
+
       await axios
-        .post('https://www.ssafysignal.site:8443/posting', posting, config)
+        .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
         .then((res) => {
           console.log(res)
           console.log(1)
@@ -231,11 +210,16 @@ const PostingRegister = () => {
       console.log('에러')
     }
   }
-
+  const handlePositon = () => {
+    const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
+    setPosting({ ...posting, postingPositionList: copy })
+  }
   useEffect(() => {
     // postingFetch()
     // profileFetch()
-  }, [])
+    handlePositon()
+    // console.log(JSON.stringify(positionRedux))
+  }, [positionRedux])
 
   return (
     <Container>
@@ -245,7 +229,7 @@ const PostingRegister = () => {
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
-          <div style={{ display: 'flex', marginBottom: '1em' }}>
+          <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>프로젝트 주제 </Label>
               <TextField
@@ -258,7 +242,7 @@ const PostingRegister = () => {
                 }}
               />
             </div>
-            <div className="email-section">
+            <div className="email-section" style={{ marginLeft: '3em' }}>
               <Label>프로젝트 모집 기간</Label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -275,7 +259,7 @@ const PostingRegister = () => {
             </div>
           </div>
           {/* 여기는 진행지역,분야 */}
-          <div style={{ display: 'flex', marginBottom: '2em' }}>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>진행 지역</Label>
               <FilterSelect
@@ -291,7 +275,7 @@ const PostingRegister = () => {
                 ))}
               </FilterSelect>
             </div>
-            <div className="email-section">
+            <div className="email-section " style={{ marginLeft: '3em' }}>
               <Label style={{ width: '10%' }}>분야</Label>
               <FilterSelect
                 onChange={(e) => {
@@ -308,7 +292,7 @@ const PostingRegister = () => {
             </div>
           </div>
           {/* 여기는 진행유형,프로젝트기간 */}
-          <div style={{ display: 'flex', marginBottom: '2em' }}>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>진행 유형 </Label>
               <FilterSelect
@@ -325,7 +309,7 @@ const PostingRegister = () => {
                 ))}
               </FilterSelect>
             </div>
-            <div className="email-section">
+            <div className="email-section" style={{ marginLeft: '3em' }}>
               <Label>프로젝트 기간</Label>
               <FilterSelect
                 onChange={(e) => {
@@ -342,7 +326,7 @@ const PostingRegister = () => {
             </div>
           </div>
           {/* 여기는 사용기술 , 시간선택 */}
-          <div style={{ display: 'flex', marginBottom: '2em' }}>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>사용 기술 </Label>
               <Autocomplete
@@ -361,13 +345,13 @@ const PostingRegister = () => {
                 sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
               />
             </div>
-            <div className="email-section">
+            <div className="email-section" style={{ marginLeft: '3em' }}>
               <Label>화상 미팅 예약</Label>
               <button>시간 선택</button>
             </div>
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
-          <div style={{ display: 'flex', marginBottom: '2em' }}>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section1">
               <div>
                 <div>
@@ -376,13 +360,15 @@ const PostingRegister = () => {
                     <FilterSelect
                       onChange={(e) => {
                         // console.log(e.target.value)
-                        setPosi(e.target.value)
+                        const position = JSON.parse(e.target.value)
+                        setPosi({ code: position.code, name: position.name })
+
                         // dispatch(add(e.target.value))
                         // setPosting({ ...posting, term: e.target.value })
                       }}
                     >
                       {positionData.map((ele, i) => (
-                        <option key={i} value={ele.name}>
+                        <option key={i} value={JSON.stringify(ele)}>
                           {ele.name}
                         </option>
                       ))}
@@ -408,8 +394,8 @@ const PostingRegister = () => {
               </div>
             </div>
             <Box style={{ width: '5%' }}></Box>
-            <div className="phone-section">
-              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>예상 난이도</Label>
+            <div className="phone-section" style={{ marginLeft: '3em' }}>
+              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>x`난이도</Label>
               <FilterSelect
                 onChange={(e) => {
                   console.log(e.target.value)

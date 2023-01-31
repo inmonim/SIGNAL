@@ -11,7 +11,7 @@ function positionTodo(props) {
   return (
     <Box>
       {todolist.map((ele, idx) => (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }} key={ele.id}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }} key={idx}>
           <Typography variant="h4">{ele.text}</Typography>
           <Button
             onClick={() => {
