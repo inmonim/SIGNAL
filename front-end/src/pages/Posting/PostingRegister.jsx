@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Box, TextField } from '@mui/material'
+import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
 import moment from 'moment/moment'
@@ -11,6 +11,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
+import { FilterInput } from './Posting'
+import DateSelect from 'components/Posting/DateSelect'
+// import { ko } from 'date-fns/esm/locale'
+// import  DatePicker as DateTimePicker  from 'react-datepicker'
+import AddIcon from '@mui/icons-material/Add'
 // import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
@@ -18,7 +23,8 @@ import Skilldata from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
-import { add } from 'store/redux'
+import { add, addQna } from 'store/redux'
+import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
   padding: 100px 10em;
@@ -130,7 +136,7 @@ const PostingRegister = () => {
   // end >> Fetch
 
   // start >> Data filter
-
+  const [Date, setDate] = useState()
   // end >> Data filter
 
   // start >> handle position
@@ -166,7 +172,7 @@ const PostingRegister = () => {
   }
 
   // end >> handle career
-
+  // const [startDate, setStartDate] = useState(new Date())
   // start >> handle exp
 
   // end >> handle exp
@@ -178,7 +184,18 @@ const PostingRegister = () => {
   }
 
   // end >> handle content
+  const [todolist, setTodolist] = useState({
+    id: 0,
+    text: '',
+  })
 
+  function handleText(e) {
+    setTodolist({ text: e.target.value })
+  }
+
+  function onReset() {
+    setTodolist({ text: '' })
+  }
   // start >> handle qna
 
   // const handleQnAChange = (value, key) => {
@@ -347,7 +364,14 @@ const PostingRegister = () => {
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
               <Label>화상 미팅 예약</Label>
-              <button>시간 선택</button>
+              <DateSelect setDate={setDate} />
+              <button
+                onClick={() => {
+                  console.log(Date)
+                }}
+              >
+                시간 선택
+              </button>
             </div>
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
@@ -362,9 +386,6 @@ const PostingRegister = () => {
                         // console.log(e.target.value)
                         const position = JSON.parse(e.target.value)
                         setPosi({ code: position.code, name: position.name })
-
-                        // dispatch(add(e.target.value))
-                        // setPosting({ ...posting, term: e.target.value })
                       }}
                     >
                       {positionData.map((ele, i) => (
@@ -374,6 +395,7 @@ const PostingRegister = () => {
                       ))}
                     </FilterSelect>
                     <img
+                      style={{ marginTop: '7px', marginBottom: '7px' }}
                       src={plusButton}
                       alt="plusButton"
                       className="plus-button"
@@ -395,7 +417,7 @@ const PostingRegister = () => {
             </div>
             <Box style={{ width: '5%' }}></Box>
             <div className="phone-section" style={{ marginLeft: '3em' }}>
-              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>x`난이도</Label>
+              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>난이도</Label>
               <FilterSelect
                 onChange={(e) => {
                   console.log(e.target.value)
@@ -433,7 +455,30 @@ const PostingRegister = () => {
               </Label>
             </div>
             <div className="answer-section">
-              {/* <QnAList qnaList={posting.postingQuestionList} onChange={handleQnAChange}></QnAList> */}
+              <div>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (todolist.text !== '') {
+                      dispatch(addQna(todolist.text))
+                    } else alert('질문을 입력해 주세요')
+                    onReset()
+                  }}
+                >
+                  <div style={{ marginBottom: '2em' }}>
+                    <FilterInput
+                      placeholder="질문을 입력하세요 "
+                      type="text"
+                      value={todolist.text}
+                      onChange={handleText}
+                    ></FilterInput>
+                    <Button style={{ marginLeft: '1em' }} type="submit" variant="outlined" startIcon={<AddIcon />}>
+                      추가
+                    </Button>
+                  </div>
+                  <QnaTodo />
+                </form>
+              </div>
             </div>
           </div>
         </div>

@@ -151,6 +151,25 @@ export const positionTodo = createSlice({
 })
 export const { add, remove, addCount, minusCount } = positionTodo.actions
 
+let nextId = 0
+export const qnaTodo = createSlice({
+  name: 'qnaTodo',
+  initialState: [],
+  reducers: {
+    addQna: (state, action) => {
+      nextId++
+      state.push({
+        id: nextId,
+        text: action.payload,
+      })
+    },
+    removeQna: (state, action) => {
+      return state.filter((e) => e.id !== action.payload)
+    },
+  },
+})
+export const { addQna, removeQna } = qnaTodo.actions
+
 const stock = createSlice({
   name: 'stock',
   initialState: [10, 11, 12],
@@ -173,5 +192,6 @@ export default configureStore({
     skillCode: skillCode.reducer,
     posting: posting.reducer,
     positionTodo: positionTodo.reducer,
+    qnaTodo: qnaTodo.reducer,
   },
 })

@@ -358,7 +358,7 @@ function Posting() {
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                      style={{ marginRight: '1em', width: '47px', height: '30px' }}
                     />
                     {ele}
                   </Skillbtn>
@@ -416,7 +416,6 @@ function Posting() {
     </div>
   )
 }
-export default Posting
 
 const Container = styled.div`
   width: 80%;
@@ -548,3 +547,4 @@ const FilterInput = styled.input`
     box-shadow: inset 0 0 0 1px#3396f4;
   }
 `
+export { Posting, FilterInput }
