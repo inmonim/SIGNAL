@@ -62,6 +62,7 @@ public class ApplyController {
         }
     }
 
+    
     @Tag(name = "지원")
     @Operation(summary = "지원서 수정", description = "지원서를 수정한다.")
     @ApiResponses({
@@ -72,11 +73,15 @@ public class ApplyController {
     @PutMapping("/{applySeq}")
     private ResponseEntity<BasicResponse> modifyApply(@Parameter(name = "applySeq", description = "지원서 Seq", required = true) @PathVariable(name = "applySeq") Integer applySeq,
                                                       @Parameter(description = "지원서 수정 정보", required = true) @RequestBody ApplyBasicRequest applyBasicRequest) {
-
+    	
         log.info("modifyApply - Call");
-
+        System.out.println(applyBasicRequest);
+        applyService.modifyApply(applyBasicRequest, applySeq);
         try {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        }
+        catch (DuplicateKeyException e) {
+        	return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
@@ -84,6 +89,7 @@ public class ApplyController {
         }
     }
 
+    
     @Tag(name = "지원")
     @Operation(summary = "지원서 상세 조회", description = "지원서 상세 정보를 조회한다.")
     @ApiResponses({
@@ -97,45 +103,8 @@ public class ApplyController {
         log.info("findApply - Call");
 
         try {
-
-            List<ApplyAnswer> applyAnswerList = new ArrayList<>();
-            List<String> careerList = new ArrayList<>();
-            List<String> expList = new ArrayList<>();
-            List<CommonCode> skillList = new ArrayList<>();
-
-            for (int i = 1; i <= 5; i++) {
-                applyAnswerList.add(ApplyAnswer.builder()
-                                .applyAnswerSeq(i)
-                                .postingSeq(1)
-                                .postingQuestionSeq(10 + i)
-                                .content("질문 답변 테스트 " + i)
-                                .regDt(LocalDateTime.now())
-                                .build());
-                careerList.add("커리어 테스트 " + i);
-                expList.add("경험 테스트 " + i);
-                skillList.add(CommonCode.builder()
-                                .code("AI100")
-                                .name("keras")
-                                .groupCode("AI")
-                                .groupName("인공지능 기술스택 구분")
-                                .build());
-            }
-
-            // dummy
-            ApplyFindResponse applyFindResponse = ApplyFindResponse.builder()
-                    .userSeq(1)
-                    .postingSeq(1)
-                    .content("지원서 상세 더미")
-                    .position(CommonCode.builder().code("PO100").name("frontend").groupCode("PO").groupName("포지션 구분").build())
-                    .fieldCode(CommonCode.builder().code("FI100").name("web").groupCode("FI").groupName("분야구분").build())
-                    .answerList(applyAnswerList)
-                    .careerList(careerList)
-                    .expList(expList)
-                    .skillList(skillList)
-                    .build();
-
-//            Apply apply = applyService.findApply(applySeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyFindResponse));
+            ApplyFindResponse res = applyService.findApply(applySeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
@@ -153,6 +122,7 @@ public class ApplyController {
         log.info("deleteApply - Call");
 
         try {
+        	applyService.cancleApply(applySeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
