@@ -3,17 +3,15 @@ package com.ssafysignal.api.profile.service;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.profile.dto.request.ProfilePositionRegistRequest;
+import com.ssafysignal.api.profile.dto.response.HeartLogResponse;
 import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
-import com.ssafysignal.api.profile.entity.UserCareer;
-import com.ssafysignal.api.profile.entity.UserExp;
-import com.ssafysignal.api.profile.entity.UserPosition;
-import com.ssafysignal.api.profile.entity.UserSkill;
-import com.ssafysignal.api.profile.repository.UserCareerRepository;
-import com.ssafysignal.api.profile.repository.UserExpRepository;
-import com.ssafysignal.api.profile.repository.UserPositionRepository;
-import com.ssafysignal.api.profile.repository.UserSkillRepository;
+import com.ssafysignal.api.profile.entity.*;
+import com.ssafysignal.api.profile.repository.*;
 import com.ssafysignal.api.user.entity.User;
+import com.ssafysignal.api.user.repository.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,6 +27,8 @@ public class ProfileService {
     private final UserExpRepository userExpRepository;
     private final UserPositionRepository userPositionRepository;
     private final UserSkillRepository userSkillRepository;
+    private final UserRepository userRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
 
     // 프로필 조회
     @Transactional
@@ -180,5 +180,43 @@ public class ProfileService {
         Optional<UserExp> userExp = userExpRepository.findByUserExpSeq(userExpSeq);
         userExp.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         userExpRepository.delete(userExp.get());
+    }
+
+    // ========== 하트 ==========
+
+    // 하트 충전
+    @Transactional
+    public void chargeHeart(Integer userSeq, Map<String, Object> param) {
+        
+        // 유저의 현재 하트 cnt GET
+        // 변수랑 메서드 명을 좀 바꿔보자
+        User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        Integer userHeartCnt = user.getHeartCnt();
+        
+        // param으로 들어온 수를 Integer 형태로 변환 후 값을 적용한다.
+        Integer addHeart = Integer.valueOf(param.get("heartCnt").toString());
+        user.chargeHeart(userHeartCnt+addHeart);
+        
+        // userRep에 저장
+        userRepository.save(user);
+
+        // userHeartLog에 저장할 log 데이터 빌딩
+        UserHeartLog userHeartLog = UserHeartLog.builder()
+                .userSeq(userSeq)
+                .heartCnt(addHeart)
+                .content("일단 테스트용")
+                .build();
+
+        // UserHeartLog에 저장
+        userHeartLogRepository.save(userHeartLog);
+    }
+
+
+    // 하트 로그 조회
+    @Transactional
+    public List<UserHeartLog> findAllUserHeartLog(Integer userSeq) {
+        List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq);
+        System.out.println(userHeartLogList);
+        return userHeartLogList;
     }
 }
