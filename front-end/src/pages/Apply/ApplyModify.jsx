@@ -7,20 +7,12 @@ import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
 import styled from 'styled-components'
-
-import Skilldata from 'data/Skilldata'
+import Skill from '../../data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
-import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
-
-const Container = styled.section`
-  padding: 50px 500px;
-`
-
-const width = {
-  minWidth: '800px',
-}
+import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
+import { useLocation } from 'react-router-dom'
 
 const Title = styled.h1`
   font-size: 2.5em;
@@ -51,14 +43,18 @@ const positionSelectStyle = {
   position: 'static',
 }
 
-function ApplyModify() {
+function ApplyRegister() {
+  const location = useLocation()
+
   const userSeq = 1
   const postingSeq = 458
+  const applySeq = location.state.applySeq
 
   // start >> useState
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
+  const [apply, setApply] = useState([{}])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
@@ -69,8 +65,7 @@ function ApplyModify() {
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
-  const [meeting, setMeeting] = useState('')
-
+  const [meetingSeq, setMeetingSeq] = useState('')
   // ene >> useState
 
   // start >> Fetch
@@ -103,13 +98,101 @@ function ApplyModify() {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + 1)
-      console.log(res.data.body)
-      setPosition(getPositionName(res.data.body.position.code))
-      setContent(res.data.body.content)
+      // const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const res = {
+        data: {
+          header: {
+            code: '200',
+            message: '성공',
+          },
+          body: {
+            userSeq: 2,
+            postingSeq: 458,
+            content: '저는 프로젝트 팀 구하는 게 힘들었던 경험이 있어 이 프로젝트에 지원합니다.',
+            position: {
+              code: 'PO100',
+              name: 'frontend',
+              groupCode: 'PO',
+              groupName: '포지션 구분',
+            },
+            answerList: [
+              {
+                applyAnswerSeq: 4,
+                applySeq: 22,
+                postingSeq: 458,
+                postingQuestionSeq: 81,
+                content: '답변 테스트1',
+                regDt: [2023, 1, 31, 14, 39, 44],
+              },
+            ],
+            careerList: [
+              {
+                applyCareerSeq: 16,
+                applySeq: 22,
+                content: '경력1',
+              },
+              {
+                applyCareerSeq: 17,
+                applySeq: 22,
+                content: '경력2',
+              },
+            ],
+            expList: [
+              {
+                applyExpSeq: 13,
+                applySeq: 22,
+                content: '경험1',
+              },
+              {
+                applyExpSeq: 14,
+                applySeq: 22,
+                content: '경험2',
+              },
+            ],
+            skillList: [
+              {
+                code: 'AI100',
+                name: 'keras',
+                groupCode: 'AI',
+                groupName: '인공지능 기술스택 구분',
+              },
+              {
+                code: 'AI101',
+                name: 'matplotlib',
+                groupCode: 'AI',
+                groupName: '인공지능 기술스택 구분',
+              },
+            ],
+            postingMeeting: {
+              postingMeetingSeq: 314,
+              postingSeq: 458,
+              applySeq: 22,
+              fromUserSeq: 1,
+              toUserSeq: 2,
+              meetingDt: '2023-01-29 16:33:58.000',
+              postingMeetingCode: 'PM100',
+              code: {
+                code: 'PM100',
+                name: '미팅전',
+                groupCode: 'PM',
+                groupName: '사전미팅 상태구분',
+              },
+            },
+          },
+        },
+      }
+
+      console.log(applySeq)
+      console.log(apply)
+
+      setApply(res.data.body)
       careerFetchFilter(res.data.body.careerList)
-      expFetchFilter(res.data.body.expList)
+      expFetchFilter(res.data.body.careerList)
+      skillFetchFilter(res.data.body.skillList)
+      setPosition(res.data.body.position.name)
+      setContent(res.data.body.content)
       setAnswerList(res.data.body.answerList)
+      setMeetingSeq(res.data.body.postingMeeting.postingMeetingSeq)
     } catch (error) {
       console.log(error)
     }
@@ -123,7 +206,7 @@ function ApplyModify() {
     const careerArr = []
     list.map((item, index) =>
       careerArr.push({
-        seq: index,
+        seq: item.applyCareerSeq,
         content: item.content,
       })
     )
@@ -135,7 +218,7 @@ function ApplyModify() {
     const expArr = []
     list.map((item, index) =>
       expArr.push({
-        seq: index,
+        seq: item.applyExpSeq,
         content: item.content,
       })
     )
@@ -145,20 +228,55 @@ function ApplyModify() {
 
   const meetingFetchFilter = (list) => {
     const meetingDtArr = []
-    list.map((item, index) => meetingDtArr.push(item.meetingDt))
+    list.forEach((item) => {
+      if (item.postingMeetingCode === 'PM102') {
+        meetingDtArr.push({
+          postingMeetingSeq: item.postingMeetingSeq,
+          meetingDt: item.meetingDt,
+          applyAnswerSeq: item.applyAnswerSeq,
+        })
+      }
+    })
+
     setMeetingList(meetingDtArr)
   }
 
-  const CareerPostFilter = (list) => {
+  const skillFetchFilter = (list) => {
+    const skillArr = []
+    list.forEach((item) => {
+      skillArr.push(item.name)
+    })
+
+    setSkillList(skillArr)
+  }
+
+  const careerPostFilter = (list) => {
     const careerArr = []
     list.map((item) => careerArr.push(item.content))
     return careerArr
   }
 
-  const ExpPostFilter = (list) => {
+  const expPostFilter = (list) => {
     const expArr = []
     list.map((item) => expArr.push(item.content))
     return expArr
+  }
+
+  const skillPostFilter = (list) => {
+    const skillArr = []
+    list.map((item) => skillArr.push(Skill.getSkillCode(item)))
+    return skillArr
+  }
+
+  const answerPostFilter = (list) => {
+    const answerArr = []
+    list.map((item) =>
+      answerArr.push({
+        applyAnswerSeq: item.applyAnswerSeq,
+        content: item.content,
+      })
+    )
+    return answerArr
   }
 
   // start >> handle position
@@ -171,9 +289,10 @@ function ApplyModify() {
   // start >> handle skill
 
   const handleSkillInput = (value) => {
-    const skillArr = [...skillList]
-    skillArr.push(value)
-    setSkillList(skillArr)
+    const skillArr = [...skillList, value]
+    const set = new Set(skillArr)
+    const uniqueArr = Array.from(set)
+    setSkillList(uniqueArr)
   }
 
   const handleSkillRemove = (id) => {
@@ -284,7 +403,7 @@ function ApplyModify() {
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
-    setMeeting(meetingList[key])
+    setMeetingSeq(key)
   }
 
   const handleApplySubmit = async () => {
@@ -292,21 +411,18 @@ function ApplyModify() {
     const postingSeq = 458
     try {
       const req = {
-        applyAnswerList: answerList,
-        applyCareerList: CareerPostFilter(careerList),
-        applyExpList: ExpPostFilter(expList),
-        applySkillList: skillList,
+        applyAnswerList: answerPostFilter(answerList),
+        applyCareerList: careerPostFilter(careerList),
+        applyExpList: expPostFilter(expList),
+        applySkillList: skillPostFilter(skillList),
         content,
-        fieldCode: posting.fieldCode,
-        meetingDt: meeting,
+        postingMeetingSeq: meetingSeq,
         positionCode: getPositionCode(position),
-        postingSeq,
         userSeq,
       }
       console.log(req)
-      const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('.', req, config)
+        .put(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
         .then((res) => {
           console.log(res)
         })
@@ -314,7 +430,7 @@ function ApplyModify() {
           console.log(err)
         })
 
-      console.log('지원서 post')
+      console.log('지원서 put')
     } catch (error) {
       console.log(error)
     }
@@ -327,8 +443,8 @@ function ApplyModify() {
   }, [])
 
   return (
-    <Container>
-      <div style={width}>
+    <div className="apply-register-container">
+      <div className="apply-register-width-section">
         <div>
           <Title>{user.nickname} 님의지원서</Title>
         </div>
@@ -372,7 +488,7 @@ function ApplyModify() {
                 disablePortal
                 id="combo-box-demo"
                 sx={{ width: 300 }}
-                options={Skilldata}
+                options={Skill.Skilldata}
                 getOptionLabel={(option) => option.name}
                 filterOptions={skillSearchFilter}
                 renderInput={(params) => (
@@ -394,7 +510,7 @@ function ApplyModify() {
                 open={open}
                 meetingList={meetingList}
                 onChange={handleMeetingDtChange}
-                meeting={meeting}
+                meetingSeq={meetingSeq}
               ></MeetingDtSelect>
             </div>
           </div>
@@ -432,6 +548,7 @@ function ApplyModify() {
                 fullWidth={true}
                 multiline={true}
                 minRows="5"
+                defaultValue={content || ''}
                 onChange={handleContentChange}
               />
             </div>
@@ -441,7 +558,7 @@ function ApplyModify() {
               <Label className="label">지원자에게 궁금한 점</Label>
             </div>
             <div className="answer-section">
-              <QnAList questionList={questionList} onChange={handleQnAChange}></QnAList>
+              <QnAList questionList={questionList} answerList={answerList} onChange={handleQnAChange}></QnAList>
             </div>
           </div>
         </div>
@@ -451,8 +568,8 @@ function ApplyModify() {
           </button>
         </div>
       </div>
-    </Container>
+    </div>
   )
 }
 
-export default ApplyModify
+export default ApplyRegister

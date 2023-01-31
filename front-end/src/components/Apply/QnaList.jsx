@@ -1,12 +1,18 @@
 import React from 'react'
 import Qna from './Qna'
 
-function QnaList({ questionList, onChange }) {
+function QnaList({ questionList, answerList, onChange }) {
   return (
     <div>
       {questionList &&
-        questionList.map((item, index) => (
-          <Qna question={item} id={item.postingQuestionSeq} key={index} onChange={onChange}></Qna>
+        questionList.map((item) => (
+          <Qna
+            question={item}
+            answerList={answerList}
+            id={item.postingQuestionSeq}
+            key={item.postingQuestionSeq}
+            onChange={onChange}
+          ></Qna>
         ))}
     </div>
   )
