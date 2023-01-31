@@ -36,7 +36,7 @@ function App() {
           <Route path="/posting/:id" element={<Application />} />
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
-          <Route path="/applydetail/:applySeq" element={<ApplyDetail />} />
+          <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="/teamselect" element={<TeamSelect />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />

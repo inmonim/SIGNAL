@@ -134,14 +134,7 @@ function TeamSelect() {
                             <MemoModal applySeq={apply.applySeq}></MemoModal>
                           </TableCell>
                           <TableCell align="center">
-                            <Link
-                              to={{
-                                pathname: '/applydetail',
-                                state: {
-                                  applySeq: apply.applySeq,
-                                },
-                              }}
-                            >
+                            <Link to={'/applydetail'} state={{ applySeq: apply.applySeq, userSeq: apply.userSeq }}>
                               <ImageButton>
                                 <img src={detailButton} alt="memoButton" style={Image} />
                               </ImageButton>
