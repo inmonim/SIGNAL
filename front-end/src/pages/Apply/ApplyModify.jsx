@@ -6,41 +6,23 @@ import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import styled from 'styled-components'
 import Skill from '../../data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
 import { useLocation } from 'react-router-dom'
-
-const Title = styled.h1`
-  font-size: 2.5em;
-  font-weight: bold;
-  padding-bottom: 40px;
-  border-bottom: 5px solid #796fb2;
-`
-
-const Label = styled.h1`
-  font-size: 20px;
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-`
+import SignalBtn from 'components/common/SignalBtn'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
   position: 'static',
+  width: '300px',
 }
 
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
-}
-
-const positionSelectStyle = {
-  backgroundColor: '#f3f5f7',
-  width: '11.5em',
-  position: 'static',
+  margin: '10px 0px',
 }
 
 function ApplyRegister() {
@@ -98,89 +80,7 @@ function ApplyRegister() {
 
   const applyFetch = async () => {
     try {
-      // const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      const res = {
-        data: {
-          header: {
-            code: '200',
-            message: '성공',
-          },
-          body: {
-            userSeq: 2,
-            postingSeq: 458,
-            content: '저는 프로젝트 팀 구하는 게 힘들었던 경험이 있어 이 프로젝트에 지원합니다.',
-            position: {
-              code: 'PO100',
-              name: 'frontend',
-              groupCode: 'PO',
-              groupName: '포지션 구분',
-            },
-            answerList: [
-              {
-                applyAnswerSeq: 4,
-                applySeq: 22,
-                postingSeq: 458,
-                postingQuestionSeq: 81,
-                content: '답변 테스트1',
-                regDt: [2023, 1, 31, 14, 39, 44],
-              },
-            ],
-            careerList: [
-              {
-                applyCareerSeq: 16,
-                applySeq: 22,
-                content: '경력1',
-              },
-              {
-                applyCareerSeq: 17,
-                applySeq: 22,
-                content: '경력2',
-              },
-            ],
-            expList: [
-              {
-                applyExpSeq: 13,
-                applySeq: 22,
-                content: '경험1',
-              },
-              {
-                applyExpSeq: 14,
-                applySeq: 22,
-                content: '경험2',
-              },
-            ],
-            skillList: [
-              {
-                code: 'AI100',
-                name: 'keras',
-                groupCode: 'AI',
-                groupName: '인공지능 기술스택 구분',
-              },
-              {
-                code: 'AI101',
-                name: 'matplotlib',
-                groupCode: 'AI',
-                groupName: '인공지능 기술스택 구분',
-              },
-            ],
-            postingMeeting: {
-              postingMeetingSeq: 314,
-              postingSeq: 458,
-              applySeq: 22,
-              fromUserSeq: 1,
-              toUserSeq: 2,
-              meetingDt: '2023-01-29 16:33:58.000',
-              postingMeetingCode: 'PM100',
-              code: {
-                code: 'PM100',
-                name: '미팅전',
-                groupCode: 'PM',
-                groupName: '사전미팅 상태구분',
-              },
-            },
-          },
-        },
-      }
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
 
       console.log(applySeq)
       console.log(apply)
@@ -443,47 +343,73 @@ function ApplyRegister() {
   }, [])
 
   return (
-    <div className="apply-register-container">
-      <div className="apply-register-width-section">
+    <div className="apply-modify--container">
+      <div className="apply-modify--width-section">
         <div>
-          <Title>{user.nickname} 님의지원서</Title>
+          <div className="apply-modify-title">{user.nickname} 님의지원서</div>
         </div>
-        <div>
-          <div className="user-detail-section">
-            <div className="phone-section">
-              <Label>전화번호 </Label>
-              <TextField disabled value={user.phone || ''} sx={inputStyle} />
+        <hr className="apply-modify-hr" />
+        <div className="apply-modify-application-section">
+          <div className="apply-modify-user-detail-section">
+            <div className="apply-modify-phone-section">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div>전화번호 </div>
+                <TextField disabled value={user.phone || ''} sx={inputStyle} />
+              </div>
             </div>
-            <div className="email-section">
-              <Label>이메일</Label>
-              <TextField disabled value={user.email || ''} sx={inputStyle} />
-            </div>
-          </div>
-          <div className="position-section">
-            <div>
-              <Label className="label">원하는 포지션</Label>
-              <FormControl style={positionSelectStyle}>
-                <InputLabel id="demo-simple-select-label" sx={{ inputStyle, width: '11.5em' }}></InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={position || ''}
-                  onChange={handlePositionChange}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                >
-                  {posting.postingPositionList &&
-                    posting.postingPositionList.map((item, index) => (
-                      <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
-                        {getPositionName(item.positionCode)}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
+            <div className="apply-modify-email-section">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="apply-modify-label">이메일</div>
+                <TextField disabled value={user.email || ''} sx={inputStyle} />
+              </div>
             </div>
           </div>
-          <div className="skill-meeting-section">
-            <div className="skill-section">
-              <Label className="label">사용기술</Label>
+          <div className="apply-modify-position-meeting-section">
+            <div className="apply-modify-position-section">
+              <div style={{ display: 'flex' }}>
+                <div className="apply-modify-label" style={{ display: 'flex', alignItems: 'center' }}>
+                  포지션
+                </div>
+                <FormControl style={inputStyle}>
+                  <InputLabel id="demo-simple-select-label" sx={inputStyle}></InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={position || ''}
+                    onChange={handlePositionChange}
+                    inputProps={{ 'aria-label': 'Without label' }}
+                  >
+                    {posting.postingPositionList &&
+                      posting.postingPositionList.map((item, index) => (
+                        <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
+                          {getPositionName(item.positionCode)}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div className="apply-modify-meeting-section">
+              <div style={{ display: 'flex' }}>
+                <div className="apply-modify-label" style={{ display: 'flex', alignItems: 'center' }}>
+                  화상미팅 예약
+                </div>
+                <div>
+                  <MeetingDtSelect
+                    open={open}
+                    meetingList={meetingList}
+                    onChange={handleMeetingDtChange}
+                    meetingSeq={meetingSeq}
+                  ></MeetingDtSelect>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="apply-modify-skill-section">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
+                <span className="apply-modify-label">사용기술</span>
+              </div>
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
@@ -499,73 +425,84 @@ function ApplyRegister() {
                         handleSkillInput(e.target.value)
                       }
                     }}
+                    sx={inputStyle}
                   />
                 )}
               />
-              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
-            </div>
-            <div className="meeting-section">
-              <Label className="label">화상미팅 예약</Label>
-              <MeetingDtSelect
-                open={open}
-                meetingList={meetingList}
-                onChange={handleMeetingDtChange}
-                meetingSeq={meetingSeq}
-              ></MeetingDtSelect>
             </div>
           </div>
-          <div className="career-exp-section">
-            <div className="career-section">
-              <div>
-                <div className="career-label">
-                  <Label>경력</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
+          <div style={{ display: 'inline-block', marginRight: '7px' }}>
+            <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
+          </div>
+          <div className="apply-modify-career-exp-section">
+            <div style={{ width: '50%' }}>
+              <div className="apply-modify-career-section">
+                <div className="apply-modify-career-label">
+                  <div style={{ padding: '0px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>경력</div>
+                      <img
+                        src={plusButton}
+                        alt="plusButton"
+                        className="apply-modify-plus-button"
+                        onClick={handleCareerAdd}
+                      />
+                    </div>
+                  </div>
+                  <hr></hr>
                 </div>
-                <hr></hr>
+                <CareerList
+                  careerList={careerList}
+                  onRemove={handleCareerRemove}
+                  onChange={handleCareerChange}
+                ></CareerList>
               </div>
-              <CareerList
-                careerList={careerList}
-                onRemove={handleCareerRemove}
-                onChange={handleCareerChange}
-              ></CareerList>
             </div>
-            <div className="exp-section">
-              <div>
-                <div className="exp-label">
-                  <Label>경험</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleExpAdd} />
+            <div style={{ width: '50%' }}>
+              <div className="apply-modify-exp-section">
+                <div className="apply-modify-exp-label">
+                  <div style={{ padding: '0px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>경험</div>
+                      <img
+                        src={plusButton}
+                        alt="plusButton"
+                        className="apply-modify-plus-button"
+                        onClick={handleExpAdd}
+                      />
+                    </div>
+                  </div>
+                  <hr></hr>
                 </div>
-                <hr></hr>
+                <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
               </div>
-              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
             </div>
           </div>
-          <div className="content-section">
-            <Label className="label">하고싶은 말</Label>
-            <div>
-              <TextField
-                style={textAreaStyle}
-                fullWidth={true}
-                multiline={true}
-                minRows="5"
-                defaultValue={content || ''}
-                onChange={handleContentChange}
-              />
-            </div>
+          <div className="apply-modify-content-section">
+            <div className="apply-modify-label">하고싶은 말</div>
+
+            <TextField
+              style={textAreaStyle}
+              fullWidth={true}
+              multiline={true}
+              minRows="5"
+              defaultValue={content || ''}
+              onChange={handleContentChange}
+            />
           </div>
-          <div className="question-answer-section">
-            <div className="question-section">
-              <Label className="label">지원자에게 궁금한 점</Label>
+          <div className="apply-modify-question-answer-section">
+            <div className="apply-modify-question-section">
+              <div className="apply-modify-label">지원자에게 궁금한 점</div>
             </div>
-            <div className="answer-section">
+            <div style={{ margin: '10px 0px' }}>
               <QnAList questionList={questionList} answerList={answerList} onChange={handleQnAChange}></QnAList>
             </div>
           </div>
         </div>
-        <div className="submit-button">
-          <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
-          </button>
+        <div className="apply-modify-submit-button">
+          <SignalBtn onClick={handleApplySubmit} style={{ width: '50%' }}>
+            수정하기
+          </SignalBtn>
         </div>
       </div>
     </div>
