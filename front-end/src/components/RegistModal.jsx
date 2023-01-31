@@ -207,6 +207,7 @@ function RegistModal({ open, onClose }) {
                 }}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
               />
+              {console.log(value)}
             </LocalizationProvider>
           </div>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
