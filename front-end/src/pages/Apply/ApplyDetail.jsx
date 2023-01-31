@@ -6,7 +6,7 @@ import axios from 'axios'
 
 import { getPositionName } from 'data/Positiondata'
 
-import ApplyDelete from './ApplyDelete'
+import ApplyDelete from '../../components/Apply/ApplyDelete'
 import skillImage from '../../assets/image/Skilltest/React.png'
 // import { useLocation } from 'react-router'
 
@@ -69,10 +69,15 @@ function ApplyDetail() {
     <div className="apply-detail-container">
       <div className="apply-detail-width-section">
         <div className="apply-detail-project-name-section">
-          <div className="apply-detail-project-name-label">프로젝트 이름</div>
-          <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
-          <hr />
+          <div>
+            <div className="apply-detail-project-name-label">프로젝트 이름</div>
+            <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
+          </div>
+          <div className="apply-detail-submit-section">
+            <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
+          </div>
         </div>
+        <hr className="apply-detail-hr" />
         <div className="apply-detail-application-section">
           <div className="apply-detail-name-position-section">
             <div className="apply-detail-name-section">
@@ -100,49 +105,65 @@ function ApplyDetail() {
               <div className="apply-detail-text-value">{user.email}</div>
             </div>
           </div>
-          <div className="skill-section">
-            <div style={{ display: 'flex' }}>
-              <div className="apply-detail-label">사용기술</div>
-              <div className="apply-detail-skillList-section">
-                {apply.skillList &&
-                  apply.skillList.map((skill, index) => (
-                    <div key={index}>
-                      <div className="apply-detail-skill">
+          <div className="apply-detail-skill-section" style={{ display: 'flex' }}>
+            <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
+              <span className="apply-detail-label">사용기술</span>
+            </div>
+            <div className="apply-detail-skillList-section">
+              {apply.skillList &&
+                apply.skillList.map((skill, index) => (
+                  <div key={index} style={{ display: 'inline-block', marginRight: '7px' }}>
+                    <div className="apply-detail-skill" key={index}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
                         <img src={skillImage} alt="skillImage" className="apply-detail-skill-image" />
                         <span>{skill.name}</span>
                       </div>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
           </div>
           <div className="apply-detail-career-exp-section">
-            <div className="apply-detail-career-section">
-              <div className="apply-detail-career-label">
-                <div className="apply-detail-label">경력</div>
-                <hr />
-              </div>
-              <div>
-                {apply.careerList &&
-                  apply.careerList.map((career, index) => (
-                    <div className="apply-detail-career" key={index}>
-                      {career}
-                    </div>
-                  ))}
+            <div style={{ width: '50%' }}>
+              <div className="apply-detail-career-section">
+                <div className="apply-detail-career-label">
+                  <div className="apply-detail-career-label">경력</div>
+                  <hr className="apply-detail-hr-small" />
+                </div>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: '90%' }}>
+                    {apply.careerList &&
+                      apply.careerList.map((career, index) => (
+                        <div className="apply-detail-career" key={index}>
+                          {career}
+                        </div>
+                      ))}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="apply-detail-exp-section">
-              <div className="apply-detail-exp-label">
-                <div className="apply-detail-label">경험</div>
-                <hr />
-              </div>
-              <div>
-                {apply.expList &&
-                  apply.expList.map((exp, index) => (
-                    <div className="apply-detail-exp" key={index}>
-                      {exp}
-                    </div>
-                  ))}
+            <div style={{ width: '50%' }}>
+              <div className="apply-detail-exp-section">
+                <div className="apply-detail-exp-label">
+                  <div className="apply-detail-exp-label">경험</div>
+                  <hr className="apply-detail-hr-small" />
+                </div>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ width: '90%' }}>
+                    {apply.expList &&
+                      apply.expList.map((exp, index) => (
+                        <div className="apply-detail-exp" key={index}>
+                          {exp}
+                        </div>
+                      ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -152,19 +173,16 @@ function ApplyDetail() {
           </div>
           <div className="apply-detail-question-answer-section">
             <div className="apply-detail-label">공고 작성자가 궁금한 점</div>
-            <div>
+            <div style={{ margin: '10px 0px' }}>
               {posting.postingQuestionList &&
                 posting.postingQuestionList.map((question, index) => (
-                  <div key={index}>
-                    <div>{question.content}</div>
-                    <div>{apply.answerList[index].content}</div>
+                  <div key={index} style={{ margin: '10px 0px' }}>
+                    <div className="apply-question-content">{question.content}</div>
+                    <div className="apply-answer-content">{apply.answerList[index].content}</div>
                   </div>
                 ))}
             </div>
           </div>
-        </div>
-        <div className="apply-detail-submit-section">
-          <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
         </div>
       </div>
     </div>
