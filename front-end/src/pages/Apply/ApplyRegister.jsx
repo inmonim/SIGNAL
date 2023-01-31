@@ -109,6 +109,7 @@ function ApplyRegister() {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
       careerFetchFilter(res.data.body.userCareerList)
       expFetchFilter(res.data.body.userExpList)
+      console.log(res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -300,6 +301,7 @@ function ApplyRegister() {
   const handleApplySubmit = async () => {
     const userSeq = 1
     const postingSeq = 458
+    console.log(CareerPostFilter(careerList))
     try {
       const req = {
         applyAnswerList: answerList,

@@ -151,16 +151,39 @@ hr {
 }
 
 .apply-detail-container {
-  width: 100%;
+  width: 1000px;
   font-size: 20px;
+  margin: auto;
+  margin-top: 50px;
 }
 
 .apply-detail-width-section {
   min-width: 800px;
 }
 
-.apply-detail-project-name-section {
+.apply-detail-project-name-section,
+.apply-detail-label {
   color: #574b9f;
+}
+
+.apply-detail-name-section,
+.apply-detail-position-section,
+.apply-detail-phone-section,
+.apply-detail-email-section,
+.skill-section {
+  width: 50%;
+}
+
+.apply-detail-name-position-section {
+  display: flex;
+}
+
+.apply-detail-label {
+  width: 25%;
+}
+
+.apply-detail-skill {
+  margin: auto;
 }
 
 .apply-detail-project-name-label {

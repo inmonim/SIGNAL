@@ -76,32 +76,44 @@ function ApplyDetail() {
         <div className="apply-detail-application-section">
           <div className="apply-detail-name-position-section">
             <div className="apply-detail-name-section">
-              <div className="apply-detail-name-label">이름</div>
-              <div>{user.nickname}</div>
+              <div style={{ display: 'flex' }}>
+                <div className="apply-detail-label">이름</div>
+                <div className="apply-detail-text-value">{user.nickname}</div>
+              </div>
             </div>
             <div className="apply-detail-position-section">
-              <div className="apply-detail-label">포지션</div>
-              <div>{position}</div>
+              <div style={{ display: 'flex' }}>
+                <div className="apply-detail-label">포지션</div>
+                <div className="apply-detail-text-value">{position}</div>
+              </div>
             </div>
           </div>
           <div className="apply-detail-phone-section">
-            <div className="label">전화번호</div>
-            <div>{user.phone}</div>
+            <div style={{ display: 'flex' }}>
+              <div className="apply-detail-label">전화번호</div>
+              <div className="apply-detail-text-value">{user.phone}</div>
+            </div>
           </div>
           <div className="apply-detail-email-section">
-            <div className="apply-detail-label">이메일</div>
-            <div>{user.email}</div>
+            <div style={{ display: 'flex' }}>
+              <div className="apply-detail-label">이메일</div>
+              <div className="apply-detail-text-value">{user.email}</div>
+            </div>
           </div>
-          <div className="apply-detail-skill-section">
-            <div className="apply-detail-label">사용기술</div>
-            <div className="apply-detail-skillList-section">
-              {apply.skillList &&
-                apply.skillList.map((skill, index) => (
-                  <div className="apply-detail-skill" key={index}>
-                    <img src={skillImage} alt="skillImage" className="apply-detail-skill-image" />
-                    <span>{skill.name}</span>
-                  </div>
-                ))}
+          <div className="skill-section">
+            <div style={{ display: 'flex' }}>
+              <div className="apply-detail-label">사용기술</div>
+              <div className="apply-detail-skillList-section">
+                {apply.skillList &&
+                  apply.skillList.map((skill, index) => (
+                    <div key={index}>
+                      <div className="apply-detail-skill">
+                        <img src={skillImage} alt="skillImage" className="apply-detail-skill-image" />
+                        <span>{skill.name}</span>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
           <div className="apply-detail-career-exp-section">
