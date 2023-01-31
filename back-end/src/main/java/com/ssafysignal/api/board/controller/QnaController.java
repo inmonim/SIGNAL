@@ -49,6 +49,7 @@ public class QnaController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
+
     }
 
     @Tag(name = "QnA")
