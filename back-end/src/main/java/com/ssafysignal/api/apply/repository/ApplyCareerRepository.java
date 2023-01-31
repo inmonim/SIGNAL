@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ApplyCareerRepository extends JpaRepository<ApplyCareer, Integer>{
     Optional<List<ApplyCareer>> findApplyCareersByApplySeq(Integer applySeq);
+
+    List<ApplyCareer> findAllByApplySeq(Integer applySeq);
 }

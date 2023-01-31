@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ApplyExpRepository extends JpaRepository<ApplyExp, Integer>{
     Optional<List<ApplyExp>> findApplyExpsByApplySeq(Integer integer);
+
+    List<ApplyExp> findAllByApplySeq(Integer applySeq);
 }

@@ -1,9 +1,11 @@
 package com.ssafysignal.api.apply.service;
 
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.common.repository.CommonCodeRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
@@ -27,10 +29,10 @@ public class ApplyService {
     private final ApplySkillRepository applySkillRepository;
     private final ApplyAnswerRepository applyAnswerRepository;
     private final PostingMeetingRepository postingMeetingRepository;
+    private final CommonCodeRepository commonCodeRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
-        //System.out.println("applyRegistRequest"+applyRegistRequest);
 
         // 지원서 등록
         Apply apply = Apply.builder()
@@ -84,7 +86,7 @@ public class ApplyService {
 
         //미팅시간 설정
         PostingMeeting postingMeeting= postingMeetingRepository.findById(applyRegistRequest.getPostingMeetingSeq()).get();
-        System.out.println(postingMeeting);
+
         if(!postingMeeting.getCode().getCode().equals("PM102")){ //이미 선택된 시간
             System.out.println("이미 선택된 사전미팅시간");
             throw new DuplicateKeyException("이미 선택된 사전미팅시간");
@@ -92,16 +94,46 @@ public class ApplyService {
         postingMeeting.setToUserSeq(applyRegistRequest.getUserSeq());
         postingMeeting.setApplySeq(apply.getApplySeq());
         postingMeeting.setPostingMeetingCode("PM100");
-        System.out.println("수정후"+postingMeeting);
+
         postingMeetingRepository.save(postingMeeting);
 
 
     }
 
     @Transactional(readOnly = true)
-    public Apply findApply(Integer applySeq) {
-        return applyRepository.findById(applySeq)
+    public ApplyFindResponse findApply(Integer applySeq) {
+        Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        //포지션
+        String positionCode = apply.getPositionCode();
+        CommonCode code = commonCodeRepository.findById(positionCode).get();
+
+        //기술스택
+        List<ApplySkill> skillList = applySkillRepository.findAllByApplySeq(applySeq);
+        List<CommonCode> skillCommonCodeList = new ArrayList<>();
+        for(ApplySkill as : skillList){
+            String skillCode = as.getSkillCode();
+            CommonCode skillCommonCode = commonCodeRepository.findById(skillCode).get();
+            skillCommonCodeList.add(skillCommonCode);
+        }
+
+        //사전미팅
+        PostingMeeting postingMeeting = postingMeetingRepository.findByApplySeqAndToUserSeq(applySeq, apply.getUserSeq());
+
+        ApplyFindResponse res = ApplyFindResponse.builder()
+                .userSeq(apply.getUserSeq())
+                .postingSeq(apply.getPostingSeq())
+                .content(apply.getContent())
+                .position(code)
+                .answerList(apply.getApplyAnswerList())
+                .careerList(apply.getApplyCareerList())
+                .expList(apply.getApplyExpList())
+                .skillList(skillCommonCodeList)
+                .postingMeeting(postingMeeting)
+                .build();
+        
+        return res;
     }
 
 //    @Transactional(readOnly = true)
@@ -121,8 +153,7 @@ public class ApplyService {
 
         apply.setContent(applyModifyRequest.getContent());
         apply.setPositionCode(applyModifyRequest.getPositionCode());
-        apply.setPostingMeetingSeq(applyModifyRequest.getPostingMeetingSeq());
-
+        
         // 기술 스택
         List<ApplySkill> applySkillList = apply.getApplySkillList();
         applySkillList.clear();
@@ -158,17 +189,43 @@ public class ApplyService {
             );
         }
         apply.setApplyCareerList(applyCareerList);
-
-        applyRepository.save(apply);
-
+        
+        
         //답변
         for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
-            int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
+            int applyAnswerSeq = Integer.parseInt((String)answerRequest.get("applyAnswerSeq"));
             String content = (String)answerRequest.get("content");
+            ApplyAnswer answer = applyAnswerRepository.findById(applyAnswerSeq).get();
+            answer.setContent(content);
+            applyAnswerRepository.save(answer);
         }
+		
 
+        //미팅시간
+        int newPostingMeetingSeq = applyModifyRequest.getPostingMeetingSeq();
+        int curPostingMeetingSeq = apply.getPostingMeetingSeq();
+        System.out.println(curPostingMeetingSeq+", "+newPostingMeetingSeq);
+        if(newPostingMeetingSeq != curPostingMeetingSeq) {	
+        	PostingMeeting newPostingmeeting = postingMeetingRepository.findById(newPostingMeetingSeq).get();
+        	if(!newPostingmeeting.getPostingMeetingCode().equals("PM102")) 
+        		throw new DuplicateKeyException("이미 선택된 사전미팅시간");
+        	apply.setPostingMeetingSeq(newPostingMeetingSeq);
+        	
+        	PostingMeeting curPostingMeeting = postingMeetingRepository.findById(curPostingMeetingSeq).get();
+        	if(curPostingMeeting.getPostingMeetingCode().equals("PM101"))
+        		throw new DuplicateKeyException("이미 사전미팅 했음");
+        	curPostingMeeting.setApplySeq(null);
+        	curPostingMeeting.setToUserSeq(null);
+        	curPostingMeeting.setPostingMeetingCode("PM102");
+        	postingMeetingRepository.save(curPostingMeeting);
+        	
+        	newPostingmeeting.setApplySeq(applySeq);
+        	newPostingmeeting.setToUser(applyModifyRequest.getUserSeq());
+        	newPostingmeeting.setPostingMeetingCode("PM100");
+        	postingMeetingRepository.save(newPostingmeeting);
+        }
+        applyRepository.save(apply);
 
-        //미팅시간 설정
 
     }
 
@@ -176,7 +233,17 @@ public class ApplyService {
     public void cancleApply(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-
+        
+        //미팅 시간 비워주기
+        int postingMeetingSeq = apply.getPostingMeetingSeq();
+        PostingMeeting postingMeeting= postingMeetingRepository.findById(postingMeetingSeq).get();
+        if(!postingMeeting.getPostingMeetingCode().equals("PM101")) {
+        	postingMeeting.setApplySeq(null);
+        	postingMeeting.setToUserSeq(null);
+        	postingMeeting.setPostingMeetingCode("PM102");
+        	postingMeetingRepository.save(postingMeeting);
+        }
+        
         apply.setApplyCode("PAS104");
         applyRepository.save(apply);
     }
