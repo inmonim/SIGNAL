@@ -36,7 +36,7 @@ function App() {
           <Route path="/posting/:id" element={<Application />} />
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
-          <Route path="/applydetail/:applySeq" element={<ApplyDetail />} />
+          <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="/teamselect" element={<TeamSelect />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
