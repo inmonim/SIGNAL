@@ -29,9 +29,10 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/auth/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().hasRole("USER")
+//                .antMatchers("/", "/auth/**").permitAll()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .anyRequest().hasRole("USER")
+                .anyRequest().permitAll()
 
                 .and()
                 .exceptionHandling()
