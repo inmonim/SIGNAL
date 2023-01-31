@@ -1,6 +1,5 @@
 package com.ssafysignal.api.global.config;
 
-import com.ssafysignal.api.global.redis.CacheKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -25,7 +24,7 @@ public class CacheConfig {
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory){
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()
-                .entryTtl(Duration.ofSeconds(CacheKey.DEFAULT_EXPIRE_SEC))
+                .entryTtl(Duration.ofSeconds(60))
                 .computePrefixWith(CacheKeyPrefix.simple())
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair

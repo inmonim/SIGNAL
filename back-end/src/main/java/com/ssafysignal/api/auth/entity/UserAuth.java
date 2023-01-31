@@ -27,11 +27,11 @@ public class UserAuth implements GrantedAuthority {
     @JoinColumn(name = "user_seq")
     private User user;
 
-    @Column(name = "roles")
-    private String roles;
+    @Column(name = "role")
+    private String role;
 
     @Override
     public String getAuthority() {
-        return roles;
+        return role;
     }
 }
