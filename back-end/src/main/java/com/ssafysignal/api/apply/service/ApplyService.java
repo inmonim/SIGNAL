@@ -3,9 +3,13 @@ package com.ssafysignal.api.apply.service;
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.posting.entity.PostingMeeting;
+import com.ssafysignal.api.posting.repository.PostingMeetingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +25,12 @@ public class ApplyService {
     private final ApplyCareerRepository applyCareerRepository;
     private final ApplyExpRepository applyExpRepository;
     private final ApplySkillRepository applySkillRepository;
+    private final ApplyAnswerRepository applyAnswerRepository;
+    private final PostingMeetingRepository postingMeetingRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
+        //System.out.println("applyRegistRequest"+applyRegistRequest);
 
         // 지원서 등록
         Apply apply = Apply.builder()
@@ -31,6 +38,7 @@ public class ApplyService {
                 .postingSeq(postingSeq)
                 .content(applyRegistRequest.getContent())
                 .positionCode(applyRegistRequest.getPositionCode())
+                .postingMeetingSeq(applyRegistRequest.getPostingMeetingSeq())
                 .build();
         applyRepository.save(apply);
 
@@ -60,6 +68,34 @@ public class ApplyService {
                     .build()
             );
         }
+
+        //답변
+        for(Map<String, Object> answerRequest : applyRegistRequest.getApplyAnswerList()){
+            int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
+            String content = (String)answerRequest.get("content");
+            ApplyAnswer applyAnswer = ApplyAnswer.builder()
+                    .applySeq(apply.getApplySeq())
+                    .postingSeq(postingSeq)
+                    .postingQuestionSeq(postingQuestionSeq)
+                    .content(content)
+                    .build();
+            applyAnswerRepository.save(applyAnswer);
+        }
+
+        //미팅시간 설정
+        PostingMeeting postingMeeting= postingMeetingRepository.findById(applyRegistRequest.getPostingMeetingSeq()).get();
+        System.out.println(postingMeeting);
+        if(!postingMeeting.getCode().getCode().equals("PM102")){ //이미 선택된 시간
+            System.out.println("이미 선택된 사전미팅시간");
+            throw new DuplicateKeyException("이미 선택된 사전미팅시간");
+        }
+        postingMeeting.setToUserSeq(applyRegistRequest.getUserSeq());
+        postingMeeting.setApplySeq(apply.getApplySeq());
+        postingMeeting.setPostingMeetingCode("PM100");
+        System.out.println("수정후"+postingMeeting);
+        postingMeetingRepository.save(postingMeeting);
+
+
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +113,7 @@ public class ApplyService {
 
 
     @Transactional
-    public void modifyApply(Integer applySeq, ApplyBasicRequest applyModifyRequest) throws RuntimeException {
+    public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
 
         // 지원서 수정
         Apply apply = applyRepository.findById(applySeq)
@@ -85,6 +121,7 @@ public class ApplyService {
 
         apply.setContent(applyModifyRequest.getContent());
         apply.setPositionCode(applyModifyRequest.getPositionCode());
+        apply.setPostingMeetingSeq(applyModifyRequest.getPostingMeetingSeq());
 
         // 기술 스택
         List<ApplySkill> applySkillList = apply.getApplySkillList();
@@ -123,6 +160,16 @@ public class ApplyService {
         apply.setApplyCareerList(applyCareerList);
 
         applyRepository.save(apply);
+
+        //답변
+        for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
+            int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
+            String content = (String)answerRequest.get("content");
+        }
+
+
+        //미팅시간 설정
+
     }
 
     @Transactional
