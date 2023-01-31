@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 
-public class FindUserRes {
+public class FindUserResponse {
     String nickname;
     String phone;
     String email;
     int heartCnt;
 
     @Builder
-    public FindUserRes(String nickname, String phone, String email, int heartCnt) {
+    public FindUserResponse(String nickname, String phone, String email, int heartCnt) {
         this.nickname = nickname;
         this.phone = phone;
         this.email = email;
