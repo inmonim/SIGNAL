@@ -68,8 +68,9 @@ function ApplyRegister() {
   const [answerList, setAnswerList] = useState([])
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
+  const [postingMeetingList, setPostingMeetingList] = useState([])
   const [meetingList, setMeetingList] = useState([])
-  const [meeting, setMeeting] = useState('')
+  const [meetingSeq, setMeetingSeq] = useState('')
   // ene >> useState
 
   // start >> Fetch
@@ -94,6 +95,7 @@ function ApplyRegister() {
         })
       )
       meetingFetchFilter(res.data.body.postingMeetingList)
+      setPostingMeetingList(res.data.body.postingMeetingList)
       setAnswerList(answerArr)
       console.log(res.data.body)
       setQuestionList(res.data.body.postingQuestionList)
@@ -142,8 +144,17 @@ function ApplyRegister() {
 
   const meetingFetchFilter = (list) => {
     const meetingDtArr = []
-    list.map((item, index) => meetingDtArr.push(item.meetingDt))
+    list.forEach((item) => {
+      if (item.postingMeetingCode === 'PM102') {
+        meetingDtArr.push({
+          postingMeetingSeq: item.postingMeetingSeq,
+          meetingDt: item.meetingDt,
+        })
+      }
+    })
+
     setMeetingList(meetingDtArr)
+    console.log('meetingDtArr', meetingDtArr)
   }
 
   const CareerPostFilter = (list) => {
@@ -281,8 +292,9 @@ function ApplyRegister() {
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
-    setMeeting(meetingList[key])
-    console.log(meetingList)
+    setMeetingSeq(key)
+
+    console.log(postingMeetingList[key].postingMeetingSeq)
   }
 
   const handleApplySubmit = async () => {
@@ -296,7 +308,7 @@ function ApplyRegister() {
         applySkillList: skillList,
         content,
         fieldCode: posting.fieldCode,
-        meetingDt: meeting,
+        postingMeetingSeq: postingMeetingList[meetingSeq].postingMeetingSeq,
         positionCode: getPositionCode(position),
         postingSeq,
         userSeq,
@@ -392,7 +404,7 @@ function ApplyRegister() {
                 open={open}
                 meetingList={meetingList}
                 onChange={handleMeetingDtChange}
-                meeting={meeting}
+                meetingSeq={meetingSeq}
               ></MeetingDtSelect>
             </div>
           </div>
