@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Paging from 'components/Paging'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/qna.css'
 
 function Qna() {
@@ -30,6 +31,7 @@ function Qna() {
       .then((res) => res.json())
       .then((res) => {
         setCount(res.body.count)
+        console.log(res.body.count)
       })
   }, [page])
 
@@ -43,10 +45,27 @@ function Qna() {
     })
   })
 
+  const navigate = useNavigate()
+
   return (
     <div className="qna-page-container">
       <div className="qna-container">
-        <div className="qna-header">Q & A</div>
+        <div className="qna-header">
+          <div className="qna-header-title">Q & A</div>
+          <div className="qna-header-regist">
+            <SignalBtn
+              sigwidth="84px"
+              sigheight="45px"
+              sigfontSize="24px"
+              sigBorderRadius={14}
+              sigMargin="12.5px auto"
+              variant="contained"
+              onClick={() => navigate(`/qnaRegist`)}
+            >
+              등록
+            </SignalBtn>
+          </div>
+        </div>
         <div className="qna-table">
           <TableContainer>
             <Table>
@@ -74,7 +93,7 @@ function Qna() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Paging page={page} count={count} setPage={handlePageChange} />
+          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
         </div>
       </div>
     </div>
