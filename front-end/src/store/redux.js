@@ -100,6 +100,45 @@ const posting = createSlice({
 
 export const { fetchPostingDetail } = posting.actions
 
+// 공고등록 포지션 선택
+let nextId = 0
+
+export const positionTodo = createSlice({
+  name: 'positionTodo',
+  initialState: [],
+  reducers: {
+    add: (state, action) => {
+      nextId++
+      state.push({
+        id: nextId,
+        text: action.payload,
+        count: 0,
+      })
+    },
+    remove: (state, action) => {
+      return state.filter((e) => e.id !== action.payload)
+    },
+    addCount(state, action) {
+      const idex = state.findIndex((ele) => {
+        return ele.id === action.payload
+      })
+
+      if (state[idex].count > 0) {
+        state[idex].count++
+      }
+    },
+    minusCount(state, action) {
+      const idex = state.findIndex((ele) => {
+        return ele.id === action.payload
+      })
+      if (state[idex].count > 0) {
+        state[idex].count--
+      }
+    },
+  },
+})
+export const { add, remove, addCount, minusCount } = positionTodo.actions
+
 const stock = createSlice({
   name: 'stock',
   initialState: [10, 11, 12],
@@ -121,5 +160,6 @@ export default configureStore({
     positionCode: positionCode.reducer,
     skillCode: skillCode.reducer,
     posting: posting.reducer,
+    positionTodo: positionTodo.reducer,
   },
 })

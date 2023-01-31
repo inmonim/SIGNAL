@@ -20,6 +20,7 @@ function QnaDetail() {
       .then((res) => res.json())
       .then((res) => {
         setData(res.body)
+        console.log(res.body)
       })
   }, [])
   const navigate = useNavigate()
@@ -30,7 +31,6 @@ function QnaDetail() {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.body)
         setAlertOpen(true)
       })
   }
@@ -38,6 +38,10 @@ function QnaDetail() {
   const handleAlert = (e) => {
     setAlertOpen(false)
     navigate(`/qna`)
+  }
+
+  const handleToModify = () => {
+    navigate(`/qnaModify`, { state: { qnaSeq: data.qnaSeq, title: data.title, content: data.content } })
   }
 
   return (
@@ -52,7 +56,7 @@ function QnaDetail() {
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
             <div className="qna-detail-header-right">
-              <EditIcon className="qna-detail-modify" onClick={() => navigate(`/qnaModify`)}></EditIcon>
+              <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
               <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
               <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
             </div>
@@ -68,19 +72,19 @@ function QnaDetail() {
           </div>
           <div className="qna-detail-content">{data.content}</div>
         </div>
-        {/* {!data.isAnswer ? ( */}
-        <div className="qna-detail-comment">
-          <div className="qna-detail-comment-left">A</div>
-          <div className="qna-detail-comment-right">
-            <div className="qna-detail-comment-sb">
-              <img src={commentimg} alt="" />
+        {data.answer !== null ? (
+          <div className="qna-detail-comment">
+            <div className="qna-detail-comment-left">A</div>
+            <div className="qna-detail-comment-right">
+              <div className="qna-detail-comment-sb">
+                <img src={commentimg} alt="" />
+              </div>
+              <div className="qna-detail-comment-answer">{data.answer}</div>
             </div>
-            <div className="qna-detail-comment-answer">{data.answer}</div>
           </div>
-        </div>
-        {/* ) : (
+        ) : (
           <div></div>
-        )} */}
+        )}
       </div>
     </div>
   )
