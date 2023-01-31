@@ -31,9 +31,9 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/posting/**").hasAnyAuthority("USER")
-                .antMatchers("/board/**").hasAnyAuthority("USER")
-                .antMatchers("/auth/login").permitAll()
+//                .antMatchers("/posting/**").hasAnyAuthority("USER")
+//                .antMatchers("/board/**").hasAnyAuthority("USER")
+//                .antMatchers("/auth/login").permitAll()
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll()
 

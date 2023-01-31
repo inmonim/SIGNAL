@@ -1,6 +1,7 @@
 package com.ssafysignal.api.auth.service;
 
 import com.ssafysignal.api.auth.dto.request.FindEmailRequest;
+import com.ssafysignal.api.auth.dto.response.LoginResponse;
 import com.ssafysignal.api.auth.entity.Auth;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.auth.repository.AuthRepository;
@@ -21,7 +22,6 @@ import com.ssafysignal.api.global.response.AuthResponseCode;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
-import jdk.nashorn.internal.parser.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,7 +52,7 @@ public class AuthService {
     @Value("${server.host}")
     private String host;
 
-    public TokenInfo login(String email, String password) throws RuntimeException {
+    public LoginResponse login(String email, String password) throws RuntimeException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
@@ -61,7 +61,13 @@ public class AuthService {
         String accessToken = jwtTokenUtil.generateAccessToken(user.getEmail());
         RefreshToken refreshToken = refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(user.getEmail(),
                 jwtTokenUtil.generateRefreshToken(user.getEmail()), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
-        return TokenInfo.of(accessToken, refreshToken.getRefreshToken());
+        return LoginResponse.builder()
+                .userSeq(user.getUserSeq())
+                .name(user.getName())
+                .email(user.getEmail())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getRefreshToken())
+                .build();
     }
 
     public TokenInfo reissue (String refreshToken) throws RuntimeException {

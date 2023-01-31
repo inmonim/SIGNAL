@@ -2,6 +2,7 @@ package com.ssafysignal.api.auth.controller;
 
 import com.ssafysignal.api.auth.dto.request.FindEmailRequest;
 import com.ssafysignal.api.auth.dto.request.UserLoginRequest;
+import com.ssafysignal.api.auth.dto.response.LoginResponse;
 import com.ssafysignal.api.auth.service.AuthService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.jwt.JwtTokenUtil;
@@ -37,8 +38,8 @@ import java.util.Map;
         try {
             String email = userLoginRequest.getEmail();
             String password = userLoginRequest.getPassword();
-            TokenInfo tokenInfo = authService.login(email, password);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenInfo));
+            LoginResponse loginResponse = authService.login(email, password);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         } catch (RuntimeException e) {
