@@ -1,41 +1,120 @@
 package com.ssafysignal.api.user.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafysignal.api.common.entity.ImageFile;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
+@ToString
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "user")
-public class User {
+public class User implements UserDetails {
     @Id
-    private int userSeq;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userSeq")
+    private Integer userSeq;
+    @Column(name = "name")
     private String name;
+    @Column(name = "email", unique = true)
     private String email;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "nickname")
     private String nickname;
-    private Date birth;
+    @Column(name = "birth")
+    private LocalDateTime birth;
+    @Column(name = "phone")
     private String phone;
-    private Date regDt;
+    @Column(name = "reg_dt")
+    private LocalDateTime regDt;
+    @Column(name = "heart_cnt")
     private int heartCnt;
-    private String userCode;
-
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_image_file_seq")
+    private ImageFile imageFile;
 
     @Builder
-    public User(final int userSeq, String name, String email, String nickname,
-                Date birth, String phone, Date regDt, int heartCnt, String userCode) {
+    public User(Integer userSeq, String name, String email, String password, String nickname, LocalDateTime birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.nickname = nickname;
         this.birth = birth;
         this.phone = phone;
         this.regDt = regDt;
         this.heartCnt = heartCnt;
-        this.userCode = userCode;
+        this.imageFile = imageFile;
+    }
+
+    public void modifyUser(String name, String nickname,String phone, LocalDateTime birth) {
+        this.name = name;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.birth = birth;
+    }
+
+    public void modifyPassword(String password){
+        this.password = password;
+    }
+
+
+
+
+
+
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

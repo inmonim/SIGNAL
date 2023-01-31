@@ -1,5 +1,6 @@
 package com.ssafysignal.api.global.config;
 
+import springfox.documentation.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -28,7 +29,9 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Signal Rest API Swagger Document")
                 .description("공통 프로젝트 '시그널' 개발 API")
-                .version("1.0")
+                .termsOfServiceUrl("https://edu.ssafy.com")
+                .contact(new Contact("SSAFY", "https://edu.ssafy.com", "ssafy@ssafy.com"))
+                .version("0.1")
                 .build();
     }
 }
