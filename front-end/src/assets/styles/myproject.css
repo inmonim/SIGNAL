@@ -8,13 +8,31 @@
 }
 
 .hr-sect::after {
-  content: "";
+  content: '';
   flex-grow: 1;
-  border: 1px solid #796FB2;
+  border: 1px solid #796fb2;
   font-size: 0px;
   line-height: 0px;
 }
 
-hr{
-  border: 1px solid #796FB2;
+hr {
+  border: 1px solid #796fb2;
+}
+
+.project-list-container {
+  display: flex;
+}
+
+.project-list-end {
+  border: 1px solid black;
+  display: flex;
+  width: 281px;
+  height: 223px;
+}
+
+.project-list-ing {
+  border: 1px solid black;
+  display: flex;
+  width: 281px;
+  height: 223px;
 }

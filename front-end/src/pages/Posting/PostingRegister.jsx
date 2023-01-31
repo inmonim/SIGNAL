@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { TextField } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
 import moment from 'moment/moment'
@@ -10,11 +10,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import Autocomplete from '@mui/material/Autocomplete'
+import PositionTodo from 'components/Posting/PositionTodo'
 // import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
 import Skilldata from 'data/Skilldata'
+import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
+import { useDispatch } from 'react-redux'
+import { add } from 'store/redux'
 
 const Container = styled.section`
   // padding: 100px 25em;
@@ -67,7 +71,9 @@ const contactList = [
 ]
 
 const PostingRegister = () => {
+  const dispatch = useDispatch()
   // start >> useState
+
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
@@ -150,7 +156,7 @@ const PostingRegister = () => {
   // end >> Data filter
 
   // start >> handle position
-
+  const [posi, setPosi] = useState()
   // end >> handle position
 
   // end >> skill filter
@@ -163,16 +169,6 @@ const PostingRegister = () => {
     setPosting({ ...posting, postingSkillList: copy })
   }
   // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
-  const handleCareerAdd = () => {
-    const careerArr = [...careerList]
-    const career = {
-      seq: careerArr[careerArr.length - 1].seq + 1,
-      content: '',
-    }
-    careerArr.push(career)
-    setCareerList(careerArr)
-    console.log(careerList)
-  }
 
   const handleCareerChange = (value, key) => {
     const careerArr = [...careerList]
@@ -380,18 +376,28 @@ const PostingRegister = () => {
                     <FilterSelect
                       onChange={(e) => {
                         // console.log(e.target.value)
-                        setPosting({ ...posting, term: e.target.value })
+                        setPosi(e.target.value)
+                        // dispatch(add(e.target.value))
+                        // setPosting({ ...posting, term: e.target.value })
                       }}
                     >
-                      {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
-                        <option key={i} value={ele}>
-                          {ele}주
+                      {positionData.map((ele, i) => (
+                        <option key={i} value={ele.name}>
+                          {ele.name}
                         </option>
                       ))}
                     </FilterSelect>
-                    <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
+                    <img
+                      src={plusButton}
+                      alt="plusButton"
+                      className="plus-button"
+                      onClick={() => {
+                        dispatch(add(posi))
+                      }}
+                    />
                   </div>
                   <hr></hr>
+                  <PositionTodo />
                 </div>
                 <CareerList
                   careerList={careerList}
@@ -401,6 +407,7 @@ const PostingRegister = () => {
                 ></CareerList>
               </div>
             </div>
+            <Box style={{ width: '5%' }}></Box>
             <div className="phone-section">
               <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>예상 난이도</Label>
               <FilterSelect
