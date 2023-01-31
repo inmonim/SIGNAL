@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
@@ -31,10 +32,6 @@ public class Auth {
     private boolean isAuth;
     @Column(name = "code")
     private String code;
-
-    public void setAuth(boolean isAuth) {
-        this.isAuth = isAuth;
-    }
 
     @Builder
     public Auth(Integer authSeq, Integer userSeq, String authCode, LocalDateTime authDt, LocalDateTime regDt, boolean isAuth, String code) {
