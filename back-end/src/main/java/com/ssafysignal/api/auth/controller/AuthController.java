@@ -1,23 +1,24 @@
 package com.ssafysignal.api.auth.controller;
 
 import com.ssafysignal.api.auth.dto.request.FindEmailRequest;
-import com.ssafysignal.api.auth.dto.response.CheckRes;
+import com.ssafysignal.api.auth.dto.request.UserLoginRequest;
+import com.ssafysignal.api.auth.dto.response.TokenDto;
 import com.ssafysignal.api.auth.service.AuthService;
 import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.jwt.JwtTokenProvider;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.response.FindUserRes;
-import com.ssafysignal.api.user.entity.User;
+import com.ssafysignal.api.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.message.AuthException;
 import java.util.Map;
 
 @Slf4j
@@ -31,25 +32,17 @@ public class AuthController {
     @Tag(name = "인증")
     @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true)@RequestBody Map<String,Object> info) {
+    private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true)@RequestBody UserLoginRequest userLoginRequest) {
         log.info("login - Call");
 
-        String email = (String)info.get("email");
-        String password = (String)info.get("password");
+        TokenDto tokenDto = authService.login(userLoginRequest.getEmail(), userLoginRequest.getPassword());
 
-        try {
-            authService.login(email,password);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
-        } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
-        }catch (AuthException e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, false));
-        }
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenDto));
     }
 
     @Tag(name = "인증")
     @Operation(summary = "로그아웃", description = "사용자 Seq를 이용해 로그아웃한다.")
-    @PostMapping("/auth/{userSeq}")
+    @PostMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> logout(@Parameter(description = "사용자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("logout - Call");
 

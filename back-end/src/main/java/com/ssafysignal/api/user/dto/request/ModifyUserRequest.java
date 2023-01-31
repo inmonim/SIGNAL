@@ -6,27 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-public class ModifyUserReq {
+public class ModifyUserRequest {
 	String name;
 	String nickname;
 	String phone;
-	int birthYear;
-	int birthMonth;
-	int birthDay;
+	LocalDateTime birth;
 	ProfileImageFile profileImageFile; 
 	
 	@Builder
-	public ModifyUserReq(String name, String nickname, String phone, int birthYear, int birthMonth, int birthDay,
-			ProfileImageFile profileImageFile) {
+	public ModifyUserRequest(String name, String nickname, String phone, LocalDateTime birth,
+							 ProfileImageFile profileImageFile) {
 		this.name = name;
 		this.nickname = nickname;
 		this.phone = phone;
-		this.birthYear = birthYear;
-		this.birthMonth = birthMonth;
-		this.birthDay = birthDay;
+		this.birth = birth;
 		this.profileImageFile = profileImageFile;
 	}
 	
