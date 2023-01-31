@@ -19,6 +19,7 @@ import axios from 'axios'
 import Styled from 'styled-components'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
 
 const Banner = emotion.div`
   width: 100%;
@@ -133,9 +134,18 @@ function TeamSelect() {
                             <MemoModal applySeq={apply.applySeq}></MemoModal>
                           </TableCell>
                           <TableCell align="center">
-                            <ImageButton>
-                              <img src={detailButton} alt="memoButton" style={Image} />
-                            </ImageButton>
+                            <Link
+                              to={{
+                                pathname: '/applydetail',
+                                state: {
+                                  applySeq: apply.applySeq,
+                                },
+                              }}
+                            >
+                              <ImageButton>
+                                <img src={detailButton} alt="memoButton" style={Image} />
+                              </ImageButton>
+                            </Link>
                           </TableCell>
                           <TableCell align="center">
                             <CommonButton>선택</CommonButton>

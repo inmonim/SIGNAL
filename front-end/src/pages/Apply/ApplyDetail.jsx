@@ -9,10 +9,11 @@ import { getPositionName } from 'data/Positiondata'
 import ApplyDelete from './ApplyDelete'
 import skillImage from '../../assets/image/Skilltest/React.png'
 
-function ApplyDetail() {
-  const useSeq = 1
-  const applySeq = 1
+function ApplyDetail({ match }) {
+  const applySeq = match.params.applySeq
+  const userSeq = match.params.applySeq.userSeq
 
+  console.log(applySeq)
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
@@ -30,7 +31,7 @@ function ApplyDetail() {
 
   const userFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + useSeq)
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
