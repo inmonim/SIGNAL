@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
@@ -25,6 +26,8 @@ public class PostingMeeting {
     private Integer postingMeetingSeq;
     @Column(name = "posting_seq")
     private Integer postingSeq;
+    @Column(name = "apply_seq")
+    private Integer applySeq;
     @Column(name = "from_user_seq")
     private Integer fromUserSeq;
     @Column(name = "to_user_seq")
@@ -39,9 +42,10 @@ public class PostingMeeting {
     private CommonCode code;
 
     @Builder
-    public PostingMeeting(Integer postingMeetingSeq, Integer postingSeq, Integer fromUserSeq, Integer toUserSeq, LocalDateTime meetingDt, String postingMeetingCode, CommonCode code) {
+    public PostingMeeting(Integer postingMeetingSeq, Integer postingSeq, Integer applySeq, Integer fromUserSeq, Integer toUserSeq, LocalDateTime meetingDt, String postingMeetingCode, CommonCode code) {
         this.postingMeetingSeq = postingMeetingSeq;
         this.postingSeq = postingSeq;
+        this.applySeq = applySeq;
         this.fromUserSeq = fromUserSeq;
         this.toUserSeq = toUserSeq;
         this.meetingDt = meetingDt;

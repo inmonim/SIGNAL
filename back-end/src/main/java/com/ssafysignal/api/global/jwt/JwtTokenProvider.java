@@ -1,5 +1,7 @@
 package com.ssafysignal.api.global.jwt;
 
+import com.ssafysignal.api.global.exception.UnAuthException;
+import com.ssafysignal.api.global.response.AuthResponseCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -39,8 +41,9 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
+
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + JwtExpirationEnums.ACCESS_TOKEN_EXPIRATION_TIME.getValue());
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -50,7 +53,7 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -66,9 +69,7 @@ public class JwtTokenProvider {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
+        if (claims.get("auth") == null) throw new UnAuthException(AuthResponseCode.TOKEN_DECODING_FAIL);
 
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =

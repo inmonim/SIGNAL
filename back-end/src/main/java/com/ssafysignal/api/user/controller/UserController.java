@@ -1,5 +1,6 @@
 package com.ssafysignal.api.user.controller;
 
+import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
@@ -25,6 +26,21 @@ public class UserController {
     private final UserService userService;
 
     @Tag(name = "회원")
+    @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
+    @PostMapping("")
+    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "회원 가입 정보", required = true) @RequestBody RegistUserRequest registUserRequest) {
+        log.info("registUser - Call");
+
+        try {
+            log.info(registUserRequest.toString());
+            userService.registUser(registUserRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
+    }
+
+    @Tag(name = "회원")
     @Operation(summary = "회원 상세 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
@@ -36,24 +52,13 @@ public class UserController {
                     .nickname(user.getNickname())
                     .phone(user.getPhone())
                     .heartCnt(user.getHeartCnt())
+                    .userImageUrl(user.getImageFile().getUrl())
                     .build();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findUserResponse));
-        }catch(Exception e) {
-        	return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
-        }
-    }
-
-    @Tag(name = "회원")
-    @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
-    @PostMapping("")
-    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "가입정보", required = true)@RequestBody RegistUserRequest registUserRequest) {
-        log.info("registUser - Call");
-
-        try {
-            userService.registUser(registUserRequest);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch(RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
     
@@ -65,11 +70,12 @@ public class UserController {
         
         try {
             userService.deleteUser(userSeq);
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e){
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
-
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
     
     @Tag(name = "회원")
@@ -88,7 +94,5 @@ public class UserController {
 
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
-    
-
 
 }
