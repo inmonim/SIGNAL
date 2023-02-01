@@ -82,15 +82,21 @@ public class AuthService {
 
         // email 추출
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        String email = principal.getUsername();
+        String email = authentication.getName();
 
         RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(email)
                 .orElseThrow(() -> new UnAuthException(AuthResponseCode.TOKEN_NOT_FOUND));
 
+        System.out.println(refreshToken);
+        System.out.println(redisRefreshToken.getRefreshToken());
+
         // 레디스의 리프레시 토큰와 일치하면
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())){
             // 만료 기간까지 남은 시간이 없으면
+
+            // 만료 시간 부분 오류 수정필요
+            System.out.println("리프레시 토큰 만료까지 남은 시간 = " + jwtTokenUtil.getRemainMilliSeconds(refreshToken));
+
             if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) < JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()) {
                 // 엑세스 토큰 발급
                 String accessToken = jwtTokenUtil.generateAccessToken(email);
@@ -101,7 +107,7 @@ public class AuthService {
             // 만료 까지 남은 시간이 있으면
             return TokenInfo.of(jwtTokenUtil.generateAccessToken(email), refreshToken);
         }
-        // 토큰이 일치하지 않으면
+
         throw new UnAuthException(AuthResponseCode.UNAUTHORIZED);
     }
 
