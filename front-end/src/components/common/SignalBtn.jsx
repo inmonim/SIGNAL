@@ -2,8 +2,6 @@ import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 
 const SignalBtn = styled(Btn)(({ theme, sigwidth, sigheight, sigfontsize, sigborderradius, sigmargin }) => ({
-  fontFamily: 'dohyeon',
-  fontColor: theme.palette.getContrastText('#574B9F'),
   backgroundColor: '#574B9F',
   width: sigwidth,
   height: sigheight,
