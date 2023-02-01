@@ -111,10 +111,96 @@ function RegistModal({ open, onClose }) {
     }
   }
 
+  async function emailDupCheck() {
+    const email = inputs.email
+    // fetch(process.env.REACT_APP_API_URL + `/auth/email/${email}`, {
+    return await fetch(`https://localhost:8443/auth/email/${email}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        if (response.body === true) {
+          alert('이미 가입된 이메일입니다.')
+          return true
+        } else {
+          return false
+        }
+      })
+  }
+
+  async function nicknameDupCheck() {
+    const nickname = inputs.nickname
+    return await fetch(`https://localhost:8443/auth/nickname/${nickname}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        if (response.body === true) {
+          alert('이미 존재하는 닉네임입니다.')
+          return true
+        } else {
+          return false
+        }
+      })
+  }
+  function registUser() {
+    return fetch(`https://localhost:8443/user/`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(inputs),
+    })
+      .then((response) => {
+        if (response.ok === true) {
+          return response.json()
+        } else {
+          alert('다시 시도')
+          return false
+        }
+      })
+      .then((data) => {
+        console.log(`data: ${JSON.stringify(data)}`)
+      })
+  }
+
+  async function regist() {
+    const emailDup = await emailDupCheck()
+    console.log('이메일 검사 중')
+    if (emailDup) {
+      console.log('이메일 검사 걸림')
+      setMsg1('중복된 이메일입니다.')
+      return false
+    }
+    const nicknameDup = await nicknameDupCheck()
+    console.log('닉네임 검사중')
+    if (nicknameDup) {
+      console.log('닉네임 검사에서 함 걸림')
+      setMsg4('중복된 닉네임입니다.')
+      return false
+    }
+    const registSuccess = registUser()
+    console.log('등록중')
+    if (registSuccess === false) {
+      console.log('등록 실패')
+      return false
+    }
+    console.log('등록에 성공하셨습니다')
+    return true
+  }
+
   const [msg1, setMsg1] = useState('')
   const [msg2, setMsg2] = useState('')
   const [msg3, setMsg3] = useState('')
-  // const [msg4, setMsg4] = useState('')
+  const [msg4, setMsg4] = useState('')
 
   const handleAlertOpen = () => {
     if (checkemail(inputs.email) === false) {
@@ -135,25 +221,11 @@ function RegistModal({ open, onClose }) {
     } else {
       setMsg3('')
     }
-
-    setAlertOpen(true)
-    fetch(process.env.REACT_APP_API_URL + '/user', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
+    return regist().then((checkPass) => {
+      if (checkPass) {
+        setAlertOpen(true)
+      }
     })
-      .then((response) => {
-        if (response.ok === true) {
-          return response.json()
-        } else {
-          alert('다시 시도')
-        }
-      })
-      .then((data) => {
-        console.log(`data: ${JSON.stringify(data)}`)
-      })
   }
 
   const handleToLogin = () => {
@@ -222,6 +294,7 @@ function RegistModal({ open, onClose }) {
               sx={inputStyle}
               onChange={handleInput}
             />
+            <div style={{ textAlign: 'left', marginLeft: '50px', color: 'red' }}>{msg4}</div>
             <PatternFormat
               format="###-####-####"
               customInput={TextField}
