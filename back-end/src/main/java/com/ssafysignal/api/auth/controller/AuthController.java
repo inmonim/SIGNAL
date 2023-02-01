@@ -55,16 +55,19 @@ import java.util.Map;
     
     @Tag(name = "인증")
     @Operation(summary = "재인증", description = "리프레시 토큰을 이용해 엑세스 토큰을 재발급한다.")
-    @PostMapping("/login/{refreshToken}")
-    private ResponseEntity<BasicResponse> reissue(@Parameter(description = "리프레시 토큰", required = true) @PathVariable("refreshToken") String refreshToken) {
+    @PostMapping("/refresh")
+    private ResponseEntity<BasicResponse> reissue(@RequestHeader("Authorization") String accessToken,
+                                                  @RequestHeader("RefreshToken") String refreshToken) {
         log.info("reissue - Call");
 
         try {
             TokenInfo tokenInfo = authService.reissue(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenInfo));
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
@@ -185,5 +188,10 @@ import java.util.Map;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
+    }
+
+    // 토큰 추출
+    private String resolveToken(String token) {
+        return token.substring(7);
     }
 }
