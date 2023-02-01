@@ -52,22 +52,37 @@ function LoginModal({ open, onClose }) {
     console.log('click login')
     console.log('Email: ', inputEmail)
     console.log('Pwd: ', inputPwd)
-    if (inputEmail === 'gurrms@naver.com' && inputPwd === 'gurrms123.') {
-      console.log('로그인 성공')
-      sessionStorage.setItem('userEmail', inputEmail)
-      sessionStorage.setItem('username', '혁근')
-      sessionStorage.setItem('userSeq', 1)
-      onClose(onClose(true))
-      return
-    } else if (inputEmail === 'bbb@naver.com' && inputPwd === 'tkdals123.') {
-      console.log('로그인 성공')
-      sessionStorage.setItem('userEmail', inputEmail)
-      sessionStorage.setItem('username', '상민')
-      sessionStorage.setItem('userSeq', 2)
-      onClose(onClose(true))
-      return
-    }
-    console.log('로그인 실패')
+
+    fetch(process.env.REACT_APP_API_URL + '/auth/login', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: inputEmail,
+        password: inputPwd,
+      }),
+    })
+      .then((res) => {
+        if (res.ok === true) {
+          return res.json()
+        } else {
+          throw new Error('다시 시도')
+        }
+      })
+      .then((data) => {
+        console.log('로그인 성공')
+        sessionStorage.setItem('accessToken', data.body.accessToken)
+        sessionStorage.setItem('refreshToken', data.body.refreshToken)
+        sessionStorage.setItem('userEmail', data.body.email)
+        sessionStorage.setItem('username', data.body.name)
+        sessionStorage.setItem('userSeq', data.body.userSeq)
+        onClose(onClose(true))
+      })
+      .catch((e) => {
+        alert('다시 시도')
+        return e.message
+      })
   }
 
   const activeEnter = (e) => {
@@ -80,10 +95,12 @@ function LoginModal({ open, onClose }) {
   const [inputPwd, setInputPwd] = useState('')
 
   const handleInputEmail = (e) => {
+    // cosnt nextInputEmail = {...inputEmail}
     setInputEmail(e.target.value)
   }
   const handleInputPwd = (e) => {
     setInputPwd(e.target.value)
+    console.log(e.target.value)
   }
   return (
     <>
