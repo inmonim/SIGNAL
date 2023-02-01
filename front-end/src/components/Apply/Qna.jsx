@@ -7,6 +7,7 @@ const textAreaStyle = {
 }
 
 function Qna({ question, id, onChange, answerList }) {
+  console.log(answerList)
   const [answer, setAnswer] = useState('')
 
   const setDefaultAnswer = () => {
@@ -16,6 +17,8 @@ function Qna({ question, id, onChange, answerList }) {
       })
     }
   }
+
+  console.log(answer)
 
   const handleQnAChange = (event) => {
     onChange(event.target.value, id)
@@ -32,7 +35,7 @@ function Qna({ question, id, onChange, answerList }) {
         fullWidth={true}
         multiline={true}
         minRows="2"
-        defaultValue={answer || ''}
+        defaultValue={answer}
         onChange={handleQnAChange}
       />
     </div>
