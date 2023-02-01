@@ -25,7 +25,7 @@ function Header() {
   const [isLogin, setIsLogin] = useState(false)
   const [letterCnt, setLetterCnt] = useState(0)
   useEffect(() => {
-    if (sessionStorage.getItem('username') !== null) {
+    if (sessionStorage.getItem('userSeq') !== null) {
       setIsLogin(true)
       fetch(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq'), {
         method: 'GET',
@@ -38,9 +38,33 @@ function Header() {
   })
 
   const onLogout = () => {
-    sessionStorage.removeItem('username')
-    sessionStorage.removeItem('userEmail')
-    setIsLogin(false)
+    fetch(process.env.REACT_APP_API_URL + '/auth/logout', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('accessToken'),
+        RefreshToken: 'Bearer ' + sessionStorage.getItem('refreshToken'),
+      },
+    })
+      .then((res) => {
+        if (res.ok === true) {
+          return res.json()
+        } else {
+          throw new Error('다시 시도')
+        }
+      })
+      .then((data) => {
+        console.log('로그아웃 성공')
+        sessionStorage.removeItem('accessToken')
+        sessionStorage.removeItem('userEmail')
+        sessionStorage.removeItem('username')
+        sessionStorage.removeItem('userSeq')
+        setIsLogin(false)
+      })
+      .catch((e) => {
+        alert('다시 시도')
+        return e.message
+      })
   }
 
   return (
