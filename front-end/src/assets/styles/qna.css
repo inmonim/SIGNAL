@@ -14,6 +14,7 @@
 .qna-header {
   justify-content: center;
   align-items: center;
+  margin-top: 50px;
 }
 
 .qna-header-title {
@@ -62,7 +63,7 @@ a {
   width: 1125px;
   height: 535px;
   border-top: 2px solid #796fb2;
-  margin: auto;
+  margin: 70px auto;
 }
 
 .qna-detail-comment-container{
@@ -154,7 +155,7 @@ a {
   width: 1125px;
   height: 650px;
   border-bottom: 2px solid #796fb2;
-  margin: auto;
+  margin: 70px auto;
 }
 .qna-regist-header {
   font-size: 44px;

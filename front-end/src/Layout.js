@@ -14,10 +14,11 @@ import QnaRegist from 'pages/QnA/QnaRegist'
 import QnaModify from 'pages/QnA/QnaModify'
 import ApplyDetail from 'pages/Apply/ApplyDetail'
 import TeamSelect from 'pages/Project/TeamSelect'
+import ApplyRegister from 'pages/Apply/ApplyRegister'
+import ApplyModify from 'pages/Apply/ApplyModify'
+import { Posting } from 'pages/Posting/Posting'
 
-const Posting = lazy(() => import('./pages/Posting/Posting'))
-const ApplyRegister = lazy(() => import('./pages/Apply/ApplyRegister'))
-const ApplyModify = lazy(() => import('./pages/Apply/ApplyModify'))
+// const Posting = lazy(() => import('./pages/Posting/Posting'))
 const MyProject = lazy(() => import('./pages/Project/MyProject'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 // const PostingRegister = lazy(() => import('./pages/Posting/PostingRegister'))
