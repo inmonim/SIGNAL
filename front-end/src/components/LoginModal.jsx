@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox'
 import 'assets/font/font.css'
 import SignalBtn from './common/SignalBtn'
 import RegistModal from './RegistModal'
+import FindModal from './FindEmailPwdModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
@@ -42,11 +43,18 @@ const inputStyle = {
 
 function LoginModal({ open, onClose }) {
   const [regOpen, setRegOpen] = useState(false)
+  const [findOpen, setFindOpen] = useState(false)
   const handleRegOpen = () => {
     setRegOpen(true)
   }
+  const handleFindOpen = () => {
+    setFindOpen(true)
+  }
   const handleRegClose = () => {
     setRegOpen(false)
+  }
+  const handleFindClose = () => {
+    setFindOpen(false)
   }
   const handleToMain = () => {
     console.log('click login')
@@ -127,17 +135,10 @@ function LoginModal({ open, onClose }) {
               <img style={{ width: '409px', height: '205px', margin: '30px 0px' }} src={modalLogo} alt="modalLogo" />
             </div>
             <div className="login-input" style={{ display: 'inline-block' }}>
-              <TextField
-                id="filled-multiline-flexible"
-                label="E-mail"
-                multiline
-                sx={inputStyle}
-                onChange={handleInputEmail}
-              />
+              <TextField id="filled-multiline-flexible" label="E-mail" sx={inputStyle} onChange={handleInputEmail} />
               <TextField
                 id="filled-multiline-flexible"
                 label="Password"
-                multiline
                 sx={inputStyle}
                 onChange={handleInputPwd}
                 onKeyDown={(e) => activeEnter(e)}
@@ -157,8 +158,10 @@ function LoginModal({ open, onClose }) {
                     color: '#574b9f',
                     fontSize: '20px',
                   }}
+                  onClick={handleFindOpen}
                 >
                   이메일 / 비밀번호 찾기 {'>>'}
+                  <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
                 </div>
               </div>
               <div className="login-under2">
@@ -182,9 +185,9 @@ function LoginModal({ open, onClose }) {
                 <SignalBtn
                   sigwidth="173px"
                   sigheight="90px"
-                  sigfontSize="44px"
-                  sigBorderRadius={25}
-                  sigMargin="30px auto"
+                  sigfontsize="44px"
+                  sigborderradius={25}
+                  sigmargin="30px auto"
                   variant="contained"
                   onClick={handleToMain}
                 >
