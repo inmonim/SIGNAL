@@ -4,7 +4,7 @@ import minusButton from '../../assets/image/minusButton.png'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
-  width: '22rem',
+  width: '20rem',
 }
 
 function Career({ career, id, onRemove, onChange }) {
@@ -23,16 +23,14 @@ function Career({ career, id, onRemove, onChange }) {
           handleCareerChange(e)
         }}
       />
-      <div className="minus-button-section">
-        <img
-          src={minusButton}
-          alt="minusButton"
-          className="minus-button"
-          onClick={() => {
-            onRemove(id)
-          }}
-        />
-      </div>
+      <img
+        style={{ height: '34px', padding: '5px' }}
+        src={minusButton}
+        alt="minusButton"
+        onClick={() => {
+          onRemove(id)
+        }}
+      />
     </div>
   )
 }

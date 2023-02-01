@@ -98,6 +98,7 @@
 .exp-div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 1em;
 }
 
@@ -112,4 +113,182 @@
 
   align-items: center;
   font-weight: bold;
+}
+
+
+
+/* ----modify---- */
+
+.apply-modify-container{
+  width: 900px;
+  font-size: 20px;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 70px;
+}
+
+.apply-modify-width-section{
+  min-width: 800px;
+}
+
+.apply-modify-title{
+  color: #000000;
+  font-size: 40px;
+}
+
+.apply-modify-hr{
+  border: 2px solid #463c7f;
+}
+
+.apply-modify-application-section{
+  margin: 20px;
+}
+
+.apply-modify-user-detail-section{
+  display: flex;
+}
+
+.apply-modify-position-meeting-section{
+  display: flex;
+}
+
+.apply-modify-phone-section,
+.apply-modify-email-section,
+.apply-modify-position-section,
+.apply-modify-meeting-section{
+ width: 50%;
+}
+
+.apply-modify-label {
+  color: #574b9f;
+  width: 25%;
+}
+
+.apply-modify-career-exp-section{
+  display: flex;
+  margin: 30px 0px;
+}
+
+.apply-modify-career-section,
+.apply-modify-exp-section{
+  width: 97%;
+}
+
+.apply-modify-career-label,
+.apply-modify-exp-label{
+  text-align: center;
+  color: #574b9f;
+}
+
+.apply-modify-plus-button{
+  height: 35px;
+  padding: 5px;
+}
+
+.apply-modify-content-section,
+.apply-modify-question-answer-section{
+  margin: 30px 0px;
+}
+
+.apply-modify-user-detail-section,
+.apply-modify-position-meeting-section,
+.apply-modify-skill-section{
+  padding: 10px 0px;  
+}
+
+.apply-modify-question-section{
+  margin: 30px 0px;
+}
+
+.apply-modify-submit-button{
+  display: flex;
+  justify-content: center;
+}
+
+
+/* ----register---- */
+.apply-register-container{
+  width: 900px;
+  font-size: 20px;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 70px;
+}
+
+.apply-register-width-section{
+  min-width: 800px;
+}
+
+.apply-register-title{
+  color: #000000;
+  font-size: 40px;
+}
+
+.apply-register-hr{
+  border: 2px solid #463c7f;
+}
+
+.apply-register-application-section{
+  margin: 20px;
+}
+
+.apply-register-user-detail-section{
+  display: flex;
+}
+
+.apply-register-position-meeting-section{
+  display: flex;
+}
+
+.apply-register-phone-section,
+.apply-register-email-section,
+.apply-register-position-section,
+.apply-register-meeting-section{
+ width: 50%;
+}
+
+.apply-register-label {
+  color: #574b9f;
+  width: 25%;
+}
+
+.apply-register-career-exp-section{
+  display: flex;
+  margin: 30px 0px;
+}
+
+.apply-register-career-section,
+.apply-register-exp-section{
+  width: 97%;
+}
+
+.apply-register-career-label,
+.apply-register-exp-label{
+  text-align: center;
+  color: #574b9f;
+}
+
+.apply-register-plus-button{
+  height: 35px;
+  padding: 5px;
+}
+
+.apply-register-content-section,
+.apply-register-question-answer-section{
+  margin: 30px 0px;
+}
+
+.apply-register-user-detail-section,
+.apply-register-position-meeting-section,
+.apply-register-skill-section{
+  padding: 10px 0px;  
+}
+
+.apply-register-question-section{
+  margin: 30px 0px;
+}
+
+.apply-register-submit-button{
+  display: flex;
+  justify-content: center;
 }

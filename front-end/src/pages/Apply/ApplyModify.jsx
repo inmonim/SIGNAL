@@ -6,59 +6,37 @@ import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import styled from 'styled-components'
-
-import Skilldata from 'data/Skilldata'
+import Skill from '../../data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
-import MeetingDtSelect from 'components/Apply/MeetingDtSelect'
-
-const Container = styled.section`
-  padding: 50px 500px;
-`
-
-const width = {
-  minWidth: '800px',
-}
-
-const Title = styled.h1`
-  font-size: 2.5em;
-  font-weight: bold;
-  padding-bottom: 40px;
-  border-bottom: 5px solid #796fb2;
-`
-
-const Label = styled.h1`
-  font-size: 20px;
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-`
+import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
+import { useLocation } from 'react-router-dom'
+import SignalBtn from 'components/common/SignalBtn'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
   position: 'static',
+  width: '300px',
 }
 
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
+  margin: '10px 0px',
 }
 
-const positionSelectStyle = {
-  backgroundColor: '#f3f5f7',
-  width: '11.5em',
-  position: 'static',
-}
+function ApplyRegister() {
+  const location = useLocation()
 
-function ApplyModify() {
   const userSeq = 1
   const postingSeq = 458
+  const applySeq = location.state.applySeq
 
   // start >> useState
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
+  const [apply, setApply] = useState([{}])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
@@ -69,8 +47,7 @@ function ApplyModify() {
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
-  const [meeting, setMeeting] = useState('')
-
+  const [meetingSeq, setMeetingSeq] = useState('')
   // ene >> useState
 
   // start >> Fetch
@@ -103,13 +80,19 @@ function ApplyModify() {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + 1)
-      console.log(res.data.body)
-      setPosition(getPositionName(res.data.body.position.code))
-      setContent(res.data.body.content)
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+
+      console.log(applySeq)
+      console.log(apply)
+
+      setApply(res.data.body)
       careerFetchFilter(res.data.body.careerList)
-      expFetchFilter(res.data.body.expList)
+      expFetchFilter(res.data.body.careerList)
+      skillFetchFilter(res.data.body.skillList)
+      setPosition(res.data.body.position.name)
+      setContent(res.data.body.content)
       setAnswerList(res.data.body.answerList)
+      setMeetingSeq(res.data.body.postingMeeting.postingMeetingSeq)
     } catch (error) {
       console.log(error)
     }
@@ -123,7 +106,7 @@ function ApplyModify() {
     const careerArr = []
     list.map((item, index) =>
       careerArr.push({
-        seq: index,
+        seq: item.applyCareerSeq,
         content: item.content,
       })
     )
@@ -135,7 +118,7 @@ function ApplyModify() {
     const expArr = []
     list.map((item, index) =>
       expArr.push({
-        seq: index,
+        seq: item.applyExpSeq,
         content: item.content,
       })
     )
@@ -145,20 +128,55 @@ function ApplyModify() {
 
   const meetingFetchFilter = (list) => {
     const meetingDtArr = []
-    list.map((item, index) => meetingDtArr.push(item.meetingDt))
+    list.forEach((item) => {
+      if (item.postingMeetingCode === 'PM102') {
+        meetingDtArr.push({
+          postingMeetingSeq: item.postingMeetingSeq,
+          meetingDt: item.meetingDt,
+          applyAnswerSeq: item.applyAnswerSeq,
+        })
+      }
+    })
+
     setMeetingList(meetingDtArr)
   }
 
-  const CareerPostFilter = (list) => {
+  const skillFetchFilter = (list) => {
+    const skillArr = []
+    list.forEach((item) => {
+      skillArr.push(item.name)
+    })
+
+    setSkillList(skillArr)
+  }
+
+  const careerPostFilter = (list) => {
     const careerArr = []
     list.map((item) => careerArr.push(item.content))
     return careerArr
   }
 
-  const ExpPostFilter = (list) => {
+  const expPostFilter = (list) => {
     const expArr = []
     list.map((item) => expArr.push(item.content))
     return expArr
+  }
+
+  const skillPostFilter = (list) => {
+    const skillArr = []
+    list.map((item) => skillArr.push(Skill.getSkillCode(item)))
+    return skillArr
+  }
+
+  const answerPostFilter = (list) => {
+    const answerArr = []
+    list.map((item) =>
+      answerArr.push({
+        applyAnswerSeq: item.applyAnswerSeq,
+        content: item.content,
+      })
+    )
+    return answerArr
   }
 
   // start >> handle position
@@ -171,9 +189,10 @@ function ApplyModify() {
   // start >> handle skill
 
   const handleSkillInput = (value) => {
-    const skillArr = [...skillList]
-    skillArr.push(value)
-    setSkillList(skillArr)
+    const skillArr = [...skillList, value]
+    const set = new Set(skillArr)
+    const uniqueArr = Array.from(set)
+    setSkillList(uniqueArr)
   }
 
   const handleSkillRemove = (id) => {
@@ -284,7 +303,7 @@ function ApplyModify() {
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
-    setMeeting(meetingList[key])
+    setMeetingSeq(key)
   }
 
   const handleApplySubmit = async () => {
@@ -292,21 +311,18 @@ function ApplyModify() {
     const postingSeq = 458
     try {
       const req = {
-        applyAnswerList: answerList,
-        applyCareerList: CareerPostFilter(careerList),
-        applyExpList: ExpPostFilter(expList),
-        applySkillList: skillList,
+        applyAnswerList: answerPostFilter(answerList),
+        applyCareerList: careerPostFilter(careerList),
+        applyExpList: expPostFilter(expList),
+        applySkillList: skillPostFilter(skillList),
         content,
-        fieldCode: posting.fieldCode,
-        meetingDt: meeting,
+        postingMeetingSeq: meetingSeq,
         positionCode: getPositionCode(position),
-        postingSeq,
         userSeq,
       }
       console.log(req)
-      const config = { 'Content-Type': 'application/json' }
       await axios
-        .post('.', req, config)
+        .put(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
         .then((res) => {
           console.log(res)
         })
@@ -314,7 +330,7 @@ function ApplyModify() {
           console.log(err)
         })
 
-      console.log('지원서 post')
+      console.log('지원서 put')
     } catch (error) {
       console.log(error)
     }
@@ -327,52 +343,78 @@ function ApplyModify() {
   }, [])
 
   return (
-    <Container>
-      <div style={width}>
+    <div className="apply-modify--container">
+      <div className="apply-modify--width-section">
         <div>
-          <Title>{user.nickname} 님의지원서</Title>
+          <div className="apply-modify-title">{user.nickname} 님의지원서</div>
         </div>
-        <div>
-          <div className="user-detail-section">
-            <div className="phone-section">
-              <Label>전화번호 </Label>
-              <TextField disabled value={user.phone || ''} sx={inputStyle} />
+        <hr className="apply-modify-hr" />
+        <div className="apply-modify-application-section">
+          <div className="apply-modify-user-detail-section">
+            <div className="apply-modify-phone-section">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div>전화번호 </div>
+                <TextField disabled value={user.phone || ''} sx={inputStyle} />
+              </div>
             </div>
-            <div className="email-section">
-              <Label>이메일</Label>
-              <TextField disabled value={user.email || ''} sx={inputStyle} />
-            </div>
-          </div>
-          <div className="position-section">
-            <div>
-              <Label className="label">원하는 포지션</Label>
-              <FormControl style={positionSelectStyle}>
-                <InputLabel id="demo-simple-select-label" sx={{ inputStyle, width: '11.5em' }}></InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={position || ''}
-                  onChange={handlePositionChange}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                >
-                  {posting.postingPositionList &&
-                    posting.postingPositionList.map((item, index) => (
-                      <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
-                        {getPositionName(item.positionCode)}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
+            <div className="apply-modify-email-section">
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="apply-modify-label">이메일</div>
+                <TextField disabled value={user.email || ''} sx={inputStyle} />
+              </div>
             </div>
           </div>
-          <div className="skill-meeting-section">
-            <div className="skill-section">
-              <Label className="label">사용기술</Label>
+          <div className="apply-modify-position-meeting-section">
+            <div className="apply-modify-position-section">
+              <div style={{ display: 'flex' }}>
+                <div className="apply-modify-label" style={{ display: 'flex', alignItems: 'center' }}>
+                  포지션
+                </div>
+                <FormControl style={inputStyle}>
+                  <InputLabel id="demo-simple-select-label" sx={inputStyle}></InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={position || ''}
+                    onChange={handlePositionChange}
+                    inputProps={{ 'aria-label': 'Without label' }}
+                  >
+                    {posting.postingPositionList &&
+                      posting.postingPositionList.map((item, index) => (
+                        <MenuItem value={getPositionName(item.positionCode) || ''} key={item.positionCode + index}>
+                          {getPositionName(item.positionCode)}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div className="apply-modify-meeting-section">
+              <div style={{ display: 'flex' }}>
+                <div className="apply-modify-label" style={{ display: 'flex', alignItems: 'center' }}>
+                  화상미팅 예약
+                </div>
+                <div>
+                  <MeetingDtSelect
+                    open={open}
+                    meetingList={meetingList}
+                    onChange={handleMeetingDtChange}
+                    meetingSeq={meetingSeq}
+                  ></MeetingDtSelect>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="apply-modify-skill-section">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
+                <span className="apply-modify-label">사용기술</span>
+              </div>
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 sx={{ width: 300 }}
-                options={Skilldata}
+                options={Skill.Skilldata}
                 getOptionLabel={(option) => option.name}
                 filterOptions={skillSearchFilter}
                 renderInput={(params) => (
@@ -383,76 +425,88 @@ function ApplyModify() {
                         handleSkillInput(e.target.value)
                       }
                     }}
+                    sx={inputStyle}
                   />
                 )}
               />
-              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
-            </div>
-            <div className="meeting-section">
-              <Label className="label">화상미팅 예약</Label>
-              <MeetingDtSelect
-                open={open}
-                meetingList={meetingList}
-                onChange={handleMeetingDtChange}
-                meeting={meeting}
-              ></MeetingDtSelect>
             </div>
           </div>
-          <div className="career-exp-section">
-            <div className="career-section">
-              <div>
-                <div className="career-label">
-                  <Label>경력</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleCareerAdd} />
+          <div style={{ display: 'inline-block', marginRight: '7px' }}>
+            <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
+          </div>
+          <div className="apply-modify-career-exp-section">
+            <div style={{ width: '50%' }}>
+              <div className="apply-modify-career-section">
+                <div className="apply-modify-career-label">
+                  <div style={{ padding: '0px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>경력</div>
+                      <img
+                        src={plusButton}
+                        alt="plusButton"
+                        className="apply-modify-plus-button"
+                        onClick={handleCareerAdd}
+                      />
+                    </div>
+                  </div>
+                  <hr></hr>
                 </div>
-                <hr></hr>
+                <CareerList
+                  careerList={careerList}
+                  onRemove={handleCareerRemove}
+                  onChange={handleCareerChange}
+                ></CareerList>
               </div>
-              <CareerList
-                careerList={careerList}
-                onRemove={handleCareerRemove}
-                onChange={handleCareerChange}
-              ></CareerList>
             </div>
-            <div className="exp-section">
-              <div>
-                <div className="exp-label">
-                  <Label>경험</Label>
-                  <img src={plusButton} alt="plusButton" className="plus-button" onClick={handleExpAdd} />
+            <div style={{ width: '50%' }}>
+              <div className="apply-modify-exp-section">
+                <div className="apply-modify-exp-label">
+                  <div style={{ padding: '0px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>경험</div>
+                      <img
+                        src={plusButton}
+                        alt="plusButton"
+                        className="apply-modify-plus-button"
+                        onClick={handleExpAdd}
+                      />
+                    </div>
+                  </div>
+                  <hr></hr>
                 </div>
-                <hr></hr>
+                <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
               </div>
-              <ExpList expList={expList} onRemove={handleExpRemove} onChange={handleExpChange}></ExpList>
             </div>
           </div>
-          <div className="content-section">
-            <Label className="label">하고싶은 말</Label>
-            <div>
-              <TextField
-                style={textAreaStyle}
-                fullWidth={true}
-                multiline={true}
-                minRows="5"
-                onChange={handleContentChange}
-              />
-            </div>
+          <div className="apply-modify-content-section">
+            <div className="apply-modify-label">하고싶은 말</div>
+
+            <TextField
+              style={textAreaStyle}
+              fullWidth={true}
+              multiline={true}
+              minRows="5"
+              defaultValue={content || ''}
+              onChange={handleContentChange}
+            />
           </div>
-          <div className="question-answer-section">
-            <div className="question-section">
-              <Label className="label">지원자에게 궁금한 점</Label>
+          <div className="apply-modify-question-answer-section">
+            <div className="apply-modify-question-section">
+              <div className="apply-modify-label">지원자에게 궁금한 점</div>
             </div>
-            <div className="answer-section">
-              <QnAList questionList={questionList} onChange={handleQnAChange}></QnAList>
+            <div style={{ margin: '10px 0px' }}>
+              <QnAList questionList={questionList} answerList={answerList} onChange={handleQnAChange}></QnAList>
             </div>
           </div>
         </div>
-        <div className="submit-button">
-          <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
-          </button>
+        <div className="apply-modify-submit-button">
+          <SignalBtn onClick={handleApplySubmit} style={{ width: '50%' }}>
+            수정하기
+          </SignalBtn>
         </div>
       </div>
-    </Container>
+    </div>
   )
 }
 
-export default ApplyModify
+export default ApplyRegister
