@@ -108,7 +108,7 @@ function PostingDetail() {
               <div className="apply-detail-name-section">
                 <div style={{ display: 'flex' }}>
                   <div className="apply-detail-label">난이도</div>
-                  <div className="apply-detail-text-value">{posting ? posting.level : null}</div>
+                  <div className="apply-detail-text-value">Level : {posting ? posting.level : null}</div>
                 </div>
               </div>
               <div className="apply-detail-position-section">
@@ -123,7 +123,9 @@ function PostingDetail() {
               <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
                 <span className="apply-detail-skill-label">사용기술</span>
               </div>
-              <div className="apply-detail-skillList-section"></div>
+              <div className="apply-detail-skillList-section">
+                {posting && posting.postingSkillList.map((ele, i) => <p key={i}>{ele.skillCode}</p>)}
+              </div>
             </div>
             <div className="apply-detail-career-exp-section">
               <div style={{ width: '50%' }}>
