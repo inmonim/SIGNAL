@@ -36,5 +36,18 @@ div {
   top: 40px;
   left: 150px;
   font-size: 24px;
-  min-height: 370px;
+  padding: 111px 93px;
+  height: 195px
+}
+
+.user-profile-img{
+  border-radius: 50%;
+  width: 195px;
+  height: 195px;
+}
+
+.user-profile-info{
+  /* position: relative; */
+    /* padding-left: 328px; */
+    /* padding-top: 58px; */
 }
