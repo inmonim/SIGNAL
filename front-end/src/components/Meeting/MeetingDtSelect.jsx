@@ -15,7 +15,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: '800px',
   bgcolor: '#fff',
   boxShadow: 24,
   borderRadius: 2,
@@ -72,12 +72,16 @@ function meetingDtSelet(props) {
           </Box>
         </Modal>
         <div style={selectedTimeStyle}>
-          {props.meetingList
-            ? props.meetingSeq === ''
-              ? ''
-              : ` ${moment(
-                  props.meetingList.filter((item) => item.postingMeetingSeq === props.meetingSeq).meetingDt
-                ).format('LLL')}시`
+          {props.meetingList && props.meetingSeq
+            ? props.meetingList.filter((item) => {
+                return item.postingMeetingSeq + '' === props.meetingSeq
+              })[0]
+              ? `${moment(
+                  props.meetingList.filter((item) => {
+                    return item.postingMeetingSeq + '' === props.meetingSeq
+                  })[0].meetingDt
+                ).format('YYYY-MM-DD HH')}시`
+              : ''
             : ''}
         </div>
       </div>

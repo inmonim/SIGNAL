@@ -75,6 +75,19 @@ function ApplyRegister() {
     }
   }
 
+  const qnaListDataFormat = () => {
+    const qnaArr = []
+    questionList.map((item, index) =>
+      qnaArr.push({
+        postingQuestionSeq: item.postingQuestionSeq,
+        content: item.content,
+        defaultValue: '',
+      })
+    )
+
+    setQuestionList(qnaArr)
+  }
+
   const profileFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
@@ -292,12 +305,11 @@ function ApplyRegister() {
         positionCode: getPositionCode(position),
         userSeq,
       }
-      console.log(req)
+      console.log(JSON.stringify(req))
       const config = { 'Content-Type': 'application/json' }
+
       await axios
-        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, JSON.stringify(req), {
-          headers: config,
-        })
+        .post('https://192.168.30.117:8443/apply/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)
         })
@@ -315,6 +327,7 @@ function ApplyRegister() {
     userFetch()
     postingFetch()
     profileFetch()
+    qnaListDataFormat()
   }, [])
 
   return (
