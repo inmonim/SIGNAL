@@ -63,14 +63,22 @@ function RegistModal({ open, onClose }) {
     name: '',
     nickname: '',
     phone: '',
-    userBirth: '',
+    birth: '',
   })
+
+  const dateInput = (e) => {
+    // dateSelect 폼에서 현재 위치를 저장하기 위해 setValue는 이벤트를 그대로 저장
+    setValue(e)
+    // inputs.userBirth로 들어가는 날짜는 String으로 변환
+    const birth = birthToString(e)
+    inputs.birth = birth
+  }
 
   const handleInput = (e) => {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
+    // console.log(nextInputs)
   }
 
   function checkemail(str) {
@@ -103,26 +111,48 @@ function RegistModal({ open, onClose }) {
     }
   }
 
-  const [msg1, setMsg1] = useState('')
-  const [msg2, setMsg2] = useState('')
-  const [msg3, setMsg3] = useState('')
-  // const [msg4, setMsg4] = useState('')
+  async function emailDupCheck() {
+    const email = inputs.email
+    // fetch(process.env.REACT_APP_API_URL + `/auth/email/${email}`, {
+    return await fetch(`https://localhost:8443/auth/email/${email}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        if (response.body === true) {
+          alert('이미 가입된 이메일입니다.')
+          return true
+        } else {
+          return false
+        }
+      })
+  }
 
-  const handleAlertOpen = () => {
-    if (checkemail(inputs.email) === false) {
-      setMsg1('이메일 형식을 확인해주세요.')
-      return
-    }
-    if (checkpass(inputs.password) === false) {
-      setMsg2('8자리 이상 영어, 숫자, 특수문자 조합')
-      return
-    }
-    if (inputs.password !== inputs.passwordCheck) {
-      setMsg3('비밀번호가 일치하지 않습니다.')
-      return
-    }
-    setAlertOpen(true)
-    fetch(process.env.REACT_APP_API_URL + '/user', {
+  async function nicknameDupCheck() {
+    const nickname = inputs.nickname
+    return await fetch(`https://localhost:8443/auth/nickname/${nickname}`, {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        if (response.body === true) {
+          alert('이미 존재하는 닉네임입니다.')
+          return true
+        } else {
+          return false
+        }
+      })
+  }
+  function registUser() {
+    return fetch(`https://localhost:8443/user/`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -134,11 +164,68 @@ function RegistModal({ open, onClose }) {
           return response.json()
         } else {
           alert('다시 시도')
+          return false
         }
       })
       .then((data) => {
         console.log(`data: ${JSON.stringify(data)}`)
       })
+  }
+
+  async function regist() {
+    const emailDup = await emailDupCheck()
+    console.log('이메일 검사 중')
+    if (emailDup) {
+      console.log('이메일 검사 걸림')
+      setMsg1('중복된 이메일입니다.')
+      return false
+    }
+    const nicknameDup = await nicknameDupCheck()
+    console.log('닉네임 검사중')
+    if (nicknameDup) {
+      console.log('닉네임 검사에서 함 걸림')
+      setMsg4('중복된 닉네임입니다.')
+      return false
+    }
+    const registSuccess = registUser()
+    console.log('등록중')
+    if (registSuccess === false) {
+      console.log('등록 실패')
+      return false
+    }
+    console.log('등록에 성공하셨습니다')
+    return true
+  }
+
+  const [msg1, setMsg1] = useState('')
+  const [msg2, setMsg2] = useState('')
+  const [msg3, setMsg3] = useState('')
+  const [msg4, setMsg4] = useState('')
+
+  const handleAlertOpen = () => {
+    if (checkemail(inputs.email) === false) {
+      setMsg1('이메일 형식을 확인해주세요.')
+      return
+    } else {
+      setMsg1('')
+    }
+    if (checkpass(inputs.password) === false) {
+      setMsg2('8자리 이상 영어, 숫자, 특수문자 조합')
+      return
+    } else {
+      setMsg2('')
+    }
+    if (inputs.password !== inputs.passwordCheck) {
+      setMsg3('비밀번호가 일치하지 않습니다.')
+      return
+    } else {
+      setMsg3('')
+    }
+    return regist().then((checkPass) => {
+      if (checkPass) {
+        setAlertOpen(true)
+      }
+    })
   }
 
   const handleToLogin = () => {
@@ -207,8 +294,9 @@ function RegistModal({ open, onClose }) {
               sx={inputStyle}
               onChange={handleInput}
             />
+            <div style={{ textAlign: 'left', marginLeft: '50px', color: 'red' }}>{msg4}</div>
             <PatternFormat
-              format="### - #### - ####"
+              format="###-####-####"
               customInput={TextField}
               name="phone"
               label="Phone Number"
@@ -221,22 +309,19 @@ function RegistModal({ open, onClose }) {
                 name="birth"
                 label="Birth"
                 inputFormat="YYYY / MM / DD"
-                value={birthToString(value)}
-                onChange={(newValue) => {
-                  setValue(newValue)
-                }}
+                value={value}
+                onChange={dateInput}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
               />
-              {console.log(birthToString(value))}
             </LocalizationProvider>
           </div>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <SignalBtn
               sigwidth="173px"
               sigheight="90px"
-              sigfontSize="40px"
-              sigBorderRadius={25}
-              sigMargin="30px auto"
+              sigfontsize="40px"
+              sigborderradius={25}
+              sigmargin="30px auto"
               variant="contained"
               onClick={handleAlertOpen}
             >
