@@ -70,7 +70,7 @@ function RegistModal({ open, onClose }) {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
+    // console.log(nextInputs)
   }
 
   function checkemail(str) {
@@ -208,7 +208,7 @@ function RegistModal({ open, onClose }) {
               onChange={handleInput}
             />
             <PatternFormat
-              format="### - #### - ####"
+              format="###-####-####"
               customInput={TextField}
               name="phone"
               label="Phone Number"
@@ -227,16 +227,15 @@ function RegistModal({ open, onClose }) {
                 }}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
               />
-              {console.log(birthToString(value))}
             </LocalizationProvider>
           </div>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <SignalBtn
               sigwidth="173px"
               sigheight="90px"
-              sigfontSize="40px"
-              sigBorderRadius={25}
-              sigMargin="30px auto"
+              sigfontsize="40px"
+              sigborderradius={25}
+              sigmargin="30px auto"
               variant="contained"
               onClick={handleAlertOpen}
             >
