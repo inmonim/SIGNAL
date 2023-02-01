@@ -14,9 +14,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +29,11 @@ import java.util.Map;
     @RestController
     @RequestMapping("/auth")
     public class AuthController {
-        private final AuthService authService;
-        private final JwtTokenUtil jwtTokenUtil;
+    private final AuthService authService;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    @Value("${server.host}")
+    private String host;
 
     @Tag(name = "인증")
     @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
@@ -93,8 +99,10 @@ import java.util.Map;
             authService.checkEmail(email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
-        }        
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, false));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
     }
 
     @Tag(name = "인증")
@@ -107,7 +115,9 @@ import java.util.Map;
             authService.checkNickname(nickname);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, false));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 
@@ -128,20 +138,21 @@ import java.util.Map;
     @Tag(name = "인증")
     @Operation(summary = "이메일 인증", description = "회원가입 사용자 이메일 인증 처리한다.")
     @GetMapping("/emailauth/{authCode}")
-    private ResponseEntity<BasicResponse> emailAuth(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode) {
+    private ResponseEntity<BasicResponse> emailAuth(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode,
+                                                    HttpServletResponse response) {
         log.info("emailAuth - Call");
 
         try {
             authService.emailAuth(authCode);
+            response.sendRedirect(host);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
+        } catch (IOException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
-
-        //이메일 인증 후 리다이렉트 해주기??
     }
 
     @Tag(name = "인증")
@@ -174,10 +185,5 @@ import java.util.Map;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
-    }
-
-    // 토큰 추출
-    private String resolveToken(String token) {
-        return token.substring(7);
     }
 }

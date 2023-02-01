@@ -74,7 +74,7 @@ public class UserService {
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
                         .title("Signal 회원가입 인증")
-                        .text("url을 클릭하면 인증이 완료됩니다.")
+                        .text("이메일 인증")
                         .host(host)
                         .url(String.format("/auth/emailauth/%s", authCode))
                         .build());
@@ -96,6 +96,5 @@ public class UserService {
     	
     	//파일 이미지  변경 코드 추가하기
     }
-
 
 }
