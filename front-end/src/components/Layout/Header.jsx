@@ -70,11 +70,15 @@ function Header() {
                 </D.Down>
               </D.DropdownContainer>
             </li>
-            <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/">
-                마이프로젝트
-              </Link>
-            </li>
+            {isLogin ? (
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/myproject">
+                  마이프로젝트
+                </Link>
+              </li>
+            ) : (
+              <li></li>
+            )}
             <li>
               <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
                 공지사항
