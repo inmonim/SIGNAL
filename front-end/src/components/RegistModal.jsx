@@ -63,8 +63,16 @@ function RegistModal({ open, onClose }) {
     name: '',
     nickname: '',
     phone: '',
-    userBirth: '',
+    birth: '',
   })
+
+  const dateInput = (e) => {
+    // dateSelect 폼에서 현재 위치를 저장하기 위해 setValue는 이벤트를 그대로 저장
+    setValue(e)
+    // inputs.userBirth로 들어가는 날짜는 String으로 변환
+    const birth = birthToString(e)
+    inputs.birth = birth
+  }
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -112,15 +120,22 @@ function RegistModal({ open, onClose }) {
     if (checkemail(inputs.email) === false) {
       setMsg1('이메일 형식을 확인해주세요.')
       return
+    } else {
+      setMsg1('')
     }
     if (checkpass(inputs.password) === false) {
       setMsg2('8자리 이상 영어, 숫자, 특수문자 조합')
       return
+    } else {
+      setMsg2('')
     }
     if (inputs.password !== inputs.passwordCheck) {
       setMsg3('비밀번호가 일치하지 않습니다.')
       return
+    } else {
+      setMsg3('')
     }
+
     setAlertOpen(true)
     fetch(process.env.REACT_APP_API_URL + '/user', {
       method: 'POST',
@@ -221,10 +236,8 @@ function RegistModal({ open, onClose }) {
                 name="birth"
                 label="Birth"
                 inputFormat="YYYY / MM / DD"
-                value={birthToString(value)}
-                onChange={(newValue) => {
-                  setValue(newValue)
-                }}
+                value={value}
+                onChange={dateInput}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
               />
             </LocalizationProvider>
