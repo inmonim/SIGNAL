@@ -292,12 +292,11 @@ function ApplyRegister() {
         positionCode: getPositionCode(position),
         userSeq,
       }
-      console.log(req)
+      console.log(JSON.stringify(req))
       const config = { 'Content-Type': 'application/json' }
+
       await axios
-        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, JSON.stringify(req), {
-          headers: config,
-        })
+        .post('https://192.168.30.117:8443/apply/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)
         })

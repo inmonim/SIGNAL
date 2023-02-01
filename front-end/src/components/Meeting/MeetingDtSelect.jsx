@@ -46,6 +46,15 @@ function meetingDtSelet(props) {
     setOpen(false)
   }
 
+  console.log(
+    'ddddd',
+    props.meetingList.filter((item) => {
+      console.log(item)
+      console.log(props.meetingSeq)
+      return item.postingMeetingSeq + '' === props.meetingSeq
+    })[0]
+  )
+
   return (
     <CssVarsProvider>
       <div>
@@ -72,12 +81,20 @@ function meetingDtSelet(props) {
           </Box>
         </Modal>
         <div style={selectedTimeStyle}>
-          {props.meetingList
-            ? props.meetingSeq === ''
-              ? ''
-              : ` ${moment(
-                  props.meetingList.filter((item) => item.postingMeetingSeq === props.meetingSeq).meetingDt
-                ).format('LLL')}시`
+          {props.meetingList && props.meetingSeq
+            ? props.meetingList.filter((item) => {
+                console.log(item)
+                console.log(props.meetingSeq)
+                return item.postingMeetingSeq + '' === props.meetingSeq
+              })[0]
+              ? `${moment(
+                  props.meetingList.filter((item) => {
+                    console.log(item)
+                    console.log(props.meetingSeq)
+                    return item.postingMeetingSeq + '' === props.meetingSeq
+                  })[0].meetingDt
+                ).format('YYYY-MM-DD HH')}시`
+              : ''
             : ''}
         </div>
       </div>

@@ -320,7 +320,7 @@ function ApplyRegister() {
         positionCode: getPositionCode(position),
         userSeq,
       }
-      console.log(req)
+      console.log(JSON.stringify(req))
       await axios
         .put(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
         .then((res) => {
@@ -343,8 +343,8 @@ function ApplyRegister() {
   }, [])
 
   return (
-    <div className="apply-modify--container">
-      <div className="apply-modify--width-section">
+    <div className="apply-modify-container">
+      <div className="apply-modify-width-section">
         <div>
           <div className="apply-modify-title">{user.nickname} 님의지원서</div>
         </div>
