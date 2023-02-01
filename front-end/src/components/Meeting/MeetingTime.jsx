@@ -26,7 +26,7 @@ function MeetingTime(props) {
 
   const handleTimeClick = (event) => {
     props.onChange(event.target.value)
-    console.log(props)
+    console.log(event.target.value)
     props.close()
   }
 

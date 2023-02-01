@@ -260,4 +260,12 @@ const Skilldata = [
   },
 ]
 
-export default Skilldata
+function getSkillCode(name) {
+  let code = 'error'
+  Skilldata.forEach(function (item) {
+    if (item.name === name) code = item.code
+  })
+  return code
+}
+
+export default { Skilldata, getSkillCode }

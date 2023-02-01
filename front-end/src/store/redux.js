@@ -82,7 +82,18 @@ const skillCode = createSlice({
     },
   },
 })
-
+function pushUniqueObject(array, object) {
+  let isDuplicate = false
+  for (let i = 0; i < array.length; i++) {
+    if (array[i].id === object.id) {
+      isDuplicate = true
+      break
+    }
+  }
+  if (!isDuplicate) {
+    array.push(object)
+  }
+}
 export const { fetchSkillCode } = positionCode.actions
 
 // ..getSkillCommonCode //
@@ -101,19 +112,19 @@ const posting = createSlice({
 export const { fetchPostingDetail } = posting.actions
 
 // 공고등록 포지션 선택
-let nextId = 0
 
 export const positionTodo = createSlice({
   name: 'positionTodo',
   initialState: [],
   reducers: {
     add: (state, action) => {
-      nextId++
-      state.push({
-        id: nextId,
-        text: action.payload,
+      console.log(action)
+      const dic = {
+        id: action.payload.code,
+        text: action.payload.name,
         count: 0,
-      })
+      }
+      pushUniqueObject(state, dic)
     },
     remove: (state, action) => {
       return state.filter((e) => e.id !== action.payload)
@@ -122,8 +133,9 @@ export const positionTodo = createSlice({
       const idex = state.findIndex((ele) => {
         return ele.id === action.payload
       })
-
-      if (state[idex].count > 0) {
+      const sum = state.reduce((acc, cur) => acc + cur.count, 0)
+      console.log(sum)
+      if (sum < 8) {
         state[idex].count++
       }
     },
@@ -138,6 +150,25 @@ export const positionTodo = createSlice({
   },
 })
 export const { add, remove, addCount, minusCount } = positionTodo.actions
+
+let nextId = 0
+export const qnaTodo = createSlice({
+  name: 'qnaTodo',
+  initialState: [],
+  reducers: {
+    addQna: (state, action) => {
+      nextId++
+      state.push({
+        id: nextId,
+        text: action.payload,
+      })
+    },
+    removeQna: (state, action) => {
+      return state.filter((e) => e.id !== action.payload)
+    },
+  },
+})
+export const { addQna, removeQna } = qnaTodo.actions
 
 const stock = createSlice({
   name: 'stock',
@@ -161,5 +192,6 @@ export default configureStore({
     skillCode: skillCode.reducer,
     posting: posting.reducer,
     positionTodo: positionTodo.reducer,
+    qnaTodo: qnaTodo.reducer,
   },
 })

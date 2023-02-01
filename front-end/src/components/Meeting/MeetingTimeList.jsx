@@ -2,7 +2,8 @@ import React from 'react'
 import '../../assets/styles/Calendar.css'
 import MeetingTime from './MeetingTime'
 
-function MeetingTimeSelect(props) {
+function MeetingTimeList(props) {
+  console.log(props)
   return (
     <div className="time-list-section">
       {props.timeList.map((item) => (
@@ -18,4 +19,4 @@ function MeetingTimeSelect(props) {
   )
 }
 
-export default MeetingTimeSelect
+export default MeetingTimeList
