@@ -19,6 +19,7 @@ import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
 import MyProject from './pages/Project/MyProject'
+import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
@@ -51,6 +52,7 @@ function App() {
           <Route path="/qnaRegist" element={<QnaRegist />} />
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
+          <Route path="/beforemeeting" element={<Beforemeeting />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>

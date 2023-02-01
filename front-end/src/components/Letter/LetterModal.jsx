@@ -71,9 +71,9 @@ function LetterModal({ open, onClose }) {
             <SignalBtn
               sigwidth="172px"
               sigheight="55px"
-              sigfontSize="29px"
-              sigBorderRadius={15}
-              sigMargin="30px auto"
+              sigfontsize="29px"
+              sigborderradius={15}
+              sigmargin="30px auto"
               selected={selectedListIndex === 3}
               onClick={() => setSelectedListIndex(3)}
             >
