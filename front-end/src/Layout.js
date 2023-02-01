@@ -19,7 +19,7 @@ import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
 import MyProject from './pages/Project/MyProject'
-import Beforemeeting from 'pages/Beforemeeting'
+import Beforemeeting from 'pages/Apply/Beforemeeting'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
