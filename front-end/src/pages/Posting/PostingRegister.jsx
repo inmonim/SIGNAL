@@ -13,6 +13,8 @@ import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
+import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
 // import { ko } from 'date-fns/esm/locale'
 // import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
@@ -85,24 +87,23 @@ const PostingRegister = () => {
   const [posting, setPosting] = useState({
     userSeq: 1,
     subject,
-    localCode: '39',
+    localCode: '11',
     fieldCode: 'FI100',
-    Contact: true,
+    isContact: true,
     term: 10,
     content: '공고 등록 테스트 본문',
-    postingEndDt: datevalue,
-
+    postingEndDt: '2023-01-01 11:00:00.000',
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
     postingSkillList: ['WE100', 'WE101'],
     postingPositionList: [
       {
         positionCode: 'PO100',
-        positionCnt: 1,
+        positionCnt: 5,
       },
       {
         positionCode: 'PO101',
-        positionCnt: 2,
+        positionCnt: 10,
       },
     ],
     postingQuestionList: [
@@ -136,12 +137,14 @@ const PostingRegister = () => {
   // end >> Fetch
 
   // start >> Data filter
-  const [Date, setDate] = useState()
+  const [Date, setDate] = useState('')
+  const [DateList, setDateList] = useState([])
   // end >> Data filter
 
   // start >> handle position
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
+  const qnaRedux = useSelector((state) => state.qnaTodo)
   // end >> handle position
 
   // end >> skill filter
@@ -172,6 +175,16 @@ const PostingRegister = () => {
   }
 
   // end >> handle career
+  const handleDelete = (ele) => {
+    // console.log('함수')
+    setDateList(
+      DateList.filter((date) => {
+        // console.log(date, 'date')
+        // console.log(ele, 'ele')
+        return date !== ele
+      })
+    )
+  }
   // const [startDate, setStartDate] = useState(new Date())
   // start >> handle exp
 
@@ -214,29 +227,41 @@ const PostingRegister = () => {
       await axios
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
         .then((res) => {
-          console.log(res)
-          console.log(1)
+          // console.log(res)
+          // console.log(1)
         })
         .catch((err) => {
           console.log(err)
-          console.log(posting)
+          // console.log(posting)
+          // console.log(JSON.stringify(posting))
         })
 
-      console.log('공고 post')
+      // console.log('공고 post')
     } catch (error) {
-      console.log('에러')
+      // console.log('에러')
     }
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
     setPosting({ ...posting, postingPositionList: copy })
   }
+  const handleqna = () => {
+    const copy = qnaRedux.map((ele, i) => ({ num: i + 1, content: ele.text }))
+    setPosting({ ...posting, postingQuestionList: copy })
+  }
   useEffect(() => {
     // postingFetch()
     // profileFetch()
     handlePositon()
+
     // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
+  useEffect(() => {
+    handleqna()
+  }, [qnaRedux])
+  useEffect(() => {
+    setPosting({ ...posting, postingMeetingList: DateList })
+  }, [DateList])
 
   return (
     <Container>
@@ -281,7 +306,7 @@ const PostingRegister = () => {
               <Label>진행 지역</Label>
               <FilterSelect
                 onChange={(e) => {
-                  console.log(e.target.value)
+                  // console.log(e.target.value)
                   setPosting({ ...posting, localCode: e.target.value })
                 }}
               >
@@ -315,7 +340,12 @@ const PostingRegister = () => {
               <FilterSelect
                 onChange={(e) => {
                   // console.log(e.target.value)
-                  setPosting({ ...posting, isContact: e.target.value })
+                  if (e.target.value === 'true') {
+                    setPosting({ ...posting, isContact: true })
+                  } else {
+                    setPosting({ ...posting, isContact: false })
+                  }
+                  // console.log(typeof e.target.value)
                   // console.log(range(10, 3))
                 }}
               >
@@ -331,7 +361,7 @@ const PostingRegister = () => {
               <FilterSelect
                 onChange={(e) => {
                   // console.log(e.target.value)
-                  setPosting({ ...posting, term: e.target.value })
+                  setPosting({ ...posting, term: Number(e.target.value) })
                 }}
               >
                 {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
@@ -354,7 +384,7 @@ const PostingRegister = () => {
                 options={Skilldata}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  console.log(newValue)
+                  // console.log(newValue)
                   // console.log(event.target)
                   handleChangeSkill(newValue)
                 }}
@@ -362,16 +392,35 @@ const PostingRegister = () => {
                 sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
               />
             </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
-              <Label>화상 미팅 예약</Label>
-              <DateSelect setDate={setDate} />
-              <button
-                onClick={() => {
-                  console.log(Date)
-                }}
-              >
-                시간 선택
-              </button>
+            <div style={{ flexDirection: 'column' }}>
+              <div className="email-section" style={{ marginLeft: '3em' }}>
+                <Label>화상 미팅 예약</Label>
+                <Box sx={{ flexDirection: 'row' }}>
+                  <DateSelect setDate={setDate} />
+                  <button
+                    onClick={() => {
+                      if (!DateList.includes(Date)) {
+                        const copy = [...DateList]
+                        copy.push(Date)
+                        setDateList(copy)
+                      }
+                    }}
+                  >
+                    시간 선택
+                  </button>
+                </Box>
+              </div>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '500px' }}>
+                {DateList.map((ele, i) => (
+                  <Chip
+                    key={i}
+                    label={ele.slice(5, 16)}
+                    onDelete={() => {
+                      handleDelete(ele)
+                    }}
+                  />
+                ))}
+              </Stack>
             </div>
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
@@ -420,8 +469,8 @@ const PostingRegister = () => {
               <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>난이도</Label>
               <FilterSelect
                 onChange={(e) => {
-                  console.log(e.target.value)
-                  setPosting({ ...posting, level: e.target.value })
+                  // console.log(e.target.value)
+                  setPosting({ ...posting, level: Number(e.target.value) })
                 }}
               >
                 {[1, 2, 3, 4, 5].map((ele, i) => (
