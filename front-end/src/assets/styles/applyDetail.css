@@ -182,7 +182,7 @@ hr {
   width: 25%;
 }
 
-.apply-detail-project-name-section{
+.apply-detail-project-name-section {
   display: flex;
   justify-content: space-between;
   padding: 0px 15px;
@@ -204,85 +204,90 @@ hr {
   margin: 30px 0px;
 }
 
-.apply-detail-skill-image{
+.apply-detail-skill-image {
   height: 35px;
 }
 
-.apply-detail-skill{
+.apply-detail-skill {
   width: 92px;
   display: inline-block;
 }
 
-.apply-detail-career-exp-section{
+.apply-detail-career-exp-section {
   display: flex;
   margin: 30px 0px;
 }
 
 .apply-detail-content-section,
-.apply-detail-question-answer-section{
+.apply-detail-question-answer-section {
   margin: 30px 0px;
 }
 
 .apply-detail-career-section,
-.apply-detail-exp-section{
+.apply-detail-exp-section {
   width: 97%;
 }
 
-.apply-detail-skill-label{
+.apply-detail-skill-label {
   color: #574b9f;
 }
 
-.apply-detail-skill-section{
+.apply-detail-skill-section {
   display: flex;
   align-items: center;
 }
 
 .apply-detail-career-label,
-.apply-detail-exp-label{
+.apply-detail-exp-label {
   text-align: center;
   color: #574b9f;
 }
 
 .apply-detail-career,
-.apply-detail-exp{
+.apply-detail-exp {
   margin: 10px 30px 15px 30px;
 }
 
-.apply-detail-content{
+.apply-detail-content {
   padding: 15px;
   height: 140px;
-  background: #DDDBEC;  
+  background: #dddbec;
   border-radius: 8px;
   margin: 10px 0px;
 }
 
-.apply-question-content{
+.apply-question-content {
   margin-bottom: 5px;
 }
 
-.apply-answer-content{
+.apply-answer-content {
   padding: 15px;
   height: 100px;
-  background: #DDDBEC;  
+  background: #dddbec;
   border-radius: 8px;
   margin: 10px 0px;
 }
 
-.apply-detail-hr{
+.apply-detail-hr {
   border: 2px solid #463c7f;
 }
 
-.apply-detail-hr-small{
+.apply-detail-hr-small {
   border: 1.5px solid #463c7f;
 }
 
-.apply-detail-cancle-section{
+.apply-detail-cancle-section {
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 /* ----delete---- */
 
-.apply-delete-button{
+.apply-delete-button {
   position: static;
+}
+
+.apply-detail-name-position-section2 {
+  display: flex;
+  margin: 10px 0px 30px 0px;
 }
