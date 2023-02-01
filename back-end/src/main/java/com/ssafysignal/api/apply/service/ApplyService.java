@@ -73,7 +73,7 @@ public class ApplyService {
 
         //답변
         for(Map<String, Object> answerRequest : applyRegistRequest.getApplyAnswerList()){
-            int postingQuestionSeq = Integer.parseInt((String)answerRequest.get("postingQuestionSeq"));
+            int postingQuestionSeq = (int)answerRequest.get("postingQuestionSeq");
             String content = (String)answerRequest.get("content");
             ApplyAnswer applyAnswer = ApplyAnswer.builder()
                     .applySeq(apply.getApplySeq())
@@ -193,7 +193,7 @@ public class ApplyService {
         
         //답변
         for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
-            int applyAnswerSeq = Integer.parseInt((String)answerRequest.get("applyAnswerSeq"));
+            int applyAnswerSeq = (int)answerRequest.get("applyAnswerSeq");
             String content = (String)answerRequest.get("content");
             ApplyAnswer answer = applyAnswerRepository.findById(applyAnswerSeq).get();
             answer.setContent(content);

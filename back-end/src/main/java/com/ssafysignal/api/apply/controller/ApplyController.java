@@ -56,8 +56,10 @@ public class ApplyController {
             applyService.registApply(applyRegistRequest, postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (DuplicateKeyException e){
+            System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         } catch (RuntimeException e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
