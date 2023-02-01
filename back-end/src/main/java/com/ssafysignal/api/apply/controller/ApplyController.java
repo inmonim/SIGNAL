@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,10 +57,8 @@ public class ApplyController {
             applyService.registApply(applyRegistRequest, postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (DuplicateKeyException e){
-            System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         } catch (RuntimeException e) {
-            System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
@@ -146,23 +145,29 @@ public class ApplyController {
                                                              @Parameter(description = "페이지", required = true) Integer page,
                                                              @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findALlApplyToWriter - Call");
+        System.out.println("이거 안씁니다 쓰면 이상한거");
+        try {
+            List<ApplyWriterFindResponse> resList = applyService.findAllApplyWriter(postingSeq, page, size);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resList));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        }
+    }
+
+    @Tag(name = "지원")
+    @Operation(summary = "작성자 지원서 갯수 조회", description = "작성자 기준으로 지원서 갯수 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원서 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "지원서 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/writer/count/{postingSeq}")
+    private ResponseEntity<BasicResponse> countApplyWriter(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq) {
+        log.info("findALlApplyToWriter - Call");
 
         try {
-            // dummy
-            List<ApplyWriterFindResponse> applyList = new ArrayList<>();
-
-            for (int i = 0; i < size; i++){
-                applyList.add(ApplyWriterFindResponse.builder()
-                        .applySeq(i)
-                        .userSeq(1)
-                        .nickname("혁근띠")
-                        .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
-                        .build());
-            }
-
-
-//            List<ApplyWriterFindResponse> applyList = applyService.findAllApplyWriter(postingSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
+            Map<String,Integer> ret =applyService.countApplyWriter(postingSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ret));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
@@ -175,8 +180,8 @@ public class ApplyController {
             @ApiResponse(responseCode = "400", description = "지원서 목록 조회 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
-    @GetMapping("/applyer/{postingSeq}")
-    private ResponseEntity<BasicResponse> findAllApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
+    @GetMapping("/applyer/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllApplyApplyer(@Parameter(name = "userSeq", description = "유저 Seq", required = true) @PathVariable("userSeq") Integer userSeq,
                                                               @Parameter(description = "페이지", required = true) Integer page,
                                                               @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findAllApplyApplyer - Call");
@@ -202,6 +207,26 @@ public class ApplyController {
     }
 
     @Tag(name = "지원")
+    @Operation(summary = "지원자 지원서 갯수 조회", description = "지원자 기준으로 지원서 갯수를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "지원서 목록 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "지원서 목록 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/applyer/count/{userSeq}")
+    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("findAllApplyApplyer - Call");
+
+        try {
+            Map<String,Integer> ret =applyService.countApplyApplyer(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ret));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        }
+    }
+
+
+    @Tag(name = "지원")
     @Operation(summary = "지원서 메모 등록", description = "지원서 메모 등록한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "지원서 메모 등록 완료"),
@@ -214,7 +239,7 @@ public class ApplyController {
 
         try {
             log.info(applyMemoRequest.toString());
-
+        //할것!
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
