@@ -25,7 +25,7 @@ function Header() {
   const [isLogin, setIsLogin] = useState(false)
   const [letterCnt, setLetterCnt] = useState(0)
   useEffect(() => {
-    if (sessionStorage.getItem('username') !== null) {
+    if (sessionStorage.getItem('userSeq') !== null) {
       setIsLogin(true)
       fetch(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq'), {
         method: 'GET',
@@ -38,9 +38,33 @@ function Header() {
   })
 
   const onLogout = () => {
-    sessionStorage.removeItem('username')
-    sessionStorage.removeItem('userEmail')
-    setIsLogin(false)
+    fetch(process.env.REACT_APP_API_URL + '/auth/logout', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: 'Bearer ' + sessionStorage.getItem('accessToken'),
+        RefreshToken: 'Bearer ' + sessionStorage.getItem('refreshToken'),
+      },
+    })
+      .then((res) => {
+        if (res.ok === true) {
+          return res.json()
+        } else {
+          throw new Error('다시 시도')
+        }
+      })
+      .then((data) => {
+        console.log('로그아웃 성공')
+        sessionStorage.removeItem('accessToken')
+        sessionStorage.removeItem('userEmail')
+        sessionStorage.removeItem('username')
+        sessionStorage.removeItem('userSeq')
+        setIsLogin(false)
+      })
+      .catch((e) => {
+        alert('다시 시도')
+        return e.message
+      })
   }
 
   return (
@@ -70,11 +94,15 @@ function Header() {
                 </D.Down>
               </D.DropdownContainer>
             </li>
-            <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/">
-                마이프로젝트
-              </Link>
-            </li>
+            {isLogin ? (
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/myproject">
+                  마이프로젝트
+                </Link>
+              </li>
+            ) : (
+              <li></li>
+            )}
             <li>
               <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
                 공지사항
@@ -131,7 +159,7 @@ function Header() {
                   <D.Down isDropped={nameIsOpen}>
                     <D.Ul>
                       <D.Li>
-                        <D.LinkWrapper href="/">마이페이지</D.LinkWrapper>
+                        <D.LinkWrapper href="/myprofile">마이페이지</D.LinkWrapper>
                       </D.Li>
                       <D.Li>
                         <D.LinkWrapper onClick={onLogout}>로그아웃</D.LinkWrapper>

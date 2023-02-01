@@ -77,7 +77,7 @@ function FindEmailPwdModal({ open, onClose }) {
   }
   const handleAlertToMain = () => {
     setAlertOpen(false)
-    onClose(onClose(true))
+    onClose(true)
   }
   const handleFindPwd = () => {
     console.log('click Find Pwd')
@@ -102,9 +102,7 @@ function FindEmailPwdModal({ open, onClose }) {
     <>
       <Modal hideBackdrop open={open} onClose={onClose}>
         <Box sx={style}>
-          <div className="close">
-            <img className="find-closeimg" src={closeBtn} alt="closeBtn" onClick={onClose} />
-          </div>
+          <img className="find-closeimg" src={closeBtn} alt="closeBtn" onClick={onClose} />
           <div className="find-container">
             <div className="find-header">이메일 / 비밀번호 찾기</div>
             <div className="find-email">
