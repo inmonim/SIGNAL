@@ -1,0 +1,71 @@
+.find-closeimg {
+  cursor: pointer;
+  display: inline-block;
+  position: absolute;
+  left: 90%;
+  bottom: 90%;
+  transform: translate(-50%, 0%);
+}
+
+.find-container {
+  text-align: center;
+}
+
+.find-header {
+  display: inline-block;
+  font-size: 43px;
+  padding: 48px;
+}
+
+.find-email {
+  display: inline-block;
+  width: 90%;
+  padding: 23px;
+}
+
+.find-email-header {
+  display: flex;
+  align-items: center;
+  font-size: 27px;
+  margin-bottom: 20px;
+}
+
+.find-email-header::after {
+  content: '';
+  flex-grow: 1;
+  border: 1px solid #796fb2;
+  font-size: 0px;
+  line-height: 0px;
+  margin-left: 42px;
+}
+
+.find-email-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+.find-pwd {
+  display: inline-block;
+  width: 90%;
+  padding: 23px;
+}
+
+.find-pwd-header {
+  display: flex;
+  align-items: center;
+  font-size: 27px;
+  margin-bottom: 20px;
+}
+
+.find-pwd-header::after {
+  content: '';
+  flex-grow: 1;
+  border: 1px solid #796fb2;
+  font-size: 0px;
+  line-height: 0px;
+  margin-left: 42px;
+}
+
+.find-pwd-btn {
+  display: flex;
+  justify-content: flex-end;
+}
