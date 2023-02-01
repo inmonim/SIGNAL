@@ -20,6 +20,7 @@ import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
 import MyProject from './pages/Project/MyProject'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
+import ProjectDetail from './pages/Project/ProjectDetail'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -42,6 +43,7 @@ function App() {
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="/teamselect" element={<TeamSelect />} />
+          <Route path="/projectDetail" element={<ProjectDetail />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />

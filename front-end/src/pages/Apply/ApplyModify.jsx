@@ -8,12 +8,12 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
 import Skill from '../../data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
-import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
+import QnaList from 'components/Apply/QnaList'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -29,9 +29,11 @@ const textAreaStyle = {
 function ApplyRegister() {
   const location = useLocation()
 
-  const userSeq = 1
+  const userSeq = 82
   const postingSeq = 458
   const applySeq = location.state.applySeq
+
+  const navigate = useNavigate()
 
   // start >> useState
 
@@ -43,14 +45,14 @@ function ApplyRegister() {
   const [expList, setExpList] = useState([])
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
-  const [questionList, setQuestionList] = useState([])
-  const [answerList, setAnswerList] = useState([])
-  const [qnaList, setQnaList] = useState([])
+  // const [questionList, setQuestionList] = useState([])
+  // const [answerList, setAnswerList] = useState([])
+  const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')
+  // const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')/
   const [meetingDafault, setMeetingDafault] = useState('')
   // ene >> useState
 
@@ -59,6 +61,8 @@ function ApplyRegister() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
+      console.log('user', res.data.body)
+      console.log('user', res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -68,6 +72,7 @@ function ApplyRegister() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
+      console.log(res.data.body)
       const answerArr = []
       res.data.body.postingQuestionList.map((item) =>
         answerArr.push({
@@ -77,7 +82,7 @@ function ApplyRegister() {
         })
       )
       meetingFetchFilter(res.data.body.postingMeetingList)
-      setQuestionList(res.data.body.postingQuestionList)
+      // setQuestionList(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -85,17 +90,20 @@ function ApplyRegister() {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      setApply(res.data.body)
-      careerFetchFilter(res.data.body.careerList)
-      expFetchFilter(res.data.body.careerList)
-      skillFetchFilter(res.data.body.skillList)
-      setPosition(res.data.body.position.name)
-      setContent(res.data.body.content)
-      setAnswerList(res.data.body.answerList)
-      setMeetingSeq(res.data.body.postingMeeting.postingMeetingSeq)
-      console.log('meetingSeq', res.data.body.postingMeeting.postingMeetingSeq)
+      const applyRes = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const postingRes = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+
+      setApply(applyRes.data.body)
+      careerFetchFilter(applyRes.data.body.careerList)
+      expFetchFilter(applyRes.data.body.expList)
+      skillFetchFilter(applyRes.data.body.skillList)
+      setPosition(applyRes.data.body.position.name)
+      setContent(applyRes.data.body.content)
+      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
+      setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
+      console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log(apply)
+      console.log('applyRes.data.body', applyRes.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -172,14 +180,16 @@ function ApplyRegister() {
   }
 
   const answerPostFilter = (list) => {
-    console.log('여길봐', list)
+    console.log('listdf', list)
     const answerArr = []
     list.map((item) =>
       answerArr.push({
-        applyAnswerSeq: item.applyAnswerSeq + '',
-        content: item.content,
+        applyAnswerSeq: item.applyAnswerSeq,
+        content: item.defaultValue,
       })
     )
+    console.log('answerArr', answerArr)
+
     return answerArr
   }
 
@@ -271,10 +281,12 @@ function ApplyRegister() {
         newExpArr.splice(index, 1, { seq: key, content: value })
       }
     }
+    console.log(newExpArr)
     setExpList(newExpArr)
   }
 
   const handleExpRemove = (key) => {
+    console.log(key)
     setExpList(expList.filter((exp) => exp.seq !== key))
   }
 
@@ -291,32 +303,34 @@ function ApplyRegister() {
   // start >> handle qna
 
   const handleQnAChange = (value, key) => {
-    const answerArr = [...answerList]
+    const qnaArr = [...qnaList]
     console.log(key)
-    answerList.forEach((item, index) => {
+    qnaArr.forEach((item, index) => {
       if (item.postingQuestionSeq === key) {
-        answerArr.splice(index, 1, {
+        qnaArr.splice(index, 1, {
           postingQuestionSeq: key,
-          content: value,
+          content: item.content,
+          applyAnswerSeq: item.applyAnswerSeq,
+          defaultValue: value,
         })
       }
     })
 
-    setAnswerList(answerArr)
-    console.log(answerArr)
+    setQnaList(qnaArr)
+    console.log(qnaArr)
   }
 
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
-    setMeetingSeqCheck(false)
+    // setMeetingSeqCheck(false)
     setMeetingSeq(key)
   }
 
   const handleApplyModify = async () => {
     try {
       const req = {
-        applyAnswerList: answerPostFilter(answerList),
+        applyAnswerList: answerPostFilter(qnaList),
         applyCareerList: careerPostFilter(careerList),
         applyExpList: expPostFilter(expList),
         applySkillList: skillPostFilter(skillList),
@@ -325,34 +339,6 @@ function ApplyRegister() {
         positionCode: getPositionCode(position),
         userSeq,
       }
-
-      // const req1 = {
-      //   applyAnswerList: [
-      //     { applyAnswerSeq: 7, content: 'erwedfasd' },
-      //     { applyAnswerSeq: 8, content: 'erwesafsadf' },
-      //   ],
-      //   applyCareerList: [
-      //     '경력 단위 테스트',
-      //     '경력 단위 테스트2',
-      //     '경력테스트!',
-      //     '경력테스트!',
-      //     '경력 단위 테스트',
-      //     '경력 단위 테스트2',
-      //   ],
-      //   applyExpList: [
-      //     '경력 단위 테스트',
-      //     '경력 단위 테스트2',
-      //     '경력테스트!',
-      //     '경력테스트!',
-      //     '경력 단위 테스트',
-      //     '경력 단위 테스트2',
-      //   ],
-      //   applySkillList: ['WE103', 'WE101'],
-      //   content: 'fdf',
-      //   postingMeetingSeq: 314,
-      //   positionCode: 'PO101',
-      //   userSeq: 1,
-      // }
       console.log(JSON.stringify(req))
       const config = { 'Content-Type': 'application/json' }
       await axios
@@ -365,21 +351,23 @@ function ApplyRegister() {
         })
 
       console.log('지원서 put')
+      navigate(-1)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const qnaListDataFormat = () => {
+  const qnaListDataFormat = (apply, posting) => {
     const qnaArr = []
-    questionList.map((item, index) =>
+    posting.postingQuestionList.map((item, index) =>
       qnaArr.push({
         postingQuestionSeq: item.postingQuestionSeq,
         content: item.content,
-        defaultValue: answerList[index].content,
+        defaultValue: apply.answerList[index].content,
+        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
       })
     )
-    console.log(qnaArr)
+    console.log('qnaArr', qnaArr)
     setQnaList(qnaArr)
   }
 
@@ -387,7 +375,6 @@ function ApplyRegister() {
     userFetch()
     postingFetch()
     applyFetch()
-    qnaListDataFormat()
   }, [])
 
   return (
@@ -449,7 +436,7 @@ function ApplyRegister() {
                     onChange={handleMeetingDtChange}
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
-                  {meetingSeqCheck === 'true' ? (
+                  {meetingDafault !== '' ? (
                     <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD')}</div>
                   ) : (
                     ''
@@ -547,7 +534,7 @@ function ApplyRegister() {
               <div className="apply-modify-label">지원자에게 궁금한 점</div>
             </div>
             <div style={{ margin: '10px 0px' }}>
-              <QnAList questionList={qnaList} onChange={handleQnAChange}></QnAList>
+              <QnaList questionList={qnaList} onChange={handleQnAChange}></QnaList>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
+import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 
 const inputStyle = {
@@ -29,7 +30,7 @@ function ApplyRegister() {
   const postingSeq = 458
 
   // start >> useState
-
+  const navigate = useNavigate()
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [position, setPosition] = useState('')
@@ -301,7 +302,7 @@ function ApplyRegister() {
         applyExpList: expPostFilter(expList),
         applySkillList: skillPostFilter(skillList),
         content,
-        postingMeetingSeq: meetingSeq,
+        postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
         userSeq,
       }
@@ -309,7 +310,7 @@ function ApplyRegister() {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
-        .post('https://192.168.30.117:8443/apply/' + postingSeq, req, config)
+        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)
         })
@@ -321,6 +322,7 @@ function ApplyRegister() {
     } catch (error) {
       console.log(error)
     }
+    navigate('/')
   }
 
   useEffect(() => {
