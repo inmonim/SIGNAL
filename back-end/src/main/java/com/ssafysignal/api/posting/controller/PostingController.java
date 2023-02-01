@@ -93,10 +93,9 @@ public class PostingController {
         if (postingSkillList != null && postingSkillList.size() > 0) searchKeys.put("postingSkillList", postingSkillList);
 
         postingSkillList = new ArrayList<>();  //임시
-        postingSkillList.add("WE102"); postingSkillList.add("WE100");
-        searchKeys.put("postingSkillList", postingSkillList);
+        postingSkillList.add("WE101"); postingSkillList.add("WE100");
         try {
-            List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys);
+            List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys, postingSkillList);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
