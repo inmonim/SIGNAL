@@ -13,17 +13,20 @@ import java.util.Map;
 public class ProjectSpecification {
     public static Specification<Project> bySearchWord(Map<String, Object> searchKey){
         return ((root, query, criteriaBuilder) -> {
+            System.out.println((ArrayList<String>) searchKey.get("postingSkillList"));
             Predicate projectList = criteriaBuilder.conjunction();
-
-            if (searchKey.get("subject") != null) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("subject"), "%" + searchKey.get("subject") + "%"));
-            if (searchKey.get("localCode") != null) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("localCode"), "%" + searchKey.get("localCode") + "%"));
-            if (searchKey.get("fieldCode") != null) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("fieldCode"), "%" + searchKey.get("fieldCode") + "%"));
-            if (searchKey.get("postingSkillList") != null) {
+            if (searchKey.containsKey("subject")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("subject"), "%" + searchKey.get("subject") + "%"));
+            if (searchKey.containsKey("localCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("localCode"),(String)searchKey.get("localCode")));
+            if (searchKey.containsKey("fieldCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("fieldCode"), (String)searchKey.get("fieldCode")));
+            //projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("projectCode"), "PS102"));
+            if (searchKey.containsKey("postingSkillList")) {
                 List<String> skills = (ArrayList<String>) searchKey.get("postingSkillList");
 
                 Join<Project, Posting> postingJoin = root.join("posting");
                 Join<Posting, PostingSkill> postingSkillJoin = postingJoin.join("postingSkillList");
-                projectList = criteriaBuilder.and(projectList, postingSkillJoin.get("skillCode").in(skills));
+                //Join<Posting, PostingSkill> postingSkillJoin = postingJoin.
+                for(String skill : skills)
+                    projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(postingSkillJoin.get("skillCode"),skill));
             }
             return projectList;
         });

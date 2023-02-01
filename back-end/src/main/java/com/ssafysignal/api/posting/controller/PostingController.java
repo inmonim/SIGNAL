@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,13 +85,16 @@ public class PostingController {
                                                          @Parameter(description = "분야 코드") String fieldCode,
                                                          @Parameter(description = "기술 스택 목록", schema = @Schema(type = "List")) @RequestParam(required = false) List<String> postingSkillList) {
         log.info("findAllPosting - Call");
-
+        System.out.println(subject+", "+localCode+", "+fieldCode+","+postingSkillList);
         Map<String, Object> searchKeys = new HashMap<>();
         if (subject != null && !subject.equals("")) searchKeys.put("subject", subject);
         if (localCode != null && !localCode.equals("")) searchKeys.put("localCode", localCode);
         if (fieldCode != null && !fieldCode.equals("")) searchKeys.put("fieldCode", fieldCode);
         if (postingSkillList != null && postingSkillList.size() > 0) searchKeys.put("postingSkillList", postingSkillList);
 
+        postingSkillList = new ArrayList<>();  //임시
+        postingSkillList.add("WE102"); postingSkillList.add("WE100");
+        searchKeys.put("postingSkillList", postingSkillList);
         try {
             List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
