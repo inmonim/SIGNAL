@@ -26,7 +26,7 @@ function ApplyDetail() {
   // const userSeq = location.state.userSeq
   // const applySeq = location.state.applySeq
 
-  const userSeq = 1
+  const userSeq = 82
   const applySeq = 60
   const postingSeq = 458
   const [posting, setPosting] = useState('458')

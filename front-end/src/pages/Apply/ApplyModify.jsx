@@ -10,7 +10,7 @@ import Skill from '../../data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
 import QnaList from 'components/Apply/QnaList'
@@ -33,6 +33,8 @@ function ApplyRegister() {
   const postingSeq = 458
   const applySeq = location.state.applySeq
 
+  const navigate = useNavigate()
+
   // start >> useState
 
   const [user, setUser] = useState([])
@@ -44,7 +46,7 @@ function ApplyRegister() {
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
   // const [questionList, setQuestionList] = useState([])
-  const [answerList, setAnswerList] = useState([])
+  // const [answerList, setAnswerList] = useState([])
   const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
@@ -97,7 +99,6 @@ function ApplyRegister() {
       skillFetchFilter(applyRes.data.body.skillList)
       setPosition(applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
-      setAnswerList(applyRes.data.body.answerList)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log(apply)
@@ -184,9 +185,11 @@ function ApplyRegister() {
     list.map((item) =>
       answerArr.push({
         applyAnswerSeq: item.applyAnswerSeq,
-        content: item.content,
+        content: item.defaultValue,
       })
     )
+    console.log('answerArr', answerArr)
+
     return answerArr
   }
 
@@ -300,19 +303,21 @@ function ApplyRegister() {
   // start >> handle qna
 
   const handleQnAChange = (value, key) => {
-    const answerArr = [...answerList]
+    const qnaArr = [...qnaList]
     console.log(key)
-    answerList.forEach((item, index) => {
+    qnaArr.forEach((item, index) => {
       if (item.postingQuestionSeq === key) {
-        answerArr.splice(index, 1, {
+        qnaArr.splice(index, 1, {
           postingQuestionSeq: key,
-          content: value,
+          content: item.content,
+          applyAnswerSeq: item.applyAnswerSeq,
+          defaultValue: value,
         })
       }
     })
 
-    setAnswerList(answerArr)
-    console.log(answerArr)
+    setQnaList(qnaArr)
+    console.log(qnaArr)
   }
 
   // end >> handle qna
@@ -346,6 +351,7 @@ function ApplyRegister() {
         })
 
       console.log('지원서 put')
+      navigate(-1)
     } catch (error) {
       console.log(error)
     }
