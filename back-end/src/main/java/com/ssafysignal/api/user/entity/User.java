@@ -38,8 +38,7 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "birth")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime birth;
+    private String birth;
     @Column(name = "phone")
     private String phone;
     @Column(name = "reg_dt")
@@ -51,7 +50,7 @@ public class User {
     private ImageFile imageFile;
 
     @Builder
-    public User(Integer userSeq, String name, String email, String password, String nickname, LocalDateTime birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
+    public User(Integer userSeq, String name, String email, String password, String nickname, String birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
@@ -64,7 +63,7 @@ public class User {
         this.imageFile = imageFile;
     }
 
-    public void modifyUser(String name, String nickname,String phone, LocalDateTime birth) {
+    public void modifyUser(String name, String nickname,String phone, String birth) {
         this.name = name;
         this.nickname = nickname;
         this.phone = phone;
