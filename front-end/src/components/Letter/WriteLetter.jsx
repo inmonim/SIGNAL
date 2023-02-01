@@ -21,15 +21,15 @@ const inputStyle = {
 
 const SignalBtn = styled(Btn)(({ theme }) => ({
   float: 'right',
-  marginRight: '210px',
   backgroundColor: '#fff',
-  color: '#574B9F',
   width: '92px',
   height: '45px',
   fontSize: '29px',
   border: '1px solid #574B9F',
   borderRadius: 15,
   boxShadow: '0px 4px 7px rgba(0,0,0,0.25)',
+  color: '#574B9F',
+  marginRight: '210px',
   '&:hover': {
     backgroundColor: '#574B9F',
     borderColor: '1px solid #574B9F',
