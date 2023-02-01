@@ -63,7 +63,7 @@ function RegistModal({ open, onClose }) {
     name: '',
     nickname: '',
     phone: '',
-    // userBirth: '',
+    userBirth: '',
   })
 
   const handleInput = (e) => {
@@ -81,6 +81,26 @@ function RegistModal({ open, onClose }) {
   function checkpass(str) {
     const reg = /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.]).{8,}$/
     return reg.test(str)
+  }
+
+  function birthToString(value) {
+    if (value !== null) {
+      const year = String(value.$y)
+      let month = ''
+      let day = ''
+      if (value.$M + 1 >= 10) {
+        month = String(value.$M + 1)
+      } else {
+        month = '0' + String(value.$M + 1)
+      }
+      if (value.$D >= 10) {
+        day = String(value.$D)
+      } else {
+        day = '0' + String(value.$D)
+      }
+      const birthString = `${year}-${month}-${day}`
+      return birthString
+    }
   }
 
   const [msg1, setMsg1] = useState('')
@@ -201,13 +221,13 @@ function RegistModal({ open, onClose }) {
                 name="birth"
                 label="Birth"
                 inputFormat="YYYY / MM / DD"
-                value={value}
+                value={birthToString(value)}
                 onChange={(newValue) => {
                   setValue(newValue)
                 }}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
               />
-              {console.log(value)}
+              {console.log(birthToString(value))}
             </LocalizationProvider>
           </div>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
