@@ -70,7 +70,16 @@ function QnaDetail() {
               <span>{data.view}</span>
             </div>
           </div>
-          <div className="qna-detail-content">{data.content}</div>
+          <div className="qna-detail-content">
+            {(data.content || '').split('\n').map((line, index) => {
+              return (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              )
+            })}
+          </div>
         </div>
         {data.answer !== null ? (
           <div className="qna-detail-comment">
