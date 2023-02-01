@@ -1,8 +1,10 @@
 package com.ssafysignal.api.global.config;
 
+import com.ssafysignal.api.global.jwt.CustomUserDetailService;
 import com.ssafysignal.api.global.jwt.JwtAuthenticationFilter;
 import com.ssafysignal.api.global.jwt.JwtEntryPoint;
-import com.ssafysignal.api.global.jwt.JwtTokenProvider;
+import com.ssafysignal.api.global.jwt.JwtTokenUtil;
+import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,21 +21,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtEntryPoint jwtEntryPoint;
-    private final JwtTokenProvider jwtTokenProvider;
-
+    private final JwtTokenUtil jwtTokenUtil;
+    private final CustomUserDetailService customUserDetailService;
+    private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors()
-
-                .and()
+                .httpBasic().disable()
                 .csrf().disable()
+
                 .authorizeRequests()
-                .anyRequest().permitAll()
-//                .antMatchers("/", "/auth/*", "/user/").permitAll()
-//                .antMatchers("/admin/*").hasAnyAuthority("ADMIN")
-//                .antMatchers("/board/*").hasAnyAuthority("USER")
+//                .antMatchers("/posting/**").hasAnyAuthority("USER")
+//                .antMatchers("/board/**").hasAnyAuthority("USER")
+//                .antMatchers("/auth/login").permitAll()
 //                .anyRequest().authenticated()
+                .anyRequest().permitAll()
 
                 .and()
                 .exceptionHandling()
@@ -44,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService, logoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

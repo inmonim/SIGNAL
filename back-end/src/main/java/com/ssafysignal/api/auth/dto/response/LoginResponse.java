@@ -1,14 +1,15 @@
 package com.ssafysignal.api.auth.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-@AllArgsConstructor
-public class TokenDto {
-    private String grantType;
+public class LoginResponse {
+    private Integer userSeq;
+    private String email;
+    private String name;
+
     private String accessToken;
     private String refreshToken;
 }
