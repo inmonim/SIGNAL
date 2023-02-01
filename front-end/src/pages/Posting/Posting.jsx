@@ -14,7 +14,7 @@ import TextField from '@mui/material/TextField'
 import Skilldata from 'data/Skilldata'
 import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
-
+import Paging from 'components/Paging'
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
@@ -134,23 +134,36 @@ function Posting() {
     // setTitle(e.target.value)
   }
 
+  const [page, setPage] = useState(1)
+  const [size] = useState(20)
+  const [count, setCount] = useState(0)
+  const handleToPage = (page) => {
+    setPage(page)
+  }
+
   const postList = async () => {
-    const res = await axios.get('https://www.ssafysignal.site:8443/posting?page=1&size=100&fieldCode=FI100')
+    const res = await axios.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}&fieldCode=FI100`)
     setPostingList(res.data.body.postingList)
+  }
+  const countFetch = async () => {
+    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/count')
+    setCount(res.data.body.count)
   }
   const btnClickAxios = async () => {
     const res = await axios.get(
-      `https://www.ssafysignal.site:8443/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
+      process.env.REACT_APP_API_URL +
+        `/posting?page=${page}&size=${size}&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
     )
     setPostingList(res.data.body.postingList)
     // console.log(Title)/
   }
   useEffect(() => {
     postList()
+    countFetch()
   }, [])
   useEffect(() => {
     btnClickAxios()
-  }, [value, local, Title, skillListauto])
+  }, [value, local, Title, skillListauto, page])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [local])
@@ -345,7 +358,7 @@ function Posting() {
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                      style={{ marginRight: '1em', width: '47px', height: '30px' }}
                     />
                     {ele}
                   </Skillbtn>
@@ -398,11 +411,11 @@ function Posting() {
             <PostingCardItem post={post} key={i} />
           ))}
         </PostList>
+        <Paging page={page} count={count} setPage={handleToPage} size={size}></Paging>
       </Container>
     </div>
   )
 }
-export default Posting
 
 const Container = styled.div`
   width: 80%;
@@ -534,3 +547,4 @@ const FilterInput = styled.input`
     box-shadow: inset 0 0 0 1px#3396f4;
   }
 `
+export { Posting, FilterInput }

@@ -1,6 +1,5 @@
 .notice-page-container {
   width: 100%;
-  height: 90%;
   display: flex;
   align-items: center;
 }
@@ -14,7 +13,7 @@
   font-size: 44px;
   display: flex;
   justify-content: center;
-  margin-bottom: 70px;
+  margin: 50px 0px;
 }
 
 /* 테이블 헤더  */
@@ -49,7 +48,7 @@ a{
   height: 600px;
   border-top: 2px solid #796fb2;
   border-bottom: 2px solid #796fb2;
-  margin: auto;
+  margin: 70px auto;
 }
 
 .notice-detail-title{

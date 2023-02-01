@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
+import { useNavigate } from 'react-router-dom'
+import AlertModal from 'components/AlertModal'
 import 'assets/styles/qna.css'
 
 const inputStyle = {
@@ -23,6 +25,7 @@ function QnaRegist() {
     title: '',
     userSeq: sessionStorage.getItem('userSeq'),
   })
+  const [alertOpen, setAlertOpen] = useState(false)
   const handleInput = (e) => {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
@@ -37,17 +40,15 @@ function QnaRegist() {
       },
       body: JSON.stringify(inputs),
     })
-      .then((res) => {
-        if (res.ok === true) {
-          console.log(res)
-          return res.json()
-        } else {
-          alert('다시!')
-        }
-      })
+      .then((res) => res.json())
       .then((data) => {
-        console.log(`data: ${JSON.stringify(data)}`)
+        setAlertOpen(true)
       })
+  }
+  const navigate = useNavigate()
+  const handleAlert = (e) => {
+    setAlertOpen(false)
+    navigate(`/qna`)
   }
   return (
     <div className="qna-page-container">
@@ -81,6 +82,7 @@ function QnaRegist() {
             >
               완료
             </SignalBtn>
+            <AlertModal open={alertOpen} onClick={handleAlert} msg="등록되었습니다."></AlertModal>
           </div>
         </div>
       </div>
