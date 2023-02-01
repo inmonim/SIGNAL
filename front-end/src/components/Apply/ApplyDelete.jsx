@@ -7,6 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/applyDetail.css'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const CancleButton = styled(Button)(({ theme }) => ({
@@ -30,6 +31,7 @@ const DeleteButton = styled(Button)(({ theme }) => ({
 
 function ApplyDelete({ applySeq }) {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleOpen = () => {
     setOpen(true)
@@ -44,6 +46,7 @@ function ApplyDelete({ applySeq }) {
     try {
       const res = await axios.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       console.log(res)
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
@@ -66,8 +69,8 @@ function ApplyDelete({ applySeq }) {
             지원을 취소하시겠습니까?
           </DialogTitle>
           <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
-          <DialogActions className="apply-delete-button">
-            <DeleteButton onClick={handleApplyDelete}>삭제</DeleteButton>
+          <DialogActions className="apply-delete-button" onClick={handleApplyDelete}>
+            <DeleteButton>삭제</DeleteButton>
           </DialogActions>
         </div>
       </Dialog>
