@@ -81,7 +81,7 @@ function ApplyDetail() {
               <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
             </div>
             <div className="apply-detail-cancle-section">
-              <Link to={'/applymodify'} state={{ applySeq: applySeq }}>
+              <Link to={'/applymodify'} state={{ applySeq }}>
                 <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
                   지원 수정
                 </ApplyModify>
