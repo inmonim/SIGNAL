@@ -8,6 +8,7 @@ import LetterModal from 'components/Letter/LetterModal'
 import * as D from './DropDownStyle'
 import Badge from '@mui/material/Badge'
 import EmailIcon from '@mui/icons-material/Email'
+import SignalBtn from 'components/common/SignalBtn'
 
 function Header() {
   const [postingIsOpen, postingRef, postingHandler] = useDetectClose(false)
@@ -67,6 +68,7 @@ function Header() {
       })
   }
 
+  if (window.location.pathname === '/beforemeeting') return null
   return (
     <div className="header-container">
       <div className="header-wrap">
@@ -129,6 +131,9 @@ function Header() {
                   </D.Ul>
                 </D.Down>
               </D.DropdownContainer>
+            </li>
+            <li>
+              <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>사전미팅</SignalBtn>
             </li>
           </ul>
         </div>
