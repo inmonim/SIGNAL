@@ -113,8 +113,7 @@ function RegistModal({ open, onClose }) {
 
   async function emailDupCheck() {
     const email = inputs.email
-    // fetch(process.env.REACT_APP_API_URL + `/auth/email/${email}`, {
-    return await fetch(`https://localhost:8443/auth/email/${email}`, {
+    return await fetch(process.env.REACT_APP_API_URL + `/auth/email/${email}`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -124,17 +123,15 @@ function RegistModal({ open, onClose }) {
       .then((response) => {
         console.log(response)
         if (response.body === true) {
-          alert('이미 가입된 이메일입니다.')
           return true
         } else {
           return false
         }
       })
   }
-
   async function nicknameDupCheck() {
     const nickname = inputs.nickname
-    return await fetch(`https://localhost:8443/auth/nickname/${nickname}`, {
+    return await fetch(process.env.REACT_APP_API_URL + `/auth/nickname/${nickname}`, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
@@ -144,7 +141,6 @@ function RegistModal({ open, onClose }) {
       .then((response) => {
         console.log(response)
         if (response.body === true) {
-          alert('이미 존재하는 닉네임입니다.')
           return true
         } else {
           return false
@@ -152,7 +148,7 @@ function RegistModal({ open, onClose }) {
       })
   }
   function registUser() {
-    return fetch(`https://localhost:8443/user/`, {
+    fetch(process.env.REACT_APP_API_URL + '/user', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -197,12 +193,21 @@ function RegistModal({ open, onClose }) {
     return true
   }
 
+  // 해당 input에서 유효성, 중복검사 통과하면 경고문 없애기 위한 리셋 함수
+  function msgReset() {
+    setMsg1('')
+    setMsg2('')
+    setMsg3('')
+    setMsg4('')
+  }
+
   const [msg1, setMsg1] = useState('')
   const [msg2, setMsg2] = useState('')
   const [msg3, setMsg3] = useState('')
   const [msg4, setMsg4] = useState('')
 
   const handleAlertOpen = () => {
+    msgReset()
     if (checkemail(inputs.email) === false) {
       setMsg1('이메일 형식을 확인해주세요.')
       return
@@ -221,7 +226,7 @@ function RegistModal({ open, onClose }) {
     } else {
       setMsg3('')
     }
-    return regist().then((checkPass) => {
+    regist().then((checkPass) => {
       if (checkPass) {
         setAlertOpen(true)
       }
@@ -264,6 +269,7 @@ function RegistModal({ open, onClose }) {
               id="filled-multiline-flexible"
               name="password"
               label="Password"
+              type={'password'}
               multiline
               sx={inputStyle}
               onChange={handleInput}
@@ -273,6 +279,7 @@ function RegistModal({ open, onClose }) {
               id="filled-multiline-flexible"
               name="passwordCheck"
               label="Password Check"
+              type="password"
               multiline
               sx={inputStyle}
               onChange={handleInput}
@@ -308,7 +315,7 @@ function RegistModal({ open, onClose }) {
               <DatePicker
                 name="birth"
                 label="Birth"
-                inputFormat="YYYY / MM / DD"
+                inputFormat="YYYY/MM/DD"
                 value={value}
                 onChange={dateInput}
                 renderInput={(params) => <TextField {...params} helperText={null} sx={inputStyle} />}
