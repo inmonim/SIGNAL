@@ -17,7 +17,7 @@ const Application = () => {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/apply/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + `/apply/1`)
       setApply(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
       console.log(res.data.body)
@@ -28,7 +28,7 @@ const Application = () => {
 
   const userFetch = async () => {
     try {
-      const res = await axios.get('http://www.ssafysignal.site:8080/user/1')
+      const res = await axios.get(process.env.REACT_APP_API_URL + `/user/1`)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
