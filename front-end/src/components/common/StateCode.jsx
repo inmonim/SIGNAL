@@ -19,14 +19,14 @@ import { css } from '@emotion/react'
 const dynamicStyle = (props) => {
   return css`
     background-color: ${props.children === '대기중'
-      ? 'rgb(87, 75, 159, 0.5)'
+      ? 'rgb(87, 75, 159, 0.4)'
       : props.children === '지원취소'
-      ? 'rgb(255, 66, 66, 0.5)'
+      ? 'rgb(255, 66, 66, 0.4)'
       : 'white'};
     border-radius: 15px;
-    padding: 4px 2px;
     color: white;
-    font-size: normal;
+    padding: 2px 4px;
+    font-size: 17px;
   `
 }
 const StateCode = styled.div`

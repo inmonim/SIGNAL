@@ -8,18 +8,12 @@
   margin: auto;
 }
 
-.team-select-table-header{
-
-}
-
 
 .team-submit{
   display: flex;
   justify-content: center;
   margin-top: 15px;
 }
-
-.team-selct-table{}
 
 .team-select-banner{
   width: 100%;
@@ -35,4 +29,5 @@
 .team-select-submit-button{
   display: flex;
   justify-content: center;
+  margin: 10px 0px;
 }
