@@ -1,0 +1,38 @@
+.hr-sect {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: #000000;
+  font-size: 27px;
+  margin: 8px 0px;
+}
+
+.hr-sect::after {
+  content: '';
+  flex-grow: 1;
+  border: 1px solid #796fb2;
+  font-size: 0px;
+  line-height: 0px;
+}
+
+hr {
+  border: 1px solid #796fb2;
+}
+
+.project-list-container {
+  display: flex;
+}
+
+.project-list-end {
+  border: 1px solid black;
+  display: flex;
+  width: 281px;
+  height: 223px;
+}
+
+.project-list-ing {
+  border: 1px solid black;
+  display: flex;
+  width: 281px;
+  height: 223px;
+}
