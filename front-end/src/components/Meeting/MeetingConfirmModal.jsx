@@ -32,7 +32,7 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
 function MeetingConfirmModal() {
   const [open, setOpen] = useState(false)
 
-  const handleOpen = () => {
+  const handleOpen = (e) => {
     setOpen(true)
   }
 

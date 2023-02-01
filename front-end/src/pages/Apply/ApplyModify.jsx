@@ -52,7 +52,7 @@ function ApplyRegister() {
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')
+  // const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')/
   const [meetingDafault, setMeetingDafault] = useState('')
   // ene >> useState
 
@@ -99,11 +99,11 @@ function ApplyRegister() {
       skillFetchFilter(applyRes.data.body.skillList)
       setPosition(applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
+      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log(apply)
-      console.log(applyRes.data.body)
-      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
+      console.log('applyRes.data.body', applyRes.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -323,7 +323,7 @@ function ApplyRegister() {
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
-    setMeetingSeqCheck(false)
+    // setMeetingSeqCheck(false)
     setMeetingSeq(key)
   }
 
@@ -436,7 +436,7 @@ function ApplyRegister() {
                     onChange={handleMeetingDtChange}
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
-                  {meetingSeqCheck === 'true' ? (
+                  {meetingDafault !== '' ? (
                     <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD')}</div>
                   ) : (
                     ''
