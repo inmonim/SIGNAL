@@ -34,6 +34,8 @@ public class UserService {
 
     @Value("${server.host}")
     private String host;
+    @Value("${server.port}")
+    private Integer port;
 
 
     @Transactional(readOnly = true)
@@ -76,6 +78,7 @@ public class UserService {
                         .title("Signal 회원가입 인증")
                         .text("이메일 인증")
                         .host(host)
+                        .port(port)
                         .url(String.format("/auth/emailauth/%s", authCode))
                         .build());
     }
