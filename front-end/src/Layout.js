@@ -1,6 +1,6 @@
 // 라우터 관리
 // React-Router
-import React, { lazy } from 'react'
+import React from 'react'
 import Header from 'components/Layout/Header'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
@@ -18,9 +18,10 @@ import ApplyRegister from 'pages/Apply/ApplyRegister'
 import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
+import MyProject from './pages/Project/MyProject'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
-const MyProject = lazy(() => import('./pages/Project/MyProject'))
+// const MyProject = lazy(() => import('./pages/Project/MyProject'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
 // const PostingRegister = lazy(() => import('./pages/Posting/PostingRegister'))
 // usenavigate lazy 안되는듯 ?// const Board = lazy(() => import('./pages/Board/Board'))
