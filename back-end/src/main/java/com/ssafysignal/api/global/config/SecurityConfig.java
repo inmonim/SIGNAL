@@ -1,9 +1,6 @@
 package com.ssafysignal.api.global.config;
 
-import com.ssafysignal.api.global.jwt.CustomUserDetailService;
-import com.ssafysignal.api.global.jwt.JwtAuthenticationFilter;
-import com.ssafysignal.api.global.jwt.JwtEntryPoint;
-import com.ssafysignal.api.global.jwt.JwtTokenUtil;
+import com.ssafysignal.api.global.jwt.*;
 import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +21,7 @@ public class SecurityConfig {
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailService customUserDetailService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
+    private final JwtExceptionFilter jwtExceptionFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,7 +29,7 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-//                .antMatchers("/posting/**").hasAnyAuthority("USER")
+//                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
 //                .antMatchers("/board/**").hasAnyAuthority("USER")
 //                .antMatchers("/auth/login").permitAll()
 //                .anyRequest().authenticated()
@@ -44,9 +42,11 @@ public class SecurityConfig {
                 .and()
                 .logout().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService, logoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+                .formLogin().disable();
+
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService, logoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
