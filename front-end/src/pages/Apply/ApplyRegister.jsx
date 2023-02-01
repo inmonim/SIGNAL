@@ -75,6 +75,19 @@ function ApplyRegister() {
     }
   }
 
+  const qnaListDataFormat = () => {
+    const qnaArr = []
+    questionList.map((item, index) =>
+      qnaArr.push({
+        postingQuestionSeq: item.postingQuestionSeq,
+        content: item.content,
+        defaultValue: '',
+      })
+    )
+
+    setQuestionList(qnaArr)
+  }
+
   const profileFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
@@ -314,6 +327,7 @@ function ApplyRegister() {
     userFetch()
     postingFetch()
     profileFetch()
+    qnaListDataFormat()
   }, [])
 
   return (

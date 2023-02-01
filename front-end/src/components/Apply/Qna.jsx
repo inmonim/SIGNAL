@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { TextField } from '@mui/material'
 
 const textAreaStyle = {
@@ -6,27 +6,13 @@ const textAreaStyle = {
   margin: '10px 0px',
 }
 
-function Qna({ question, id, onChange, answerList }) {
-  console.log(answerList)
-  const [answer, setAnswer] = useState('')
-
-  const setDefaultAnswer = () => {
-    if (answerList !== undefined) {
-      answerList.forEach((item) => {
-        if (item.postingQuestionSeq === id) setAnswer(item.content)
-      })
-    }
-  }
-
-  console.log(answer)
-
+function Qna({ question, id, onChange }) {
+  console.log(question)
   const handleQnAChange = (event) => {
     onChange(event.target.value, id)
   }
 
-  useEffect(() => {
-    setDefaultAnswer()
-  }, [])
+  useEffect(() => {}, [])
   return (
     <div style={{ margin: '10px 0px' }}>
       <div style={{ marginBottom: '5px', color: '#574b9f' }}>{question.content}</div>
@@ -35,7 +21,7 @@ function Qna({ question, id, onChange, answerList }) {
         fullWidth={true}
         multiline={true}
         minRows="2"
-        defaultValue={answer}
+        defaultValue={question.defaultValue}
         onChange={handleQnAChange}
       />
     </div>
