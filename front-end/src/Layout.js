@@ -15,6 +15,7 @@ import QnaModify from 'pages/QnA/QnaModify'
 import ApplyDetail from 'pages/Apply/ApplyDetail'
 import TeamSelect from 'pages/Project/TeamSelect'
 import ApplyRegister from 'pages/Apply/ApplyRegister'
+import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/qnaDetail" element={<QnaDetail />} />
           <Route path="/qnaRegist" element={<QnaRegist />} />
           <Route path="/qnaModify" element={<QnaModify />} />
+          <Route path="/myprofile" element={<MyProfile />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
