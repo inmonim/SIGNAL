@@ -2,6 +2,7 @@ package com.ssafysignal.api.apply.service;
 
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
+import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.common.entity.CommonCode;
@@ -10,11 +11,17 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.posting.repository.PostingMeetingRepository;
+import com.ssafysignal.api.user.entity.User;
+import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -30,6 +37,7 @@ public class ApplyService {
     private final ApplyAnswerRepository applyAnswerRepository;
     private final PostingMeetingRepository postingMeetingRepository;
     private final CommonCodeRepository commonCodeRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
@@ -255,4 +263,58 @@ public class ApplyService {
 
         return apply.getMemo();
     }
+
+    @Transactional(readOnly = true)
+    public Map<String,Integer> countApplyWriter(int postingSeq){
+        Map<String,Integer> ret = new HashMap<>();
+        int totalCnt = applyRepository.countByPostingSeq(postingSeq);
+        ret.put("count",totalCnt);
+        return ret;
+    }
+    @Transactional(readOnly = true)
+    public Map<String,Integer> countApplyApplyer(int userSeq){
+        Map<String,Integer> ret = new HashMap<>();
+        int totalCnt = applyRepository.countByUserSeq(userSeq);
+        ret.put("count",totalCnt);
+        return ret;
+    }
+
+    @Transactional
+    public List<ApplyWriterFindResponse> findAllApplyWriter(int postingSeq, int page, int size){
+        PageRequest pagenation = PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq");
+        List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq,pagenation);
+        List<ApplyWriterFindResponse> resList = new ArrayList<>();
+        for(Apply apply : applyList){
+            int applySeq = apply.getApplySeq();
+            int userSeq = apply.getUserSeq();
+            User user = userRepository.findByUserSeq(userSeq).get();
+            String nickname =user.getNickname();
+            CommonCode positionCode = commonCodeRepository.findById(apply.getPositionCode()).get();
+            String memo = apply.getMemo();
+            CommonCode applyCode = apply.getCode();
+            int postingMeetingSeq = apply.getPostingMeetingSeq();
+            PostingMeeting postingMeeting = postingMeetingRepository.findById(postingMeetingSeq).get();
+            CommonCode postingMeetingCode = postingMeeting.getCode();
+            LocalDateTime meetingDateTime = postingMeeting.getMeetingDt();
+            String meetingDt = meetingDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            ApplyWriterFindResponse res =ApplyWriterFindResponse.builder()
+                    .applySeq(applySeq)
+                    .userSeq(userSeq)
+                    .nickname(nickname)
+                    .positionCode(positionCode)
+                    .memo(memo)
+                    .applyCode(applyCode)
+                    .postingMeetingSeq(postingMeetingSeq)
+                    .postingMeetingCode(postingMeetingCode)
+                    .meetingDt(meetingDt)
+                    .build();
+            resList.add(res);
+            System.out.println("res:"+res);
+        }
+        return resList;
+
+    }
+
+
+
 }
