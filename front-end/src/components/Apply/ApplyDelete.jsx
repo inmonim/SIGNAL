@@ -21,6 +21,7 @@ const CancleButton = styled(Button)(({ theme }) => ({
 const DeleteButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.vars.palette.common.white,
   color: '#574B9F',
+  position: 'static',
   '&:hover': {
     backgroundColor: '#574B9F',
     color: theme.vars.palette.common.white,
@@ -41,7 +42,8 @@ function ApplyDelete({ applySeq }) {
   const handleApplyDelete = async () => {
     console.log('지원서 삭제')
     try {
-      await axios.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const res = await axios.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      console.log(res)
     } catch (error) {
       console.log(error)
     }
@@ -49,7 +51,7 @@ function ApplyDelete({ applySeq }) {
 
   return (
     <CssVarsProvider>
-      <CancleButton variant="contained" startIcon={<CancelIcon />} onClick={handleOpen}>
+      <CancleButton variant="contained" startIcon={<CancelIcon />} onClick={handleOpen} style={{ marginLeft: '10px' }}>
         지원 취소
       </CancleButton>
       <Dialog
@@ -64,7 +66,7 @@ function ApplyDelete({ applySeq }) {
             지원을 취소하시겠습니까?
           </DialogTitle>
           <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
-          <DialogActions className="delete-button">
+          <DialogActions className="apply-delete-button">
             <DeleteButton onClick={handleApplyDelete}>삭제</DeleteButton>
           </DialogActions>
         </div>
