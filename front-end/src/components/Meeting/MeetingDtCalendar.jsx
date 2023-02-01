@@ -10,8 +10,6 @@ function MeetingDtCalendar(props) {
   const [timeList, setTimeList] = useState([])
   const [meeting, setMeeting] = useState([])
 
-  console.log('MeetingDtCalendar', props)
-
   const meetingListFilter = (list) => {
     const meetingArr = []
     list.meetingList.map((item) => meetingArr.push(item.meetingDt.slice(0, 10)))
@@ -29,7 +27,6 @@ function MeetingDtCalendar(props) {
       item.meetingDt.slice(0, 10) === value ? timeArr.push({ id: item.postingMeetingSeq, time: item.meetingDt }) : 0
     )
     setTimeList(timeArr)
-    console.log(timeArr)
   }
 
   useEffect(() => {

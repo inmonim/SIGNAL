@@ -27,7 +27,7 @@ function ApplyDetail() {
   // const applySeq = location.state.applySeq
 
   const userSeq = 1
-  const applySeq = 22
+  const applySeq = 60
   const postingSeq = 458
   const [posting, setPosting] = useState('458')
 
@@ -39,6 +39,7 @@ function ApplyDetail() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
+      console.log(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
       postingFetch(res.data.body.postingSeq)
       console.log('applyFetch', res.data.body)
@@ -152,9 +153,9 @@ function ApplyDetail() {
                   <div style={{ display: 'flex' }}>
                     <div style={{ width: '90%' }}>
                       {apply.careerList &&
-                        apply.careerList.map((career, index) => (
-                          <div className="apply-detail-career" key={index}>
-                            {career}
+                        apply.careerList.map((item) => (
+                          <div className="apply-detail-career" key={item.applyCareerSeq}>
+                            {item.content}
                           </div>
                         ))}
                     </div>
@@ -170,9 +171,9 @@ function ApplyDetail() {
                   <div style={{ display: 'flex' }}>
                     <div style={{ width: '90%' }}>
                       {apply.expList &&
-                        apply.expList.map((exp, index) => (
-                          <div className="apply-detail-exp" key={index}>
-                            {exp}
+                        apply.expList.map((item) => (
+                          <div className="apply-detail-exp" key={item.applyExpSeq}>
+                            {item.content}
                           </div>
                         ))}
                     </div>
@@ -188,11 +189,15 @@ function ApplyDetail() {
               <div className="apply-detail-label">공고 작성자가 궁금한 점</div>
               <div style={{ margin: '10px 0px' }}>
                 {posting.postingQuestionList &&
-                  posting.postingQuestionList.map((question, index) => (
-                    <div key={index} style={{ margin: '10px 0px' }}>
+                  posting.postingQuestionList.map((question) => (
+                    <div key={question.postingQuestionSeq} style={{ margin: '10px 0px' }}>
                       <div className="apply-question-content">{question.content}</div>
                       <div className="apply-answer-content">
-                        {apply.answerList.filter((item) => item.postingQuestionSeq === question.postingQuestionSeq)}
+                        {apply.answerList
+                          .filter((answer) => answer.postingQuestionSeq === question.postingQuestionSeq)
+                          .map((item) => (
+                            <div key={item.applyAnswerSeq}>{item.content}</div>
+                          ))}
                       </div>
                     </div>
                   ))}

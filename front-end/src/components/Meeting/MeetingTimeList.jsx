@@ -3,7 +3,6 @@ import '../../assets/styles/Calendar.css'
 import MeetingTime from './MeetingTime'
 
 function MeetingTimeList(props) {
-  console.log(props)
   return (
     <div className="time-list-section">
       {props.timeList.map((item) => (
