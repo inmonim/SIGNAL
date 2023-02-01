@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -53,11 +54,17 @@ public class AuthService {
     private String host;
 
     public LoginResponse login(String email, String password) throws RuntimeException {
+        // 아이디 비밀번호 검증
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-
         if (!passwordEncoder.matches(password, user.getPassword())) throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
 
+        // 이메일 인증 여부 검증
+        Auth auth = authRepository.findByUserSeq(user.getUserSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.UNAUTHORIZED));
+        if (!auth.isAuth()) throw new NotFoundException(ResponseCode.UNAUTHORIZED);
+
+        // 토큰 발급 시작
         String accessToken = jwtTokenUtil.generateAccessToken(user.getEmail());
         RefreshToken refreshToken = refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(user.getEmail(),
                 jwtTokenUtil.generateRefreshToken(user.getEmail()), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
@@ -109,13 +116,13 @@ public class AuthService {
     @Transactional(readOnly = true)
     public void checkEmail(String email) {
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.SUCCESS));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public void checkNickname(String nickname) {
         userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.SUCCESS));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
