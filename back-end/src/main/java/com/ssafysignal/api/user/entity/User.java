@@ -77,15 +77,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<UserAuth> authorities = new HashSet<>();
-
-    private void addAuthority(UserAuth authority) {
-        authorities.add(authority);
-    }
-
-    public List<String> getRoles() {
+    private List<UserAuth> authorities = new ArrayList<>();
+    public List<String> getAuthorities() {
         return authorities.stream()
-                .map(UserAuth::getRoles)
+                .map(UserAuth::getRole)
                 .collect(Collectors.toList());
     }
 }

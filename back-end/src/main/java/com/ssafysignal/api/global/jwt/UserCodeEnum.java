@@ -1,6 +1,6 @@
 package com.ssafysignal.api.global.jwt;
 
-public enum UserCode {
+public enum UserCodeEnum {
     USER("USER", "일반회원"),
     ADMIN("ADMIN", "관리자");
     private String code;
@@ -12,7 +12,7 @@ public enum UserCode {
     public String getMessage() {
         return this.message;
     }
-    UserCode(String code, String message) {
+    UserCodeEnum(String code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -2,25 +2,19 @@ package com.ssafysignal.api.auth.controller;
 
 import com.ssafysignal.api.auth.dto.request.FindEmailRequest;
 import com.ssafysignal.api.auth.dto.request.UserLoginRequest;
-import com.ssafysignal.api.auth.dto.response.TokenDto;
+import com.ssafysignal.api.auth.dto.response.LoginResponse;
 import com.ssafysignal.api.auth.service.AuthService;
 import com.ssafysignal.api.global.exception.NotFoundException;
-import com.ssafysignal.api.global.jwt.JwtTokenProvider;
+import com.ssafysignal.api.global.jwt.JwtTokenUtil;
+import com.ssafysignal.api.global.jwt.TokenInfo;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.request.RegistUserRequest;
-import com.ssafysignal.api.user.repository.UserRepository;
-import com.ssafysignal.api.user.service.UserService;
-import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,9 +27,9 @@ import java.util.Map;
     @RequestMapping("/auth")
     public class AuthController {
         private final AuthService authService;
-        private final JwtTokenProvider jwtTokenProvider;
+        private final JwtTokenUtil jwtTokenUtil;
 
-        @Tag(name = "인증")
+    @Tag(name = "인증")
     @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
     @PostMapping("/login")
     private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true)@RequestBody UserLoginRequest userLoginRequest) {
@@ -44,8 +38,24 @@ import java.util.Map;
         try {
             String email = userLoginRequest.getEmail();
             String password = userLoginRequest.getPassword();
-            TokenDto tokenDto = authService.login(email, password);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenDto));
+            LoginResponse loginResponse = authService.login(email, password);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
+        }
+    }
+    
+    @Tag(name = "인증")
+    @Operation(summary = "재인증", description = "리프레시 토큰을 이용해 엑세스 토큰을 재발급한다.")
+    @PostMapping("/login/{refreshToken}")
+    private ResponseEntity<BasicResponse> reissue(@Parameter(description = "리프레시 토큰", required = true) @PathVariable("refreshToken") String refreshToken) {
+        log.info("reissue - Call");
+
+        try {
+            TokenInfo tokenInfo = authService.reissue(refreshToken);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenInfo));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         } catch (RuntimeException e) {
@@ -54,14 +64,16 @@ import java.util.Map;
     }
 
 
+
     @Tag(name = "인증")
     @Operation(summary = "로그아웃", description = "사용자 Seq를 이용해 로그아웃한다.")
     @PostMapping("/logout")
     private ResponseEntity<BasicResponse> logout(@RequestHeader("Authorization") String accessToken,
                                                  @RequestHeader("RefreshToken") String refreshToken) {
         log.info("logout - Call");
-
         try {
+            String email = jwtTokenUtil.getUsername(accessToken.substring(7));
+            authService.logout(TokenInfo.of(accessToken, refreshToken), email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
