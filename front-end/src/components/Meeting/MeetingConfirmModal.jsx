@@ -33,14 +33,11 @@ function MeetingConfirmModal() {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
-    console.log('meeting')
     setOpen(true)
   }
 
   const handleClose = () => {
     setOpen(false)
-    console.log('meeting')
-    console.log(open)
   }
   return (
     <CssVarsProvider>

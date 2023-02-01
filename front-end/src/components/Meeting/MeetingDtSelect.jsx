@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography'
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/Calendar.css'
 import moment from 'moment'
-import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
-import Button from '@mui/material/Button'
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import 'moment/locale/ko'
+import SignalBtn from 'components/common/SignalBtn'
 
 const style = {
   position: 'absolute',
@@ -30,20 +30,6 @@ const cancleButtonStyle = {
   cursor: 'pointer',
 }
 
-const CommonButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#574B9F',
-  color: theme.vars.palette.common.white,
-  borderRadius: '8px',
-  border: '1px solid white',
-  '&:hover': {
-    backgroundColor: theme.vars.palette.common.white,
-    color: '#574B9F',
-    border: '1px solid #574b9f',
-    cursor: 'pointer',
-  },
-  width: '100%',
-}))
-
 const selectedTimeStyle = {
   textAlign: 'center',
   margin: '5px',
@@ -63,7 +49,9 @@ function meetingDtSelet(props) {
   return (
     <CssVarsProvider>
       <div>
-        <CommonButton onClick={handleOpen}>시간선택</CommonButton>
+        <SignalBtn onClick={handleOpen} style={{ width: '300px' }}>
+          시간선택
+        </SignalBtn>
         <Modal
           open={open}
           onClose={handleClose}
@@ -84,9 +72,17 @@ function meetingDtSelet(props) {
           </Box>
         </Modal>
         <div style={selectedTimeStyle}>
-          {props.meetingList[props.meetingSeq] === ''
-            ? ''
-            : ` ${moment(props.meetingList[props.meetingSeq]).format('LLL')}시`}
+          {props.meetingList && props.meetingSeq
+            ? props.meetingList.filter((item) => {
+                return item.postingMeetingSeq + '' === props.meetingSeq
+              })[0]
+              ? `${moment(
+                  props.meetingList.filter((item) => {
+                    return item.postingMeetingSeq + '' === props.meetingSeq
+                  })[0].meetingDt
+                ).format('YYYY-MM-DD HH')}시`
+              : ''
+            : ''}
         </div>
       </div>
     </CssVarsProvider>

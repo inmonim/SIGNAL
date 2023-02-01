@@ -10,11 +10,9 @@ function MeetingDtCalendar(props) {
   const [timeList, setTimeList] = useState([])
   const [meeting, setMeeting] = useState([])
 
-  console.log(props)
-
   const meetingListFilter = (list) => {
     const meetingArr = []
-    list.meetingList.map((item) => meetingArr.push(item.slice(0, 10)))
+    list.meetingList.map((item) => meetingArr.push(item.meetingDt.slice(0, 10)))
     setMeeting(meetingArr)
   }
 
@@ -25,7 +23,9 @@ function MeetingDtCalendar(props) {
 
   const handleTimeListChange = (value) => {
     const timeArr = []
-    props.meetingList.map((e, index) => (e.slice(0, 10) === value ? timeArr.push({ id: index, time: e }) : 0))
+    props.meetingList.map((item) =>
+      item.meetingDt.slice(0, 10) === value ? timeArr.push({ id: item.postingMeetingSeq, time: item.meetingDt }) : 0
+    )
     setTimeList(timeArr)
   }
 
@@ -51,6 +51,7 @@ function MeetingDtCalendar(props) {
           // 현재 날짜가 post 작성한 날짜 배열(mark)에 있다면, dot div 추가
           if (meeting.find((x) => x === moment(date).format('YYYY-MM-DD'))) {
             html.push(<div className="dot"></div>)
+            // setDotSeq(dotSeq + 1)
           }
           // 다른 조건을 주어서 html.push 에 추가적인 html 태그를 적용할 수 있음.
           return (

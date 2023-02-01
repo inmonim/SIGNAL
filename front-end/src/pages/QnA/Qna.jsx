@@ -58,7 +58,7 @@ function Qna() {
               sigheight="45px"
               sigfontSize="24px"
               sigBorderRadius={14}
-              sigMargin="12.5px auto"
+              sigMargin="0px 0px 5px 0px"
               variant="contained"
               onClick={() => navigate(`/qnaRegist`)}
             >

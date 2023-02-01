@@ -1,26 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { TextField } from '@mui/material'
-import styled from 'styled-components'
-
-const Label = styled.h1`
-  font-size: 20px;
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-`
 
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
+  margin: '10px 0px',
 }
 
-function Qna({ question, id, onChange }) {
+function Qna({ question, id, onChange, answerList }) {
+  console.log(answerList)
+  const [answer, setAnswer] = useState('')
+
+  const setDefaultAnswer = () => {
+    if (answerList !== undefined) {
+      answerList.forEach((item) => {
+        if (item.postingQuestionSeq === id) setAnswer(item.content)
+      })
+    }
+  }
+
+  console.log(answer)
+
   const handleQnAChange = (event) => {
     onChange(event.target.value, id)
   }
+
+  useEffect(() => {
+    setDefaultAnswer()
+  }, [])
   return (
-    <div>
-      <Label className="question-label">{question.content}</Label>
-      <TextField style={textAreaStyle} fullWidth={true} multiline={true} minRows="1" onChange={handleQnAChange} />
+    <div style={{ margin: '10px 0px' }}>
+      <div style={{ marginBottom: '5px', color: '#574b9f' }}>{question.content}</div>
+      <TextField
+        style={textAreaStyle}
+        fullWidth={true}
+        multiline={true}
+        minRows="2"
+        defaultValue={answer}
+        onChange={handleQnAChange}
+      />
     </div>
   )
 }
