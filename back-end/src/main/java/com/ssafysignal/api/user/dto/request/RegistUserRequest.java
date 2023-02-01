@@ -23,7 +23,6 @@ public class RegistUserRequest {
 	private String nickname;
 	@Schema(description = "전화번호")
 	private String phone;
-	@Schema(description = "생년월일", example = "2023-01-01 11:59:59.999")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-	private LocalDateTime birth;
+	@Schema(description = "생년월일", example = "2023-01-01")
+	private String birth;
 }
