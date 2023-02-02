@@ -71,6 +71,7 @@ public class AuthService {
         return LoginResponse.builder()
                 .userSeq(user.getUserSeq())
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
