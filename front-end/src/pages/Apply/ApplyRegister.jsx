@@ -6,7 +6,7 @@ import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import Skill from '../../data/Skilldata'
+import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
@@ -157,7 +157,7 @@ function ApplyRegister() {
 
   const skillPostFilter = (list) => {
     const skillArr = []
-    list.map((item) => skillArr.push(Skill.getSkillCode(item)))
+    list.map((item) => skillArr.push(getSkillCode(item)))
     return skillArr
   }
 
@@ -405,7 +405,7 @@ function ApplyRegister() {
                   disablePortal
                   id="combo-box-demo"
                   sx={{ width: 300 }}
-                  options={Skill.Skilldata}
+                  options={Skilldata}
                   getOptionLabel={(option) => option.name}
                   filterOptions={skillSearchFilter}
                   renderInput={(params) => (
