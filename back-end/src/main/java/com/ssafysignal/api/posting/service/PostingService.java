@@ -198,10 +198,12 @@ public class PostingService {
     }
 
     @Transactional
-    public void applySelect(Integer applySeq, boolean isSelect) throws RuntimeException {
+    public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        apply.setSelect(isSelect);
+        apply.setSelect(true);
+        // 대기중으로 상태 변경
+        apply.setApplyCode("AS100");
         applyRepository.save(apply);
     }
 
