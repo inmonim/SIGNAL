@@ -12,6 +12,7 @@ const SignalBtn = styled(Btn)(({ theme, sigwidth, sigheight, sigfontsize, sigbor
   color: '#fff',
   margin: sigmargin,
   display: 'flex',
+  zIndex: 0,
   '&:hover': {
     backgroundColor: '#fff',
     borderColor: '1px solid #574B9F',
