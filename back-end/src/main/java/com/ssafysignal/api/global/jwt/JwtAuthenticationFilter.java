@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 String username = jwtTokenUtil.getUsername(accessToken);
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
 
-                System.out.println("userDetails = " + userDetails);
+                System.out.println("userDetails = " + userDetails.toString());
 
                 // 사용자 정보와 토큰을 이용해 토큰 검증
                 if (jwtTokenUtil.validateToken(accessToken, userDetails)) {

@@ -65,10 +65,13 @@ import java.util.Map;
             LoginResponse loginResponse = authService.reissue(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (UnAuthException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }

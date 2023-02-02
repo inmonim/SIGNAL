@@ -25,11 +25,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
+                .cors()
+                .and()
+
                 .csrf().disable()
 
                 .authorizeRequests()
-//                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
+                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
 //                .antMatchers("/board/**").hasAnyAuthority("USER")
 //                .antMatchers("/auth/login").permitAll()
 //                .anyRequest().authenticated()
