@@ -3,7 +3,9 @@ package com.ssafysignal.api.profile.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
 import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
+import com.ssafysignal.api.profile.entity.UserHeartLog;
 import com.ssafysignal.api.profile.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -273,6 +276,38 @@ public class ProfileController {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
+        }
+    }
+
+    // ========== 하트 ==========
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "하트 충전", description = "하트를 충전한다")
+    @PostMapping("heart/{userSeq}")
+    private ResponseEntity<BasicResponse> chargeHeart(@Parameter(name = "userSeq", description = "사용자의 seq", required = true) @PathVariable("userSeq") Integer userSeq,
+                                                      @Parameter(description = "충전할 하트 갯수") @RequestBody Map<String, Object> param) {
+        log.info("chargeHeart - Call");
+
+        try {
+            profileService.chargeHeart(userSeq, param);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "하트 로그 목록 조회", description = "하트 충전 및 사용 내력을 조회한다")
+    @GetMapping("heart/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllHeartLog(@Parameter(name="userSeq", description = "사용자의 seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("findAllHeartLog - Call");
+
+        try {
+            List<UserHeartLog> userHeartLogList = profileService.findAllUserHeartLog(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, HeartLogAllResponse.fromEntity(userHeartLogList)));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 

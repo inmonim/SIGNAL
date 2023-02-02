@@ -1,7 +1,9 @@
 package com.ssafysignal.api.user.service;
 
 import com.ssafysignal.api.auth.entity.Auth;
+import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.auth.repository.AuthRepository;
+import com.ssafysignal.api.auth.repository.UserAuthRepository;
 import com.ssafysignal.api.common.dto.EmailDto;
 import com.ssafysignal.api.common.service.EmailService;
 import com.ssafysignal.api.global.exception.NotFoundException;
@@ -26,19 +28,18 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AuthRepository authRepository;
+    private final UserAuthRepository userAuthRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${server.backend.host}")
-    private String beHost;
+    @Value("${server.host}")
+    private String host;
 
-    @Value("${server.frontend.host}")
-    private String feHost;
 
     @Transactional(readOnly = true)
     public User findUser(final int userSeq) {
         return userRepository.findByUserSeq(userSeq)
-                .orElseThrow(() -> new RuntimeException("찾는 회원이 없습니다."));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
     }
     
     @Transactional
@@ -58,6 +59,7 @@ public class UserService {
                         .phone(registUserRequest.getPhone())
                         .build());
 
+        // 이메일 인증 코드 저장
         Auth auth = Auth.builder()
                 .userSeq(user.getUserSeq())
                 .authCode("AU101")
@@ -67,20 +69,22 @@ public class UserService {
         // 인증 코드 등록
         authRepository.save(auth);
 
+        // 인증 메일 전송
         emailService.sendMail(
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
                         .title("Signal 회원가입 인증")
                         .text("url을 클릭하면 인증이 완료됩니다.")
-                        .host(beHost)
+                        .host(host)
                         .url(String.format("/auth/emailauth/%s", authCode))
                         .build());
     }
     
     @Transactional
     public void deleteUser(int userSeq) throws RuntimeException {
-    	User user = userRepository.findByUserSeq(userSeq)
-    			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        User user = userRepository.findByUserSeq(userSeq)
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
+        userAuthRepository.deleteByUser(user);
     }
     
     @Transactional

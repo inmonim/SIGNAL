@@ -1,10 +1,7 @@
 package com.ssafysignal.api.posting.entity;
 
 import com.ssafysignal.api.common.entity.CommonCode;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -15,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@ToString
 @Table(name = "posting_skill")
 public class PostingSkill {
     @Id
