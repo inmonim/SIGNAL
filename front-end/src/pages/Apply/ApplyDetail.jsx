@@ -8,6 +8,7 @@ import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import { Link, useLocation } from 'react-router-dom'
+import SignalBtn from 'components/common/SignalBtn'
 import axios from 'axios'
 
 // import { useLocation } from 'react-router'
@@ -201,6 +202,11 @@ function ApplyDetail() {
                   ))}
               </div>
             </div>
+          </div>
+          <div>
+            <SignalBtn sigwidth="20%" sigheight="40px" sigmargin="auto" sigborderradius="100px">
+              돌아가기
+            </SignalBtn>
           </div>
         </div>
       </div>

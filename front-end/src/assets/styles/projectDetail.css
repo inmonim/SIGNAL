@@ -1,0 +1,127 @@
+.project-detail-container{
+  width: 1200px;
+  font-size: 20px;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 70px;
+  height: 100vh;
+  min-height: 1300px;
+}
+.project-detail-width{
+  min-width: 1500;
+  background-color: #DDDBEC;
+  border-radius: 150px 150px 0px 0px;
+  height: 100%;
+}
+
+.project-detail-my-section{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px;
+  margin-left: 250px;
+  font-size: smaller;
+}
+
+.project-detail-my-warning-section{
+  display: flex;
+  align-items: center;
+  background-color: #574B9F;
+  padding: 5px 15px;
+  border-radius: 10px;
+  justify-content: center;
+  width: 140px;
+  height: 30px;
+  color: #ffffff;
+}
+
+.project-detail-my-heart-section{
+  display: flex;
+  align-items: center;
+  background-color: #9A93C5;
+  padding: 5px 15px;
+  border-radius: 10px;
+  justify-content: center;
+  width: 170px;
+  height: 30px;
+  color: #ffffff;
+}
+
+.project-detail-img-proejct-background-1{
+  position: relative;
+  top: 45px;
+  left: 30px;
+  width: 230px;
+}    
+
+.project-detail-img-settings{
+  position: relative;
+  width: 50px;
+  top: -90px;
+  left: 800px;
+}
+
+.project-detail-project-title{
+  font-size: -webkit-xxx-large;
+  width: 650px;
+  position: relative;
+  top: -150px;
+  left: 270px;
+  margin-top: 20px;
+}
+
+.project-detail-my-section{
+  position: relative;
+  top: -150px;
+  left: 20px;
+}
+
+.project-detail-content{
+  width: 600px;
+  position: relative;
+  font-size: x-large;
+}
+
+.project-detail-side-bar > div{
+margin: 10px 0px;
+}
+
+.project-detail-side-bar{
+  direction: rtl;
+  margin-right: 100px;
+}
+
+.project-detail-body-section{
+  display: flex;
+  position: relative;
+  top: 70px;
+  left: 180px;
+  justify-content: space-between;
+  width: 1050px;
+}
+
+.project-detail-img-proejct-background-2{
+  width: 405px;
+  position: relative;
+  top: 200px;
+  left: 700px;
+}
+
+.project-detail-team-detail-list{
+  display: flex;
+  position: relative;
+  width: 480px;
+  justify-content: space-between;
+  top: 220px;
+  left: 220px;
+}
+
+.project-detail-team{
+  text-align: center;
+}
+
+.project-detail-team > img{
+  border-radius: 100%;
+  border: 3px solid #574B9F;
+  width: 66px
+}
