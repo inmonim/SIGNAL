@@ -49,13 +49,15 @@ public class UserService {
         String authCode = UUID.randomUUID().toString();
 
         // 비밀번호 암호화
-        registUserRequest.setPassword(passwordEncoder.encode(registUserRequest.getPassword()));
+        String passwordEncode = passwordEncoder.encode(registUserRequest.getPassword());
+
+        if (passwordEncoder.matches(registUserRequest.getPassword(), passwordEncode)) System.out.println(true);
 
         // 데이터베이스 저장
         User user = userRepository.save(User.builder()
                         .name(registUserRequest.getName())
                         .email(registUserRequest.getEmail())
-                        .password(registUserRequest.getPassword())
+                        .password(passwordEncode)
                         .nickname(registUserRequest.getNickname())
                         .birth(registUserRequest.getBirth())
                         .phone(registUserRequest.getPhone())

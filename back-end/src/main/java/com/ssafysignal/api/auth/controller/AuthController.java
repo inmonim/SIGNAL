@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,8 +62,8 @@ import java.util.Map;
         log.info("reissue - Call");
 
         try {
-            TokenInfo tokenInfo = authService.reissue(refreshToken);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenInfo));
+            LoginResponse loginResponse = authService.reissue(refreshToken);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (UnAuthException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {

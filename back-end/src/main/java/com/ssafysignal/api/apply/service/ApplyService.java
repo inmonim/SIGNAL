@@ -268,7 +268,9 @@ public class ApplyService {
     public Map<String,Integer> countApplyWriter(int postingSeq){
         Map<String,Integer> ret = new HashMap<>();
         int totalCnt = applyRepository.countByPostingSeq(postingSeq);
+        int selectCnt = applyRepository.countByPostingSeqAndIsSelect(postingSeq, true);
         ret.put("count",totalCnt);
+        ret.put("selectCnt",selectCnt);
         return ret;
     }
     @Transactional(readOnly = true)
@@ -279,7 +281,7 @@ public class ApplyService {
         return ret;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ApplyWriterFindResponse> findAllApplyWriter(int postingSeq, int page, int size){
         PageRequest pagenation = PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq");
         List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq,pagenation);
@@ -309,7 +311,6 @@ public class ApplyService {
                     .meetingDt(meetingDt)
                     .build();
             resList.add(res);
-            System.out.println("res:"+res);
         }
         return resList;
 
