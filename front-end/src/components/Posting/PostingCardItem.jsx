@@ -27,8 +27,8 @@ export default function PostingCardItem({ post }) {
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
           {post.subject}
         </Typography>
-        <Typography variant="body2">{Localdata[post.localCode.code].name}</Typography>
-        <Typography variant="body2">{Fielddata[post.fieldCode.code].name}</Typography>
+        <Typography variant="body2">{Localdata[post.localCode].name}</Typography>
+        <Typography variant="body2">{Fielddata[post.fieldCode].name}</Typography>
         <Box sx={{ display: 'flex' }}>
           {post.postingSkillList.map((ele) => {
             return (
