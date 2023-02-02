@@ -7,7 +7,7 @@ import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
 // import { useLocation } from 'react-router'
@@ -22,12 +22,10 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 }))
 
 function ApplyDetail() {
-  // const location = useLocation()
-  // const userSeq = location.state.userSeq
-  // const applySeq = location.state.applySeq
+  const location = useLocation()
+  const userSeq = location.state.userSeq
+  const applySeq = location.state.applySeq
 
-  const userSeq = 1
-  const applySeq = 60
   const postingSeq = 458
   const [posting, setPosting] = useState('458')
 

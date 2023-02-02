@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import { Button, Modal, Box, Typography } from '@mui/material'
-import memoButton from '../../assets/image/memo.png'
 import cancleButton from '../../assets/image/x.png'
+import ArticleIcon from '@mui/icons-material/Article'
 import axios from 'axios'
 
 const style = {
@@ -16,10 +16,6 @@ const style = {
   backgroundColor: '#DDDBEC',
   borderRadius: 8,
   p: 4,
-}
-
-const Image = {
-  width: '15px',
 }
 
 const cancleButtonStyle = {
@@ -37,6 +33,7 @@ const innerStlye = {
   borderRadius: 2,
   px: 3,
   py: 3,
+  fontSize: '20px',
 }
 
 const ImageButton = styled(Button)(({ theme }) => ({
@@ -44,7 +41,7 @@ const ImageButton = styled(Button)(({ theme }) => ({
   color: theme.vars.palette.common.white,
   height: 30,
   '&:hover': {
-    backgroundColor: '#342D5F',
+    backgroundColor: theme.vars.palette.common.white,
     color: '#574B9F',
   },
 }))
@@ -52,11 +49,10 @@ const ImageButton = styled(Button)(({ theme }) => ({
 function MemoModal(props) {
   const [open, setOpen] = useState(false)
   const [memo, setMemo] = useState('')
-
   const memoFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/memo/' + props.applySeq)
-      setMemo(res.data.body.content)
+      setMemo(res.data.body.memo)
     } catch (error) {
       console.log(error)
     }
@@ -71,17 +67,21 @@ function MemoModal(props) {
     setOpen(false)
   }
 
+  useEffect(() => {
+    memoFetch()
+  }, [])
+
   return (
     <CssVarsProvider>
-      <ImageButton onClick={handleOpen}>
-        <img src={memoButton} alt="memoButton" style={Image} />
+      <ImageButton onClick={handleOpen} startIcon={<ArticleIcon />}>
+        메모
       </ImageButton>
       <Modal open={open}>
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2" textAlign={'center'}>
             사전 미팅 메모
           </Typography>
-          <img src={cancleButton} alt="plusButton" style={cancleButtonStyle} onClick={handleClose} />
+          <img src={cancleButton} alt="plusButton" onClick={handleClose} style={cancleButtonStyle} />
           <Box sx={innerStlye}>
             <div>{memo}</div>
           </Box>

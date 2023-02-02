@@ -6,11 +6,12 @@ import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import Skill from '../../data/Skilldata'
+import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
+import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 
 const inputStyle = {
@@ -29,7 +30,7 @@ function ApplyRegister() {
   const postingSeq = 458
 
   // start >> useState
-
+  const navigate = useNavigate()
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [position, setPosition] = useState('')
@@ -156,7 +157,7 @@ function ApplyRegister() {
 
   const skillPostFilter = (list) => {
     const skillArr = []
-    list.map((item) => skillArr.push(Skill.getSkillCode(item)))
+    list.map((item) => skillArr.push(getSkillCode(item)))
     return skillArr
   }
 
@@ -301,7 +302,7 @@ function ApplyRegister() {
         applyExpList: expPostFilter(expList),
         applySkillList: skillPostFilter(skillList),
         content,
-        postingMeetingSeq: meetingSeq,
+        postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
         userSeq,
       }
@@ -309,7 +310,7 @@ function ApplyRegister() {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
-        .post('https://192.168.30.117:8443/apply/' + postingSeq, req, config)
+        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)
         })
@@ -321,6 +322,7 @@ function ApplyRegister() {
     } catch (error) {
       console.log(error)
     }
+    navigate('/')
   }
 
   useEffect(() => {
@@ -403,7 +405,7 @@ function ApplyRegister() {
                   disablePortal
                   id="combo-box-demo"
                   sx={{ width: 300 }}
-                  options={Skill.Skilldata}
+                  options={Skilldata}
                   getOptionLabel={(option) => option.name}
                   filterOptions={skillSearchFilter}
                   renderInput={(params) => (

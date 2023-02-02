@@ -9,6 +9,7 @@ import AlertFindEmail from './AlertFindEmail'
 import closeBtn from 'assets/image/x.png'
 import 'assets/font/font.css'
 import 'assets/styles/findmodal.css'
+import AlertModal from './AlertModal'
 
 const style = {
   width: 727,
@@ -41,14 +42,16 @@ const inputStyle = {
 }
 
 function FindEmailPwdModal({ open, onClose }) {
-  const [msg, setMsg] = useState('')
-  const [alertOpen, setAlertOpen] = useState(false)
+  const [msgEmail, setEmailMsg] = useState('')
+  const [msgPwd, setMsgPwd] = useState('')
+  const [emailAlertOpen, setEmailAlertOpen] = useState(false)
+  const [pwdAlertOpen, setPwdAlertOpen] = useState(false)
 
   const handleFindEmail = () => {
-    console.log('click Find Email')
+    console.log('click Find')
     console.log('Name: ', inputName)
     console.log('PhoneNumber: ', inputPhone)
-    setAlertOpen(true)
+    setEmailAlertOpen(true)
     fetch(process.env.REACT_APP_API_URL + '/auth/email', {
       method: 'POST',
       headers: {
@@ -67,7 +70,7 @@ function FindEmailPwdModal({ open, onClose }) {
         }
       })
       .then((data) => {
-        setMsg(data.body.email)
+        setEmailMsg(data.body.email)
         console.log(data.body.email)
       })
       .catch((e) => {
@@ -76,12 +79,37 @@ function FindEmailPwdModal({ open, onClose }) {
       })
   }
   const handleAlertToMain = () => {
-    setAlertOpen(false)
+    setEmailAlertOpen(false)
+    setPwdAlertOpen(false)
     onClose(true)
   }
   const handleFindPwd = () => {
     console.log('click Find Pwd')
     console.log('Email: ', inputEmail)
+    setPwdAlertOpen(true)
+    fetch(process.env.REACT_APP_API_URL + '/auth/password', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: inputEmail,
+      }),
+    })
+      .then((res) => {
+        if (res.ok === true) {
+          return res.json()
+        } else {
+          throw new Error('다시 시도')
+        }
+      })
+      .then((data) => {
+        setMsgPwd('이메일 전송완료')
+      })
+      .catch((e) => {
+        alert('회원정보가 존재하지 않습니다.')
+        return e.message
+      })
   }
 
   const [inputName, setInputName] = useState('')
@@ -130,8 +158,8 @@ function FindEmailPwdModal({ open, onClose }) {
                 </SignalBtn>
                 <AlertFindEmail
                   name={inputName}
-                  msg={msg}
-                  open={alertOpen}
+                  msg={msgEmail}
+                  open={emailAlertOpen}
                   onClick={handleAlertToMain}
                 ></AlertFindEmail>
               </div>
@@ -151,6 +179,7 @@ function FindEmailPwdModal({ open, onClose }) {
                 >
                   인증 메일 전송
                 </SignalBtn>
+                <AlertModal msg={msgPwd} open={pwdAlertOpen} onClick={handleAlertToMain}></AlertModal>
               </div>
             </div>
           </div>

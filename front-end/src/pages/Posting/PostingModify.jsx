@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useLocation } from 'react-router'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -71,18 +72,18 @@ const inputStyle = {
 const textAreaStyle = {
   backgroundColor: '#f3f5f7',
 }
-const hunjae = new Date()
-const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
+
 const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
 
-const PostingRegister = () => {
+const PostingModify = () => {
   const dispatch = useDispatch()
-  // start >> useState
-  // console.log(JSON.stringify(Skilldata))
-  const [datevalue, setDateValue] = useState(humjaetime)
+  const location = useLocation()
+  const postingSeq = location.state.postingSeq
+  //   console.log(postingSeq)
+
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
     userSeq: 1,
@@ -117,6 +118,29 @@ const PostingRegister = () => {
       },
     ],
   })
+  const postPutFetch = async () => {
+    try {
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const post = res.data.body
+      setPosting({
+        ...posting,
+        subject: post.subject,
+        localCode: post.localCode,
+        fieldCode: post.fieldCode,
+        isContact: post.isContact,
+        term: post.term,
+        content: post.content,
+        postingEndDt: post.postingEndDt,
+        level: post.level,
+        postingMeetingList: post.MeetingList,
+        postingSkillList: post.postingSkillList,
+        postingPositionList: post.postingPositionList,
+        postingQuestionList: post.postingQuestionList,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
@@ -250,6 +274,9 @@ const PostingRegister = () => {
     setPosting({ ...posting, postingQuestionList: copy })
   }
   useEffect(() => {
+    postPutFetch()
+  }, [])
+  useEffect(() => {
     // postingFetch()
     // profileFetch()
     handlePositon()
@@ -262,11 +289,18 @@ const PostingRegister = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
   }, [DateList])
-
+  useEffect(() => {})
   return (
     <Container>
       <div>
         <div>
+          <button
+            onClick={() => {
+              console.log(posting)
+            }}
+          >
+            d
+          </button>
           <Title>공고 등록</Title>
         </div>
         <div>
@@ -276,6 +310,7 @@ const PostingRegister = () => {
               <Label>프로젝트 주제 </Label>
               <TextField
                 sx={inputStyle}
+                value={posting.subject}
                 onChange={(e) => {
                   // console.log(e.target.value)
                   setSubject(e.target.value)
@@ -289,10 +324,10 @@ const PostingRegister = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="마감 날짜"
-                  value={datevalue}
+                  value={posting.postingEndDt}
                   onChange={(newValue) => {
                     const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
-                    setDateValue(time)
+
                     setPosting({ ...posting, postingEndDt: time })
                   }}
                   renderInput={(params) => <TextField {...params} />}
@@ -305,8 +340,9 @@ const PostingRegister = () => {
             <div className="phone-section">
               <Label>진행 지역</Label>
               <FilterSelect
+                value={posting.localCode}
                 onChange={(e) => {
-                  console.log(e.target.value)
+                  // console.log(e.target.value)
                   setPosting({ ...posting, localCode: e.target.value })
                 }}
               >
@@ -324,6 +360,7 @@ const PostingRegister = () => {
                   // console.log(e.target.value)
                   setPosting({ ...posting, fieldCode: e.target.value })
                 }}
+                value={posting.fieldCode}
               >
                 {Fielddata2.map((ele, i) => (
                   <option key={ele.code} value={ele.code}>
@@ -348,6 +385,7 @@ const PostingRegister = () => {
                   // console.log(typeof e.target.value)
                   // console.log(range(10, 3))
                 }}
+                value={posting.isContact}
               >
                 {contactList.map((ele, i) => (
                   <option key={i} value={ele.status}>
@@ -363,6 +401,7 @@ const PostingRegister = () => {
                   // console.log(e.target.value)
                   setPosting({ ...posting, term: Number(e.target.value) })
                 }}
+                value={posting.term}
               >
                 {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
                   <option key={i} value={ele}>
@@ -472,6 +511,7 @@ const PostingRegister = () => {
                   // console.log(e.target.value)
                   setPosting({ ...posting, level: Number(e.target.value) })
                 }}
+                value={posting.level}
               >
                 {[1, 2, 3, 4, 5].map((ele, i) => (
                   <option key={i} value={ele}>
@@ -492,6 +532,7 @@ const PostingRegister = () => {
                 multiline={true}
                 minRows="5"
                 onChange={handleContentChange}
+                value={posting.content}
               />
             </div>
           </div>
@@ -561,4 +602,4 @@ const FilterSelect = styled.select`
     box-shadow: inset 0 0 0 1px#bcb7d9;
   }
 `
-export default PostingRegister
+export default PostingModify
