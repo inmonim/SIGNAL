@@ -1,5 +1,7 @@
 package com.ssafysignal.api.posting.service;
 
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
@@ -13,6 +15,7 @@ import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectSpecification;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +36,7 @@ public class PostingService {
     private final PostingRepository postingRepository;
     private final ApplyRepository applyRepository;
     private final PostingSkillRepository postingSkillRepository;
+    private final EntityManager em;
 
     @Transactional
     public Integer countPosting() {
@@ -99,14 +104,11 @@ public class PostingService {
 
     @Transactional(readOnly = true)
     public List<PostingFindAllResponse> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
-    	List<Integer> postingSeqs = postingSkillRepository.findJPQL(postingSkillList.size());
-    	System.out.println("postingSeqs"+postingSeqs);
-    	
-        /*Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
+
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
         return projectList.stream()
                 .map(PostingFindAllResponse::fromEntity)
-                .collect(Collectors.toList());*/
-    	return null;
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
