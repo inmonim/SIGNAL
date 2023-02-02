@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom'
 import Paging from 'components/Paging'
 import { Button } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
-import StateCode from 'components/common/StateCode'
+import { StateCode } from 'components/common/TeamSelectStateCode'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ProjectTeamSelectConfirmModal from 'components/Project/ProjectInviteConfirmModal'
 
@@ -32,63 +32,82 @@ const ImageButton = styled(Button)(({ theme }) => ({
 function TeamSelect() {
   const postingSeq = 458
   const [applyList, setApplyList] = useState([])
-  const [posting, setPosting] = useState([])
-  // const [proejctTota/lCnt, setProjectTotalCnt] = useState('')/
+  const [teamTotalCnt, setTeamTotalCnt] = useState(1)
+  const [teamCnt, setTeamCnt] = useState(0)
 
+  const [applySeqList, setapplySeqList] = useState([])
   const [size] = useState(8)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(0)
 
+  const [valid, setValid] = useState('true')
+
   const handlePageChange = (page) => {
     setPage(page)
+    applyListFetch(page)
     console.log(page)
-    applyListFetch()
   }
 
-  const applyListFetch = async () => {
+  const applyListFetch = async (param) => {
     try {
       await axios
         .get(process.env.REACT_APP_API_URL + '/apply/writer/' + postingSeq, {
-          params: { page, size },
+          params: {
+            page: param,
+            size,
+          },
         })
         .then((res) => {
-          console.log(res.data.body)
           setApplyList(res.data.body)
+          console.log(res.data.body)
         })
 
       await axios.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
         setCount(res.data.body.count)
-        console.log(res.data.body)
       })
 
       await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
-        setPosting(res.data.body)
-        console.log(res.data.body)
-        console.log(posting)
-        // setProjectTotalCnt(res.data.body.)
+        setTeamTotalCnt(
+          res.data.body.postingPositionList.reduce((sum, value) => {
+            return sum + value.positionCnt
+          }, 0)
+        )
+      })
+
+      await axios.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
+        setTeamCnt(res.data.body.selectCnt)
       })
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleProjectStart = () => {
-    alert('프로젝트 시작')
-    // try {
-    //   await axios.post(process.env.REACT_APP_API_URL + '/project/' + proejctSeq).then((res) => {
-    //     console.log(res.data.body)
-    //     setApplyList(res.data.body)
-    //   })
-    // } catch (error) {
-    //   console.log(error)
-    // }
+  const checkButtonValid = () => {
+    if (teamTotalCnt === teamCnt) setValid('false')
+    console.log(teamTotalCnt)
+    console.log(teamCnt)
+    console.log(valid)
+  }
+
+  const handleProjectStart = async () => {
+    const config = { 'Content-Type': 'application/json' }
+    try {
+      const res = await axios.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq }, config)
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const stateCodeColor = (stateCode) => {}
 
   useEffect(() => {
-    applyListFetch()
+    applyListFetch(1)
   }, [])
+  useEffect(() => {}, [applySeqList])
+  useEffect(() => {
+    checkButtonValid()
+  }, [teamTotalCnt, teamCnt])
 
   return (
     <CssVarsProviderm>
@@ -106,10 +125,12 @@ function TeamSelect() {
                     <TableCell align="center"> 사전미팅참가 </TableCell>
                     <TableCell align="center"> 미팅 예약 시간</TableCell>
                     <TableCell align="center"> 포지션 </TableCell>
-                    <TableCell align="center"></TableCell>
                     <TableCell align="center"> 메모 </TableCell>
                     <TableCell align="center"> 상세보기 </TableCell>
                     <TableCell align="center"> 선택 </TableCell>
+                    <TableCell align="center">
+                      {teamCnt}/{teamTotalCnt}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -131,14 +152,6 @@ function TeamSelect() {
                         <TableCell align="center">{moment(apply.meetingDt).format('MM/DD HH:00')}</TableCell>
                         <TableCell align="center">{apply.positionCode.name}</TableCell>
                         <TableCell align="center">
-                          <StateCode
-                            color={stateCodeColor(apply.applyCode)}
-                            className="team-project-building-state-code"
-                          >
-                            {apply.applyCode.name}
-                          </StateCode>
-                        </TableCell>
-                        <TableCell align="center">
                           <MemoModal applySeq={apply.applySeq}></MemoModal>
                         </TableCell>
                         <TableCell align="center">
@@ -148,9 +161,19 @@ function TeamSelect() {
                         </TableCell>
                         <TableCell align="center">
                           <ProjectTeamSelectConfirmModal
-                            props={apply}
-                            onChange={applyListFetch}
+                            apply={apply}
+                            applySeqList={applySeqList}
+                            setapplySeqList={setapplySeqList}
+                            valid={valid}
                           ></ProjectTeamSelectConfirmModal>
+                        </TableCell>
+                        <TableCell align="center">
+                          <StateCode
+                            color={stateCodeColor(apply.applyCode)}
+                            className="team-project-building-state-code"
+                          >
+                            {apply.applyCode.name}
+                          </StateCode>
                         </TableCell>
                       </TableRow>
                     ))}
