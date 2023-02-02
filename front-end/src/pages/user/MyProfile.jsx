@@ -1,27 +1,81 @@
 import React from 'react'
-// import { Avatar } from '@mui/material'
+import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/myprofile.css'
 import ProfileImg from 'assets/image/profileimg2.jpeg'
-import ProfileBackground from 'assets/image/myprofile-back.png'
+import heart from 'assets/image/heart.png'
 
 function MyProfile() {
   return (
-    <div className="user-profile">
-      <div className="user-profile-container">
-        <img className="user-profile-background" src={ProfileBackground} alt="" />
-        <div className="user-profile-user">
-          {/* <Avatar
-            alt="Remy Sharp" */}
-          <img
-            src={ProfileImg}
-            className="user-profile-img"
-            // sx={{ width: '195px', height: '195px' }}
-          />
-          <div className="user-profile-info">박세아</div>
+    <div className="my-container">
+      <div className="my-main">
+        <div className="my-user">
+          <img className="my-user-img" src={ProfileImg} alt="" />
+          <div className="my-user-info">
+            <div className="my-user-nickname">{sessionStorage.getItem('username')}</div>
+            <div className="my-user-email">{sessionStorage.getItem('userEmail')}</div>
+          </div>
+          <div className="my-user-heart">
+            <img className="my-user-heart-img" src={heart} alt="" />
+            <div className="my-user-heart-cnt">100</div>
+          </div>
+          <div className="my-user-btn">
+            <SignalBtn
+              className="my-user-btn-modify"
+              sigwidth="100px"
+              sigheight="28px"
+              sigfontsize="15px"
+              sigborderradius={24}
+            >
+              회원정보 수정
+            </SignalBtn>
+            <SignalBtn
+              className="my-user-btn-pwd"
+              sigwidth="100px"
+              sigheight="28px"
+              sigfontsize="15px"
+              sigborderradius={24}
+              sx={userModifyStyle}
+            >
+              비밀번호 변경
+            </SignalBtn>
+            <SignalBtn
+              className="my-user-btn-delete"
+              sigwidth="100px"
+              sigheight="28px"
+              sigfontsize="15px"
+              sigborderradius={24}
+              sx={userDeleteStyle}
+            >
+              회원 탈퇴
+            </SignalBtn>
+          </div>
+        </div>
+        <div className="my-profile-container">
+          <div className="my-profile">
+            <div>ㅇㄹㅇ</div>
+          </div>
         </div>
       </div>
     </div>
   )
+}
+
+const userModifyStyle = {
+  backgroundColor: '#fff',
+  color: '#574B9F',
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: '#fff',
+  },
+}
+const userDeleteStyle = {
+  backgroundColor: '#ff0000',
+  color: '#fff',
+  border: '1px solid #ff0000',
+  '&:hover': {
+    backgroundColor: '#fff',
+    color: '#ff0000',
+  },
 }
 
 export default MyProfile
