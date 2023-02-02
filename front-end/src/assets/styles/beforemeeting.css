@@ -1,195 +1,195 @@
-.before-meeting-container{
-    width: 100%;
-    height: 1080px;
-    background-color: #DDDBEC;
+.before-meeting-container {
+  width: 100%;
+  height: 1080px;
+  background-color: #dddbec;
 }
 
-.before-meeting-main{
-    display: flex;
-    justify-content: space-around;
-    padding: 71px 84px;
+.before-meeting-main {
+  display: flex;
+  justify-content: space-around;
+  padding: 71px 84px;
 }
 
-.before-meeting-left-person{
-    width: 1264px;
-    height: 801px;
-    border: 1px solid #574B9F;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
+.before-meeting-left-person {
+  width: 1264px;
+  height: 801px;
+  border: 1px solid #574b9f;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
 }
 
-.before-meeting-left-img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.before-meeting-left-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.before-meeting-left-person-name{
-    width: 234px;
-    height: 84px;
-    position: absolute;
-    top: 676px;
-    left: 969px;
-    background-color: #fff;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 44px;
+.before-meeting-left-person-name {
+  width: 234px;
+  height: 84px;
+  position: absolute;
+  top: 676px;
+  left: 969px;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
 }
 
-.before-meeting-right-person{
-    width: 412px;
-    height: 298px;
-    border: 1px solid #574B9F;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
+.before-meeting-right-person {
+  width: 412px;
+  height: 298px;
+  border: 1px solid #574b9f;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
 }
 
-.before-meeting-right-img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.before-meeting-right-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.before-meeting-right-person-name{
-    width: 90px;
-    height: 46px;
-    position: absolute;
-    top: 242px;
-    left: 315px;
-    background-color: #fff;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
+.before-meeting-right-person-name {
+  width: 90px;
+  height: 46px;
+  position: absolute;
+  top: 242px;
+  left: 315px;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
 }
 
-.before-meeting-footer{
-    width: 100%;
-    height: 102px;
-    background-color: #9A93C5;
-    position: fixed;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0px 64px;
+.before-meeting-footer {
+  width: 100%;
+  height: 102px;
+  background-color: #9a93c5;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 64px;
 }
 
-.before-meeting-time{
-    width: 299px;
-    height: 57px;
-    background-color: #fff;
-    border-radius: 10px;
-    opacity: 0.5;
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.before-meeting-time {
+  width: 299px;
+  height: 57px;
+  background-color: #fff;
+  border-radius: 10px;
+  opacity: 0.5;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.before-meeting-btn{
-    display: flex;
-    width: 170px;
-    justify-content: space-between;
+.before-meeting-btn {
+  display: flex;
+  width: 170px;
+  justify-content: space-between;
 }
 
-.before-meeting-btn-memo-container{
-    text-align: center;
+.before-meeting-btn-memo-container {
+  text-align: center;
 }
 
-.before-meeting-btn-memo{
-    width: 59px;
-    height: 59px;
-    border: 4px solid #574B9F;
-    border-radius: 50%;
-    background-color: #fff;
-    overflow: hidden;
-    background-image: url(assets/image/memom.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    box-shadow: 0px 6px 4px 0px rgba(1,1,1,0.25);
+.before-meeting-btn-memo {
+  width: 59px;
+  height: 59px;
+  border: 4px solid #574b9f;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  background-image: url(assets/image/memom.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0px 6px 4px 0px rgba(1, 1, 1, 0.25);
 }
 
-.before-meeting-btn-door-container{
-    text-align: center;
+.before-meeting-btn-door-container {
+  text-align: center;
 }
 
-.before-meeting-btn-door{
-    width: 59px;
-    height: 59px;
-    border: 4px solid #574B9F;
-    border-radius: 50%;
-    background-color: #fff;
-    overflow: hidden;
-    background-image: url(assets/image/dooricon.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    box-shadow: 0px 6px 4px 0px rgba(1,1,1,0.25);
+.before-meeting-btn-door {
+  width: 59px;
+  height: 59px;
+  border: 4px solid #574b9f;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  background-image: url(assets/image/dooricon.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0px 6px 4px 0px rgba(1, 1, 1, 0.25);
 }
 
-.before-meeting-btn-name{
-    padding: 5px;
+.before-meeting-btn-name {
+  padding: 5px;
 }
 
-.before-meeting-footer-right{
-    display: flex;
-    width: 200px;
-    justify-content: space-between;
+.before-meeting-footer-right {
+  display: flex;
+  width: 200px;
+  justify-content: space-between;
 }
 
-.before-meeting-footer-right-mute{
-    width: 53px;
-    height: 52px;
-    overflow: hidden;
-    background-image: url(assets/image/micBtn.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.before-meeting-footer-right-voice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/micBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.before-meeting-footer-right-nomute{
-    width: 53px;
-    height: 52px;
-    overflow: hidden;
-    background-image: url(assets/image/nomicBtn.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.before-meeting-footer-right-novoice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/nomicBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.before-meeting-footer-right-video{
-    width: 53px;
-    height: 52px;
-    overflow: hidden;
-    background-image: url(assets/image/videoBtn.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.before-meeting-footer-right-video {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/videoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.before-meeting-footer-right-novideo{
-    width: 53px;
-    height: 52px;
-    overflow: hidden;
-    background-image: url(assets/image/novideoBtn.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.before-meeting-footer-right-novideo {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/novideoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.before-meeting-footer-right-chat{
-    width: 53px;
-    height: 52px;
-    overflow: hidden;
-    background-image: url(assets/image/chatBtn.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.before-meeting-footer-right-chat {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/chatBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

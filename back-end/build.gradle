@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	//querydsl
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
@@ -53,6 +54,10 @@ dependencies {
 	// mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//querydsl 추가
+	//implementation "com.querydsl:querydsl-jpa:5.0.0"
+	//implementation "com.querydsl:querydsl-apt:5.0.0"
 }
 
 tasks.named('test') {

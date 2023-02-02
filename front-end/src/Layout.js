@@ -12,7 +12,7 @@ import QnaDetail from 'pages/QnA/QnaDetail'
 import QnaRegist from 'pages/QnA/QnaRegist'
 import QnaModify from 'pages/QnA/QnaModify'
 import ApplyDetail from 'pages/Apply/ApplyDetail'
-import TeamSelect from 'pages/Project/TeamSelect'
+import TeamBuilding from 'pages/Project/TeamBuilding'
 import ApplyRegister from 'pages/Apply/ApplyRegister'
 import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
@@ -44,7 +44,7 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
-          <Route path="/teamselect" element={<TeamSelect />} />
+          <Route path="/teambuilding" element={<TeamBuilding />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
