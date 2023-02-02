@@ -20,4 +20,5 @@ public interface ApplyRepository extends JpaRepository<Apply, Integer>{
     int countByUserSeq(int userSeq);
 
     List<Apply> findAllByPostingSeq(int postingSeq, PageRequest pagenation);
+
 }
