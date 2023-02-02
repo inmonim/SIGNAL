@@ -53,11 +53,6 @@ function PostingDetail() {
   return (
     <CssVarsProvider>
       <div className="apply-detail-container">
-        <button
-          onClick={() => {
-            console.log(typeof posting.postingSeq)
-          }}
-        ></button>
         <div className="apply-detail-width-section">
           <div className="apply-detail-project-name-section">
             <div>
