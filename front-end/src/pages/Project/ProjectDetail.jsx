@@ -1,5 +1,4 @@
-import React from 'react'
-// import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../../assets/styles/applyDetail.css'
 import '../../assets/styles/skill.css'
 // import { getPositionName } from 'data/Positiondata'
@@ -12,13 +11,6 @@ import '../../assets/styles/skill.css'
 import axios from 'axios'
 
 function ProjectDetail() {
-  // 인모쓰 여기다가 작성하심 됩니두]
-  //  ex) const [data, setData] =useStaet([])
-  // const res = axios.get(~~~~)
-  // setData(res.data.body)  ~~~
-
-  // 접속은 localhost/projectDetail 로 하셔서 콘솔창에서 데이터 확인하십셔
-
   // const location = useLocation()
   // const projectSeq = ???
   // const userSeq = sessionStorage.getItem('userSeq')
@@ -27,8 +19,10 @@ function ProjectDetail() {
   const userSeq = 82
   const projectSeq = 448
 
+  const [data, setData] = useState([])
+
   const getProject = async () => {
-    return await axios({
+    await axios({
       url: process.env.REACT_APP_API_URL + '/project',
       method: 'GET',
       params: {
@@ -38,29 +32,25 @@ function ProjectDetail() {
       },
     })
       .then((res) => {
-        console.log(res, `===============`)
-        return res
+        setData(res.data.body)
       })
       .catch((e) => {
         console.log(e)
       })
   }
 
-  const setData = async () => {
-    const databody = await getProject()
-    console.log(databody)
-    return databody
-  }
-
-  setData()
+  useEffect(() => {
+    getProject()
+  }, [])
 
   return (
     <>
       <div>프로젝트 상세</div>
-      {/* <div> {data} </div> */}
-      {/* <div> {content} </div>
-      <div> {heartCnt} </div>
-      <div> {warningCnt} </div> */}
+      <div> {data.title} </div>
+      <div> {data.content} </div>
+      <div> {data.heartCnt} </div>
+      <div> 외않되? </div>
+      <div> {data.warningCnt} </div>
     </>
   )
 }
