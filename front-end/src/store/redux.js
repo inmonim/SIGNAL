@@ -122,7 +122,7 @@ export const positionTodo = createSlice({
       const dic = {
         id: action.payload.code,
         text: action.payload.name,
-        count: 0,
+        count: action.payload.count ? action.payload.count : 0,
       }
       pushUniqueObject(state, dic)
     },

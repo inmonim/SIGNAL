@@ -139,7 +139,8 @@ const PostingModify = () => {
       })
       const result = post.postingMeetingList.map((e) => e.meetingDt)
       setDateList(result)
-      dispatch(add({ code: 'PO100', name: 'frontend', count: 1 }))
+
+      dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
     } catch (error) {
       console.log(error)
     }
@@ -268,7 +269,7 @@ const PostingModify = () => {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
-        .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
+        .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
           // console.log(res)
           // console.log(1)
