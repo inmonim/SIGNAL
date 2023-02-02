@@ -14,15 +14,11 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Builder
 public class RefreshToken {
-
     @Id
     private String id;
-
     private String refreshToken;
-
     @TimeToLive
     private Long expiration;
-
     public static RefreshToken createRefreshToken(String username, String refreshToken, Long remainingMilliSeconds) {
         return RefreshToken.builder()
                 .id(username)

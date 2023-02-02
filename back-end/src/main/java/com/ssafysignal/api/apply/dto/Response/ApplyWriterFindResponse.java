@@ -19,10 +19,29 @@ import java.util.stream.Collectors;
 public class ApplyWriterFindResponse {
     @Schema(description = "지원서 Seq", example = "1")
     private Integer applySeq;
+
     @Schema(description = "지원자 Seq", example = "1")
     private Integer userSeq;
+
     @Schema(description = "지원자 nickname")
     private String nickname;
-    @Schema(description = "지원서의 진행 상황")
-    private CommonCode statusCode;
+
+    @Schema(description = "지원자 포지션코드")
+    private CommonCode positionCode;
+
+    @Schema(description = "지원자 메모")
+    private String memo;
+
+    @Schema(description = "지원서의 상태코드")
+    private CommonCode applyCode;
+
+    @Schema(description = "사전미팅 Seq", example = "1")
+    private Integer postingMeetingSeq;
+
+    @Schema(description = "사전미팅 상태코드")
+    private CommonCode postingMeetingCode;
+
+    @Schema(description = "사전미팅 시간")
+    private String meetingDt;
+
 }

@@ -1,14 +1,10 @@
 package com.ssafysignal.api.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,13 +12,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@ToString
-@Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @DynamicInsert
 @DynamicUpdate
+@Builder
 @Table(name = "user")
 public class User {
     @Id
@@ -38,8 +34,7 @@ public class User {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "birth")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime birth;
+    private String birth;
     @Column(name = "phone")
     private String phone;
     @Column(name = "reg_dt")
@@ -51,7 +46,7 @@ public class User {
     private ImageFile imageFile;
 
     @Builder
-    public User(Integer userSeq, String name, String email, String password, String nickname, LocalDateTime birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
+    public User(Integer userSeq, String name, String email, String password, String nickname, String birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
@@ -63,29 +58,14 @@ public class User {
         this.heartCnt = heartCnt;
         this.imageFile = imageFile;
     }
-
-    public void modifyUser(String name, String nickname,String phone, LocalDateTime birth) {
-        this.name = name;
-        this.nickname = nickname;
-        this.phone = phone;
-        this.birth = birth;
-    }
-    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
-    public void modifyPassword(String password){
-        this.password = password;
-    }
-
+    
+    // Security 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<UserAuth> authorities = new HashSet<>();
-
-    private void addAuthority(UserAuth authority) {
-        authorities.add(authority);
-    }
-
-    public List<String> getRoles() {
+    private List<UserAuth> authorities = new ArrayList<>();
+    public List<String> getAuthorities() {
         return authorities.stream()
-                .map(UserAuth::getRoles)
+                .map(UserAuth::getRole)
                 .collect(Collectors.toList());
     }
 }

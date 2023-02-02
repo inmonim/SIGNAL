@@ -1,30 +1,31 @@
 package com.ssafysignal.api.auth.service;
 
 import com.ssafysignal.api.auth.dto.request.FindEmailRequest;
-import com.ssafysignal.api.auth.dto.response.TokenDto;
+import com.ssafysignal.api.auth.dto.response.LoginResponse;
 import com.ssafysignal.api.auth.entity.Auth;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.auth.repository.AuthRepository;
 import com.ssafysignal.api.auth.repository.UserAuthRepository;
 import com.ssafysignal.api.common.dto.EmailDto;
-import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.common.service.EmailService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.exception.UnAuthException;
 import com.ssafysignal.api.global.jwt.JwtExpirationEnums;
-import com.ssafysignal.api.global.jwt.JwtTokenProvider;
-import com.ssafysignal.api.global.jwt.UserCode;
-import com.ssafysignal.api.global.redis.*;
-import com.ssafysignal.api.global.response.AuthResponseCode;
+import com.ssafysignal.api.global.jwt.JwtTokenUtil;
+import com.ssafysignal.api.global.jwt.TokenInfo;
+import com.ssafysignal.api.global.jwt.UserCodeEnum;
+import com.ssafysignal.api.global.redis.LogoutAccessToken;
+import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
+import com.ssafysignal.api.global.redis.RefreshToken;
+import com.ssafysignal.api.global.redis.RefreshTokenRedisRepository;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,70 +35,96 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
 
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
     private final EmailService emailService;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenUtil jwtTokenUtil;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${server.host}")
     private String host;
+    @Value("${server.port}")
+    private Integer port;
 
-
-    // 토큰 추출
-    private String resolveToken(String token) {
-        return token.substring(7);
-    }
-
-    public TokenDto login(String email, String password) throws RuntimeException {
-
+    @Transactional
+    public LoginResponse login(String email, String password) throws RuntimeException {
+        // 아이디 비밀번호 검증
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        if (!passwordEncoder.matches(password, user.getPassword())) throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
 
-        if (!passwordEncoder.matches(password, user.getPassword())) throw new UnAuthException(AuthResponseCode.UNAUTHORIZED);
+        // 이메일 인증 여부 검증
+        Auth auth = authRepository.findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(user.getUserSeq(),"AU100")
+                .orElseThrow(() -> new NotFoundException(ResponseCode.UNAUTHORIZED));
+        if (!auth.isAuth()) throw new NotFoundException(ResponseCode.UNAUTHORIZED);
 
-        // 인증용 객체 생성 후 Jwt 객체 반환
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, passwordEncoder.encode(password));
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        System.out.println("authentication = " + authentication);
-
-        return jwtTokenProvider.generateToken(authentication);
+        // 토큰 발급 시작
+        String accessToken = jwtTokenUtil.generateAccessToken(user.getEmail());
+        RefreshToken refreshToken = refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(user.getEmail(),
+                jwtTokenUtil.generateRefreshToken(user.getEmail()), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
+        return LoginResponse.builder()
+                .userSeq(user.getUserSeq())
+                .name(user.getName())
+                .email(user.getEmail())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getRefreshToken())
+                .build();
     }
 
-//    public RefreshToken saveRefreshToken(Authentication authentication) {
-//        // redis 에 refresh 토큰 저장
-//        refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(email,
-//                jwtTokenProvider.generateToken(email), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
-//
-//    }
+    @Transactional
+    public TokenInfo reissue (String refreshToken) throws RuntimeException {
+        refreshToken = refreshToken.substring(7);
 
-    @CacheEvict(value = CacheKey.USER, key = "#email")
-    public void logout(TokenDto tokenDto, String username) {
-//        String accessToken = resolveToken(tokenDto.getAccessToken());
-//        long remainMilliSeconds = jwtTokenProvider.getRemainMilliSeconds(accessToken);
-//        refreshTokenRedisRepository.deleteById(username);
-//        logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken, username, remainMilliSeconds));
+        String email =jwtTokenUtil.getUsername(refreshToken);
+
+        System.out.println("email = " + email);
+
+        RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(email)
+                .orElseThrow(() -> new UnAuthException(ResponseCode.TOKEN_NOT_FOUND));
+
+        System.out.println(refreshToken);
+        System.out.println(redisRefreshToken.getRefreshToken());
+
+        // 레디스의 리프레시 토큰와 일치하면
+        if (refreshToken.equals(redisRefreshToken.getRefreshToken())){
+            // 만료 기간까지 남은 시간이 없으면
+            if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) <= 0) {
+                // 엑세스 토큰 발급
+                String accessToken = jwtTokenUtil.generateAccessToken(email);
+                return TokenInfo.of(accessToken,
+                        refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(email,
+                                jwtTokenUtil.generateRefreshToken(email), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue())).getRefreshToken());
+            }
+            // 만료 까지 남은 시간이 있으면
+            return TokenInfo.of(jwtTokenUtil.generateAccessToken(email), refreshToken);
+        }
+
+        throw new UnAuthException(ResponseCode.INVALID_TOKEN);
     }
 
+    @CacheEvict(value = "user", key = "#email")
+    public void logout(TokenInfo tokenInfo, String email) {
+        String accessToken = tokenInfo.getAccessToken().substring(7);
+        long remainMilliSeconds = jwtTokenUtil.getRemainMilliSeconds(accessToken);
+        refreshTokenRedisRepository.deleteById(email);
+        logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken, email, remainMilliSeconds));
+    }
 
     @Transactional(readOnly = true)
     public void checkEmail(String email) {
         userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.SUCCESS));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public void checkNickname(String nickname) {
         userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new NotFoundException(ResponseCode.SUCCESS));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -111,28 +138,27 @@ public class AuthService {
     public void emailAuth(String authCode) throws RuntimeException {
         Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
                 // 인증이 이미 되었거나 코드가 없는 경우
-                .orElseThrow(() -> new UnAuthException(AuthResponseCode.ALREADY_AUTH));
+                .orElseThrow(() -> new UnAuthException(ResponseCode.ALREADY_AUTH));
         auth.setAuth(true);
         auth.setAuthDt(LocalDateTime.now());
         authRepository.save(auth);
 
         UserAuth userAuth = UserAuth.builder()
-                .roles(UserCode.USER.getCode())
+                .role(UserCodeEnum.USER.getCode())
                 .user(User.builder()
-                        .userSeq(auth.getUserSeq())
-                        .build())
+                .userSeq(auth.getUserSeq())
+                .build())
                 .build();
 
-        //유저 권한 승급 ("USER")
+        // 유저 권한 승급 ("USER")
         userAuthRepository.save(userAuth);
     }
 
     @Transactional
     public void findPassword(final String email) throws Exception {
-        System.out.println(email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        System.out.println(user);
+
         String authCode = UUID.randomUUID().toString();
 
         Auth auth = Auth.builder()
@@ -140,6 +166,7 @@ public class AuthService {
                 .authCode("AU100")
                 .code(authCode)
                 .build();
+
         // 인증 코드 등록
         authRepository.save(auth);
 
@@ -148,24 +175,31 @@ public class AuthService {
                 EmailDto.builder()
                         .receiveAddress(email)
                         .title("Signal 비밀번호 찾기 - 이메일 인증")
-                        .text("url을 클릭하여 임시 비밀번호를 이메일로 받을 수 있습니다.")
+                        .content("아래 버튼을 클릭하여 이메일을 인증해주세요.")
+                        .text("이메일 인증")
                         .host(host)
+                        .port(port)
                         .url(String.format("/auth/password/%s", authCode))
                         .build());
     }
 
     @Transactional
-    public void getTempPassword(final String authCode) throws Exception {
+    public void getPasswordByEmail(final String authCode) throws Exception {
+        // 인증이 이미 되었거나 코드가 없는 경우
         Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
-                // 인증이 이미 되었거나 코드가 없는 경우
-                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.ALREADY_AUTH));
 
-        String tempPassword = UUID.randomUUID().toString().substring(0,6);
+        // 인증처리
+        auth.setAuth(true);
+        auth.setAuthDt(LocalDateTime.now());
+        authRepository.save(auth);
+
 
         //임시 비밀번호로 변경
+        String tempPassword = UUID.randomUUID().toString().substring(0, 6);
         User user = userRepository.findByUserSeq(auth.getUserSeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        user.modifyPassword(tempPassword);
+        user.setPassword(passwordEncoder.encode(tempPassword));
         userRepository.save(user);
 
         //임시 비밀번호 전송
@@ -173,8 +207,9 @@ public class AuthService {
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
                         .title("Signal 임시 비밀 번호")
-                        .text("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : "+tempPassword)
+                        .content("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : " + tempPassword)
+                        .text("로그인")
+                        .host(host)
                         .build());
     }
-
 }
