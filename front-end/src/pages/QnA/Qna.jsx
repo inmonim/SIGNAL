@@ -56,9 +56,9 @@ function Qna() {
             <SignalBtn
               sigwidth="84px"
               sigheight="45px"
-              sigfontSize="24px"
-              sigBorderRadius={14}
-              sigMargin="0px 0px 5px 0px"
+              sigfontsize="24px"
+              sigborderradius={14}
+              sigmargin="0px 0px 5px 0px"
               variant="contained"
               onClick={() => navigate(`/qnaRegist`)}
             >

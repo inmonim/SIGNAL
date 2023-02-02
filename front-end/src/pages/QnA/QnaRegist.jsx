@@ -74,9 +74,9 @@ function QnaRegist() {
             <SignalBtn
               sigwidth="84px"
               sigheight="45px"
-              sigfontSize="24px"
-              sigBorderRadius={14}
-              sigMargin="12.5px auto"
+              sigfontsize="24px"
+              sigborderradius={14}
+              sigmargin="12.5px auto"
               variant="contained"
               onClick={handleQnaRegist}
             >

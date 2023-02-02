@@ -6,13 +6,14 @@ import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import Skill from '../../data/Skilldata'
+import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
-import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
+import moment from 'moment/moment'
+import QnaList from 'components/Apply/QnaList'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -28,9 +29,11 @@ const textAreaStyle = {
 function ApplyRegister() {
   const location = useLocation()
 
-  const userSeq = 1
+  const userSeq = 82
   const postingSeq = 458
   const applySeq = location.state.applySeq
+
+  const navigate = useNavigate()
 
   // start >> useState
 
@@ -42,12 +45,15 @@ function ApplyRegister() {
   const [expList, setExpList] = useState([])
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
-  const [questionList, setQuestionList] = useState([])
-  const [answerList, setAnswerList] = useState([])
+  // const [questionList, setQuestionList] = useState([])
+  // const [answerList, setAnswerList] = useState([])
+  const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
+  // const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')/
+  const [meetingDafault, setMeetingDafault] = useState('')
   // ene >> useState
 
   // start >> Fetch
@@ -55,6 +61,8 @@ function ApplyRegister() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
+      console.log('user', res.data.body)
+      console.log('user', res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -64,15 +72,17 @@ function ApplyRegister() {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
+      console.log(res.data.body)
       const answerArr = []
       res.data.body.postingQuestionList.map((item) =>
         answerArr.push({
           postingQuestionSeq: item.postingQuestionSeq,
           content: '',
+          applyAnswerSeq: '',
         })
       )
       meetingFetchFilter(res.data.body.postingMeetingList)
-      setQuestionList(res.data.body.postingQuestionList)
+      // setQuestionList(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -80,19 +90,20 @@ function ApplyRegister() {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const applyRes = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const postingRes = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
 
-      console.log(applySeq)
+      setApply(applyRes.data.body)
+      careerFetchFilter(applyRes.data.body.careerList)
+      expFetchFilter(applyRes.data.body.expList)
+      skillFetchFilter(applyRes.data.body.skillList)
+      setPosition(applyRes.data.body.position.name)
+      setContent(applyRes.data.body.content)
+      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
+      setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
+      console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log(apply)
-
-      setApply(res.data.body)
-      careerFetchFilter(res.data.body.careerList)
-      expFetchFilter(res.data.body.careerList)
-      skillFetchFilter(res.data.body.skillList)
-      setPosition(res.data.body.position.name)
-      setContent(res.data.body.content)
-      setAnswerList(res.data.body.answerList)
-      setMeetingSeq(res.data.body.postingMeeting.postingMeetingSeq)
+      console.log('applyRes.data.body', applyRes.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -129,11 +140,11 @@ function ApplyRegister() {
   const meetingFetchFilter = (list) => {
     const meetingDtArr = []
     list.forEach((item) => {
-      if (item.postingMeetingCode === 'PM102') {
+      if (item.postingMeetingCode === 'PM102' || item.postingMeetingSeq === meetingSeq) {
+        setMeetingDafault(item.meetingDt)
         meetingDtArr.push({
           postingMeetingSeq: item.postingMeetingSeq,
           meetingDt: item.meetingDt,
-          applyAnswerSeq: item.applyAnswerSeq,
         })
       }
     })
@@ -164,18 +175,21 @@ function ApplyRegister() {
 
   const skillPostFilter = (list) => {
     const skillArr = []
-    list.map((item) => skillArr.push(Skill.getSkillCode(item)))
+    list.map((item) => skillArr.push(getSkillCode(item)))
     return skillArr
   }
 
   const answerPostFilter = (list) => {
+    console.log('listdf', list)
     const answerArr = []
     list.map((item) =>
       answerArr.push({
         applyAnswerSeq: item.applyAnswerSeq,
-        content: item.content,
+        content: item.defaultValue,
       })
     )
+    console.log('answerArr', answerArr)
+
     return answerArr
   }
 
@@ -267,10 +281,12 @@ function ApplyRegister() {
         newExpArr.splice(index, 1, { seq: key, content: value })
       }
     }
+    console.log(newExpArr)
     setExpList(newExpArr)
   }
 
   const handleExpRemove = (key) => {
+    console.log(key)
     setExpList(expList.filter((exp) => exp.seq !== key))
   }
 
@@ -287,42 +303,46 @@ function ApplyRegister() {
   // start >> handle qna
 
   const handleQnAChange = (value, key) => {
-    const answerArr = [...answerList]
-    answerList.forEach((item, index) => {
+    const qnaArr = [...qnaList]
+    console.log(key)
+    qnaArr.forEach((item, index) => {
       if (item.postingQuestionSeq === key) {
-        answerArr.splice(index, 1, {
+        qnaArr.splice(index, 1, {
           postingQuestionSeq: key,
-          content: value,
+          content: item.content,
+          applyAnswerSeq: item.applyAnswerSeq,
+          defaultValue: value,
         })
       }
     })
 
-    setAnswerList(answerArr)
+    setQnaList(qnaArr)
+    console.log(qnaArr)
   }
 
   // end >> handle qna
 
   const handleMeetingDtChange = (key) => {
+    // setMeetingSeqCheck(false)
     setMeetingSeq(key)
   }
 
-  const handleApplySubmit = async () => {
-    const userSeq = 1
-    const postingSeq = 458
+  const handleApplyModify = async () => {
     try {
       const req = {
-        applyAnswerList: answerPostFilter(answerList),
+        applyAnswerList: answerPostFilter(qnaList),
         applyCareerList: careerPostFilter(careerList),
         applyExpList: expPostFilter(expList),
         applySkillList: skillPostFilter(skillList),
         content,
-        postingMeetingSeq: meetingSeq,
+        postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
         userSeq,
       }
-      console.log(req)
+      console.log(JSON.stringify(req))
+      const config = { 'Content-Type': 'application/json' }
       await axios
-        .put(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
+        .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req, config)
         .then((res) => {
           console.log(res)
         })
@@ -331,9 +351,24 @@ function ApplyRegister() {
         })
 
       console.log('지원서 put')
+      navigate(-1)
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const qnaListDataFormat = (apply, posting) => {
+    const qnaArr = []
+    posting.postingQuestionList.map((item, index) =>
+      qnaArr.push({
+        postingQuestionSeq: item.postingQuestionSeq,
+        content: item.content,
+        defaultValue: apply.answerList[index].content,
+        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
+      })
+    )
+    console.log('qnaArr', qnaArr)
+    setQnaList(qnaArr)
   }
 
   useEffect(() => {
@@ -343,8 +378,8 @@ function ApplyRegister() {
   }, [])
 
   return (
-    <div className="apply-modify--container">
-      <div className="apply-modify--width-section">
+    <div className="apply-modify-container">
+      <div className="apply-modify-width-section">
         <div>
           <div className="apply-modify-title">{user.nickname} 님의지원서</div>
         </div>
@@ -353,7 +388,7 @@ function ApplyRegister() {
           <div className="apply-modify-user-detail-section">
             <div className="apply-modify-phone-section">
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div>전화번호 </div>
+                <div className="apply-modify-label">전화번호</div>
                 <TextField disabled value={user.phone || ''} sx={inputStyle} />
               </div>
             </div>
@@ -401,6 +436,11 @@ function ApplyRegister() {
                     onChange={handleMeetingDtChange}
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
+                  {meetingDafault !== '' ? (
+                    <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD')}</div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>
@@ -414,7 +454,7 @@ function ApplyRegister() {
                 disablePortal
                 id="combo-box-demo"
                 sx={{ width: 300 }}
-                options={Skill.Skilldata}
+                options={Skilldata}
                 getOptionLabel={(option) => option.name}
                 filterOptions={skillSearchFilter}
                 renderInput={(params) => (
@@ -480,7 +520,6 @@ function ApplyRegister() {
           </div>
           <div className="apply-modify-content-section">
             <div className="apply-modify-label">하고싶은 말</div>
-
             <TextField
               style={textAreaStyle}
               fullWidth={true}
@@ -495,12 +534,12 @@ function ApplyRegister() {
               <div className="apply-modify-label">지원자에게 궁금한 점</div>
             </div>
             <div style={{ margin: '10px 0px' }}>
-              <QnAList questionList={questionList} answerList={answerList} onChange={handleQnAChange}></QnAList>
+              <QnaList questionList={qnaList} onChange={handleQnAChange}></QnaList>
             </div>
           </div>
         </div>
         <div className="apply-modify-submit-button">
-          <SignalBtn onClick={handleApplySubmit} style={{ width: '50%' }}>
+          <SignalBtn onClick={handleApplyModify} style={{ width: '50%' }}>
             수정하기
           </SignalBtn>
         </div>
