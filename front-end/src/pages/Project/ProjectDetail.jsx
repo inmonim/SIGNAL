@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../../assets/styles/applyDetail.css'
 import '../../assets/styles/skill.css'
-// import { getPositionName } from 'data/Positiondata'
-// import ApplyDelete from '../../components/Apply/ApplyDelete'
-// import skillImage from '../../assets/image/Skilltest/React.png'
 // import { Button } from '@mui/material'
 // import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 // import ModeEditIcon from '@mui/icons-material/ModeEdit'
@@ -19,7 +16,7 @@ function ProjectDetail() {
   const userSeq = 82
   const projectSeq = 448
 
-  const [data, setData] = useState([])
+  const [pjtData, setPjtData] = useState([])
 
   const getProject = async () => {
     await axios({
@@ -32,7 +29,11 @@ function ProjectDetail() {
       },
     })
       .then((res) => {
-        setData(res.data.body)
+        console.log(res.data.body)
+        setPjtData(res.data.body)
+      })
+      .then(() => {
+        console.log(pjtData)
       })
       .catch((e) => {
         console.log(e)
@@ -46,11 +47,13 @@ function ProjectDetail() {
   return (
     <>
       <div>프로젝트 상세</div>
-      <div> {data.title} </div>
-      <div> {data.content} </div>
-      <div> {data.heartCnt} </div>
-      <div> 외않되? </div>
-      <div> {data.warningCnt} </div>
+      <div> subject : {pjtData.sueject} </div>
+      <div> content : {pjtData.content} </div>
+      <div> heartCnt : {pjtData.heartCnt} </div>
+      <div> weekCnt : {pjtData.weekCnt} </div>
+      <div> warningCnt : {pjtData.warningCnt} </div>
+
+      <div> projectUserList : {pjtData.projectUserList} </div>
     </>
   )
 }
