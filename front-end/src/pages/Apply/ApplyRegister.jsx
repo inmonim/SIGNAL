@@ -11,8 +11,9 @@ import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
+import { useNavigate } from 'react-router-dom'
+// import { useNavigate, useLocation } from 'react-router-dom'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -26,11 +27,26 @@ const textAreaStyle = {
 }
 
 function ApplyRegister() {
-  const userSeq = 1
+  // start >> parameter
+
+  // 1. 아래 default postingSeq 지우기
+  // 2. const postingSeq = location.state.postingSeq
+  // 3. import { useNavigate, useLocation } from 'react-router-dom'
+
+  // const postingSeq = location.state.postingSeq
+
+  const userSeq = sessionStorage.getItem('userSeq')
   const postingSeq = 458
 
-  // start >> useState
+  // end >> parameter
+
+  // start >> useNavigate
+
   const navigate = useNavigate()
+
+  // end >> useNavigate
+
+  // start >> useState
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [position, setPosition] = useState('')
@@ -285,12 +301,16 @@ function ApplyRegister() {
 
   // end >> handle qna
 
+  // start >> handle meeting
+
   const handleMeetingDtChange = (key) => {
     setMeetingSeq(key)
     console.log(key)
-
-    // console.log(postingMeetingList[key].postingMeetingCode)
   }
+
+  // end >> handle meeting
+
+  // start >> post
 
   const handleApplySubmit = async () => {
     const userSeq = 1
@@ -325,12 +345,18 @@ function ApplyRegister() {
     navigate('/')
   }
 
+  // end >> post
+
+  // start >> useEffect
+
   useEffect(() => {
     userFetch()
     postingFetch()
     profileFetch()
     qnaListDataFormat()
   }, [])
+
+  // end >> useEffect
 
   return (
     <div className="apply-register-container">

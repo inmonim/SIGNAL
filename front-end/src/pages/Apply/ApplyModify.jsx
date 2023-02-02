@@ -10,10 +10,11 @@ import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
 import QnaList from 'components/Apply/QnaList'
+// import { useNavigate, useLocation } from 'react-router-dom'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -27,11 +28,12 @@ const textAreaStyle = {
 }
 
 function ApplyRegister() {
-  const location = useLocation()
+  // const location = useLocation()
+  // const applySeq = location.state.applySeq
 
   const userSeq = 82
   const postingSeq = 458
-  const applySeq = location.state.applySeq
+  const applySeq = 1
 
   const navigate = useNavigate()
 
@@ -45,15 +47,13 @@ function ApplyRegister() {
   const [expList, setExpList] = useState([])
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
-  // const [questionList, setQuestionList] = useState([])
-  // const [answerList, setAnswerList] = useState([])
   const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  // const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')/
   const [meetingDafault, setMeetingDafault] = useState('')
+  const [meetingValid, setMeetingValid] = useState(true)
   // ene >> useState
 
   // start >> Fetch
@@ -82,7 +82,6 @@ function ApplyRegister() {
         })
       )
       meetingFetchFilter(res.data.body.postingMeetingList)
-      // setQuestionList(res.data.body.postingQuestionList)
     } catch (error) {
       console.log(error)
     }
@@ -99,7 +98,7 @@ function ApplyRegister() {
       skillFetchFilter(applyRes.data.body.skillList)
       setPosition(applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
-      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
+      qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
       console.log(apply)
@@ -191,6 +190,20 @@ function ApplyRegister() {
     console.log('answerArr', answerArr)
 
     return answerArr
+  }
+
+  const qnaListDataFiltert = (apply, posting) => {
+    const qnaArr = []
+    posting.postingQuestionList.map((item, index) =>
+      qnaArr.push({
+        postingQuestionSeq: item.postingQuestionSeq,
+        content: item.content,
+        defaultValue: apply.answerList[index].content,
+        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
+      })
+    )
+    console.log('qnaArr', qnaArr)
+    setQnaList(qnaArr)
   }
 
   // start >> handle position
@@ -322,10 +335,16 @@ function ApplyRegister() {
 
   // end >> handle qna
 
+  // start >> handle meetingDt
+
   const handleMeetingDtChange = (key) => {
-    // setMeetingSeqCheck(false)
     setMeetingSeq(key)
+    setMeetingValid(false)
   }
+
+  // end >> handle meetingDt
+
+  // start >> handle put
 
   const handleApplyModify = async () => {
     try {
@@ -356,20 +375,7 @@ function ApplyRegister() {
       console.log(error)
     }
   }
-
-  const qnaListDataFormat = (apply, posting) => {
-    const qnaArr = []
-    posting.postingQuestionList.map((item, index) =>
-      qnaArr.push({
-        postingQuestionSeq: item.postingQuestionSeq,
-        content: item.content,
-        defaultValue: apply.answerList[index].content,
-        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
-      })
-    )
-    console.log('qnaArr', qnaArr)
-    setQnaList(qnaArr)
-  }
+  // end >> handle put
 
   useEffect(() => {
     userFetch()
@@ -436,8 +442,12 @@ function ApplyRegister() {
                     onChange={handleMeetingDtChange}
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
-                  {meetingDafault !== '' ? (
-                    <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD')}</div>
+                  {meetingValid ? (
+                    meetingDafault !== '' ? (
+                      <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD HH:MM')}</div>
+                    ) : (
+                      ''
+                    )
                   ) : (
                     ''
                   )}

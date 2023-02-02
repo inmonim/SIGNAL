@@ -7,10 +7,9 @@ import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import { Link, useLocation } from 'react-router-dom'
+// import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
-
-// import { useLocation } from 'react-router'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -22,9 +21,27 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 }))
 
 function ApplyDetail() {
-  const location = useLocation()
-  const userSeq = location.state.userSeq
-  const applySeq = location.state.applySeq
+  // 1. 아래 default userSeq, applySeq 지우기
+  // 2. import { Link, useLocation } from 'react-router-dom'
+
+  // const location = useLocation()
+  // const userSeq = location.state.userSeq
+  // const applySeq = location.state.applySeq
+
+  const userSeq = 1
+  const applySeq = 82
+
+  const currentUserSeq = sessionStorage.getItem('userSeq')
+  const showButton = (
+    <div>
+      <Link to={'/applymodify'} state={{ applySeq }}>
+        <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
+          지원 수정
+        </ApplyModify>
+      </Link>
+      <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
+    </div>
+  )
 
   const postingSeq = 458
   const [posting, setPosting] = useState('458')
@@ -79,15 +96,7 @@ function ApplyDetail() {
               <div className="apply-detail-project-name-label">프로젝트 이름</div>
               <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
             </div>
-            <div className="apply-detail-cancle-section">
-              <Link to={'/applymodify'} state={{ applySeq }}>
-                <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
-                  지원 수정
-                </ApplyModify>
-              </Link>
-
-              <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
-            </div>
+            <div className="apply-detail-cancle-section">{userSeq === currentUserSeq ? showButton : ''}</div>
           </div>
           <hr className="apply-detail-hr" />
           <div className="apply-detail-application-section">
