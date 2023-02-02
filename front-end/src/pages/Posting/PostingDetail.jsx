@@ -6,9 +6,11 @@ import { Fielddata } from 'data/Fielddata'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Localdata from 'data/Localdata'
+import { Box } from '@mui/system'
+import SignalBtn from 'components/common/SignalBtn'
 // import { useLocation } from 'react-router'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
@@ -22,6 +24,7 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 
 function PostingDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   // console.log(id)
   // const location = useLocation()
   // const userSeq = location.state.userSeq
@@ -50,6 +53,11 @@ function PostingDetail() {
   return (
     <CssVarsProvider>
       <div className="apply-detail-container">
+        <button
+          onClick={() => {
+            console.log(typeof posting.postingSeq)
+          }}
+        ></button>
         <div className="apply-detail-width-section">
           <div className="apply-detail-project-name-section">
             <div>
@@ -59,17 +67,14 @@ function PostingDetail() {
               <div className="apply-detail-project-title">{posting ? posting.subject : null}</div>
             </div>
             <div className="apply-detail-cancle-section">
-              <Link to={'/applymodify'} state={{ applySeq }}>
-                <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
-                  지원 수정
-                </ApplyModify>
-              </Link>
+              {posting && (
+                <Link to={'/postingModify'} state={{ postingSeq: posting.postingSeq }}>
+                  <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
+                    공고 수정
+                  </ApplyModify>
+                </Link>
+              )}
               <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
-              <button
-                onClick={() => {
-                  console.log(posting)
-                }}
-              ></button>
             </div>
           </div>
           <hr className="apply-detail-hr" />
@@ -114,50 +119,44 @@ function PostingDetail() {
               <div className="apply-detail-position-section">
                 <div style={{ display: 'flex' }}>
                   <div className="apply-detail-label">포지션 인원</div>
-                  <div className="apply-detail-text-value"></div>
+                  <div className="apply-detail-text-value">
+                    {posting &&
+                      posting.postingPositionList.map((e, i) => (
+                        <p key={i}>
+                          {e.code.name} : {e.positionCnt}
+                        </p>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="apply-detail-skill-section">
+            <Box sx={{ display: 'flex' }}>
               <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
                 <span className="apply-detail-skill-label">사용기술</span>
               </div>
-              <div className="apply-detail-skillList-section">
-                {posting && posting.postingSkillList.map((ele, i) => <p key={i}>{ele.skillCode}</p>)}
-              </div>
-            </div>
-            <div className="apply-detail-career-exp-section">
-              <div style={{ width: '50%' }}>
-                <div className="apply-detail-career-section">
-                  <div className="apply-detail-career-label">
-                    <div className="apply-detail-career-label">경력</div>
-                    <hr className="apply-detail-hr-small" />
-                  </div>
-                  <div style={{ display: 'flex' }}>
-                    <div style={{ width: '90%' }}></div>
-                  </div>
-                </div>
-              </div>
-              <div style={{ width: '50%' }}>
-                <div className="apply-detail-exp-section">
-                  <div className="apply-detail-exp-label">
-                    <div className="apply-detail-exp-label">경험</div>
-                    <hr className="apply-detail-hr-small" />
-                  </div>
-                  <div style={{ display: 'flex' }}>
-                    <div style={{ width: '90%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              {posting &&
+                posting.postingSkillList.map((ele, i) => (
+                  <p style={{ marginRight: '5px' }} key={i}>
+                    {ele.skillCode}
+                  </p>
+                ))}
+            </Box>
+
             <div className="apply-detail-content-section">
-              <div className="apply-detail-label">하고싶은 말</div>
-              <div className="apply-detail-content"></div>
+              <div className="apply-detail-label">프로젝트 소개</div>
+              <div className="apply-detail-content">{posting && posting.content}</div>
             </div>
-            <div className="apply-detail-question-answer-section">
-              <div className="apply-detail-label">공고 작성자가 궁금한 점</div>
-              <div style={{ margin: '10px 0px' }}></div>
+            <div className="apply-register-submit-button">
+              <SignalBtn
+                style={{ width: '50%' }}
+                onClick={() => {
+                  navigate('/applyregister', { state: posting.postingSeq })
+                }}
+              >
+                지원하기
+              </SignalBtn>
+              {/* 팀원 선택 페이지 ( 작성자용 ) */}
             </div>
           </div>
         </div>
