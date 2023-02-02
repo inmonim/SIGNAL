@@ -22,7 +22,7 @@ import AddIcon from '@mui/icons-material/Add'
 // import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
-import Skilldata from 'data/Skilldata'
+import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
@@ -137,6 +137,9 @@ const PostingModify = () => {
         postingPositionList: post.postingPositionList,
         postingQuestionList: post.postingQuestionList,
       })
+      const result = post.postingMeetingList.map((e) => e.meetingDt)
+      setDateList(result)
+      dispatch(add({ code: 'PO100', name: 'frontend', count: 1 }))
     } catch (error) {
       console.log(error)
     }
@@ -159,7 +162,7 @@ const PostingModify = () => {
   // }
 
   // end >> Fetch
-
+  const [deSkill, setDeSkill] = useState([])
   // start >> Data filter
   const [Date, setDate] = useState('')
   const [DateList, setDateList] = useState([])
@@ -209,6 +212,9 @@ const PostingModify = () => {
       })
     )
   }
+  // const getDateList = () => {
+  //   DateList.push()
+  // }
   // const [startDate, setStartDate] = useState(new Date())
   // start >> handle exp
 
@@ -234,7 +240,20 @@ const PostingModify = () => {
     setTodolist({ text: '' })
   }
   // start >> handle qna
-
+  function getMatchingValues(postingSkillList, Skilldata) {
+    const result = []
+    for (let i = 0; i < postingSkillList.length; i++) {
+      for (let j = 0; j < Skilldata.length; j++) {
+        // console.log(postingSkillList[i].skillCode)
+        // console.log(Skilldata[j].code)
+        if (postingSkillList[i].skillCode === Skilldata[j].code) {
+          result.push(Skilldata[j])
+          break
+        }
+      }
+    }
+    return result
+  }
   // const handleQnAChange = (value, key) => {
   //   const qnaArr = [...qnaList]
   //   qnaArr.splice(key, 1, value)
@@ -275,6 +294,7 @@ const PostingModify = () => {
   }
   useEffect(() => {
     postPutFetch()
+    setDeSkill(getMatchingValues(posting.postingSkillList, Skilldata))
   }, [])
   useEffect(() => {
     // postingFetch()
@@ -297,6 +317,9 @@ const PostingModify = () => {
           <button
             onClick={() => {
               console.log(posting)
+              console.log(Skilldata)
+              console.log(getMatchingValues(posting.postingSkillList, Skilldata))
+              console.log(deSkill)
             }}
           >
             d
@@ -415,21 +438,24 @@ const PostingModify = () => {
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>사용 기술 </Label>
-              <Autocomplete
-                multiple
-                limitTags={5}
-                size="small"
-                id="multiple-limit-tags"
-                options={Skilldata}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  // console.log(newValue)
-                  // console.log(event.target)
-                  handleChangeSkill(newValue)
-                }}
-                renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
-              />
+              {deSkill && (
+                <Autocomplete
+                  multiple
+                  limitTags={5}
+                  size="small"
+                  id="multiple-limit-tags"
+                  options={Skilldata}
+                  getOptionLabel={(option) => option.name}
+                  defaultValue={deSkill}
+                  onChange={(event, newValue) => {
+                    // console.log(newValue)
+                    // console.log(event.target)
+                    handleChangeSkill(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                  sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
+                />
+              )}
             </div>
             <div style={{ flexDirection: 'column' }}>
               <div className="email-section" style={{ marginLeft: '3em' }}>
@@ -449,7 +475,7 @@ const PostingModify = () => {
                   </button>
                 </Box>
               </div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '500px' }}>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '450px' }}>
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
@@ -488,6 +514,7 @@ const PostingModify = () => {
                       alt="plusButton"
                       className="plus-button"
                       onClick={() => {
+                        console.log(posi)
                         dispatch(add(posi))
                       }}
                     />

@@ -11,7 +11,7 @@ import Localdata from 'data/Localdata'
 import TabPanel from '@mui/lab/TabPanel'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import Skilldata from 'data/Skilldata'
+import { Skilldata } from 'data/Skilldata'
 import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
@@ -355,6 +355,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
