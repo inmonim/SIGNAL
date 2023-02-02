@@ -10,8 +10,6 @@ function MeetingDtCalendar(props) {
   const [timeList, setTimeList] = useState([])
   const [meeting, setMeeting] = useState([])
 
-  console.log('MeetingDtCalendar', props)
-
   const meetingListFilter = (list) => {
     const meetingArr = []
     list.meetingList.map((item) => meetingArr.push(item.meetingDt.slice(0, 10)))
@@ -29,7 +27,6 @@ function MeetingDtCalendar(props) {
       item.meetingDt.slice(0, 10) === value ? timeArr.push({ id: item.postingMeetingSeq, time: item.meetingDt }) : 0
     )
     setTimeList(timeArr)
-    console.log(timeArr)
   }
 
   useEffect(() => {
@@ -37,7 +34,7 @@ function MeetingDtCalendar(props) {
   }, [])
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <Calendar
         onChange={handleCalendar} // useState로 포커스 변경 시 현재 날짜 받아오기
         formatDay={(locale, date) => moment(date).format('DD')} // 날'일' 제외하고 숫자만 보이도록 설정
@@ -47,6 +44,7 @@ function MeetingDtCalendar(props) {
         navigationLabel={null}
         showNeighboringMonth={false} //  이전, 이후 달의 날짜는 보이지 않도록 설정
         className="mx-auto w-full text-sm border-b"
+        // minDate={new Date()}
         tileContent={({ date, view }) => {
           // 날짜 타일에 컨텐츠 추가하기 (html 태그)
           // 추가할 html 태그를 변수 초기화

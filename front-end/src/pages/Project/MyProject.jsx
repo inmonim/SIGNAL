@@ -13,6 +13,7 @@ function MyProject() {
   const [ingData, setIngData] = useState([])
   // const [img, setImg] = useState('')
   useEffect(() => {
+    console.log(sessionStorage.getItem('useSeq'))
     fetch(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`, {
       method: 'GET',
     })
