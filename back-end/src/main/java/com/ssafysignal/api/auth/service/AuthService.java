@@ -18,7 +18,6 @@ import com.ssafysignal.api.global.redis.LogoutAccessToken;
 import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
 import com.ssafysignal.api.global.redis.RefreshToken;
 import com.ssafysignal.api.global.redis.RefreshTokenRedisRepository;
-import com.ssafysignal.api.global.response.AuthResponseCode;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
@@ -27,18 +26,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthService {
 
     private final AuthRepository authRepository;
@@ -52,7 +48,10 @@ public class AuthService {
 
     @Value("${server.host}")
     private String host;
+    @Value("${server.port}")
+    private Integer port;
 
+    @Transactional
     public LoginResponse login(String email, String password) throws RuntimeException {
         // 아이디 비밀번호 검증
         User user = userRepository.findByEmail(email)
@@ -60,7 +59,7 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
 
         // 이메일 인증 여부 검증
-        Auth auth = authRepository.findByUserSeq(user.getUserSeq())
+        Auth auth = authRepository.findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(user.getUserSeq(),"AU100")
                 .orElseThrow(() -> new NotFoundException(ResponseCode.UNAUTHORIZED));
         if (!auth.isAuth()) throw new NotFoundException(ResponseCode.UNAUTHORIZED);
 
@@ -77,15 +76,16 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public TokenInfo reissue (String refreshToken) throws RuntimeException {
         refreshToken = refreshToken.substring(7);
 
-        // email 추출
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+        String email =jwtTokenUtil.getUsername(refreshToken);
+
+        System.out.println("email = " + email);
 
         RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(email)
-                .orElseThrow(() -> new UnAuthException(AuthResponseCode.TOKEN_NOT_FOUND));
+                .orElseThrow(() -> new UnAuthException(ResponseCode.TOKEN_NOT_FOUND));
 
         System.out.println(refreshToken);
         System.out.println(redisRefreshToken.getRefreshToken());
@@ -93,11 +93,7 @@ public class AuthService {
         // 레디스의 리프레시 토큰와 일치하면
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())){
             // 만료 기간까지 남은 시간이 없으면
-
-            // 만료 시간 부분 오류 수정필요
-            System.out.println("리프레시 토큰 만료까지 남은 시간 = " + jwtTokenUtil.getRemainMilliSeconds(refreshToken));
-
-            if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) < JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()) {
+            if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) <= 0) {
                 // 엑세스 토큰 발급
                 String accessToken = jwtTokenUtil.generateAccessToken(email);
                 return TokenInfo.of(accessToken,
@@ -108,7 +104,7 @@ public class AuthService {
             return TokenInfo.of(jwtTokenUtil.generateAccessToken(email), refreshToken);
         }
 
-        throw new UnAuthException(AuthResponseCode.UNAUTHORIZED);
+        throw new UnAuthException(ResponseCode.INVALID_TOKEN);
     }
 
     @CacheEvict(value = "user", key = "#email")
@@ -142,7 +138,7 @@ public class AuthService {
     public void emailAuth(String authCode) throws RuntimeException {
         Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
                 // 인증이 이미 되었거나 코드가 없는 경우
-                .orElseThrow(() -> new UnAuthException(AuthResponseCode.ALREADY_AUTH));
+                .orElseThrow(() -> new UnAuthException(ResponseCode.ALREADY_AUTH));
         auth.setAuth(true);
         auth.setAuthDt(LocalDateTime.now());
         authRepository.save(auth);
@@ -150,8 +146,8 @@ public class AuthService {
         UserAuth userAuth = UserAuth.builder()
                 .role(UserCodeEnum.USER.getCode())
                 .user(User.builder()
-                        .userSeq(auth.getUserSeq())
-                        .build())
+                .userSeq(auth.getUserSeq())
+                .build())
                 .build();
 
         // 유저 권한 승급 ("USER")
@@ -162,7 +158,7 @@ public class AuthService {
     public void findPassword(final String email) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        System.out.println(user);
+
         String authCode = UUID.randomUUID().toString();
 
         Auth auth = Auth.builder()
@@ -170,6 +166,7 @@ public class AuthService {
                 .authCode("AU100")
                 .code(authCode)
                 .build();
+
         // 인증 코드 등록
         authRepository.save(auth);
 
@@ -178,24 +175,31 @@ public class AuthService {
                 EmailDto.builder()
                         .receiveAddress(email)
                         .title("Signal 비밀번호 찾기 - 이메일 인증")
-                        .text("url을 클릭하여 임시 비밀번호를 이메일로 받을 수 있습니다.")
+                        .content("아래 버튼을 클릭하여 이메일을 인증해주세요.")
+                        .text("이메일 인증")
                         .host(host)
+                        .port(port)
                         .url(String.format("/auth/password/%s", authCode))
                         .build());
     }
 
     @Transactional
-    public void getTempPassword(final String authCode) throws Exception {
+    public void getPasswordByEmail(final String authCode) throws Exception {
+        // 인증이 이미 되었거나 코드가 없는 경우
         Auth auth = authRepository.findByCodeAndIsAuth(authCode, false)
-                // 인증이 이미 되었거나 코드가 없는 경우
-                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.ALREADY_AUTH));
 
-        String tempPassword = UUID.randomUUID().toString().substring(0,6);
+        // 인증처리
+        auth.setAuth(true);
+        auth.setAuthDt(LocalDateTime.now());
+        authRepository.save(auth);
+
 
         //임시 비밀번호로 변경
+        String tempPassword = UUID.randomUUID().toString().substring(0, 6);
         User user = userRepository.findByUserSeq(auth.getUserSeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        user.modifyPassword(tempPassword);
+        user.setPassword(passwordEncoder.encode(tempPassword));
         userRepository.save(user);
 
         //임시 비밀번호 전송
@@ -203,8 +207,9 @@ public class AuthService {
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
                         .title("Signal 임시 비밀 번호")
-                        .text("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : "+tempPassword)
+                        .content("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : " + tempPassword)
+                        .text("로그인")
+                        .host(host)
                         .build());
     }
-
 }

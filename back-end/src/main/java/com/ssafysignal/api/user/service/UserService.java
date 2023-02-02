@@ -75,7 +75,8 @@ public class UserService {
         emailService.sendMail(
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
-                        .title("Signal 회원가입 인증")
+                        .title("Signal 회원 가입 - 이메일 인증")
+                        .content("아래 버튼을 클릭하여 이메일을 인증해주세요.")
                         .text("이메일 인증")
                         .host(host)
                         .port(port)
@@ -94,7 +95,11 @@ public class UserService {
     public void modifyUser(int userSeq, ModifyUserRequest userInfo) throws RuntimeException {
     	User user = userRepository.findByUserSeq(userSeq)
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-    	user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), userInfo.getBirth());
+
+        user.setName(userInfo.getName());
+        user.setNickname(userInfo.getNickname());
+        user.setPhone(userInfo.getPhone());
+        user.setBirth(userInfo.getBirth());
     	userRepository.save(user);
     	
     	//파일 이미지  변경 코드 추가하기

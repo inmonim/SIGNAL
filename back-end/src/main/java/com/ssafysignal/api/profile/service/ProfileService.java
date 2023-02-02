@@ -195,7 +195,7 @@ public class ProfileService {
         
         // param으로 들어온 수를 Integer 형태로 변환 후 값을 적용한다.
         Integer addHeart = Integer.valueOf(param.get("heartCnt").toString());
-        user.chargeHeart(userHeartCnt+addHeart);
+        user.setHeartCnt(userHeartCnt +addHeart);
         
         // userRep에 저장
         userRepository.save(user);
