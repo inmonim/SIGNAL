@@ -214,7 +214,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/applyer/count/{userSeq}")
-    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "userSeq", description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllApplyApplyer - Call");
 
         try {

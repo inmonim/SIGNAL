@@ -165,25 +165,4 @@ public class ProjectSettingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
-
-    @Tag(name = "프로젝트")
-    @Operation(summary = "프로젝트 지원자 목록 조회", description = "프로젝트 지원자 목록을 조회한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "프로젝트 지원자 목록을 조회 완료"),
-            @ApiResponse(responseCode = "400", description = "프로젝트 지원자 목록을 조회 중 오류 발생"),
-            @ApiResponse(responseCode = "401", description = "로그인 필요"),
-            @ApiResponse(responseCode = "403", description = "권한 없음")})
-    @GetMapping("/applyer/{postingSeq}")
-    private ResponseEntity<BasicResponse> findAllApplyer(@Parameter(name = "postingSeq", description = "공고 Seq") @PathVariable(name = "postingSeq") Integer postingSeq) {
-        log.info("findAllApplyer - Call");
-
-        try {
-            List<ProjectApplyDto> applyerList = projectSettingService.findAllApplyer(postingSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("applyerList", applyerList); }}));
-        }  catch (NotFoundException e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
-        }
-    }
 }
