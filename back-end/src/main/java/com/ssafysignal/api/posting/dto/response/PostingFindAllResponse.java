@@ -1,5 +1,6 @@
 package com.ssafysignal.api.posting.dto.response;
 
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.posting.entity.PostingSkill;
 import com.ssafysignal.api.project.entity.Project;
 import lombok.Builder;
@@ -13,8 +14,8 @@ import java.util.List;
 public class PostingFindAllResponse {
     private Integer postingSeq;
     private String subject;
-    private String localCode;
-    private String fieldCode;
+    private CommonCode localCode;
+    private CommonCode fieldCode;
     private Integer totalCnt;
     private Integer selectCnt;
     private List<PostingSkill> postingSkillList;
@@ -23,8 +24,8 @@ public class PostingFindAllResponse {
         return PostingFindAllResponse.builder()
                 .postingSeq(project.getPosting().getPostingSeq())
                 .subject(project.getSubject())
-                .localCode(project.getLocalCode())
-                .fieldCode(project.getFieldCode())
+                .localCode(project.getLocal())
+                .fieldCode(project.getField())
                 // totalCnt
                 // selectCnt
                 .postingSkillList(project.getPosting().getPostingSkillList())

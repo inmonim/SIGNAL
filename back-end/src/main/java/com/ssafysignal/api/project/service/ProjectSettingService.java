@@ -75,15 +75,6 @@ public class ProjectSettingService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<ProjectApplyDto> findAllApplyer(Integer postingSeq) {
-        List<Apply> applyList = applyRepository.findByPostingSeq(postingSeq);
-
-        return applyList.stream()
-                .map(ProjectApplyDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ProjectSettingModifyRequest projectSettingModifyRequest) throws RuntimeException, IOException {
 
