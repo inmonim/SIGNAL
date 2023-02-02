@@ -7,7 +7,7 @@ import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import axios from 'axios'
 
@@ -23,6 +23,8 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 }))
 
 function ApplyDetail() {
+  const navigate = useNavigate()
+
   const location = useLocation()
   const userSeq = location.state.userSeq
   const applySeq = location.state.applySeq
@@ -204,7 +206,13 @@ function ApplyDetail() {
             </div>
           </div>
           <div>
-            <SignalBtn sigwidth="20%" sigheight="40px" sigmargin="auto" sigborderradius="100px">
+            <SignalBtn
+              sigwidth="20%"
+              sigheight="40px"
+              sigmargin="auto"
+              sigborderradius="100px"
+              onClick={() => navigate(-1)}
+            >
               돌아가기
             </SignalBtn>
           </div>
