@@ -163,12 +163,21 @@ export const qnaTodo = createSlice({
         text: action.payload,
       })
     },
+    addQnaF: (state, action) => {
+      console.log(action)
+      const dic = {
+        id: action.payload.id,
+        text: action.payload.text,
+      }
+      nextId++
+      pushUniqueObject(state, dic)
+    },
     removeQna: (state, action) => {
       return state.filter((e) => e.id !== action.payload)
     },
   },
 })
-export const { addQna, removeQna } = qnaTodo.actions
+export const { addQna, removeQna, addQnaF } = qnaTodo.actions
 
 const stock = createSlice({
   name: 'stock',

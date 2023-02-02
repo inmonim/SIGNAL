@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -26,7 +27,7 @@ import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
-import { add, addQna } from 'store/redux'
+import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
@@ -84,10 +85,9 @@ const PostingModify = () => {
   const postingSeq = location.state.postingSeq
   //   console.log(postingSeq)
 
-  const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
     userSeq: 1,
-    subject,
+    subject: '테스트',
     localCode: '11',
     fieldCode: 'FI100',
     isContact: true,
@@ -118,6 +118,7 @@ const PostingModify = () => {
       },
     ],
   })
+  // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
@@ -137,10 +138,22 @@ const PostingModify = () => {
         postingPositionList: post.postingPositionList,
         postingQuestionList: post.postingQuestionList,
       })
-      const result = post.postingMeetingList.map((e) => e.meetingDt)
-      setDateList(result)
-
-      dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
+      const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+      const resultPosition = post.postingPositionList.map((e) => ({
+        code: e.positionCode,
+        name: e.code.name,
+        count: e.positionCnt,
+      }))
+      const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+      const resultQuestion = post.postingQuestionList.map((e) => ({
+        id: e.num,
+        text: e.content,
+      }))
+      setDateList(resultMeeting)
+      resultPosition.forEach((e) => dispatch(add(e)))
+      // dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
+      resultQuestion.forEach((e) => dispatch(addQnaF(e)))
+      setPosting({ ...posting, postingSkillList: resultSkill })
     } catch (error) {
       console.log(error)
     }
@@ -271,11 +284,12 @@ const PostingModify = () => {
       await axios
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
-          // console.log(res)
-          // console.log(1)
+          console.log(res)
+          console.log(JSON.stringify(posting))
         })
         .catch((err) => {
           console.log(err)
+          console.log(JSON.stringify(posting))
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
@@ -317,10 +331,8 @@ const PostingModify = () => {
         <div>
           <button
             onClick={() => {
-              console.log(posting)
+              console.log(JSON.stringify(posting))
               console.log(Skilldata)
-              console.log(getMatchingValues(posting.postingSkillList, Skilldata))
-              console.log(deSkill)
             }}
           >
             d
@@ -337,7 +349,7 @@ const PostingModify = () => {
                 value={posting.subject}
                 onChange={(e) => {
                   // console.log(e.target.value)
-                  setSubject(e.target.value)
+
                   setPosting({ ...posting, subject: e.target.value })
                   // console.log(subject)
                 }}
@@ -602,9 +614,11 @@ const PostingModify = () => {
         </div>
 
         <div className="submit-button">
-          <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
-          </button>
+          <Link to={`/posting/${postingSeq}`}>
+            <button className="apply-button" onClick={handleApplySubmit}>
+              지원하기
+            </button>
+          </Link>
         </div>
       </div>
     </Container>
