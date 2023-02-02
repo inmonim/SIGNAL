@@ -1,12 +1,16 @@
 package com.ssafysignal.api.apply.dto.Response;
 
 import com.ssafysignal.api.apply.entity.ApplyAnswer;
+import com.ssafysignal.api.apply.entity.ApplyCareer;
+import com.ssafysignal.api.apply.entity.ApplyExp;
 import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.posting.entity.PostingMeeting;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +26,14 @@ public class ApplyFindResponse {
     private String content;
     @Schema(description = "포지션")
     private CommonCode position;
-    @Schema(description = "분야")
-    private CommonCode fieldCode;
     @Schema(description = "공고 질문 답변 목록")
     private List<ApplyAnswer> answerList;
     @Schema(description = "경력 목록")
-    private List<String> careerList;
+    private List<ApplyCareer> careerList;
     @Schema(description = "경험 목록")
-    private List<String> expList;
+    private List<ApplyExp> expList;
     @Schema(description = "기술스택 목록")
     private List<CommonCode> skillList;
+    @Schema(description = "사전미팅시간")
+    private PostingMeeting postingMeeting;
 }

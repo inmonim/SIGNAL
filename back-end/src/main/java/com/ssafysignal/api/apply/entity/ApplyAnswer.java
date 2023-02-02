@@ -32,7 +32,6 @@ public class ApplyAnswer {
     private LocalDateTime regDt;
 
     @Builder
-
     public ApplyAnswer(Integer applyAnswerSeq, Integer applySeq, Integer postingSeq, Integer postingQuestionSeq, String content, LocalDateTime regDt) {
         this.applyAnswerSeq = applyAnswerSeq;
         this.applySeq = applySeq;
