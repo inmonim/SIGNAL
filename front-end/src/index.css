@@ -1,5 +1,14 @@
 @import 'reset.css';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #fff;
+}
+
+.root-wrap {
+  position: relative;
+  width: 100%;
 }
