@@ -268,4 +268,4 @@ function getSkillCode(name) {
   return code
 }
 
-export default { Skilldata, getSkillCode }
+export { Skilldata, getSkillCode }
