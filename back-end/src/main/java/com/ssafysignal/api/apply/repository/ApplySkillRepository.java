@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface ApplySkillRepository extends JpaRepository<ApplySkill, Integer> {
 
     Optional<List<ApplySkill>> findApplySkillsByApplySeq(Integer integer);
+
+    List<ApplySkill> findAllByApplySeq(Integer applySeq);
 }

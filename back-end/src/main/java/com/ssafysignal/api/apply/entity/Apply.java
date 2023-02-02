@@ -48,7 +48,7 @@ public class Apply {
     
     // 1 : 1 관계
     @OneToOne
-    @JoinColumn(name = "position_code", insertable = false, updatable = false)
+    @JoinColumn(name = "apply_code", insertable = false, updatable = false)
     private CommonCode code;
     @OneToOne
     @JoinColumn(name = "posting_seq", insertable = false, updatable = false)

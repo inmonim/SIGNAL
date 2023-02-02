@@ -1,5 +1,7 @@
 package com.ssafysignal.api.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -22,10 +24,10 @@ import java.util.stream.Collectors;
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userSeq")
+    @Column(name = "user_seq")
     private Integer userSeq;
     @Column(name = "name")
     private String name;
@@ -36,7 +38,7 @@ public class User implements UserDetails {
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "birth")
-    private LocalDateTime birth;
+    private String birth;
     @Column(name = "phone")
     private String phone;
     @Column(name = "reg_dt")
@@ -48,7 +50,7 @@ public class User implements UserDetails {
     private ImageFile imageFile;
 
     @Builder
-    public User(Integer userSeq, String name, String email, String password, String nickname, LocalDateTime birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
+    public User(Integer userSeq, String name, String email, String password, String nickname, String birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
         this.userSeq = userSeq;
         this.name = name;
         this.email = email;
@@ -61,60 +63,23 @@ public class User implements UserDetails {
         this.imageFile = imageFile;
     }
 
-    public void modifyUser(String name, String nickname,String phone, LocalDateTime birth) {
+    public void modifyUser(String name, String nickname,String phone, String birth) {
         this.name = name;
         this.nickname = nickname;
         this.phone = phone;
         this.birth = birth;
     }
-
+    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
     public void modifyPassword(String password){
         this.password = password;
     }
 
-
-
-
-
-
-
-    @ElementCollection(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
+    private List<UserAuth> authorities = new ArrayList<>();
+    public List<String> getAuthorities() {
+        return authorities.stream()
+                .map(UserAuth::getRole)
                 .collect(Collectors.toList());
-    }
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }
