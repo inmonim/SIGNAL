@@ -1,30 +1,46 @@
 import React from 'react'
+import arrow from 'assets/image/arrow.png'
+import selecarrow from 'assets/image/selecarrow.png'
 
 const Dot = ({ num, scrollIndex }) => {
-  return (
-    <div
-      style={{
-        width: 10,
-        height: 10,
-        border: '1px solid #574B9F',
-        borderRadius: 999,
-        backgroundColor: scrollIndex === num ? '#574B9F' : 'transparent',
-        transitionDuration: 1000,
-        transition: 'background-color 0.5s',
-      }}
-    ></div>
+  return scrollIndex === num ? (
+    <div>
+      <img
+        src={selecarrow}
+        alt=""
+        style={{
+          width: 90,
+          height: 30,
+          transitionDuration: 1000,
+          transition: 'background-color 0.5s',
+          opacity: 0.7,
+        }}
+      />
+    </div>
+  ) : (
+    <div>
+      <img
+        src={arrow}
+        alt=""
+        style={{
+          width: 90,
+          height: 30,
+          transitionDuration: 1000,
+          transition: 'background-color 0.5s',
+          opacity: 0.6,
+        }}
+      />
+    </div>
   )
 }
 
 const Dots = ({ scrollIndex }) => {
   return (
-    <div style={{ position: 'fixed', top: '80%', right: '50%' }}>
+    <div style={{ position: 'fixed', top: '85%', right: '50%' }}>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'center',
           width: 20,
           height: 100,
         }}
