@@ -162,7 +162,6 @@ public class PostingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
-
     @Tag(name = "공고")
     @Operation(summary = "팀원 선택", description = "한명의 팀원을 선택 또는 선택해제 한다.")
     @ApiResponses({
@@ -171,12 +170,11 @@ public class PostingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PutMapping("/member/{applySeq}")
-    private ResponseEntity<BasicResponse> applySelect(@Parameter(name = "applySeq", description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq,
-                                                      @Parameter(description = "선택 여부") @RequestParam("isSelect") boolean isSelect){
+    private ResponseEntity<BasicResponse> applySelect(@Parameter(name = "applySeq", description = "지원서 Seq") @PathVariable("applySeq") Integer applySeq){
         log.info("applySelect - Call");
 
         try {
-            postingService.applySelect(applySeq, isSelect);
+            postingService.applySelect(applySeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
