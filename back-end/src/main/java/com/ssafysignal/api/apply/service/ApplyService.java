@@ -154,14 +154,15 @@ public class ApplyService {
 
     @Transactional
     public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
-
+        System.out.println("asdf"+applySeq);
         // 지원서 수정
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        System.out.println("apply"+apply);
 
         apply.setContent(applyModifyRequest.getContent());
         apply.setPositionCode(applyModifyRequest.getPositionCode());
-        
+
         // 기술 스택
         List<ApplySkill> applySkillList = apply.getApplySkillList();
         applySkillList.clear();
@@ -197,7 +198,7 @@ public class ApplyService {
             );
         }
         apply.setApplyCareerList(applyCareerList);
-        
+
         
         //답변
         for(Map<String, Object> answerRequest : applyModifyRequest.getApplyAnswerList()){
@@ -207,7 +208,7 @@ public class ApplyService {
             answer.setContent(content);
             applyAnswerRepository.save(answer);
         }
-		
+
 
         //미팅시간
         int newPostingMeetingSeq = applyModifyRequest.getPostingMeetingSeq();
