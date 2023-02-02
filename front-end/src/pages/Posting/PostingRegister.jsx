@@ -534,7 +534,7 @@ const PostingRegister = () => {
 
         <div className="submit-button">
           <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
+            공고 등록
           </button>
         </div>
       </div>

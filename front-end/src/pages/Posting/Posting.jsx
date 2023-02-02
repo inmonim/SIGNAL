@@ -355,6 +355,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
