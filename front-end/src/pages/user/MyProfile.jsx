@@ -106,9 +106,22 @@ function MyProfile() {
             <AlertModal msg="탈퇴하시겠습니까?" open={alertOpen} onClick={handleToMain}></AlertModal>
           </div>
         </div>
-        <div className="my-profile-container">
-          <div className="my-profile">
-            <div>ㅇㄹㅇ</div>
+        <div className="my-profile">
+          <div className="my-profile-container">
+            <div className="my-profile-four">
+              <div className="my-profile-top">
+                <div className="my-profile-top-position">
+                  <div className="my-profile-top-position-title">포지션</div>
+                </div>
+                <div className="my-profile-top-skill">
+                  <div className="my-profile-top-skill-title">스킬</div>
+                </div>
+              </div>
+              <div className="my-profile-bottom">
+                <div className="my-profile-bottom-exp"></div>
+                <div className="my-profile-bottom-career"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
