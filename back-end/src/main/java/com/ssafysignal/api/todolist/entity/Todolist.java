@@ -25,7 +25,7 @@ public class Todolist {
     @Column(name = "project_seq")
     private Integer projectSeq;
 
-    @Column(name = "userSeq")
+    @Column(name = "user_seq")
     private Integer userSeq;
 
     @Column(name = "content")
