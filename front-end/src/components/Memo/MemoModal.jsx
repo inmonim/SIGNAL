@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import { Button, Modal, Box, Typography } from '@mui/material'
 import cancleButton from '../../assets/image/x.png'
@@ -66,11 +66,6 @@ function MemoModal(props) {
   const handleClose = () => {
     setOpen(false)
   }
-
-  useEffect(() => {
-    memoFetch()
-  }, [])
-
   return (
     <CssVarsProvider>
       <ImageButton onClick={handleOpen} startIcon={<ArticleIcon />}>
