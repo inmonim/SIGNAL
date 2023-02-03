@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
@@ -11,8 +10,10 @@ import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
+import { useNavigate } from 'react-router-dom'
+// import { useNavigate, useLocation } from 'react-router-dom'
+import api from 'api/Api.js'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -26,11 +27,26 @@ const textAreaStyle = {
 }
 
 function ApplyRegister() {
-  const userSeq = 1
+  // start >> parameter
+
+  // 1. 아래 default postingSeq 지우기
+  // 2. const postingSeq = location.state.postingSeq
+  // 3. import { useNavigate, useLocation } from 'react-router-dom'
+
+  // const postingSeq = location.state.postingSeq
+
+  const userSeq = sessionStorage.getItem('userSeq')
   const postingSeq = 458
 
-  // start >> useState
+  // end >> parameter
+
+  // start >> useNavigate
+
   const navigate = useNavigate()
+
+  // end >> useNavigate
+
+  // start >> useState
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
   const [position, setPosition] = useState('')
@@ -49,7 +65,7 @@ function ApplyRegister() {
   // start >> Fetch
   const userFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
@@ -58,7 +74,7 @@ function ApplyRegister() {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       const answerArr = []
       res.data.body.postingQuestionList.map((item) =>
@@ -91,7 +107,7 @@ function ApplyRegister() {
 
   const profileFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
       careerFetchFilter(res.data.body.userCareerList)
       expFetchFilter(res.data.body.userExpList)
       console.log(res.data.body)
@@ -285,12 +301,16 @@ function ApplyRegister() {
 
   // end >> handle qna
 
+  // start >> handle meeting
+
   const handleMeetingDtChange = (key) => {
     setMeetingSeq(key)
     console.log(key)
-
-    // console.log(postingMeetingList[key].postingMeetingCode)
   }
+
+  // end >> handle meeting
+
+  // start >> post
 
   const handleApplySubmit = async () => {
     const userSeq = 1
@@ -307,10 +327,9 @@ function ApplyRegister() {
         userSeq,
       }
       console.log(JSON.stringify(req))
-      const config = { 'Content-Type': 'application/json' }
 
-      await axios
-        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req, config)
+      await api
+        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
         .then((res) => {
           console.log(res)
         })
@@ -325,12 +344,18 @@ function ApplyRegister() {
     navigate('/')
   }
 
+  // end >> post
+
+  // start >> useEffect
+
   useEffect(() => {
     userFetch()
     postingFetch()
     profileFetch()
     qnaListDataFormat()
   }, [])
+
+  // end >> useEffect
 
   return (
     <div className="apply-register-container">
