@@ -23,8 +23,8 @@ function Header() {
   const handleLetterOpen = () => setLetterOpen(true)
   const handleLetterClose = () => setLetterOpen(false)
 
-  const [isLogin, setIsLogin] = useState(false)
   const [letterCnt, setLetterCnt] = useState(0)
+  const [isLogin, setIsLogin] = useState(false)
   useEffect(() => {
     if (sessionStorage.getItem('userSeq') !== null) {
       setIsLogin(true)
