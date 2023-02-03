@@ -90,7 +90,7 @@ public class PostingController {
         if (subject != null && !subject.equals("")) searchKeys.put("subject", subject);
         if (localCode != null && !localCode.equals("")) searchKeys.put("localCode", localCode);
         if (fieldCode != null && !fieldCode.equals("")) searchKeys.put("fieldCode", fieldCode);
-        
+
         try {
             List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys, postingSkillList);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
