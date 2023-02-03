@@ -9,8 +9,8 @@ import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/ma
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import SignalBtn from 'components/common/SignalBtn'
 // import { Link, useLocation } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { Link, useNavigate } from 'react-router-dom'
+import api from 'api/Api.js'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -28,6 +28,8 @@ function ApplyDetail() {
   // const location = useLocation()
   // const userSeq = location.state.userSeq
   // const applySeq = location.state.applySeq
+
+  const navigate = useNavigate()
 
   const userSeq = 1
   const applySeq = 82
@@ -53,7 +55,7 @@ function ApplyDetail() {
 
   const applyFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
       console.log(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
@@ -66,7 +68,7 @@ function ApplyDetail() {
 
   const userFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
     } catch (error) {
       console.log(error)
@@ -75,7 +77,7 @@ function ApplyDetail() {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       console.log('postingFetch', res.data.body)
     } catch (error) {

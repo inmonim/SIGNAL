@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
@@ -15,6 +14,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
 import QnaList from 'components/Apply/QnaList'
 // import { useNavigate, useLocation } from 'react-router-dom'
+import api from 'api/Api.js'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -59,7 +59,7 @@ function ApplyRegister() {
   // start >> Fetch
   const userFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
       console.log('user', res.data.body)
       console.log('user', res.data.body)
@@ -70,7 +70,7 @@ function ApplyRegister() {
 
   const postingFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       console.log(res.data.body)
       const answerArr = []
@@ -89,8 +89,8 @@ function ApplyRegister() {
 
   const applyFetch = async () => {
     try {
-      const applyRes = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      const postingRes = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const applyRes = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
 
       setApply(applyRes.data.body)
       careerFetchFilter(applyRes.data.body.careerList)
@@ -359,9 +359,8 @@ function ApplyRegister() {
         userSeq,
       }
       console.log(JSON.stringify(req))
-      const config = { 'Content-Type': 'application/json' }
-      await axios
-        .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req, config)
+      await api
+        .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req)
         .then((res) => {
           console.log(res)
         })
