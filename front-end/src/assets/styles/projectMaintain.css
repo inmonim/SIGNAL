@@ -5,7 +5,7 @@
   margin-top: 50px;
   margin-bottom: 70px;
   height: 100vh;
-  min-height: 1300px;
+  /* min-height: 500px; */
 }
 
 .project-maintain-width {
@@ -23,15 +23,16 @@
 }
 
 .project-maintain-title {
-  font-size: -webkit-xxx-large;
+  font-size: 65px;
   text-align: center;
 }
 
 .project-maintain-menu {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
-  margin: 20px;
+  margin: 10px auto;
+  width: 250px;
 }
 
 .project-maintain-profile-image > img {
@@ -41,25 +42,48 @@
   width: 66px;
 }
 
+.project-maintain-profile-image {
+  padding: 5px 0px;
+}
+
 .project-maintain-profile {
-  border: 1px solid #574b9f;
+  border: 2px solid #574b9f;
   border-radius: 20px;
-  width: 340px;
-  /* height: 500px;
-  margin: auto; */
-  display: flex;
+  width: 320px;
   height: 200px;
+  display: flex;
   justify-content: space-between;
+  margin: 25px 0px;
 }
 
 .project-maintain-warning-section {
   margin: auto;
 }
+.project-maintain-warning-section > div {
+  padding: 7px 0px;
+}
+
+.project-maintain-warning {
+  font-size: 33px;
+}
 
 .project-maintain-ban {
-  text-align: center;
+  margin: auto;
 }
 
 .project-maintain-profile-section {
   margin: auto;
+  padding-left: 15px;
+}
+
+.project-maintain-body {
+  width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.project-maintain-profile-text > div {
+  margin: 5px 5px 0px 5px;
 }

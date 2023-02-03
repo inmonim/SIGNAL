@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import noProfile from 'assets/image/noProfileImg.png'
+import SignalBtn from 'components/common/SignalBtn'
 
 function ProjectProfile({ Data }) {
   const position = Data.position.name
@@ -29,12 +30,20 @@ function ProjectProfile({ Data }) {
         <div className="project-maintain-profile-image">
           <img src={noProfile} alt="" />
         </div>
-        <div className="project-maintain-profile-nickname"> {nickname}</div>
-        <div className="project-maintain-profile-position"> {position}</div>
+        <div className="project-maintain-profile-text">
+          <div className="project-maintain-profile-nickname"> {nickname}</div>
+          <div className="project-maintain-profile-position"> {position}</div>
+        </div>
       </div>
       <div className="project-maintain-warning-section">
+        <div className="project-maintain-warning">경고 3회</div>
+        <div></div>
         <div className="project-maintain-warning">경고 : {warningCnt}</div>
-        {kickAble === true && <button className="project-maintain-ban">퇴출</button>}
+        {kickAble === true && (
+          <SignalBtn className="project-maintain-ban" sigborderradius="50px">
+            퇴출
+          </SignalBtn>
+        )}
       </div>
     </div>
   )
