@@ -66,11 +66,7 @@ function Posting() {
   // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('FI100')
   // 버튼 색 변경
-  const skillBtnList1 = ['JavaScript', 'React', 'Java', 'Nodejs', 'Vue', 'Spring', 'Typescript']
-  const skillBtnList2 = ['Java', 'Flutter', 'Kotlin']
-  const skillBtnList3 = ['React', 'Flutter', 'Swift']
-  const skillBtnList4 = ['Java']
-  const skillBtnList5 = ['Java', 'Flutter']
+
   const skillBtnList6 = [
     'JavaScript',
     'React',
@@ -202,7 +198,7 @@ function Posting() {
             </Box>
             <TabPanel value="FI100">
               <SkillSelectBox>
-                {skillBtnList1.map((ele, i) => (
+                {skillBtnList6.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
@@ -219,6 +215,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
@@ -231,7 +228,7 @@ function Posting() {
             </TabPanel>
             <TabPanel value="FI101">
               <SkillSelectBox>
-                {skillBtnList2.map((ele, i) => (
+                {skillBtnList6.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
@@ -248,6 +245,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
@@ -260,7 +258,7 @@ function Posting() {
             </TabPanel>
             <TabPanel value="FI102">
               <SkillSelectBox>
-                {skillBtnList3.map((ele, i) => (
+                {skillBtnList6.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
@@ -277,6 +275,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
@@ -289,7 +288,7 @@ function Posting() {
             </TabPanel>
             <TabPanel value="FI104">
               <SkillSelectBox>
-                {skillBtnList4.map((ele, i) => (
+                {skillBtnList6.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
@@ -306,6 +305,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
@@ -318,7 +318,7 @@ function Posting() {
             </TabPanel>
             <TabPanel value="FI105">
               <SkillSelectBox>
-                {skillBtnList5.map((ele, i) => (
+                {skillBtnList6.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
@@ -335,6 +335,7 @@ function Posting() {
                     }}
                     key={i}
                   >
+                    {' '}
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
