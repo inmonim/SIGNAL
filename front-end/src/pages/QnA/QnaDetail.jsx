@@ -6,6 +6,7 @@ import view from 'assets/image/view.png'
 import commentimg from 'assets/image/comment.png'
 import EditIcon from '@mui/icons-material/Edit'
 import trashcan from 'assets/image/TrashLetter.png'
+import api from 'api/Api.js'
 
 function QnaDetail() {
   const location = useLocation()
@@ -14,25 +15,16 @@ function QnaDetail() {
   const [alertOpen, setAlertOpen] = useState(false)
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq).then((res) => {
+      setData(res.data.body)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res.body)
-        console.log(res.body)
-      })
   }, [])
   const navigate = useNavigate()
 
   const handleToTrash = () => {
-    fetch(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq, {
-      method: 'DELETE',
+    api.delete(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq).then((res) => {
+      setAlertOpen(true)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setAlertOpen(true)
-      })
   }
 
   const handleAlert = (e) => {
