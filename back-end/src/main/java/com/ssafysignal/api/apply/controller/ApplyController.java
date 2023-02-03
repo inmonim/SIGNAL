@@ -145,7 +145,7 @@ public class ApplyController {
                                                              @Parameter(description = "페이지", required = true) Integer page,
                                                              @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findALlApplyToWriter - Call");
-        System.out.println("이거 안씁니다 쓰면 이상한거");
+
         try {
             List<ApplyWriterFindResponse> resList = applyService.findAllApplyWriter(postingSeq, page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resList));
@@ -214,7 +214,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/applyer/count/{userSeq}")
-    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "userSeq", description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllApplyApplyer - Call");
 
         try {

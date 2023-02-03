@@ -28,12 +28,12 @@ public class JwtExceptionFilter  extends GenericFilterBean {
         try {
             chain.doFilter(request, response);
         } catch (JwtException ex) {
-            setErrorResponse(HttpStatus.UNAUTHORIZED, (HttpServletResponse)response, ex);
+            setErrorResponse(HttpStatus.UNAUTHORIZED, (HttpServletResponse) response, ex);
         }
     }
     public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable ex) throws IOException {
         response.setStatus(status.value());
         response.setContentType("application/json; charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null)));
+        response.getWriter().write(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.INVALID_TOKEN, null)));
     }
 }

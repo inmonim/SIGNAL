@@ -28,7 +28,7 @@ public class ProjectFindResponse {
     @Schema(description = "프로젝트 내 경고 개수")
     private Integer warningCnt;
     @Schema(description = "프로젝트 팀 구성원 nickname 목록")
-    private List<String> projectUserList;
+    private List<Object> projectUserList;
 
     public static ProjectFindResponse fromEntity(final Project project){
         return ProjectFindResponse.builder()
