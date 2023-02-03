@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../../assets/styles/applyDetail.css'
 import '../../assets/styles/skill.css'
-import ApplyDelete from '../../components/Apply/ApplyDelete'
+import PostingDelete from 'components/Posting/PostingDelete'
 import { Fielddata } from 'data/Fielddata'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
@@ -30,7 +30,6 @@ function PostingDetail() {
   // const userSeq = location.state.userSeq
   // const applySeq = location.state.applySeq
 
-  const applySeq = 60
   const postingSeq = id
 
   const [posting, setPosting] = useState()
@@ -69,7 +68,7 @@ function PostingDetail() {
                   </ApplyModify>
                 </Link>
               )}
-              <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
+              <PostingDelete open={open} postingSeq={postingSeq}></PostingDelete>
             </div>
           </div>
           <hr className="apply-detail-hr" />
