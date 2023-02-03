@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/profile/myprofile.css'
 import ProfileImg from 'assets/image/profileimg2.jpeg'
@@ -28,15 +28,10 @@ function MyProfile() {
   const [alertOpen, setAlertOpen] = useState('')
   const navigate = useNavigate()
 
-  const [isLogin, setIsLogin] = useState(false)
-  useEffect(() => {
-    if (sessionStorage.getItem('userSeq') !== null) {
-      setIsLogin(true)
-    }
-  }, [])
   const handleToOut = () => {
     setAlertOpen(true)
   }
+
   const handleToMain = () => {
     const userSeq = sessionStorage.getItem('userSeq')
     setAlertOpen(false)
@@ -50,8 +45,8 @@ function MyProfile() {
           sessionStorage.removeItem('username')
           sessionStorage.removeItem('userSeq')
           console.log(res)
-          setIsLogin(false)
-          navigate('/', { state: { isLogin } })
+          navigate('/')
+          window.location.reload()
         })
         .catch((e) => {
           console.log(e)
