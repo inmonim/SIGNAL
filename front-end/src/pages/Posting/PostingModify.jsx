@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from 'api/Api'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
@@ -121,7 +121,7 @@ const PostingModify = () => {
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       const post = res.data.body
       setPosting({
         ...posting,
@@ -281,7 +281,7 @@ const PostingModify = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
 
-      await axios
+      await api
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
           console.log(res)

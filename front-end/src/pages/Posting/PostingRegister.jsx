@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from 'api/Api'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -224,7 +224,7 @@ const PostingRegister = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
 
-      await axios
+      await api
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
         .then((res) => {
           // console.log(res)

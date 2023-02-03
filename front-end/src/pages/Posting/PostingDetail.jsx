@@ -7,7 +7,7 @@ import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from 'api/Api'
 import Localdata from 'data/Localdata'
 import { Box } from '@mui/system'
 import SignalBtn from 'components/common/SignalBtn'
@@ -36,7 +36,7 @@ function PostingDetail() {
 
   const postingGetFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       console.log(res.data.body)
       // console.log('applyFetch', res.data.body)
