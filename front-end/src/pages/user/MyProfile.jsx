@@ -10,6 +10,7 @@ import AlertModal from 'components/AlertModal'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import Chip from '@mui/material/Chip'
+import InputModal from 'components/user/InputModal'
 
 function MyProfile() {
   const [userModifyOpen, setUserModifyOpen] = useState(false)
@@ -35,7 +36,7 @@ function MyProfile() {
   }
 
   const handleToClose = () => {
-    setAlertOpen(close)
+    setAlertOpen(false)
   }
 
   const handleToMain = () => {
@@ -61,6 +62,12 @@ function MyProfile() {
       console.log(err)
     }
   }
+
+  const [openInputModal, setOpenInputModal] = useState(false)
+  const handleToInputModal = () => {
+    setOpenInputModal(true)
+  }
+
   return (
     <div className="my-container">
       <div className="my-main">
@@ -123,8 +130,9 @@ function MyProfile() {
               <div className="my-profile-top">
                 <div className="my-profile-top-position">
                   <div className="my-profile-plus-btn">
-                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" />
+                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" onClick={handleToInputModal} />
                   </div>
+                  <InputModal open={openInputModal} onClose={handleToClose} insertTitle="포지션"></InputModal>
                   <div className="my-profile-top-position-title">포지션</div>
                   <div>
                     <Chip label="FrontEnd" variant="outlined" sx={{ fontSize: '20px' }} />
