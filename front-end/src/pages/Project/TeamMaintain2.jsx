@@ -1,8 +1,8 @@
 import React from 'react'
 import settings from 'assets/image/settings.png'
-import 'assets/styles/teamMaintain.css'
+import 'assets/styles/projectMaintain.css'
 import SignalBtn from 'components/common/SignalBtn'
-import TeamProfile from 'components/Project/TeamProfile'
+import ProjectProfile from 'components/Project/ProjectProfile'
 
 function ProjectMaintain2() {
   const list = [1, 2, 3, 4, 5, 6]
@@ -24,7 +24,7 @@ function ProjectMaintain2() {
 
         <div className="project-maintain-body">
           {list.map((item, index) => (
-            <TeamProfile key={index}></TeamProfile>
+            <ProjectProfile key={index}></ProjectProfile>
           ))}
         </div>
       </div>
@@ -37,8 +37,7 @@ const projectSubMenuStyle = {
   color: '#574B9F',
   borderRadius: '50px',
   height: '40px',
-  width: '130px',
-  fontSize: '20px',
+  width: '100px',
   '&:hover': {
     backgroundColor: '#574B9F',
     color: '#fff',
