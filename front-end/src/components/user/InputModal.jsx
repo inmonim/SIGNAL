@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
-import 'assets/styles/profile/userpwd.css'
+import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
 import Chip from '@mui/material/Chip'
@@ -12,16 +12,24 @@ function InputModal({ open, onClose, insertTitle }) {
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
   const handleDelete = (chipToDelete) => () => {
-    addTag((chips) => chips.filter((chip) => chip.key !== chipToDelete.key))
+    addTag((chips) => chips.filter((tag) => tag !== tag.key))
   }
-  const handleHashtagChange = (event) => setTag(event.target.value)
+  const handleHashtagChange = (event) => {
+    setTag(event.target.value)
+  }
 
   const newTag = () => {
     setNumberOfTags(numberOfTags + 1)
     addTag((arrayOfTags) => arrayOfTags.concat(tag))
   }
   const tags = arrayOfTags.map((h, index) => (
-    <Chip label={h} variant="outlined" sx={{ fontSize: '20px' }} key={index} onDelete={handleDelete(h)} />
+    <Chip
+      label={h}
+      variant="outlined"
+      sx={{ fontSize: '20px', margin: '5px' }}
+      key={index}
+      onDelete={handleDelete(h)}
+    />
   ))
 
   return (
@@ -43,31 +51,29 @@ function InputModal({ open, onClose, insertTitle }) {
               onClick={onClose}
             />
           </div>
-          <div className="user-pwd-main">
-            <div className="user-pwd-title">{insertTitle}</div>
-            <div className="user-pwd-input-container">
-              <div className="user-pwd-input">
-                <TextField
-                  id="filled-multiline-flexible"
-                  name={insertTitle}
-                  label={insertTitle}
-                  value={tag}
-                  sx={inputStyle}
-                  onChange={handleHashtagChange}
-                />
-              </div>
+          <div className="user-profile-input-main">
+            <div className="user-profile-input-title">{insertTitle}</div>
+            <div className="user-profile-input-input">
+              <TextField
+                id="filled-multiline-flexible"
+                name={insertTitle}
+                label={insertTitle}
+                value={tag}
+                sx={inputStyle}
+                onChange={handleHashtagChange}
+              />
+              <SignalBtn
+                sigwidth="80px"
+                sigheight="50px"
+                sigfontsize="24px"
+                sigborderradius={15}
+                sigmargin="auto"
+                onClick={newTag}
+              >
+                추가
+              </SignalBtn>
             </div>
-            <SignalBtn
-              sigwidth="100px"
-              sigheight="50px"
-              sigfontsize="24px"
-              sigborderradius={15}
-              sigmargin="auto"
-              onClick={newTag}
-            >
-              입력
-            </SignalBtn>
-            <div>{numberOfTags > 0 ? tags : ''}</div>
+            <div className="user-profile-input-chip">{numberOfTags > 0 ? tags : ''}</div>
           </div>
         </Box>
       </Modal>
@@ -76,8 +82,8 @@ function InputModal({ open, onClose, insertTitle }) {
 }
 
 const style = {
-  width: 707,
-  height: 500,
+  width: 607,
+  height: 400,
   bgcolor: 'background.paper',
   borderRadius: 20,
   border: 'none',
@@ -89,11 +95,12 @@ const style = {
   transform: 'translate(-50%, -50%)',
   display: 'flex',
   justifyContent: 'center',
+  // overflow: 'hidden',
 }
 
 const inputStyle = {
   backgroundColor: '#DDDBEC',
-  width: '500px',
+  width: '300px',
   '& label.Mui-focused': {
     color: '#574b9f',
   },
