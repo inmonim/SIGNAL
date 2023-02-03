@@ -4,6 +4,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router-dom'
 import AlertModal from 'components/AlertModal'
 import 'assets/styles/qna.css'
+import api from 'api/Api'
 
 const inputStyle = {
   backgroundColor: '#DDDBEC',
@@ -33,17 +34,7 @@ function QnaRegist() {
     console.log(nextInputs)
   }
   const handleQnaRegist = () => {
-    fetch(process.env.REACT_APP_API_URL + '/board/qna', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setAlertOpen(true)
-      })
+    api.post(process.env.REACT_APP_API_URL + '/board/qna', JSON.stringify(inputs)).then((res) => setAlertOpen(true))
   }
   const navigate = useNavigate()
   const handleAlert = (e) => {
