@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import 'assets/styles/projectDetail.css'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
 import proejctBackground2 from 'assets/image/projectBackground2.png'
@@ -6,8 +6,41 @@ import settings from 'assets/image/settings.png'
 import heart from 'assets/image/heart.png'
 import noProfile from 'assets/image/noProfileImg.png'
 import SignalBtn from 'components/common/SignalBtn'
+import axios from 'axios'
 
 function ProjectDetail2() {
+  // const location = useLocation()
+  // const projectSeq = ???
+  // const userSeq = sessionStorage.getItem('userSeq')
+
+  // TEST params데이터 셋
+  const userSeq = 82
+  const projectSeq = 448
+
+  const [pjtData, setPjtData] = useState([])
+
+  const getProject = async () => {
+    await axios({
+      url: process.env.REACT_APP_API_URL + '/project',
+      method: 'GET',
+      params: {
+        projectSeq,
+        // userSeq: sessionStorage.getItem('userSeq'),
+        userSeq,
+      },
+    })
+      .then((res) => {
+        console.log(res.data.body)
+        setPjtData(res.data.body)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
+  useEffect(() => {
+    getProject()
+  }, [])
   return (
     <div className="project-detail-container">
       <div className="project-detail-width">
@@ -16,27 +49,18 @@ function ProjectDetail2() {
         <div style={{ position: 'absolute' }}>
           <div className="project-detail-my-section">
             <div className="project-detail-my-warning-section">
-              <div>나의 경고</div> <div>0회</div>
+              <div>나의 경고</div> <div>{pjtData.warningCnt}회</div>
             </div>
             <div className="project-detail-my-heart-section">
               <div>나의 하트</div>
               <img src={heart} style={{ width: '30px' }} />
-              <div>*100</div>
+              <div>{pjtData.heartCnt}</div>
             </div>
           </div>
-          <div className="project-detail-project-title">Signal - webRTC를 활용한 IT프로젝트 팀 빌딩, 매칭 서비스 </div>
+          <div className="project-detail-project-title"> {pjtData.subject} </div>
         </div>
         <div className="project-detail-body-section">
-          <div className="project-detail-content">
-            사전 영상 미팅과 프로필 열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려 팀의 해체 없이 프로젝트를
-            완성해내도록 도와주는 서비스 사전 영상 미팅과 프로필 열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려
-            팀의 해체 없이 프로젝트를 완성해내도록 도와주는 서비스 사전 영상 미팅과 프로필 열람을 통해 수준과 관심,
-            여건에 맞는 팀원과 팀을 꾸려 팀의 해체 없이 프로젝트를 완성해내도록 도와주는 서비스 사전 영상 미팅과 프로필
-            열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려 팀의 해체 없이 프로젝트를 완성해내도록 도와주는 서비스
-            사전 영상 미팅과 프로필 열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려 팀의 해체 없이 프로젝트를
-            완사전 영상 미팅과 프로필 열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려 팀의 해체 없이 프로젝트를
-            완성해내도록 도와주는 서비스 사전 영상 미팅과 프로필 열람을 통해 수준과 관심, 여건에 맞는 팀원과 팀을 꾸려
-          </div>
+          <div className="project-detail-content">{pjtData.content}</div>
           <div className="project-detail-side-bar">
             <div>
               <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">

@@ -24,7 +24,6 @@ import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
 import ProjectDetail2 from './pages/Project/ProjectDetail2'
 import ProjectMaintain2 from 'pages/Project/ProjectMaintain2'
-import TeamMaintain from 'pages/Project/TeamMaintain'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -60,7 +59,6 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
-          <Route path="/TeamMaintain" element={<TeamMaintain />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>

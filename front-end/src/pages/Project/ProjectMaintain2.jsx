@@ -1,11 +1,28 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import settings from 'assets/image/settings.png'
 import 'assets/styles/projectMaintain.css'
 import SignalBtn from 'components/common/SignalBtn'
 import ProjectProfile from 'components/Project/ProjectProfile'
+import axios from 'axios'
 
 function ProjectMaintain2() {
-  const list = [1, 2, 3, 4, 5, 6]
+  // const list = [1, 2, 3, 4, 5, 6]
+  const projectSeq = 448
+
+  const [userDataList, setUserDataList] = useState([])
+
+  const projectDataLoad = async () => {
+    const loadData = await axios({
+      url: process.env.REACT_APP_API_URL + `/project/member/${projectSeq}`,
+      method: 'GET',
+    })
+    setUserDataList(loadData.data.body.projectUserList)
+  }
+
+  useEffect(() => {
+    projectDataLoad()
+  }, [])
+
   return (
     <div className="project-maintain-container">
       <div className="project-maintain-width">
@@ -20,8 +37,8 @@ function ProjectMaintain2() {
 
         <div style={{ width: '1000px', margin: 'auto' }}>
           <div className="project-maintain-body">
-            {list.map((item, index) => (
-              <ProjectProfile key={index}></ProjectProfile>
+            {userDataList.map((Data) => (
+              <ProjectProfile Data={Data} key={Data.userSeq}></ProjectProfile>
             ))}
           </div>
         </div>

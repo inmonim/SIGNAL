@@ -32,9 +32,6 @@ function ProjectDetail() {
         console.log(res.data.body)
         setPjtData(res.data.body)
       })
-      .then(() => {
-        console.log(pjtData)
-      })
       .catch((e) => {
         console.log(e)
       })
