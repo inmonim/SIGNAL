@@ -13,20 +13,35 @@ function ProjectMaintain2() {
         <div className="project-maintain-header">
           <div className="project-maintain-title">프로젝트 제목</div>
           <div className="project-maintain-menu">
-            <SignalBtn className="project-maintain-menu-1">팀 관리</SignalBtn>
-            <SignalBtn className="project-maintain-menu-2">프로젝트 관리</SignalBtn>
+            <SignalBtn className="project-maintain-menu-1" sx={projectSubMenuStyle}>
+              팀 관리
+            </SignalBtn>
+            <SignalBtn className="project-maintain-menu-2" sx={projectSubMenuStyle}>
+              프로젝트 관리
+            </SignalBtn>
           </div>
         </div>
 
-        <div style={{ width: '1000px', margin: 'auto' }}>
-          <div className="project-maintain-body">
-            {list.map((item, index) => (
-              <ProjectProfile key={index}></ProjectProfile>
-            ))}
-          </div>
+        <div className="project-maintain-body">
+          {list.map((item, index) => (
+            <ProjectProfile key={index}></ProjectProfile>
+          ))}
         </div>
       </div>
     </div>
   )
 }
+
+const projectSubMenuStyle = {
+  backgroundColor: '#fff',
+  color: '#574B9F',
+  borderRadius: '50px',
+  height: '40px',
+  width: '100px',
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: '#fff',
+  },
+}
+
 export default ProjectMaintain2
