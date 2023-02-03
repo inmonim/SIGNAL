@@ -31,7 +31,7 @@ import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
-  padding: 100px 10em;
+  padding: 109px 10em;
 `
 const skillStyle = {
   width: '100%',
