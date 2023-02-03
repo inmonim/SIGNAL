@@ -80,11 +80,18 @@ function LoginModal({ open, onClose }) {
       })
       .then((data) => {
         console.log('로그인 성공')
+        // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
+        if (isAutoLogin) {
+          localStorage.setItem('refreshToken', data.body.refreshToken)
+        }
+        console.log(data.body.accessToken)
         sessionStorage.setItem('accessToken', data.body.accessToken)
         sessionStorage.setItem('refreshToken', data.body.refreshToken)
         sessionStorage.setItem('userEmail', data.body.email)
         sessionStorage.setItem('username', data.body.name)
+        sessionStorage.setItem('nickname', data.body.nickname)
         sessionStorage.setItem('userSeq', data.body.userSeq)
+        console.log(sessionStorage.getItem('accessToken'))
         onClose(onClose(true))
       })
       .catch((e) => {
@@ -101,6 +108,7 @@ function LoginModal({ open, onClose }) {
 
   const [inputEmail, setInputEmail] = useState('')
   const [inputPwd, setInputPwd] = useState('')
+  const [isAutoLogin, setIsAutoLogin] = useState(false)
 
   const handleInputEmail = (e) => {
     // cosnt nextInputEmail = {...inputEmail}
@@ -109,6 +117,11 @@ function LoginModal({ open, onClose }) {
   const handleInputPwd = (e) => {
     setInputPwd(e.target.value)
     console.log(e.target.value)
+  }
+  const handleIsAutoLogin = () => {
+    const nextIsAutoLogin = isAutoLogin
+    setIsAutoLogin(!nextIsAutoLogin)
+    console.log(nextIsAutoLogin)
   }
   return (
     <>
@@ -145,6 +158,7 @@ function LoginModal({ open, onClose }) {
               />
               <div className="login-under1" style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <FormControlLabel
+                  onChange={handleIsAutoLogin}
                   style={{ color: '#574b9f' }}
                   label={<span style={{ fontSize: 20 }}>자동로그인</span>}
                   control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}

@@ -7,6 +7,7 @@ import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
+import SignalBtn from 'components/common/SignalBtn'
 // import { Link, useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -210,6 +211,17 @@ function ApplyDetail() {
                   ))}
               </div>
             </div>
+          </div>
+          <div>
+            <SignalBtn
+              sigwidth="20%"
+              sigheight="40px"
+              sigmargin="auto"
+              sigborderradius="100px"
+              onClick={() => navigate(-1)}
+            >
+              돌아가기
+            </SignalBtn>
           </div>
         </div>
       </div>

@@ -163,6 +163,7 @@ hr {
 
 .apply-detail-width-section {
   min-width: 800px;
+  min-height: 1000px;
 }
 
 .apply-detail-project-name-label {
