@@ -54,6 +54,8 @@ public class JwtTokenUtil {
         Claims claims = Jwts.claims();
         claims.put("username", username);
 
+        System.out.println("new Date(System.currentTimeMillis() + expireTime) = " + new Date(System.currentTimeMillis() + expireTime));
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))

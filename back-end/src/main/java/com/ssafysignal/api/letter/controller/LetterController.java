@@ -58,7 +58,6 @@ public class LetterController {
     @GetMapping("/from/{userSeq}")
     private ResponseEntity<BasicResponse> findAllFromLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq) {
         List<FindLetterResponse> letterList= letterService.findFromLetter(userSeq);
-        //System.out.println(letterList);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, letterList));
     }
 
@@ -84,6 +83,7 @@ public class LetterController {
     @Operation(summary = "쪽지 상세 조회", description = "쪽지 seq로 쪽지 상세 조회")
     @GetMapping("/{letterSeq}")
     private ResponseEntity<BasicResponse> findLetter(@Parameter(description = "쪽지seq", required = true) @PathVariable int letterSeq){
+        System.out.println("뭐냐");
         FindLetterResponse res = letterService.findLetter(letterSeq);
         if(res == null) return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
 
@@ -117,8 +117,10 @@ public class LetterController {
     @Operation(summary = "안읽은 쪽지 갯수 구하기", description = "유저seq가 받은 쪽지 중 안읽은 쪽지 갯수 구하기")
     @GetMapping("/read/{userSeq}")
     private ResponseEntity<BasicResponse> countNotReadLetter(@Parameter(description = "유저seq", required = true) @PathVariable int userSeq){
+        log.info("");
         Long cnt = letterService.countNotReadLetter(userSeq);
 
+        System.out.println("뭐냐");
         CountNotReadLetterResponse res = CountNotReadLetterResponse.builder()
                 .count(cnt)
                 .build();
