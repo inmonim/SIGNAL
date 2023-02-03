@@ -23,7 +23,7 @@ import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
 import ProjectDetail2 from './pages/Project/ProjectDetail2'
-import ProjectMaintain2 from 'pages/Project/ProjectMaintain2'
+import TeamMaintain2 from 'pages/Project/TeamMaintain2'
 import TeamMaintain from 'pages/Project/TeamMaintain'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
@@ -50,7 +50,7 @@ function App() {
           <Route path="/teambuilding" element={<TeamBuilding />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
           <Route path="/projectDetail2" element={<ProjectDetail2 />} />
-          <Route path="/projectmaintain2" element={<ProjectMaintain2 />} />
+          <Route path="/teammaintain2" element={<TeamMaintain2 />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />
