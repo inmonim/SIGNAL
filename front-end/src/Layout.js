@@ -39,6 +39,7 @@ function App() {
       <BrowserRouter>
         <ScrollTop />
         <Header></Header>
+
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/posting" element={<Posting />} />

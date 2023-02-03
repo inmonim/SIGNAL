@@ -1,18 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import 'assets/styles/beforemeeting.css'
 import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
 import io from 'socket.io-client'
+import noProfileImg from 'assets/image/noProfileImg.png'
 
-let dupCheck = false
+console.log('바깥')
+
 let myStream
 
-const meeting = () => {
-  if (dupCheck) return
-  dupCheck = true
-  console.log('dup check')
+let myName
+let roomId
+let userNames // userNames[socketId]="이름"
+let socketIds // socketIds["이름"]=socketId
 
-  const socket = io('https://i8e207.p.ssafy.io:443', { secure: true, cors: { origin: '*' } })
-  const pcConfig = {
+let pcConfig
+
+let sendPC
+let receivePCs
+
+let selfStream
+
+let numOfUsers
+let socket
+
+const prevMeetingSetting = () => {
+  socket = io('https://i8e207.p.ssafy.io:443', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  console.log('사전 미팅 소켓 통신 시작!')
+
+  pcConfig = {
     iceServers: [
       {
         urls: 'stun:edu.uxis.co.kr',
@@ -24,33 +40,147 @@ const meeting = () => {
       },
     ],
   }
+  roomId = '123'
+  myName = sessionStorage.getItem('username')
 
-  const myName = sessionStorage.getItem('username')
-  const roomId = '123'
-  const userNames = {} // userNames[socketId]="이름"
-  const socketIds = {} // socketIds["이름"]=socketId
+  if (myName === null) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let result = ''
+    const charactersLength = characters.length
+    for (let i = 0; i < 6; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    myName = '익명' + result
+  }
 
-  const sendPC = {
+  userNames = {} // userNames[socketId]="이름"
+  socketIds = {} // socketIds["이름"]=socketId
+
+  sendPC = {
     // sendPC[purpose]=pc
     user: {}, // 유저 얼굴
     share: {}, // 화면공유
   }
-  const receivePCs = {
+  receivePCs = {
     // receivePCs[purpose][socketId]=pc
     user: {},
     share: {},
   }
 
-  let selfStream
-
-  let numOfUsers = 0
+  numOfUsers = 0
 
   socket.emit('room_info', {
     roomId,
     userName: myName,
   })
-  // =============================================================
+}
+
+function Beforemeeting() {
+  if (socket == null) {
+    prevMeetingSetting()
+
+    // 기존 방의 유저수와 방장이름 얻어옴
+    socket.on('room_info', (data) => {
+      numOfUsers = data.numOfUsers + 1
+      console.log(numOfUsers, '명이 이미 접속해있음')
+      if (numOfUsers > 2) {
+        if (!alert('정원 초과입니다.')) {
+          // window.location = '..'
+          window.close()
+        }
+        return
+      }
+      meetingStart()
+    })
+
+    // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
+    socket.on('user_enter', async (data) => {
+      enterUserHandler(data)
+    })
+
+    // 처음 방에 접속했을 때, 이미 방안에 들어와있던 user들의 정보를 받음
+    socket.on('all_users', (data) => {
+      console.log('all_users : ', data.users)
+      allUsersHandler(data) // 미리 접속한 유저들의 영상을 받기위한 pc, offer 생성
+    })
+
+    // 클라이언트 입장에서 보내는 역할의 peerConnection 객체에서 수신한 answer 메시지(sender_offer의 응답받음)
+    socket.on('get_sender_answer', (data) => {
+      try {
+        console.log('get_sender_answer 받음')
+        sendPC[data.purpose].setRemoteDescription(new RTCSessionDescription(data.answer))
+      } catch (error) {
+        console.error(error)
+      }
+    })
+
+    // 클라이언트 입장에서 받는 역할의 peerConnection 객체에서 수신한 answer 메시지(receiver_offer의 응답받음)
+    socket.on('get_receiver_answer', (data) => {
+      try {
+        const pc = receivePCs[data.purpose][data.id]
+        if (pc.signalingState === 'stable') return // ?
+        pc.setRemoteDescription(new RTCSessionDescription(data.answer))
+      } catch (error) {
+        console.error(error)
+      }
+    })
+
+    // 보내는 역할의 peerConnection 객체에서 수신한 candidate 메시지
+    socket.on('get_sender_candidate', (data) => {
+      try {
+        const pc = sendPC[data.purpose]
+        if (!data.candidate) return
+        if (!pc) return
+        pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+      } catch (error) {
+        console.error(error)
+      }
+    })
+
+    // 받는 역할의 peerConnection 객체에서 수신한 candidate 메시지
+    socket.on('get_receiver_candidate', (data) => {
+      try {
+        const pc = receivePCs[data.purpose][data.id]
+        if (!data.candidate) return
+        if (!pc) return
+        pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+    // 같은 방에 있던 user가 나가면 그 방 안에있던 모든 user들에게 전송되는 이벤트
+    socket.on('user_exit', (data) => {
+      exitUserHandler(data)
+    })
+  }
+
+  const now = ''
+  const today = ''
+  console.log('랜더링')
+
+  // const [now, setNow] = useState('00:00:00')
+  // const dateNow = new Date()
+  // const year = dateNow.getFullYear()
+  // const month = ('0' + (dateNow.getMonth() + 1)).slice(-2)
+  // const day = ('0' + dateNow.getDate()).slice(-2)
+  // const today = year + '-' + month + '-' + day
+  // setNow('----')
+  // const currentTimer = () => {
+  //   const date = new Date()
+  //   const hours = String(date.getHours()).padStart(2, '0')
+  //   const minutes = String(date.getMinutes()).padStart(2, '0')
+  //   const seconds = String(date.getSeconds()).padStart(2, '0')
+  //   setNow(`${hours}:${minutes}:${seconds}`)
+  // }
+
+  // const startTimer = () => {
+  //   setInterval(currentTimer, 1000)
+  // }
+  // startTimer()
+
   function meetingStart() {
+    console.log('meetingStart 실행')
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -87,6 +217,9 @@ const meeting = () => {
       })
       .catch((error) => {
         console.error(error)
+        if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
+          // window.location = '..'
+        }
       })
   }
 
@@ -250,11 +383,12 @@ const meeting = () => {
     video.autoplay = true
     video.playsinline = true
     video.srcObject = stream
+    console.log('접속자 이름:', userName)
+    setOtherName(userName)
   }
 
   // 나간 유저 video삭제
   function removeUserVideo(socketId, userName) {
-    // ##################수정해서 쓰삼#######################
     const video = document.querySelector('.before-meeting-left-video')
     video.srcObject = null
   }
@@ -275,108 +409,14 @@ const meeting = () => {
       }
 
       removeUserVideo(socketId, userName)
+      setOtherName('부재중')
+      console.log('나간사람 이름:', userName)
     } catch (e) {
       console.error(e)
     }
   }
-  // =============================================================================
 
-  // 기존 방의 유저수와 방장이름 얻어옴
-  socket.on('room_info', (data) => {
-    numOfUsers = data.numOfUsers + 1
-    console.log(numOfUsers, '명이 이미 접속해있음')
-    if (numOfUsers > 2) {
-      alert('나가라')
-      return
-    }
-    meetingStart()
-  })
-
-  // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
-  socket.on('user_enter', async (data) => {
-    enterUserHandler(data)
-  })
-
-  // 처음 방에 접속했을 때, 이미 방안에 들어와있던 user들의 정보를 받음
-  socket.on('all_users', (data) => {
-    console.log('all_users : ', data.users)
-    allUsersHandler(data) // 미리 접속한 유저들의 영상을 받기위한 pc, offer 생성
-  })
-
-  // 클라이언트 입장에서 보내는 역할의 peerConnection 객체에서 수신한 answer 메시지(sender_offer의 응답받음)
-  socket.on('get_sender_answer', (data) => {
-    try {
-      console.log('get_sender_answer 받음')
-      sendPC[data.purpose].setRemoteDescription(new RTCSessionDescription(data.answer))
-    } catch (error) {
-      console.error(error)
-    }
-  })
-
-  // 클라이언트 입장에서 받는 역할의 peerConnection 객체에서 수신한 answer 메시지(receiver_offer의 응답받음)
-  socket.on('get_receiver_answer', (data) => {
-    try {
-      const pc = receivePCs[data.purpose][data.id]
-      if (pc.signalingState === 'stable') return // ?
-      pc.setRemoteDescription(new RTCSessionDescription(data.answer))
-    } catch (error) {
-      console.error(error)
-    }
-  })
-
-  // 보내는 역할의 peerConnection 객체에서 수신한 candidate 메시지
-  socket.on('get_sender_candidate', (data) => {
-    try {
-      const pc = sendPC[data.purpose]
-      if (!data.candidate) return
-      if (!pc) return
-      pc.addIceCandidate(new RTCIceCandidate(data.candidate))
-    } catch (error) {
-      console.error(error)
-    }
-  })
-
-  // 받는 역할의 peerConnection 객체에서 수신한 candidate 메시지
-  socket.on('get_receiver_candidate', (data) => {
-    try {
-      const pc = receivePCs[data.purpose][data.id]
-      if (!data.candidate) return
-      if (!pc) return
-      pc.addIceCandidate(new RTCIceCandidate(data.candidate))
-    } catch (error) {
-      console.log(error)
-    }
-  })
-
-  // 같은 방에 있던 user가 나가면 그 방 안에있던 모든 user들에게 전송되는 이벤트
-  socket.on('user_exit', (data) => {
-    exitUserHandler(data)
-  })
-}
-
-function Beforemeeting() {
-  const now = ''
-  const today = ''
-  console.log('반복되는가!!')
-  // const [now, setNow] = useState('00:00:00')
-  // const dateNow = new Date()
-  // const year = dateNow.getFullYear()
-  // const month = ('0' + (dateNow.getMonth() + 1)).slice(-2)
-  // const day = ('0' + dateNow.getDate()).slice(-2)
-  // const today = year + '-' + month + '-' + day
-  // setNow('----')
-  // const currentTimer = () => {
-  //   const date = new Date()
-  //   const hours = String(date.getHours()).padStart(2, '0')
-  //   const minutes = String(date.getMinutes()).padStart(2, '0')
-  //   const seconds = String(date.getSeconds()).padStart(2, '0')
-  //   setNow(`${hours}:${minutes}:${seconds}`)
-  // }
-
-  // const startTimer = () => {
-  //   setInterval(currentTimer, 1000)
-  // }
-  // startTimer()
+  // ======================================================================================
 
   const [memoOpen, setMemoOpen] = useState(false)
   const handleMemoOpen = () => setMemoOpen(true)
@@ -400,22 +440,25 @@ function Beforemeeting() {
     setVideo(false)
     myStream.getVideoTracks().forEach((track) => (track.enabled = false))
   }
-  useEffect(() => {
-    meeting()
+
+  const [otherName, setOtherName] = useState('부재중')
+  useLayoutEffect(() => {
+    console.log('한번만')
   }, [])
+
   useEffect(() => {
-    console.log('voice : ' + voice + '// video : ' + video)
+    console.log('voice : ' + voice + '// video : ' + video, '//otherName', otherName)
   }, [voice, video])
   return (
     <div className="before-meeting-container">
       <div className="before-meeting-main">
         <div className="before-meeting-left-person">
-          <video className="before-meeting-left-video" alt="상대방" />
-          <div className="before-meeting-left-person-name">...</div>
+          <video className="before-meeting-left-video" alt="상대방" poster={noProfileImg} />
+          <div className="before-meeting-left-person-name">{otherName}</div>
         </div>
         <div className="before-meeting-right-person">
           <video className="before-meeting-right-video" alt="나" />
-          <div className="before-meeting-right-person-name">{sessionStorage.getItem('username')}</div>
+          <div className="before-meeting-right-person-name">{myName}</div>
         </div>
       </div>
       <div className="before-meeting-footer">
