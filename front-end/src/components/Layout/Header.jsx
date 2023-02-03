@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from 'assets/image/Navlogo.png'
 import 'components/Layout/Header.css'
 import useDetectClose from 'hooks/useDetectClose'
@@ -26,6 +26,32 @@ function Header() {
   const [isLogin, setIsLogin] = useState(false)
   const [letterCnt, setLetterCnt] = useState(0)
   useEffect(() => {
+    // 로컬 스토리지에 refreshToken 이 존재하고 로그인 상태가 아니면 한번 쫘악 긁어옴 (= 자동로그인 상태)
+    if (localStorage.getItem('refreshToken') !== null && sessionStorage.getItem('refreshToken') === null) {
+      console.log('토큰 재발급!')
+      // 토큰 및 유저 정보 (엑세스 토큰 재발급, 리프래시 토큰만 넣어서 요청)
+      fetch(process.env.REACT_APP_API_URL + '/auth/refresh', {
+        method: 'POST',
+        headers: {
+          RefreshToken: 'Bearer ' + localStorage.getItem('refreshToken'),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          sessionStorage.setItem('accessToken', data.body.accessToken)
+          sessionStorage.setItem('refreshToken', data.body.refreshToken)
+          sessionStorage.setItem('userEmail', data.body.email)
+          sessionStorage.setItem('username', data.body.name)
+          sessionStorage.setItem('nickname', data.body.nickname)
+          sessionStorage.setItem('userSeq', data.body.userSeq)
+          setIsLogin(true)
+        })
+        .catch((e) => {
+          console.log(e)
+          return e.message
+        })
+    }
     if (sessionStorage.getItem('userSeq') !== null) {
       setIsLogin(true)
       fetch(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq'), {
@@ -38,6 +64,8 @@ function Header() {
     }
   })
 
+  const navigate = useNavigate()
+
   const onLogout = () => {
     fetch(process.env.REACT_APP_API_URL + '/auth/logout', {
       method: 'POST',
@@ -49,6 +77,7 @@ function Header() {
     })
       .then((res) => {
         if (res.ok === true) {
+          setIsLogin(false)
           return res.json()
         } else {
           throw new Error('다시 시도')
@@ -57,10 +86,14 @@ function Header() {
       .then((data) => {
         console.log('로그아웃 성공')
         sessionStorage.removeItem('accessToken')
+        sessionStorage.removeItem('refreshToken')
         sessionStorage.removeItem('userEmail')
         sessionStorage.removeItem('username')
+        sessionStorage.removeItem('nickname')
         sessionStorage.removeItem('userSeq')
+        localStorage.removeItem('refreshToken')
         setIsLogin(false)
+        navigate(`/`)
       })
       .catch((e) => {
         alert('다시 시도')

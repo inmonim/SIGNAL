@@ -2,7 +2,6 @@ import axios from 'axios'
 
 // url 호출 시 기본 값 셋팅
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
   headers: { 'Content-type': 'application/json' }, // data type
 })
 
