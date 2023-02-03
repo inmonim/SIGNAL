@@ -24,6 +24,7 @@ import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
 import TeamMaintain from 'pages/Project/TeamMaintain'
 import ProjectMaintain from 'pages/Project/ProjectMaintain'
+import ScrollTop from 'components/common/ScrollTop'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -36,6 +37,7 @@ function App() {
   return (
     <div className="root-wrap">
       <BrowserRouter>
+        <ScrollTop />
         <Header></Header>
         <Routes>
           <Route path="/" element={<MainPage />} />
