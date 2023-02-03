@@ -30,11 +30,10 @@ public class SecurityConfig {
 
                 .csrf().disable()
 
+                // 세분화 되어있을수록 위쪽에 위치해야한다.
                 .authorizeRequests()
-//                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
-//                .antMatchers("/board/**").hasAnyAuthority("USER")
-//                .antMatchers("/auth/login", "/auth").permitAll()
-//                .anyRequest().authenticated()
+                .antMatchers("/board/qna", "/board/qna/count", "/board/notice", "/board/notice/count").permitAll()
+                .antMatchers("/board/qna/**", "/board/notice/**").hasAnyAuthority("USER")
                 .anyRequest().permitAll()
 
                 .and()
