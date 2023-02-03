@@ -38,6 +38,7 @@ public class LetterService {
     @Transactional
     public List<FindLetterResponse> findFromLetter(int userSeq){
         List<Letter> letterList = letterRepository.findAllByFromUserSeqAndIsTrashOrderByLetterSeqDesc(userSeq,false);
+
         List<FindLetterResponse> ret = new ArrayList<>();
         for(Letter letter: letterList){
             FindLetterResponse element = FindLetterResponse.builder()

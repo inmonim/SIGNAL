@@ -25,6 +25,6 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
-        response.getWriter().print(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null)));
+        response.getWriter().print(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.INVALID_TOKEN, null)));
     }
 }
