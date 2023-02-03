@@ -12,7 +12,7 @@ import QnaDetail from 'pages/QnA/QnaDetail'
 import QnaRegist from 'pages/QnA/QnaRegist'
 import QnaModify from 'pages/QnA/QnaModify'
 import ApplyDetail from 'pages/Apply/ApplyDetail'
-import TeamSelect from 'pages/Project/TeamSelect'
+import TeamBuilding from 'pages/Project/TeamBuilding'
 import ApplyRegister from 'pages/Apply/ApplyRegister'
 import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
@@ -22,6 +22,9 @@ import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
+import TeamMaintain from 'pages/Project/TeamMaintain'
+import ProjectMaintain from 'pages/Project/ProjectMaintain'
+import ScrollTop from 'components/common/ScrollTop'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -34,7 +37,9 @@ function App() {
   return (
     <div className="root-wrap">
       <BrowserRouter>
+        <ScrollTop />
         <Header></Header>
+
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/posting" element={<Posting />} />
@@ -44,8 +49,10 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
-          <Route path="/teamselect" element={<TeamSelect />} />
+          <Route path="/teamBuilding" element={<TeamBuilding />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
+          <Route path="/teamMaintain" element={<TeamMaintain />} />
+          <Route path="/projectMaintain" element={<ProjectMaintain />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />

@@ -156,12 +156,14 @@ hr {
   width: 900px;
   font-size: 20px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 158px;
   margin-bottom: 70px;
+  height: 100vh;
 }
 
 .apply-detail-width-section {
   min-width: 800px;
+  min-height: 1000px;
 }
 
 .apply-detail-project-name-label {

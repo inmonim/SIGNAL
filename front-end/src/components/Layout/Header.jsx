@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from 'assets/image/Navlogo.png'
 import 'components/Layout/Header.css'
 import useDetectClose from 'hooks/useDetectClose'
@@ -9,6 +9,7 @@ import * as D from './DropDownStyle'
 import Badge from '@mui/material/Badge'
 import EmailIcon from '@mui/icons-material/Email'
 import SignalBtn from 'components/common/SignalBtn'
+import api from 'api/Api'
 
 function Header() {
   const [postingIsOpen, postingRef, postingHandler] = useDetectClose(false)
@@ -23,44 +24,70 @@ function Header() {
   const handleLetterOpen = () => setLetterOpen(true)
   const handleLetterClose = () => setLetterOpen(false)
 
-  const [isLogin, setIsLogin] = useState(false)
   const [letterCnt, setLetterCnt] = useState(0)
+  const [isLogin, setIsLogin] = useState(false)
   useEffect(() => {
-    if (sessionStorage.getItem('userSeq') !== null) {
-      setIsLogin(true)
-      fetch(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq'), {
-        method: 'GET',
-      })
-        .then((res) => res.json())
+    // 로컬 스토리지에 refreshToken 이 존재하고 로그인 상태가 아니면 한번 쫘악 긁어옴 (= 자동로그인 상태)
+    if (localStorage.getItem('refreshToken') !== null && sessionStorage.getItem('refreshToken') === null) {
+      // 토큰 및 유저 정보 (엑세스 토큰 재발급, 리프래시 토큰만 넣어서 요청)
+      api
+        .post(
+          process.env.REACT_APP_API_URL + '/auth/refresh',
+          {},
+          {
+            headers: {
+              RefreshToken: 'Bearer ' + localStorage.getItem('refreshToken'),
+            },
+          }
+        )
         .then((res) => {
-          setLetterCnt(res.body.count)
+          sessionStorage.setItem('accessToken', res.data.body.accessToken)
+          sessionStorage.setItem('refreshToken', res.data.body.refreshToken)
+          sessionStorage.setItem('userEmail', res.data.body.email)
+          sessionStorage.setItem('username', res.data.body.name)
+          sessionStorage.setItem('nickname', res.data.body.nickname)
+          sessionStorage.setItem('userSeq', res.data.body.userSeq)
+          setIsLogin(true)
+        })
+        .catch((e) => {
+          console.log(e)
+          return e.message
         })
     }
-  })
+    if (sessionStorage.getItem('userSeq') !== null) {
+      setIsLogin(true)
+      api.get(process.env.REACT_APP_API_URL + '/letter/read/' + sessionStorage.getItem('userSeq')).then((res) => {
+        setLetterCnt(res.data.body.count)
+      })
+    }
+  }, [])
+
+  const navigate = useNavigate()
 
   const onLogout = () => {
-    fetch(process.env.REACT_APP_API_URL + '/auth/logout', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: 'Bearer ' + sessionStorage.getItem('accessToken'),
-        RefreshToken: 'Bearer ' + sessionStorage.getItem('refreshToken'),
-      },
-    })
-      .then((res) => {
-        if (res.ok === true) {
-          return res.json()
-        } else {
-          throw new Error('다시 시도')
+    api
+      .post(
+        process.env.REACT_APP_API_URL + '/auth/logout',
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('accessToken'),
+            RefreshToken: 'Bearer ' + sessionStorage.getItem('refreshToken'),
+          },
         }
-      })
+      )
       .then((data) => {
         console.log('로그아웃 성공')
+        console.log(data)
         sessionStorage.removeItem('accessToken')
+        sessionStorage.removeItem('refreshToken')
         sessionStorage.removeItem('userEmail')
         sessionStorage.removeItem('username')
+        sessionStorage.removeItem('nickname')
         sessionStorage.removeItem('userSeq')
+        localStorage.removeItem('refreshToken')
         setIsLogin(false)
+        navigate(`/`)
       })
       .catch((e) => {
         alert('다시 시도')

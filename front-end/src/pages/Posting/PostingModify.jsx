@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -26,11 +27,11 @@ import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
 // import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
-import { add, addQna } from 'store/redux'
+import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
-  padding: 100px 10em;
+  padding: 109px 10em;
 `
 const skillStyle = {
   width: '100%',
@@ -84,10 +85,9 @@ const PostingModify = () => {
   const postingSeq = location.state.postingSeq
   //   console.log(postingSeq)
 
-  const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
     userSeq: 1,
-    subject,
+    subject: '테스트',
     localCode: '11',
     fieldCode: 'FI100',
     isContact: true,
@@ -118,6 +118,7 @@ const PostingModify = () => {
       },
     ],
   })
+  // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
@@ -137,6 +138,22 @@ const PostingModify = () => {
         postingPositionList: post.postingPositionList,
         postingQuestionList: post.postingQuestionList,
       })
+      const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+      const resultPosition = post.postingPositionList.map((e) => ({
+        code: e.positionCode,
+        name: e.code.name,
+        count: e.positionCnt,
+      }))
+      const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+      const resultQuestion = post.postingQuestionList.map((e) => ({
+        id: e.num,
+        text: e.content,
+      }))
+      setDateList(resultMeeting)
+      resultPosition.forEach((e) => dispatch(add(e)))
+      // dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
+      resultQuestion.forEach((e) => dispatch(addQnaF(e)))
+      setPosting({ ...posting, postingSkillList: resultSkill })
     } catch (error) {
       console.log(error)
     }
@@ -159,7 +176,7 @@ const PostingModify = () => {
   // }
 
   // end >> Fetch
-
+  const [deSkill, setDeSkill] = useState([])
   // start >> Data filter
   const [Date, setDate] = useState('')
   const [DateList, setDateList] = useState([])
@@ -209,6 +226,9 @@ const PostingModify = () => {
       })
     )
   }
+  // const getDateList = () => {
+  //   DateList.push()
+  // }
   // const [startDate, setStartDate] = useState(new Date())
   // start >> handle exp
 
@@ -234,7 +254,20 @@ const PostingModify = () => {
     setTodolist({ text: '' })
   }
   // start >> handle qna
-
+  function getMatchingValues(postingSkillList, Skilldata) {
+    const result = []
+    for (let i = 0; i < postingSkillList.length; i++) {
+      for (let j = 0; j < Skilldata.length; j++) {
+        // console.log(postingSkillList[i].skillCode)
+        // console.log(Skilldata[j].code)
+        if (postingSkillList[i].skillCode === Skilldata[j].code) {
+          result.push(Skilldata[j])
+          break
+        }
+      }
+    }
+    return result
+  }
   // const handleQnAChange = (value, key) => {
   //   const qnaArr = [...qnaList]
   //   qnaArr.splice(key, 1, value)
@@ -249,13 +282,14 @@ const PostingModify = () => {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
-        .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
+        .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
-          // console.log(res)
-          // console.log(1)
+          console.log(res)
+          console.log(JSON.stringify(posting))
         })
         .catch((err) => {
           console.log(err)
+          console.log(JSON.stringify(posting))
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
@@ -275,6 +309,7 @@ const PostingModify = () => {
   }
   useEffect(() => {
     postPutFetch()
+    setDeSkill(getMatchingValues(posting.postingSkillList, Skilldata))
   }, [])
   useEffect(() => {
     // postingFetch()
@@ -296,7 +331,8 @@ const PostingModify = () => {
         <div>
           <button
             onClick={() => {
-              console.log(posting)
+              console.log(JSON.stringify(posting))
+              console.log(Skilldata)
             }}
           >
             d
@@ -313,7 +349,7 @@ const PostingModify = () => {
                 value={posting.subject}
                 onChange={(e) => {
                   // console.log(e.target.value)
-                  setSubject(e.target.value)
+
                   setPosting({ ...posting, subject: e.target.value })
                   // console.log(subject)
                 }}
@@ -415,21 +451,24 @@ const PostingModify = () => {
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <Label>사용 기술 </Label>
-              <Autocomplete
-                multiple
-                limitTags={5}
-                size="small"
-                id="multiple-limit-tags"
-                options={Skilldata}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  // console.log(newValue)
-                  // console.log(event.target)
-                  handleChangeSkill(newValue)
-                }}
-                renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
-              />
+              {deSkill && (
+                <Autocomplete
+                  multiple
+                  limitTags={5}
+                  size="small"
+                  id="multiple-limit-tags"
+                  options={Skilldata}
+                  getOptionLabel={(option) => option.name}
+                  defaultValue={deSkill}
+                  onChange={(event, newValue) => {
+                    // console.log(newValue)
+                    // console.log(event.target)
+                    handleChangeSkill(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                  sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
+                />
+              )}
             </div>
             <div style={{ flexDirection: 'column' }}>
               <div className="email-section" style={{ marginLeft: '3em' }}>
@@ -449,7 +488,7 @@ const PostingModify = () => {
                   </button>
                 </Box>
               </div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '500px' }}>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '450px' }}>
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
@@ -488,6 +527,7 @@ const PostingModify = () => {
                       alt="plusButton"
                       className="plus-button"
                       onClick={() => {
+                        console.log(posi)
                         dispatch(add(posi))
                       }}
                     />
@@ -574,9 +614,11 @@ const PostingModify = () => {
         </div>
 
         <div className="submit-button">
-          <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
-          </button>
+          <Link to={`/posting/${postingSeq}`}>
+            <button className="apply-button" onClick={handleApplySubmit}>
+              지원하기
+            </button>
+          </Link>
         </div>
       </div>
     </Container>

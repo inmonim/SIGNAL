@@ -7,7 +7,6 @@ const textAreaStyle = {
 }
 
 function Qna({ question, id, onChange }) {
-  console.log(question)
   const handleQnAChange = (event) => {
     onChange(event.target.value, id)
   }

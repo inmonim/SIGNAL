@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from 'api/Api'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -224,7 +224,7 @@ const PostingRegister = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
 
-      await axios
+      await api
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
         .then((res) => {
           // console.log(res)
@@ -265,7 +265,7 @@ const PostingRegister = () => {
 
   return (
     <Container>
-      <div>
+      <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
         </div>
@@ -534,7 +534,7 @@ const PostingRegister = () => {
 
         <div className="submit-button">
           <button className="apply-button" onClick={handleApplySubmit}>
-            지원하기
+            공고 등록
           </button>
         </div>
       </div>
