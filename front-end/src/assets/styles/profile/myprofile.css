@@ -1,7 +1,7 @@
 .my-container {
   width: 60%;
   background-color: #dddbec;
-  margin: 0 auto;
+  margin: 108px auto;
 }
 
 .my-main {
@@ -13,6 +13,8 @@
   background-repeat: no-repeat;
   background-position: top;
 }
+
+/* 회원정보 부분 */
 
 .my-user {
   padding: 111px 80px;
@@ -65,13 +67,68 @@
   height: 112px;
 }
 
-.my-profile-container {
+/* 프로필 부분 */
+
+.my-profile {
   padding: 0px 25px;
   display: flex;
 }
 
-.my-profile {
+.my-profile-container {
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.28);
+}
+
+.my-profile-four {
+  /* border: 1px solid black; */
+  margin: 107px 95px;
+}
+
+.my-profile-top,
+.my-profile-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.my-profile-top-position,
+.my-profile-top-skill {
+  width: 353px;
+  height: 253px;
+}
+.my-profile-bottom-exp,
+.my-profile-bottom-career {
+  width: 353px;
+}
+
+.my-profile-plus-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.my-profile-plus-btn-img{
+  width: 20px;
+  height: 20px;
+}
+
+.my-profile-top-position-title,
+.my-profile-top-skill-title,
+.my-profile-bottom-exp-title,
+.my-profile-bottom-career-title {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-size: 27px;
+  padding-bottom: 20px;
+}
+
+.my-profile-top-position-title::after,
+.my-profile-top-skill-title::after,
+.my-profile-bottom-exp-title::after,
+.my-profile-bottom-career-title::after {
+  content: '';
+  flex-grow: 1;
+  border: 3px solid #796fb2;
+  margin-left: 20px;
 }

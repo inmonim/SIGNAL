@@ -12,7 +12,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-
   background-image: url('${({ isBg }) => (isBg ? gradient : null)}');
 `
 
