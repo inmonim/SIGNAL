@@ -1,17 +1,42 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogActions, Button } from '@mui/material'
+import { Button, Dialog, DialogTitle, DialogActions, styled } from '@mui/material'
+import cancleButton from 'assets/image/x.png'
 
-function AlertModal({ open, onClick, msg }) {
+const ComfirmButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#fff',
+  color: '#574B9F',
+  borderColor: '#574B9F',
+  border: '1px solid',
+  height: 30,
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: '#fff',
+  },
+}))
+
+const style = {
+  width: 707,
+  height: 500,
+  bgcolor: 'background.paper',
+  borderRadius: 20,
+  border: 'none',
+  boxShadow: 24,
+  p: 4,
+  position: 'relative',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  justifyContent: 'center',
+}
+
+function AlertModal({ open, onClick, onClose, msg }) {
   return (
-    <Dialog hideBackdrop open={open}>
-      <DialogContent>{msg}</DialogContent>
-      {/* <DialogContent>
-        <div>{name} 회원님의 이메일은</div>
-        <div>{msg}</div>
-        <div>입니다.</div>
-      </DialogContent> */}
-      <DialogActions>
-        <Button onClick={onClick}>확인</Button>
+    <Dialog open={open} className="cancle-section" hideBackdrop sx={{ style }}>
+      <DialogTitle className="cancle-title">{msg}</DialogTitle>
+      <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={onClose} />
+      <DialogActions className="delete-button">
+        <ComfirmButton onClick={onClick}>예</ComfirmButton>
       </DialogActions>
     </Dialog>
   )
