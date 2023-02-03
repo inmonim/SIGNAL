@@ -60,6 +60,9 @@
   top: -90px;
   left: 800px;
 }
+.project-detail-img-settings:hover {
+  cursor: pointer;
+}
 
 .project-detail-project-title {
   font-size: -webkit-xxx-large;

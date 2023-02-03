@@ -7,17 +7,20 @@ import heart from 'assets/image/heart.png'
 import noProfile from 'assets/image/noProfileImg.png'
 import SignalBtn from 'components/common/SignalBtn'
 import api from 'api/Api.js'
+import { Link, useNavigate } from 'react-router-dom'
 
-function ProjectDetail2() {
+function ProjectDetail() {
+  const navigate = useNavigate()
+
   // const location = useLocation()
-  // const projectSeq = ???
+  // const projectSeq = location.state.applySeq
   // const userSeq = sessionStorage.getItem('userSeq')
 
   // TEST params데이터 셋
   const userSeq = 82
   const projectSeq = 448
 
-  const [pjtData, setPjtData] = useState([])
+  const [project, setProject] = useState([])
 
   const getProject = async () => {
     await api({
@@ -31,7 +34,7 @@ function ProjectDetail2() {
     })
       .then((res) => {
         console.log(res.data.body)
-        setPjtData(res.data.body)
+        setProject(res.data.body)
       })
       .catch((e) => {
         console.log(e)
@@ -45,32 +48,43 @@ function ProjectDetail2() {
     <div className="project-detail-container">
       <div className="project-detail-width">
         <img className="project-detail-img-proejct-background-1" src={proejctBackground1} />
-        <img className="project-detail-img-settings" src={settings} alt="" />
+        <img
+          className="project-detail-img-settings"
+          src={settings}
+          alt=""
+          onClick={() => {
+            navigate('/teamMaintain')
+          }}
+        />
         <div style={{ position: 'absolute' }}>
           <div className="project-detail-my-section">
             <div className="project-detail-my-warning-section">
-              <div>나의 경고</div> <div>{pjtData.warningCnt}회</div>
+              <div>나의 경고</div> <div>{project.warningCnt}회</div>
             </div>
             <div className="project-detail-my-heart-section">
               <div>나의 하트</div>
               <img src={heart} style={{ width: '30px' }} />
-              <div>{pjtData.heartCnt}</div>
+              <div>{project.heartCnt}</div>
             </div>
           </div>
-          <div className="project-detail-project-title"> {pjtData.subject} </div>
+          <div className="project-detail-project-title"> {project.subject} </div>
         </div>
         <div className="project-detail-body-section">
-          <div className="project-detail-content">{pjtData.content}</div>
+          <div className="project-detail-content">{project.content}</div>
           <div className="project-detail-side-bar">
             <div>
-              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
-                To Do List
-              </SignalBtn>
+              <Link to="/toDoList">
+                <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                  To Do List
+                </SignalBtn>
+              </Link>
             </div>
             <div>
-              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
-                프로젝트 문서
-              </SignalBtn>
+              <Link to="/projectDocs">
+                <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                  프로젝트 문서
+                </SignalBtn>
+              </Link>
             </div>
             <div>
               <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
@@ -78,9 +92,11 @@ function ProjectDetail2() {
               </SignalBtn>
             </div>
             <div>
-              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
-                동료 평가
-              </SignalBtn>
+              <Link to="/projectEvaluation">
+                <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                  동료 평가
+                </SignalBtn>
+              </Link>
             </div>
           </div>
         </div>
@@ -93,30 +109,13 @@ function ProjectDetail2() {
           }}
         >
           <div className="project-detail-team-detail-list">
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
-            <div className="project-detail-team">
-              <img src={noProfile} alt="" />
-              <div>사람1</div>
-            </div>
+            {project.projectUserList &&
+              project.projectUserList.map((item) => (
+                <div className="project-detail-team" key={item}>
+                  <img src={noProfile} alt="" />
+                  <div>{item}</div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -124,4 +123,4 @@ function ProjectDetail2() {
   )
 }
 
-export default ProjectDetail2
+export default ProjectDetail
