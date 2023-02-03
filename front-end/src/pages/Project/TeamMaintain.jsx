@@ -1,6 +1,6 @@
 import React from 'react'
 import settings from 'assets/image/settings.png'
-import 'assets/styles/projectMaintain.css'
+import 'assets/styles/teamMaintain.css'
 import SignalBtn from 'components/common/SignalBtn'
 import ProjectProfile from 'components/Project/ProjectProfile'
 

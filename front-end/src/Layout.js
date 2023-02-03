@@ -22,10 +22,8 @@ import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
-import ProjectDetail2 from './pages/Project/ProjectDetail2'
-import TeamMaintain2 from 'pages/Project/TeamMaintain2'
 import TeamMaintain from 'pages/Project/TeamMaintain'
-import ProjectMaintain2 from 'pages/Project/ProjectMaintain2'
+import ProjectMaintain from 'pages/Project/ProjectMaintain'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -48,10 +46,10 @@ function App() {
           <Route path="/applyregister" element={<ApplyRegister />} />
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
-          <Route path="/teambuilding" element={<TeamBuilding />} />
+          <Route path="/teamBuilding" element={<TeamBuilding />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
-          <Route path="/projectDetail2" element={<ProjectDetail2 />} />
-          <Route path="/teammaintain2" element={<TeamMaintain2 />} />
+          <Route path="/teamMaintain" element={<TeamMaintain />} />
+          <Route path="/projectMaintain" element={<ProjectMaintain />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />

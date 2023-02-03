@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import '../../assets/styles/applyDetail.css'
-import '../../assets/styles/skill.css'
-// import { Button } from '@mui/material'
-// import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
-// import ModeEditIcon from '@mui/icons-material/ModeEdit'
-// import { useLocation } from 'react-router-dom'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import 'assets/styles/projectDetail.css'
+import proejctBackground1 from 'assets/image/projectBackground1.png'
+import proejctBackground2 from 'assets/image/projectBackground2.png'
+import settings from 'assets/image/settings.png'
+import heart from 'assets/image/heart.png'
+import noProfile from 'assets/image/noProfileImg.png'
+import SignalBtn from 'components/common/SignalBtn'
+import api from 'api/Api.js'
 
-function ProjectDetail() {
+function ProjectDetail2() {
   // const location = useLocation()
   // const projectSeq = ???
   // const userSeq = sessionStorage.getItem('userSeq')
@@ -19,7 +20,7 @@ function ProjectDetail() {
   const [pjtData, setPjtData] = useState([])
 
   const getProject = async () => {
-    await axios({
+    await api({
       url: process.env.REACT_APP_API_URL + '/project',
       method: 'GET',
       params: {
@@ -40,19 +41,87 @@ function ProjectDetail() {
   useEffect(() => {
     getProject()
   }, [])
-
   return (
-    <>
-      <div>프로젝트 상세</div>
-      <div> subject : {pjtData.sueject} </div>
-      <div> content : {pjtData.content} </div>
-      <div> heartCnt : {pjtData.heartCnt} </div>
-      <div> weekCnt : {pjtData.weekCnt} </div>
-      <div> warningCnt : {pjtData.warningCnt} </div>
-
-      <div> projectUserList : {pjtData.projectUserList} </div>
-    </>
+    <div className="project-detail-container">
+      <div className="project-detail-width">
+        <img className="project-detail-img-proejct-background-1" src={proejctBackground1} />
+        <img className="project-detail-img-settings" src={settings} alt="" />
+        <div style={{ position: 'absolute' }}>
+          <div className="project-detail-my-section">
+            <div className="project-detail-my-warning-section">
+              <div>나의 경고</div> <div>{pjtData.warningCnt}회</div>
+            </div>
+            <div className="project-detail-my-heart-section">
+              <div>나의 하트</div>
+              <img src={heart} style={{ width: '30px' }} />
+              <div>{pjtData.heartCnt}</div>
+            </div>
+          </div>
+          <div className="project-detail-project-title"> {pjtData.subject} </div>
+        </div>
+        <div className="project-detail-body-section">
+          <div className="project-detail-content">{pjtData.content}</div>
+          <div className="project-detail-side-bar">
+            <div>
+              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                To Do List
+              </SignalBtn>
+            </div>
+            <div>
+              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                프로젝트 문서
+              </SignalBtn>
+            </div>
+            <div>
+              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                회의 열기
+              </SignalBtn>
+            </div>
+            <div>
+              <SignalBtn sigwidth="260px" sigfontsize="30px" sigborderradius="25px">
+                동료 평가
+              </SignalBtn>
+            </div>
+          </div>
+        </div>
+        <img className="project-detail-img-proejct-background-2" src={proejctBackground2} alt="" />
+        <div
+          style={{
+            width: '500px',
+            position: 'relative',
+            top: '-450px',
+          }}
+        >
+          <div className="project-detail-team-detail-list">
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+            <div className="project-detail-team">
+              <img src={noProfile} alt="" />
+              <div>사람1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
-export default ProjectDetail
+export default ProjectDetail2
