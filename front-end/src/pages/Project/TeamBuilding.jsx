@@ -11,13 +11,17 @@ import axios from 'axios'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
 import moment from 'moment'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
 import { Button } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { StateCode } from 'components/common/TeamSelectStateCode'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ProjectTeamSelectConfirmModal from 'components/Project/ProjectInviteConfirmModal'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import cancleButton from '../../assets/image/x.png'
 
 const ImageButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -26,6 +30,19 @@ const ImageButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.vars.palette.common.white,
     color: '#574B9F',
+  },
+}))
+
+const ComfirmButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.vars.palette.common.white,
+  color: '#574B9F',
+  borderColor: '#574B9F',
+  border: '1px solid',
+  height: 30,
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: theme.vars.palette.common.white,
+    borderColor: theme.vars.palette.common.white,
   },
 }))
 
@@ -41,6 +58,18 @@ function TeamSelect() {
   const [count, setCount] = useState(0)
 
   const [valid, setValid] = useState('true')
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
+  const navigate = useNavigate()
+
+  const handleConfirmOpen = () => {
+    setConfirmOpen(true)
+  }
+
+  const handleConfirmClose = () => {
+    console.log(false)
+    setConfirmOpen(false)
+  }
 
   const handlePageChange = (page) => {
     setPage(page)
@@ -89,7 +118,7 @@ function TeamSelect() {
     console.log(valid)
   }
 
-  const handleProjectStart = async () => {
+  const projectPost = async () => {
     const config = { 'Content-Type': 'application/json' }
     try {
       const res = await axios.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq }, config)
@@ -97,6 +126,8 @@ function TeamSelect() {
     } catch (error) {
       console.log(error)
     }
+    handleConfirmClose()
+    navigate('/')
   }
 
   const stateCodeColor = (stateCode) => {}
@@ -105,9 +136,12 @@ function TeamSelect() {
     applyListFetch(1)
   }, [])
   useEffect(() => {}, [applySeqList])
+
   useEffect(() => {
     checkButtonValid()
   }, [teamTotalCnt, teamCnt])
+
+  useEffect(() => {}, [confirmOpen])
 
   return (
     <CssVarsProviderm>
@@ -183,9 +217,26 @@ function TeamSelect() {
           </div>
 
           <div className="team-select-submit-button">
-            <SignalBtn sigwidth="250px" onClick={handleProjectStart}>
+            <SignalBtn sigwidth="250px" onClick={handleConfirmOpen}>
               프로젝트 시작
             </SignalBtn>
+            <Dialog
+              open={confirmOpen}
+              onClose={handleConfirmClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              className="cancle-section"
+            >
+              <div>
+                <DialogTitle id="alert-dialog-title" className="cancle-title">
+                  프로젝트를 시작하시겠습니까?
+                </DialogTitle>
+                <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleConfirmClose} />
+                <DialogActions className="delete-button">
+                  <ComfirmButton onClick={projectPost}>예</ComfirmButton>
+                </DialogActions>
+              </div>
+            </Dialog>
           </div>
           <div>
             <Paging page={page} count={count} setPage={handlePageChange} size={size} />

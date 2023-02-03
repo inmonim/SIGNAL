@@ -22,6 +22,9 @@ import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectDetail from './pages/Project/ProjectDetail'
+import ProjectDetail2 from './pages/Project/ProjectDetail2'
+import ProjectMaintain2 from 'pages/Project/ProjectMaintain2'
+import TeamMaintain from 'pages/Project/TeamMaintain'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -46,6 +49,8 @@ function App() {
           <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="/teambuilding" element={<TeamBuilding />} />
           <Route path="/projectDetail" element={<ProjectDetail />} />
+          <Route path="/projectDetail2" element={<ProjectDetail2 />} />
+          <Route path="/projectmaintain2" element={<ProjectMaintain2 />} />
           <Route path="/myproject" element={<MyProject />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/noticeDetail" element={<NoticeDetail />} />
@@ -55,6 +60,7 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
+          <Route path="/TeamMaintain" element={<TeamMaintain />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>

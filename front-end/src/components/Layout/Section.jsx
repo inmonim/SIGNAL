@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import gradient from 'assets/image/gradient.png'
 
 const Container = styled.div`
-  width: 100%;
+  width: 1920px;
+  margin: auto;
   height: 100vh;
   background-size: contain;
   background-repeat: no-repeat;
