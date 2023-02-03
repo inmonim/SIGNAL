@@ -107,13 +107,13 @@ public class PostingService {
             List<Integer> postingList = postingSkillRepository.findBySkillList(postingSkillList, postingSkillList.size());
             if (postingList != null && postingList.size() > 0) {
                 searchKeys.put("postingList", postingList);
-                Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
-                return projectList.stream()
-                        .map(PostingFindAllResponse::fromEntity)
-                        .collect(Collectors.toList());
             }
         }
-        return new ArrayList<>();
+
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
+        return projectList.stream()
+                .map(PostingFindAllResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
