@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import noProfile from 'assets/image/noProfileImg.png'
 import SignalBtn from 'components/common/SignalBtn'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
@@ -22,7 +22,7 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
   },
 }))
 
-function ProjectProfile() {
+function ProjectProfile({ Data }) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
@@ -43,6 +43,27 @@ function ProjectProfile() {
     })
   }
 
+  const position = Data.position.name
+  const warningCnt = Data.warningCnt
+  const nickname = Data.nickname
+  // const imageUrl = Data.profileImageUrl
+
+  const [imageUrl, setimageUrl] = useState(Data.profileImageUrl)
+  const [kickAble, setkickAble] = useState(false)
+
+  const checkUser = () => {
+    if (warningCnt >= 3) {
+      setkickAble(true)
+    }
+    if (imageUrl === '/noImage.png') {
+      setimageUrl(noProfile)
+    }
+  }
+
+  useEffect(() => {
+    checkUser()
+  }, [kickAble])
+
   return (
     <div className="project-maintain-profile">
       <div className="project-maintain-profile-section">
@@ -50,43 +71,47 @@ function ProjectProfile() {
           <img src={noProfile} alt="" />
         </div>
         <div className="project-maintain-profile-text">
-          <div className="project-maintain-profile-nickname">이름</div>
-          <div className="project-maintain-profile-position">포지션</div>
+          <div className="project-maintain-profile-nickname">{nickname}</div>
+          <div className="project-maintain-profile-position"> {position}</div>
         </div>
       </div>
       <div className="project-maintain-warning-section">
-        <div className="project-maintain-warning">경고 3회</div>
+        <div className="project-maintain-warning">경고 {warningCnt}회</div>
         <div>
-          <SignalBtn
-            className="project-maintain-ban"
-            sigborderradius="50px"
-            sigmargin="auto"
-            sigfontsize="20px"
-            sigwidth="80px"
-            sigheight="40px"
-            onClick={handleOpen}
-          >
-            퇴출
-          </SignalBtn>
-          <CssVarsProvider>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              className="cancle-section"
-            >
-              <div>
-                <DialogTitle id="alert-dialog-title" className="cancle-title">
-                  선택 하시겠습니까?
-                </DialogTitle>
-                <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
-                <DialogActions className="delete-button">
-                  <ComfirmButton onClick={handleProjectCreate}>예</ComfirmButton>
-                </DialogActions>
-              </div>
-            </Dialog>
-          </CssVarsProvider>
+          {kickAble === true && (
+            <>
+              <SignalBtn
+                className="project-maintain-ban"
+                sigborderradius="50px"
+                sigmargin="auto"
+                sigfontsize="20px"
+                sigwidth="80px"
+                sigheight="40px"
+                onClick={handleOpen}
+              >
+                퇴출
+              </SignalBtn>
+              <CssVarsProvider>
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  className="cancle-section"
+                >
+                  <div>
+                    <DialogTitle id="alert-dialog-title" className="cancle-title">
+                      선택 하시겠습니까?
+                    </DialogTitle>
+                    <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
+                    <DialogActions className="delete-button">
+                      <ComfirmButton onClick={handleProjectCreate}>예</ComfirmButton>
+                    </DialogActions>
+                  </div>
+                </Dialog>
+              </CssVarsProvider>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import settings from 'assets/image/settings.png'
 import 'assets/styles/teamMaintain.css'
 import SignalBtn from 'components/common/SignalBtn'
-import ProjectProfile from 'components/Project/ProjectProfile'
+import TeamProfile from 'components/Project/TeamProfile'
 import api from 'api/Api'
 
 function ProjectMaintain() {
@@ -41,7 +41,7 @@ function ProjectMaintain() {
 
         <div className="project-maintain-body">
           {userDataList.map((Data) => (
-            <ProjectProfile Data={Data} key={Data.userSeq}></ProjectProfile>
+            <TeamProfile Data={Data} key={Data.userSeq}></TeamProfile>
           ))}
         </div>
       </div>
