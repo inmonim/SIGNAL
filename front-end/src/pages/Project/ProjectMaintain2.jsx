@@ -1,9 +1,11 @@
 import React from 'react'
 import settings from 'assets/image/settings.png'
 import 'assets/styles/projectMaintain.css'
-import noProfile from 'assets/image/noProfileImg.png'
 import SignalBtn from 'components/common/SignalBtn'
+import ProjectProfile from 'components/Project/ProjectProfile'
+
 function ProjectMaintain2() {
+  const list = [1, 2, 3, 4, 5, 6]
   return (
     <div className="project-maintain-container">
       <div className="project-maintain-width">
@@ -16,83 +18,11 @@ function ProjectMaintain2() {
           </div>
         </div>
 
-        <div>
+        <div style={{ width: '1000px', margin: 'auto' }}>
           <div className="project-maintain-body">
-            <div className="project-maintain-profile">
-              <div>
-                <div className="project-maintain-profile-image">
-                  <img src={noProfile} alt="" />
-                </div>
-                <div className="project-maintain-profile-nickname">이름</div>
-                <div className="project-maintain-profile-position">포지션</div>
-              </div>
-              <div className="project-maintain-warning-section">
-                <div className="project-maintain-warning">경고 3회</div>
-                <div>
-                  <button className="project-maintain-ban">퇴출</button>
-                </div>
-              </div>
-            </div>
-            <div className="project-maintain-profile">
-              <div>
-                <div className="project-maintain-profile-image">
-                  <img src={noProfile} alt="" />
-                </div>
-                <div className="project-maintain-profile-nickname">이름</div>
-                <div className="project-maintain-profile-position">포지션</div>
-              </div>
-              <div className="project-maintain-warning-section">
-                <div className="project-maintain-warning">경고 3회</div>
-                <div>
-                  <button className="project-maintain-ban">퇴출</button>
-                </div>
-              </div>
-            </div>
-            <div className="project-maintain-profile">
-              <div>
-                <div className="project-maintain-profile-image">
-                  <img src={noProfile} alt="" />
-                </div>
-                <div className="project-maintain-profile-nickname">이름</div>
-                <div className="project-maintain-profile-position">포지션</div>
-              </div>
-              <div className="project-maintain-warning-section">
-                <div className="project-maintain-warning">경고 3회</div>
-                <div>
-                  <button className="project-maintain-ban">퇴출</button>
-                </div>
-              </div>
-            </div>
-            <div className="project-maintain-profile">
-              <div>
-                <div className="project-maintain-profile-image">
-                  <img src={noProfile} alt="" />
-                </div>
-                <div className="project-maintain-profile-nickname">이름</div>
-                <div className="project-maintain-profile-position">포지션</div>
-              </div>
-              <div className="project-maintain-warning-section">
-                <div className="project-maintain-warning">경고 3회</div>
-                <div>
-                  <button className="project-maintain-ban">퇴출</button>
-                </div>
-              </div>
-            </div>
-            <div className="project-maintain-profile">
-              <div>
-                <div className="project-maintain-profile-image">
-                  <img src={noProfile} alt="" />
-                </div>
-                <div className="project-maintain-profile-nickname">이름</div>
-                <div className="project-maintain-profile-position">포지션</div>
-              </div>
-              <div className="project-maintain-warning-section">
-                <div className="project-maintain-warning">경고 3회</div>
-                <div>
-                  <button className="project-maintain-ban">퇴출</button>
-                </div>
-              </div>
-            </div>
+            {list.map((item, index) => (
+              <ProjectProfile key={index}></ProjectProfile>
+            ))}
           </div>
         </div>
       </div>

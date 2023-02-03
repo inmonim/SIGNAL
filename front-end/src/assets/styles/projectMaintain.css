@@ -1,4 +1,4 @@
-.project-maintain-container{
+.project-maintain-container {
   width: 1200px;
   font-size: 20px;
   margin: auto;
@@ -8,46 +8,58 @@
   min-height: 1300px;
 }
 
-.project-maintain-width{
+.project-maintain-width {
   min-width: 1500;
-  background-color: #DDDBEC;
+  background-color: #dddbec;
   border-radius: 150px 150px 0px 0px;
   height: 100%;
 }
 
-.project-detail-img-settings{
+.project-detail-img-settings {
   position: relative;
   width: 50px;
   top: 50px;
-  left: 1000px
+  left: 1000px;
 }
 
-.project-maintain-title{
+.project-maintain-title {
   font-size: -webkit-xxx-large;
   text-align: center;
 }
 
-.project-maintain-menu{
+.project-maintain-menu {
   display: flex;
   justify-content: center;
   text-align: center;
   margin: 20px;
 }
 
-.project-maintain-profile-image > img{
+.project-maintain-profile-image > img {
   text-align: center;
   border-radius: 100%;
-  border: 3px solid #574B9F;
+  border: 3px solid #574b9f;
   width: 66px;
 }
 
-.project-maintain-profile{
-  border: 1px solid #574B9F;
+.project-maintain-profile {
+  border: 1px solid #574b9f;
   border-radius: 20px;
   width: 340px;
-  height: 500px;
-  margin: auto;
+  /* height: 500px;
+  margin: auto; */
   display: flex;
   height: 200px;
   justify-content: space-between;
+}
+
+.project-maintain-warning-section {
+  margin: auto;
+}
+
+.project-maintain-ban {
+  text-align: center;
+}
+
+.project-maintain-profile-section {
+  margin: auto;
 }
