@@ -31,9 +31,9 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
+//                .antMatchers("/board/qna/**").hasAnyAuthority("USER")
 //                .antMatchers("/board/**").hasAnyAuthority("USER")
-//                .antMatchers("/auth/login").permitAll()
+//                .antMatchers("/auth/login", "/auth").permitAll()
 //                .anyRequest().authenticated()
                 .anyRequest().permitAll()
 
