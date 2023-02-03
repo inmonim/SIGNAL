@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import { Button, Modal, Box, Typography } from '@mui/material'
 import cancleButton from '../../assets/image/x.png'
 import ArticleIcon from '@mui/icons-material/Article'
-import axios from 'axios'
+import api from 'api/Api.js'
 
 const style = {
   position: 'absolute',
@@ -51,7 +51,7 @@ function MemoModal(props) {
   const [memo, setMemo] = useState('')
   const memoFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/memo/' + props.applySeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/apply/memo/' + props.applySeq)
       setMemo(res.data.body.memo)
     } catch (error) {
       console.log(error)
@@ -66,11 +66,6 @@ function MemoModal(props) {
   const handleClose = () => {
     setOpen(false)
   }
-
-  useEffect(() => {
-    memoFetch()
-  }, [])
-
   return (
     <CssVarsProvider>
       <ImageButton onClick={handleOpen} startIcon={<ArticleIcon />}>

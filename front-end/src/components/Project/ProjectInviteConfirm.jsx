@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import cancleButton from '../../assets/image/x.png'
 import Swal from 'sweetalert2'
-import axios from 'axios'
+import api from 'api/Api.js'
 
 const ComfirmButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.vars.palette.common.white,
@@ -59,7 +59,7 @@ function ProjectTeamSelectConfirmModal(props) {
       const adminSeq = 5
 
       try {
-        await axios
+        await api
           .put(process.env.REACT_APP_API_URL + '/posting/member/' + applySeq)
           .then((res) => {})
           .catch((err) => {
@@ -75,7 +75,7 @@ function ProjectTeamSelectConfirmModal(props) {
           userSeq: adminSeq,
         }
 
-        await axios
+        await api
           .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
           .then((res) => {})
           .catch((err) => {

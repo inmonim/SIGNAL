@@ -83,6 +83,11 @@ function FindEmailPwdModal({ open, onClose }) {
     setPwdAlertOpen(false)
     onClose(true)
   }
+  const handleToClose = () => {
+    setEmailAlertOpen(false)
+    setPwdAlertOpen(false)
+    onClose(true)
+  }
   const handleFindPwd = () => {
     console.log('click Find Pwd')
     console.log('Email: ', inputEmail)
@@ -179,7 +184,12 @@ function FindEmailPwdModal({ open, onClose }) {
                 >
                   인증 메일 전송
                 </SignalBtn>
-                <AlertModal msg={msgPwd} open={pwdAlertOpen} onClick={handleAlertToMain}></AlertModal>
+                <AlertModal
+                  msg={msgPwd}
+                  open={pwdAlertOpen}
+                  onClick={handleAlertToMain}
+                  onClose={handleToClose}
+                ></AlertModal>
               </div>
             </div>
           </div>

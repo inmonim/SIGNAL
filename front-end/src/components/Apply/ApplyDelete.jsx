@@ -8,7 +8,7 @@ import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/ma
 import cancleButton from '../../assets/image/x.png'
 import '../../assets/styles/applyDetail.css'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from 'api/Api.js'
 
 const CancleButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#FF4242',
@@ -44,7 +44,7 @@ function ApplyDelete({ applySeq }) {
   const handleApplyDelete = async () => {
     console.log('지원서 삭제')
     try {
-      const res = await axios.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const res = await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       console.log(res)
       navigate('/')
     } catch (error) {

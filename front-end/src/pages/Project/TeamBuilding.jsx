@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import '../../assets/styles/teamSelect.css'
 import MemoModal from '../../components/Memo/MemoModal'
-import axios from 'axios'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
 import moment from 'moment'
@@ -17,11 +16,13 @@ import { Button } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { StateCode } from 'components/common/TeamSelectStateCode'
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
-import ProjectTeamSelectConfirmModal from 'components/Project/ProjectInviteConfirmModal'
+import ProjectInviteConfirm from 'components/Project/ProjectInviteConfirm'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import cancleButton from '../../assets/image/x.png'
+import Swal from 'sweetalert2'
+import api from 'api/Api.js'
 
 const ImageButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -79,7 +80,7 @@ function TeamSelect() {
 
   const applyListFetch = async (param) => {
     try {
-      await axios
+      await api
         .get(process.env.REACT_APP_API_URL + '/apply/writer/' + postingSeq, {
           params: {
             page: param,
@@ -91,11 +92,11 @@ function TeamSelect() {
           console.log(res.data.body)
         })
 
-      await axios.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
         setCount(res.data.body.count)
       })
 
-      await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
         setTeamTotalCnt(
           res.data.body.postingPositionList.reduce((sum, value) => {
             return sum + value.positionCnt
@@ -103,7 +104,7 @@ function TeamSelect() {
         )
       })
 
-      await axios.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
         setTeamCnt(res.data.body.selectCnt)
       })
     } catch (error) {
@@ -119,15 +120,33 @@ function TeamSelect() {
   }
 
   const projectPost = async () => {
-    const config = { 'Content-Type': 'application/json' }
     try {
-      const res = await axios.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq }, config)
+      const res = await api.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq })
       console.log(res)
     } catch (error) {
       console.log(error)
     }
     handleConfirmClose()
-    navigate('/')
+    const timerInterval = () => setInterval(() => {}, 100)
+    Swal.fire({
+      title: '프로젝트 생성 완료!',
+      html: '프로젝트 생성이 완료 되었습니다! 마이 프로젝트를 확인해주세요!',
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading()
+        timerInterval()
+      },
+      willClose: () => {
+        clearInterval(timerInterval)
+        navigate('/')
+      },
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log('I was closed by the timer')
+      }
+    })
   }
 
   const stateCodeColor = (stateCode) => {}
@@ -194,12 +213,12 @@ function TeamSelect() {
                           </Link>
                         </TableCell>
                         <TableCell align="center">
-                          <ProjectTeamSelectConfirmModal
+                          <ProjectInviteConfirm
                             apply={apply}
                             applySeqList={applySeqList}
                             setapplySeqList={setapplySeqList}
                             valid={valid}
-                          ></ProjectTeamSelectConfirmModal>
+                          ></ProjectInviteConfirm>
                         </TableCell>
                         <TableCell align="center">
                           <StateCode

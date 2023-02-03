@@ -1,21 +1,20 @@
-.team-select-container{
+.team-select-container {
   width: 100%;
   font-size: 20px;
 }
 
-.team-selct-width{
+.team-selct-width {
   width: 1125px;
   margin: auto;
 }
 
-
-.team-submit{
+.team-submit {
   display: flex;
   justify-content: center;
   margin-top: 15px;
 }
 
-.team-select-banner{
+.team-select-banner {
   width: 100%;
   height: 150px;
   background: linear-gradient(89.98deg, rgba(255, 255, 255, 0) 0.02%, #bcb7d9 99.99%);
@@ -26,7 +25,7 @@
   align-items: center;
 }
 
-.team-select-submit-button{
+.team-select-submit-button {
   display: flex;
   justify-content: center;
   margin: 10px 0px;

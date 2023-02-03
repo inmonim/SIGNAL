@@ -200,8 +200,8 @@ function LoginModal({ open, onClose }) {
                   onClick={handleFindOpen}
                 >
                   이메일 / 비밀번호 찾기 {'>>'}
-                  <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
                 </div>
+                <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
               </div>
               <div className="login-under2">
                 <div style={{ fontSize: '22px', display: 'inline-block' }}>

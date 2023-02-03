@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/profile/myprofile.css'
 import ProfileImg from 'assets/image/profileimg2.jpeg'
+import plusbtn from 'assets/image/plusButton.png'
 import heart from 'assets/image/heart.png'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import Chip from '@mui/material/Chip'
 
 function MyProfile() {
   const [userModifyOpen, setUserModifyOpen] = useState(false)
@@ -30,6 +32,10 @@ function MyProfile() {
 
   const handleToOut = () => {
     setAlertOpen(true)
+  }
+
+  const handleToClose = () => {
+    setAlertOpen(close)
   }
 
   const handleToMain = () => {
@@ -103,14 +109,52 @@ function MyProfile() {
             >
               회원 탈퇴
             </SignalBtn>
-            <AlertModal msg="탈퇴하시겠습니까?" open={alertOpen} onClick={handleToMain}></AlertModal>
+            <AlertModal
+              msg="탈퇴하시겠습니까?"
+              open={alertOpen}
+              onClick={handleToMain}
+              onClose={handleToClose}
+            ></AlertModal>
           </div>
         </div>
-        <div className="my-profile-container">
-          <div className="my-profile">
-            <div>ㅇㄹㅇ</div>
+        <div className="my-profile">
+          <div className="my-profile-container">
+            <div className="my-profile-four">
+              <div className="my-profile-top">
+                <div className="my-profile-top-position">
+                  <div className="my-profile-plus-btn">
+                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" />
+                  </div>
+                  <div className="my-profile-top-position-title">포지션</div>
+                  <div>
+                    <Chip label="FrontEnd" variant="outlined" sx={{ fontSize: '20px' }} />
+                  </div>
+                </div>
+                <div className="my-profile-top-skill">
+                  <div className="my-profile-plus-btn">
+                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" />
+                  </div>
+                  <div className="my-profile-top-skill-title">스킬</div>
+                </div>
+              </div>
+              <div className="my-profile-bottom">
+                <div className="my-profile-bottom-exp">
+                  <div className="my-profile-plus-btn">
+                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" />
+                  </div>
+                  <div className="my-profile-bottom-exp-title">경험</div>
+                </div>
+                <div className="my-profile-bottom-career">
+                  <div className="my-profile-plus-btn">
+                    <img className="my-profile-plus-btn-img" src={plusbtn} alt="" />
+                  </div>
+                  <div className="my-profile-bottom-career-title">경력</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+        <div className="my-posting-list"></div>
       </div>
     </div>
   )
