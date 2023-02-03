@@ -2,7 +2,7 @@
   width: 1200px;
   font-size: 20px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 128px;
   margin-bottom: 70px;
   height: 100vh;
   min-height: 1300px;
@@ -55,14 +55,13 @@
 }
 
 .project-detail-img-settings {
-  /* position: relative;
-  width: 50px;
-  top: -90px;
-  left: 800px; */
   position: relative;
   width: 50px;
   top: -90px;
   left: 800px;
+}
+.project-detail-img-settings:hover {
+  cursor: pointer;
 }
 
 .project-detail-project-title {
@@ -93,12 +92,12 @@
 .project-detail-side-bar {
   direction: rtl;
   margin-right: 100px;
+  z-index: 1;
 }
 
 .project-detail-body-section {
   display: flex;
   position: relative;
-  top: 70px;
   left: 180px;
   justify-content: space-between;
   width: 1050px;
@@ -107,8 +106,8 @@
 .project-detail-img-proejct-background-2 {
   width: 405px;
   position: relative;
-  top: 200px;
   left: 700px;
+  top: -50px;
 }
 
 .project-detail-team-detail-list {
@@ -116,7 +115,6 @@
   position: relative;
   width: 480px;
   justify-content: space-between;
-  top: 220px;
   left: 220px;
 }
 

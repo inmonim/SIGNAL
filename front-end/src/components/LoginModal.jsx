@@ -3,6 +3,8 @@ import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, TextField } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
 import 'assets/font/font.css'
 import SignalBtn from './common/SignalBtn'
 import RegistModal from './RegistModal'
@@ -10,6 +12,7 @@ import FindModal from './FindEmailPwdModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const style = {
   width: 727,
@@ -123,6 +126,13 @@ function LoginModal({ open, onClose }) {
     setIsAutoLogin(!nextIsAutoLogin)
     console.log(nextIsAutoLogin)
   }
+
+  const [showPassword, setShowPassword] = useState(false)
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <>
       <Modal open={open} onClose={onClose}>
@@ -152,6 +162,21 @@ function LoginModal({ open, onClose }) {
               <TextField
                 id="filled-multiline-flexible"
                 label="Password"
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 sx={inputStyle}
                 onChange={handleInputPwd}
                 onKeyDown={(e) => activeEnter(e)}
@@ -175,8 +200,8 @@ function LoginModal({ open, onClose }) {
                   onClick={handleFindOpen}
                 >
                   이메일 / 비밀번호 찾기 {'>>'}
-                  <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
                 </div>
+                <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
               </div>
               <div className="login-under2">
                 <div style={{ fontSize: '22px', display: 'inline-block' }}>

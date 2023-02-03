@@ -15,6 +15,7 @@ import { Skilldata } from 'data/Skilldata'
 import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
+
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'

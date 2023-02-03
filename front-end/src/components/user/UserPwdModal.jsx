@@ -28,7 +28,12 @@ function UserPwdModal({ open, onClose }) {
 
   const handleToProfile = () => {
     setAlertOpen(false)
-    onClose(onClose(true))
+    onClose(true)
+  }
+
+  const handleToClose = () => {
+    setAlertOpen(false)
+    onClose(true)
   }
   return (
     <>
@@ -90,7 +95,12 @@ function UserPwdModal({ open, onClose }) {
             >
               변경하기
             </SignalBtn>
-            <AlertModal msg="변경되었습니다." open={alertOpen} onClick={handleToProfile}></AlertModal>
+            <AlertModal
+              msg="변경하시겠습니까?"
+              open={alertOpen}
+              onClick={handleToProfile}
+              onClose={handleToClose}
+            ></AlertModal>
           </div>
         </Box>
       </Modal>
@@ -100,7 +110,7 @@ function UserPwdModal({ open, onClose }) {
 
 const style = {
   width: 707,
-  height: 550,
+  height: 500,
   bgcolor: 'background.paper',
   borderRadius: 20,
   border: 'none',
@@ -116,7 +126,7 @@ const style = {
 
 const inputStyle = {
   backgroundColor: '#DDDBEC',
-  width: '449px',
+  width: '500px',
   '& label.Mui-focused': {
     color: '#574b9f',
   },
