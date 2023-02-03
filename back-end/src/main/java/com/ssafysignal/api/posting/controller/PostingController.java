@@ -85,17 +85,17 @@ public class PostingController {
                                                          @Parameter(description = "분야 코드") String fieldCode,
                                                          @Parameter(description = "기술 스택 목록", schema = @Schema(type = "List")) @RequestParam(required = false) List<String> postingSkillList) {
         log.info("findAllPosting - Call");
-        System.out.println(subject+", "+localCode+", "+fieldCode+","+postingSkillList);
+
         Map<String, Object> searchKeys = new HashMap<>();
         if (subject != null && !subject.equals("")) searchKeys.put("subject", subject);
         if (localCode != null && !localCode.equals("")) searchKeys.put("localCode", localCode);
         if (fieldCode != null && !fieldCode.equals("")) searchKeys.put("fieldCode", fieldCode);
-        if (postingSkillList != null && postingSkillList.size() > 0) searchKeys.put("postingSkillList", postingSkillList);
         
         try {
             List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys, postingSkillList);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }

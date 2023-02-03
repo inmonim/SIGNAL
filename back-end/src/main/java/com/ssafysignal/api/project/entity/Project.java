@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@ToString
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
