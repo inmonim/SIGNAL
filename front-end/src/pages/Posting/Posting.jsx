@@ -15,7 +15,7 @@ import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
 import api from 'api/Api'
-import SkillList from 'components/Apply/SkillList'
+// import SkillList from 'components/Apply/SkillList'
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
 // const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
@@ -143,13 +143,14 @@ function Posting() {
   }
 
   const postList = async () => {
-    const res = await api.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}&fieldCode=FI100`)
-    setPostingList(res.data.body.postingList)
+    await api.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}&fieldCode=FI100`).then((res) => {
+      setPostingList(res.data.body.postingList)
+    })
+    await api.get(process.env.REACT_APP_API_URL + '/posting/count').then((res) => {
+      setCount(res.data.body.count)
+    })
   }
-  const countFetch = async () => {
-    const res = await api.get(process.env.REACT_APP_API_URL + '/posting/count')
-    setCount(res.data.body.count)
-  }
+
   const btnClickAxios = async () => {
     const res = await api.get(
       process.env.REACT_APP_API_URL +
@@ -160,7 +161,6 @@ function Posting() {
   }
   useEffect(() => {
     postList()
-    countFetch()
   }, [])
   useEffect(() => {
     btnClickAxios()
@@ -179,7 +179,7 @@ function Posting() {
         <Box sx={{ width: '100%', mb: 2 }}>
           <button
             onClick={() => {
-              console.log(SkillList, 'SkillList')
+              console.log(skillList, 'SkillList')
               console.log(skillListauto, 'skillListauto')
             }}
           >
@@ -368,7 +368,7 @@ function Posting() {
                     <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '30px' }}
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
                     />
                     {ele}
                   </Skillbtn>

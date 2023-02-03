@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import api from 'api/Api'
+import axios from 'axios'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
@@ -31,7 +31,7 @@ import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
-  padding: 100px 10em;
+  padding: 109px 10em;
 `
 const skillStyle = {
   width: '100%',
@@ -121,7 +121,7 @@ const PostingModify = () => {
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       const post = res.data.body
       setPosting({
         ...posting,
@@ -281,7 +281,7 @@ const PostingModify = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
 
-      await api
+      await axios
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
           console.log(res)

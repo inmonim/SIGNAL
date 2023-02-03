@@ -265,7 +265,7 @@ const PostingRegister = () => {
 
   return (
     <Container>
-      <div>
+      <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
         </div>
