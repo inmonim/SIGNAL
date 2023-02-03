@@ -28,11 +28,12 @@ function UserPwdModal({ open, onClose }) {
 
   const handleToProfile = () => {
     setAlertOpen(false)
-    onClose(onClose(true))
+    onClose(true)
   }
 
   const handleToClose = () => {
-    onClose(onClose(true))
+    setAlertOpen(false)
+    onClose(true)
   }
   return (
     <>
@@ -95,7 +96,7 @@ function UserPwdModal({ open, onClose }) {
               변경하기
             </SignalBtn>
             <AlertModal
-              msg="변경되었습니다."
+              msg="변경하시겠습니까?"
               open={alertOpen}
               onClick={handleToProfile}
               onClose={handleToClose}
