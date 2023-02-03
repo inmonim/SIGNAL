@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import 'assets/styles/notice.css'
 import view from 'assets/image/view.png'
+import api from 'api/Api.js'
 
 function NoticeDetail() {
   const location = useLocation()
@@ -9,13 +10,9 @@ function NoticeDetail() {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/board/notice/` + noticeSeq, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/board/notice/` + noticeSeq).then((res) => {
+      setData(res.data.body)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res.body)
-      })
   }, [])
   return (
     <div className="notice-page-container">

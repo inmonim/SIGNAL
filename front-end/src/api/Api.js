@@ -19,30 +19,24 @@ api.interceptors.request.use(
   }
 )
 
-api.interceptors.response.use(
-  function (response) {
-    return response
-  },
-  async (error) => {
-    const {
-      config,
-      response: { status },
-    } = error
-    if (status === 401) {
-      const originalRequest = config
-      const refreshToken = sessionStorage.getItem('refreshToken')
-      const { data } = await axios.post(
-        process.env.REACT_APP_API_URL + `/auth/refresh`, // token refresh api
-        {},
-        { headers: { RefreshToken: `Bearer ${refreshToken}` } }
-      )
-      sessionStorage.setItem('accessToken', data.body.accessToken)
-      sessionStorage.setItem('refreshToken', data.body.refreshToken)
-      originalRequest.headers.Authorization = `Bearer ${data.body.accessToken}`
-      return await axios(originalRequest)
-    }
-    return Promise.reject(error)
+api.interceptors.response.use(async function (response) {
+  const { config, data } = response
+  if (data.header.code === '801') {
+    const originalRequest = config
+    const refreshToken = sessionStorage.getItem('refreshToken')
+    const { data } = await axios.post(
+      process.env.REACT_APP_API_URL + `/auth/refresh`,
+      {},
+      {
+        headers: { RefreshToken: `Bearer ${refreshToken}` },
+      }
+    )
+    sessionStorage.setItem('accessToken', data.body.accessToken)
+    sessionStorage.setItem('refreshToken', data.body.refreshToken)
+    originalRequest.headers.Authorization = `Bearer ${data.body.accessToken}`
+    return await axios(originalRequest)
   }
-)
+  return response
+})
 
 export default api

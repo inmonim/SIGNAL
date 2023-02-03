@@ -29,16 +29,18 @@ function Header() {
   useEffect(() => {
     // 로컬 스토리지에 refreshToken 이 존재하고 로그인 상태가 아니면 한번 쫘악 긁어옴 (= 자동로그인 상태)
     if (localStorage.getItem('refreshToken') !== null && sessionStorage.getItem('refreshToken') === null) {
-      console.log('토큰 재발급!')
       // 토큰 및 유저 정보 (엑세스 토큰 재발급, 리프래시 토큰만 넣어서 요청)
       api
-        .post(process.env.REACT_APP_API_URL + '/auth/refresh', {
-          headers: {
-            RefreshToken: 'Bearer ' + localStorage.getItem('refreshToken'),
-          },
-        })
+        .post(
+          process.env.REACT_APP_API_URL + '/auth/refresh',
+          {},
+          {
+            headers: {
+              RefreshToken: 'Bearer ' + localStorage.getItem('refreshToken'),
+            },
+          }
+        )
         .then((res) => {
-          console.log(res.data)
           sessionStorage.setItem('accessToken', res.data.body.accessToken)
           sessionStorage.setItem('refreshToken', res.data.body.refreshToken)
           sessionStorage.setItem('userEmail', res.data.body.email)
@@ -64,7 +66,16 @@ function Header() {
 
   const onLogout = () => {
     api
-      .post(process.env.REACT_APP_API_URL + '/auth/logout')
+      .post(
+        process.env.REACT_APP_API_URL + '/auth/logout',
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem('accessToken'),
+            RefreshToken: 'Bearer ' + sessionStorage.getItem('refreshToken'),
+          },
+        }
+      )
       .then((data) => {
         console.log('로그아웃 성공')
         console.log(data)

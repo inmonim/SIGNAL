@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 import Paging from 'components/Paging'
 import { Link } from 'react-router-dom'
 import 'assets/styles/notice.css'
+import api from 'api/Api.js'
 
 function Notice() {
   const [data, setData] = useState([])
@@ -15,20 +16,12 @@ function Notice() {
     setPage(page)
   }
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/board/notice?page=${page}&size=${size}`, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/board/notice?page=${page}&size=${size}`).then((res) => {
+      setData(res.data.body.noticeList)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res.body.noticeList)
-      })
-    fetch(process.env.REACT_APP_API_URL + '/board/notice/count', {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + '/board/notice/count').then((res) => {
+      setCount(res.data.body.count)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setCount(res.body.count)
-      })
   }, [page])
 
   const rows = []
