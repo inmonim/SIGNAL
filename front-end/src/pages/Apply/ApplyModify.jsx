@@ -41,7 +41,7 @@ function ApplyRegister() {
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  const [apply, setApply] = useState([{}])
+  // const [apply, setApply] = useState([{}])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
@@ -57,22 +57,14 @@ function ApplyRegister() {
   // ene >> useState
 
   // start >> Fetch
-  const userFetch = async () => {
+  const dataFetch = async () => {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
-      console.log('user', res.data.body)
-      console.log('user', res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-  const postingFetch = async () => {
-    try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
-      console.log(res.data.body)
+
       const answerArr = []
       res.data.body.postingQuestionList.map((item) =>
         answerArr.push({
@@ -82,17 +74,11 @@ function ApplyRegister() {
         })
       )
       meetingFetchFilter(res.data.body.postingMeetingList)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-  const applyFetch = async () => {
-    try {
       const applyRes = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
 
-      setApply(applyRes.data.body)
+      // setApply(applyRes.data.body)
       careerFetchFilter(applyRes.data.body.careerList)
       expFetchFilter(applyRes.data.body.expList)
       skillFetchFilter(applyRes.data.body.skillList)
@@ -100,9 +86,6 @@ function ApplyRegister() {
       setContent(applyRes.data.body.content)
       qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
-      console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
-      console.log(apply)
-      console.log('applyRes.data.body', applyRes.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -377,9 +360,7 @@ function ApplyRegister() {
   // end >> handle put
 
   useEffect(() => {
-    userFetch()
-    postingFetch()
-    applyFetch()
+    dataFetch()
   }, [])
 
   return (

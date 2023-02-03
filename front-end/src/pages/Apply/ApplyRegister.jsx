@@ -63,30 +63,29 @@ function ApplyRegister() {
   // ene >> useState
 
   // start >> Fetch
-  const userFetch = async () => {
+  const dataFetch = async () => {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
       setUser(res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-  const postingFetch = async () => {
-    try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      setPosting(res.data.body)
-      const answerArr = []
-      res.data.body.postingQuestionList.map((item) =>
-        answerArr.push({
-          postingQuestionSeq: item.postingQuestionSeq,
-          content: '',
-        })
-      )
-      meetingFetchFilter(res.data.body.postingMeetingList)
-      setAnswerList(answerArr)
-      console.log(res.data.body)
-      setQuestionList(res.data.body.postingQuestionList)
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
+        setPosting(res.data.body)
+        const answerArr = []
+        res.data.body.postingQuestionList.map((item) =>
+          answerArr.push({
+            postingQuestionSeq: item.postingQuestionSeq,
+            content: '',
+          })
+        )
+        meetingFetchFilter(res.data.body.postingMeetingList)
+        setAnswerList(answerArr)
+        setQuestionList(res.data.body.postingQuestionList)
+      })
+
+      await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq).then((res) => {
+        careerFetchFilter(res.data.body.userCareerList)
+        expFetchFilter(res.data.body.userExpList)
+      })
     } catch (error) {
       console.log(error)
     }
@@ -103,17 +102,6 @@ function ApplyRegister() {
     )
 
     setQuestionList(qnaArr)
-  }
-
-  const profileFetch = async () => {
-    try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq)
-      careerFetchFilter(res.data.body.userCareerList)
-      expFetchFilter(res.data.body.userExpList)
-      console.log(res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
   }
 
   // end >> Fetch
@@ -349,9 +337,7 @@ function ApplyRegister() {
   // start >> useEffect
 
   useEffect(() => {
-    userFetch()
-    postingFetch()
-    profileFetch()
+    dataFetch()
     qnaListDataFormat()
   }, [])
 
