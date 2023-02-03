@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
@@ -10,10 +9,12 @@ import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
 import QnaList from 'components/Apply/QnaList'
+// import { useNavigate, useLocation } from 'react-router-dom'
+import api from 'api/Api.js'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -27,11 +28,12 @@ const textAreaStyle = {
 }
 
 function ApplyRegister() {
-  const location = useLocation()
+  // const location = useLocation()
+  // const applySeq = location.state.applySeq
 
   const userSeq = 82
   const postingSeq = 458
-  const applySeq = location.state.applySeq
+  const applySeq = 1
 
   const navigate = useNavigate()
 
@@ -39,71 +41,52 @@ function ApplyRegister() {
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  const [apply, setApply] = useState([{}])
+  // const [apply, setApply] = useState([{}])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
   const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
-  // const [questionList, setQuestionList] = useState([])
-  // const [answerList, setAnswerList] = useState([])
   const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  // const [meetingSeqCheck, setMeetingSeqCheck] = useState('true')/
   const [meetingDafault, setMeetingDafault] = useState('')
+  const [meetingValid, setMeetingValid] = useState(true)
   // ene >> useState
 
   // start >> Fetch
-  const userFetch = async () => {
+  const dataFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
-      setUser(res.data.body)
-      console.log('user', res.data.body)
-      console.log('user', res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq).then((res) => {
+        setUser(res.data.body)
+      })
 
-  const postingFetch = async () => {
-    try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      setPosting(res.data.body)
-      console.log(res.data.body)
-      const answerArr = []
-      res.data.body.postingQuestionList.map((item) =>
-        answerArr.push({
-          postingQuestionSeq: item.postingQuestionSeq,
-          content: '',
-          applyAnswerSeq: '',
-        })
-      )
-      meetingFetchFilter(res.data.body.postingMeetingList)
-      // setQuestionList(res.data.body.postingQuestionList)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
+        setPosting(res.data.body)
+        const answerArr = []
+        res.data.body.postingQuestionList.map((item) =>
+          answerArr.push({
+            postingQuestionSeq: item.postingQuestionSeq,
+            content: '',
+            applyAnswerSeq: '',
+          })
+        )
+        meetingFetchFilter(res.data.body.postingMeetingList)
+      })
 
-  const applyFetch = async () => {
-    try {
-      const applyRes = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      const postingRes = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const applyRes = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
 
-      setApply(applyRes.data.body)
+      // setApply(applyRes.data.body)
       careerFetchFilter(applyRes.data.body.careerList)
       expFetchFilter(applyRes.data.body.expList)
       skillFetchFilter(applyRes.data.body.skillList)
       setPosition(applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
-      qnaListDataFormat(applyRes.data.body, postingRes.data.body)
+      qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
-      console.log('meetingSeq', applyRes.data.body.postingMeeting.postingMeetingSeq)
-      console.log(apply)
-      console.log('applyRes.data.body', applyRes.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -191,6 +174,20 @@ function ApplyRegister() {
     console.log('answerArr', answerArr)
 
     return answerArr
+  }
+
+  const qnaListDataFiltert = (apply, posting) => {
+    const qnaArr = []
+    posting.postingQuestionList.map((item, index) =>
+      qnaArr.push({
+        postingQuestionSeq: item.postingQuestionSeq,
+        content: item.content,
+        defaultValue: apply.answerList[index].content,
+        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
+      })
+    )
+    console.log('qnaArr', qnaArr)
+    setQnaList(qnaArr)
   }
 
   // start >> handle position
@@ -322,10 +319,16 @@ function ApplyRegister() {
 
   // end >> handle qna
 
+  // start >> handle meetingDt
+
   const handleMeetingDtChange = (key) => {
-    // setMeetingSeqCheck(false)
     setMeetingSeq(key)
+    setMeetingValid(false)
   }
+
+  // end >> handle meetingDt
+
+  // start >> handle put
 
   const handleApplyModify = async () => {
     try {
@@ -340,9 +343,8 @@ function ApplyRegister() {
         userSeq,
       }
       console.log(JSON.stringify(req))
-      const config = { 'Content-Type': 'application/json' }
-      await axios
-        .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req, config)
+      await api
+        .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req)
         .then((res) => {
           console.log(res)
         })
@@ -356,25 +358,10 @@ function ApplyRegister() {
       console.log(error)
     }
   }
-
-  const qnaListDataFormat = (apply, posting) => {
-    const qnaArr = []
-    posting.postingQuestionList.map((item, index) =>
-      qnaArr.push({
-        postingQuestionSeq: item.postingQuestionSeq,
-        content: item.content,
-        defaultValue: apply.answerList[index].content,
-        applyAnswerSeq: apply.answerList[index].applyAnswerSeq,
-      })
-    )
-    console.log('qnaArr', qnaArr)
-    setQnaList(qnaArr)
-  }
+  // end >> handle put
 
   useEffect(() => {
-    userFetch()
-    postingFetch()
-    applyFetch()
+    dataFetch()
   }, [])
 
   return (
@@ -436,8 +423,12 @@ function ApplyRegister() {
                     onChange={handleMeetingDtChange}
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
-                  {meetingDafault !== '' ? (
-                    <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD')}</div>
+                  {meetingValid ? (
+                    meetingDafault !== '' ? (
+                      <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD HH:MM')}</div>
+                    ) : (
+                      ''
+                    )
                   ) : (
                     ''
                   )}

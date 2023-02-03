@@ -4,6 +4,7 @@ import Paging from 'components/Paging'
 import { Link, useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/qna.css'
+import api from 'api/Api.js'
 
 function Qna() {
   const [data, setData] = useState([])
@@ -17,22 +18,12 @@ function Qna() {
     console.log(page)
   }
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/board/qna?page=${page}&size=${size}`, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/board/qna?page=${page}&size=${size}`).then((res) => {
+      setData(res.data.body.qnaList)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.body.qnaList)
-        setData(res.body.qnaList)
-      })
-    fetch(process.env.REACT_APP_API_URL + '/board/qna/count', {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + '/board/qna/count').then((res) => {
+      setCount(res.data.body.count)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setCount(res.body.count)
-        console.log(res.body.count)
-      })
   }, [page])
 
   const rows = []

@@ -7,10 +7,10 @@ import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import { Link, useLocation } from 'react-router-dom'
-import axios from 'axios'
-
-// import { useLocation } from 'react-router'
+import SignalBtn from 'components/common/SignalBtn'
+// import { Link, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import api from 'api/Api.js'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -22,52 +22,58 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 }))
 
 function ApplyDetail() {
-  const location = useLocation()
-  const userSeq = location.state.userSeq
-  const applySeq = location.state.applySeq
+  // 1. 아래 default userSeq, applySeq 지우기
+  // 2. import { Link, useLocation } from 'react-router-dom'
 
-  const postingSeq = 458
+  // const location = useLocation()
+  // const userSeq = location.state.userSeq
+  // const applySeq = location.state.applySeq
+
+  const navigate = useNavigate()
+
+  const userSeq = 1
+  const applySeq = 82
+
+  const currentUserSeq = sessionStorage.getItem('userSeq')
+  const showButton = (
+    <div>
+      <Link to={'/applymodify'} state={{ applySeq }}>
+        <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
+          지원 수정
+        </ApplyModify>
+      </Link>
+      <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
+    </div>
+  )
+
+  // const postingSeq = 458
   const [posting, setPosting] = useState('458')
 
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
 
-  const applyFetch = async () => {
+  const dataFetch = async () => {
     try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+      const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
-      console.log(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
-      postingFetch(res.data.body.postingSeq)
-      console.log('applyFetch', res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      // postingFetch(res.data.body.postingSeq)
 
-  const userFetch = async () => {
-    try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
-      setUser(res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
+        setPosting(res.data.body)
+      })
 
-  const postingFetch = async () => {
-    try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      setPosting(res.data.body)
-      console.log('postingFetch', res.data.body)
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq).then((res) => {
+        setUser(res.data.body)
+      })
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    applyFetch()
-    userFetch()
+    dataFetch()
   }, [])
 
   return (
@@ -79,15 +85,7 @@ function ApplyDetail() {
               <div className="apply-detail-project-name-label">프로젝트 이름</div>
               <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
             </div>
-            <div className="apply-detail-cancle-section">
-              <Link to={'/applymodify'} state={{ applySeq }}>
-                <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
-                  지원 수정
-                </ApplyModify>
-              </Link>
-
-              <ApplyDelete open={open} applySeq={applySeq}></ApplyDelete>
-            </div>
+            <div className="apply-detail-cancle-section">{userSeq === currentUserSeq ? showButton : ''}</div>
           </div>
           <hr className="apply-detail-hr" />
           <div className="apply-detail-application-section">
@@ -201,6 +199,17 @@ function ApplyDetail() {
                   ))}
               </div>
             </div>
+          </div>
+          <div>
+            <SignalBtn
+              sigwidth="20%"
+              sigheight="40px"
+              sigmargin="auto"
+              sigborderradius="100px"
+              onClick={() => navigate(-1)}
+            >
+              돌아가기
+            </SignalBtn>
           </div>
         </div>
       </div>

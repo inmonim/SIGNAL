@@ -2,11 +2,12 @@
 @import 'assets/font/font.css';
 
 .header-container {
-  width:100%;
-  position:sticky;
-  top:0;
+  width: 100%;
+  position: fixed;
+  top: 0;
   background-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0px 2px 51px rgba(0, 0, 0, 0.08);
+  z-index: 100;
 }
 
 .header-logo {
@@ -18,20 +19,15 @@
   max-width: 1730px;
   padding: 0px 95px;
   margin: 0 auto;
-
-  /* border: 1px solid red; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* font-family: 'dohyeon'; */
-  /* font-weight: 900; */
 }
 
 .header-left-wrap {
   display: flex;
   align-items: center;
   float: left;
-  /* border: 1px solid blue; */
 }
 
 .header-left-wrap ul {
@@ -39,13 +35,12 @@
 }
 
 .header-left-wrap li {
-  font-size: 27px;
+  font-size: 1.406vw;
 }
 
 .header-right-wrap {
   display: flex;
   align-items: right;
-  /* border: 1px solid green; */
 }
 
 .header-right-wrap ul {
@@ -53,7 +48,7 @@
 }
 
 .header-right-wrap li {
-  font-size: 27px;
+  font-size: 1.406vw;
 }
 
 .header-nav-item {

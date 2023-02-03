@@ -3,6 +3,8 @@ import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { FormControlLabel, TextField } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
 import 'assets/font/font.css'
 import SignalBtn from './common/SignalBtn'
 import RegistModal from './RegistModal'
@@ -10,6 +12,7 @@ import FindModal from './FindEmailPwdModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const style = {
   width: 727,
@@ -80,11 +83,18 @@ function LoginModal({ open, onClose }) {
       })
       .then((data) => {
         console.log('로그인 성공')
+        // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
+        if (isAutoLogin) {
+          localStorage.setItem('refreshToken', data.body.refreshToken)
+        }
+        console.log(data.body.accessToken)
         sessionStorage.setItem('accessToken', data.body.accessToken)
         sessionStorage.setItem('refreshToken', data.body.refreshToken)
         sessionStorage.setItem('userEmail', data.body.email)
         sessionStorage.setItem('username', data.body.name)
+        sessionStorage.setItem('nickname', data.body.nickname)
         sessionStorage.setItem('userSeq', data.body.userSeq)
+        console.log(sessionStorage.getItem('accessToken'))
         onClose(onClose(true))
       })
       .catch((e) => {
@@ -101,6 +111,7 @@ function LoginModal({ open, onClose }) {
 
   const [inputEmail, setInputEmail] = useState('')
   const [inputPwd, setInputPwd] = useState('')
+  const [isAutoLogin, setIsAutoLogin] = useState(false)
 
   const handleInputEmail = (e) => {
     // cosnt nextInputEmail = {...inputEmail}
@@ -110,6 +121,18 @@ function LoginModal({ open, onClose }) {
     setInputPwd(e.target.value)
     console.log(e.target.value)
   }
+  const handleIsAutoLogin = () => {
+    const nextIsAutoLogin = isAutoLogin
+    setIsAutoLogin(!nextIsAutoLogin)
+    console.log(nextIsAutoLogin)
+  }
+
+  const [showPassword, setShowPassword] = useState(false)
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <>
       <Modal open={open} onClose={onClose}>
@@ -139,12 +162,28 @@ function LoginModal({ open, onClose }) {
               <TextField
                 id="filled-multiline-flexible"
                 label="Password"
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 sx={inputStyle}
                 onChange={handleInputPwd}
                 onKeyDown={(e) => activeEnter(e)}
               />
               <div className="login-under1" style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <FormControlLabel
+                  onChange={handleIsAutoLogin}
                   style={{ color: '#574b9f' }}
                   label={<span style={{ fontSize: 20 }}>자동로그인</span>}
                   control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
@@ -161,8 +200,8 @@ function LoginModal({ open, onClose }) {
                   onClick={handleFindOpen}
                 >
                   이메일 / 비밀번호 찾기 {'>>'}
-                  <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
                 </div>
+                <FindModal open={findOpen} onClose={handleFindClose}></FindModal>
               </div>
               <div className="login-under2">
                 <div style={{ fontSize: '22px', display: 'inline-block' }}>
