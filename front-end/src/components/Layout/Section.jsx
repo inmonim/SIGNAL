@@ -6,7 +6,7 @@ const Container = styled.div`
   width: 1920px;
   margin: auto;
   height: 100vh;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
   display: flex;
