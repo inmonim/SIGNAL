@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
 import cancleButton from '../../assets/image/x.png'
+import Swal from 'sweetalert2'
 import axios from 'axios'
 
 const ComfirmButton = styled(Button)(({ theme }) => ({
@@ -21,7 +22,7 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
 }))
 
 const TeamSelectBtn = styled(Button)(({ theme, state, valid }) => ({
-  visibility: `${state === '미선택' && valid === 'true' ? 'visible' : 'hidden'}`,
+  visibility: `${state === '미선택' ? 'visible' : 'hidden'}`,
   backgroundColor: 'theme.vars.palette.common.white',
   color: '#574B9F',
   borderColor: '#574B9F',
@@ -44,42 +45,51 @@ function ProjectTeamSelectConfirmModal(props) {
   const handleClose = () => {
     setOpen(false)
   }
-
   const handleTeamSelect = async (e) => {
-    const applySeq = props.apply.applySeq
-    const adminSeq = 5
+    if (props.valid) {
+      handleClose()
+      return Swal.fire({
+        title: '모집인원이 가득 찼습니다',
+        text: '팀원이 부족하다면 공고를 수정해주세요',
+        icon: 'error',
+        confirmButtonText: '돌아가기',
+      })
+    } else {
+      const applySeq = props.apply.applySeq
+      const adminSeq = 5
 
-    try {
-      await axios
-        .put(process.env.REACT_APP_API_URL + '/posting/member/' + applySeq)
-        .then((res) => {})
-        .catch((err) => {
-          console.log(err)
-        })
+      try {
+        await axios
+          .put(process.env.REACT_APP_API_URL + '/posting/member/' + applySeq)
+          .then((res) => {})
+          .catch((err) => {
+            console.log(err)
+          })
 
-      console.log('팀원선택 put')
+        console.log('팀원선택 put')
 
-      const letterReq = {
-        content: '팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요~^^',
-        nickname: props.apply.nickname,
-        title: '팀원 확정 메일',
-        userSeq: adminSeq,
+        const letterReq = {
+          content: '팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요~^^',
+          nickname: props.apply.nickname,
+          title: '팀원 확정 메일',
+          userSeq: adminSeq,
+        }
+
+        await axios
+          .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
+          .then((res) => {})
+          .catch((err) => {
+            console.log(err)
+          })
+
+        const copy = [...props.applySeqList]
+        copy.push(applySeq)
+        props.setapplySeqList(copy)
+      } catch (error) {
+        console.log(error)
       }
-
-      await axios
-        .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
-        .then((res) => {})
-        .catch((err) => {
-          console.log(err)
-        })
-
-      const copy = [...props.applySeqList]
-      copy.push(applySeq)
-      props.setapplySeqList(copy)
-    } catch (error) {
-      console.log(error)
+      handleClose()
     }
-    handleClose()
   }
 
   return (
