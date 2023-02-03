@@ -22,7 +22,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.SignatureException;
 
 @Slf4j
 @Component
@@ -39,12 +38,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         // accessToken 이 있고 redis 에 accessToken 이 존재하지 않을 때 = 로그아웃 상태
         if (accessToken != null && !logoutAccessTokenRedisRepository.existsById(accessToken)) {
+            System.out.println("accessToken = " + accessToken);
             try {
                 // 토큰의 정보를 이용해 사용자 정보 생성
                 String username = jwtTokenUtil.getUsername(accessToken);
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
-
-                System.out.println("userDetails = " + userDetails);
 
                 // 사용자 정보와 토큰을 이용해 토큰 검증
                 if (jwtTokenUtil.validateToken(accessToken, userDetails)) {
@@ -52,10 +50,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    System.out.println("usernamePasswordAuthenticationToken = " + usernamePasswordAuthenticationToken);
                 }
             } catch (IllegalArgumentException e) {
+                System.out.println("유효하지 않은 토큰");
                 throw new JwtException("유효하지 않은 토큰");
             } catch (ExpiredJwtException e) {
+                System.out.println("토큰 기한 만료");
                 throw new JwtException("토큰 기한 만료");
             }
         }
