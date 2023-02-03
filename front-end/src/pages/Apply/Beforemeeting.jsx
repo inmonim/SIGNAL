@@ -24,8 +24,8 @@ let numOfUsers
 let socket
 
 const prevMeetingSetting = () => {
-  // socket = io('https://i8e207.p.ssafy.io:443', { secure: true, cors: { origin: '*' } })
-  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  socket = io('https://i8e207.p.ssafy.io:443', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('사전 미팅 소켓 통신 시작!')
 
   pcConfig = {
@@ -218,7 +218,7 @@ function Beforemeeting() {
       .catch((error) => {
         console.error(error)
         if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
-          window.location = '..'
+          // window.location = '..'
         }
       })
   }
@@ -384,8 +384,7 @@ function Beforemeeting() {
     video.playsinline = true
     video.srcObject = stream
     console.log('접속자 이름:', userName)
-    changeOtherName(userName)
-    console.log('otherName:', otherName)
+    setOtherName(userName)
   }
 
   // 나간 유저 video삭제
@@ -410,8 +409,8 @@ function Beforemeeting() {
       }
 
       removeUserVideo(socketId, userName)
-      // setOtherName('부재중')
-      console.log('나감otherName:', otherName)
+      setOtherName('부재중')
+      console.log('나간사람 이름:', userName)
     } catch (e) {
       console.error(e)
     }
@@ -446,14 +445,10 @@ function Beforemeeting() {
   useLayoutEffect(() => {
     console.log('한번만')
   }, [])
-  const changeOtherName = (name) => {
-    console.log('이름바꿈')
-    setOtherName('ㄴㅇㄹ')
-    console.log('otherName:', otherName)
-  }
+
   useEffect(() => {
     console.log('voice : ' + voice + '// video : ' + video, '//otherName', otherName)
-  }, [voice, video, otherName])
+  }, [voice, video])
   return (
     <div className="before-meeting-container">
       <div className="before-meeting-main">
