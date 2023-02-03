@@ -46,48 +46,34 @@ function ApplyDetail() {
     </div>
   )
 
-  const postingSeq = 458
+  // const postingSeq = 458
   const [posting, setPosting] = useState('458')
 
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
 
-  const applyFetch = async () => {
+  const dataFetch = async () => {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
-      console.log(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
-      postingFetch(res.data.body.postingSeq)
-      console.log('applyFetch', res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      // postingFetch(res.data.body.postingSeq)
 
-  const userFetch = async () => {
-    try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
-      setUser(res.data.body)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
+        setPosting(res.data.body)
+      })
 
-  const postingFetch = async () => {
-    try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      setPosting(res.data.body)
-      console.log('postingFetch', res.data.body)
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq).then((res) => {
+        setUser(res.data.body)
+      })
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    applyFetch()
-    userFetch()
+    dataFetch()
   }, [])
 
   return (

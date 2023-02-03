@@ -2,7 +2,6 @@ import React from 'react'
 import Qna from './Qna'
 
 function QnaList({ questionList, onChange }) {
-  console.log(questionList)
   return (
     <div>
       {questionList &&
