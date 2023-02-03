@@ -34,9 +34,8 @@ public class PostingService {
 
     private final ProjectRepository projectRepository;
     private final PostingRepository postingRepository;
-    private final ApplyRepository applyRepository;
     private final PostingSkillRepository postingSkillRepository;
-    private final EntityManager em;
+    private final ApplyRepository applyRepository;
 
     @Transactional
     public Integer countPosting() {
@@ -105,7 +104,17 @@ public class PostingService {
     @Transactional(readOnly = true)
     public List<PostingFindAllResponse> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
 
+        if (postingSkillList != null && postingSkillList.size() > 0) {
+            List<Integer> postingList = postingSkillRepository.findBySkillList(postingSkillList, postingSkillList.size());
+            searchKeys.put("postingList", postingList);
+        }
+
         Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
+
+        for (Project p : projectList) {
+            System.out.println(p.getPosting().getPostingSeq());
+        }
+
         return projectList.stream()
                 .map(PostingFindAllResponse::fromEntity)
                 .collect(Collectors.toList());

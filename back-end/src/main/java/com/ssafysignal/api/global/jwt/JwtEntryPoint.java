@@ -5,6 +5,7 @@ import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -23,8 +24,10 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
     private final ObjectMapper objectMapper;
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.getWriter().print(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.INVALID_TOKEN, null)));
+        // 엑세스 토큰 만료될때 터짐
+        // 토큰없을때
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().print(objectMapper.writeValueAsString(BasicResponse.Body(ResponseCode.INVALID_TOKEN, "토큰이 없습니다.")));
     }
 }
