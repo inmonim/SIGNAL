@@ -59,21 +59,22 @@ function ApplyRegister() {
   // start >> Fetch
   const dataFetch = async () => {
     try {
-      const res = await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq)
-      setUser(res.data.body)
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq).then((res) => {
+        setUser(res.data.body)
+      })
 
-      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      setPosting(res.data.body)
-
-      const answerArr = []
-      res.data.body.postingQuestionList.map((item) =>
-        answerArr.push({
-          postingQuestionSeq: item.postingQuestionSeq,
-          content: '',
-          applyAnswerSeq: '',
-        })
-      )
-      meetingFetchFilter(res.data.body.postingMeetingList)
+      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
+        setPosting(res.data.body)
+        const answerArr = []
+        res.data.body.postingQuestionList.map((item) =>
+          answerArr.push({
+            postingQuestionSeq: item.postingQuestionSeq,
+            content: '',
+            applyAnswerSeq: '',
+          })
+        )
+        meetingFetchFilter(res.data.body.postingMeetingList)
+      })
 
       const applyRes = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
