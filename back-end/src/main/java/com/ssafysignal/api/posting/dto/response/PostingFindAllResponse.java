@@ -1,5 +1,7 @@
 package com.ssafysignal.api.posting.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.posting.entity.PostingSkill;
 import com.ssafysignal.api.project.entity.Project;
 import lombok.Builder;
@@ -15,7 +17,9 @@ public class PostingFindAllResponse {
     private String subject;
     private String localCode;
     private String fieldCode;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer totalCnt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer selectCnt;
     private List<PostingSkill> postingSkillList;
 
@@ -25,8 +29,6 @@ public class PostingFindAllResponse {
                 .subject(project.getSubject())
                 .localCode(project.getLocalCode())
                 .fieldCode(project.getFieldCode())
-                // totalCnt
-                // selectCnt
                 .postingSkillList(project.getPosting().getPostingSkillList())
                 .build();
     }

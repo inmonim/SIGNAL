@@ -59,8 +59,9 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.getPassword())) throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
 
         // 이메일 인증 여부 검증
-        Auth auth = authRepository.findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(user.getUserSeq(),"AU100")
+        Auth auth = authRepository.findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(user.getUserSeq(),"AU101")
                 .orElseThrow(() -> new NotFoundException(ResponseCode.UNAUTHORIZED));
+
         if (!auth.isAuth()) throw new NotFoundException(ResponseCode.UNAUTHORIZED);
 
         // 토큰 발급 시작
@@ -70,6 +71,7 @@ public class AuthService {
         return LoginResponse.builder()
                 .userSeq(user.getUserSeq())
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
@@ -77,31 +79,34 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenInfo reissue (String refreshToken) throws RuntimeException {
+    public LoginResponse reissue (String refreshToken) throws RuntimeException {
         refreshToken = refreshToken.substring(7);
 
         String email =jwtTokenUtil.getUsername(refreshToken);
 
-        System.out.println("email = " + email);
-
         RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(email)
                 .orElseThrow(() -> new UnAuthException(ResponseCode.TOKEN_NOT_FOUND));
 
-        System.out.println(refreshToken);
-        System.out.println(redisRefreshToken.getRefreshToken());
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
         // 레디스의 리프레시 토큰와 일치하면
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())){
+            String accessToken = jwtTokenUtil.generateAccessToken(email);
+
             // 만료 기간까지 남은 시간이 없으면
             if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) <= 0) {
                 // 엑세스 토큰 발급
-                String accessToken = jwtTokenUtil.generateAccessToken(email);
-                return TokenInfo.of(accessToken,
-                        refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(email,
-                                jwtTokenUtil.generateRefreshToken(email), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue())).getRefreshToken());
+                refreshToken = jwtTokenUtil.generateRefreshToken(email);
+                refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(email, refreshToken, JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
             }
-            // 만료 까지 남은 시간이 있으면
-            return TokenInfo.of(jwtTokenUtil.generateAccessToken(email), refreshToken);
+            return LoginResponse.builder()
+                    .userSeq(user.getUserSeq())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
         }
 
         throw new UnAuthException(ResponseCode.INVALID_TOKEN);
@@ -193,7 +198,6 @@ public class AuthService {
         auth.setAuth(true);
         auth.setAuthDt(LocalDateTime.now());
         authRepository.save(auth);
-
 
         //임시 비밀번호로 변경
         String tempPassword = UUID.randomUUID().toString().substring(0, 6);
