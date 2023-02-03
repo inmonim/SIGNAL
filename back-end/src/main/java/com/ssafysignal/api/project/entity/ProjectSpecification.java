@@ -26,34 +26,18 @@ public class ProjectSpecification {
             query.distinct(true);
 
             Predicate projectList = criteriaBuilder.conjunction();
-            Predicate projectList2 = criteriaBuilder.conjunction();
             if (searchKey.containsKey("subject")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("subject"), "%" + searchKey.get("subject") + "%"));
             if (searchKey.containsKey("localCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("localCode"),(String)searchKey.get("localCode")));
             if (searchKey.containsKey("fieldCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("fieldCode"), (String)searchKey.get("fieldCode")));
 
-            if (searchKey.containsKey("postingSkillList")) {
-                List<String> skills = (ArrayList<String>) searchKey.get("postingSkillList");
-                Join<Project, Posting> postingJoin = root.join("posting");
-                Join<Posting, PostingSkill> postingSkillJoin = postingJoin.join("postingSkillList");
-                for(String skill : skills)
-                    projectList2 = criteriaBuilder.or(projectList2, criteriaBuilder.equal(postingSkillJoin.get("skillCode"), skill));
-                projectList = criteriaBuilder.and(projectList, projectList2);
-//              projectList = criteriaBuilder.and(projectList, postingSkillJoin.get("skillCode").in(skills));
+            if (searchKey.containsKey("postingList")) {
+                List<Integer> postingList = (ArrayList<Integer>) searchKey.get("postingList");
+                projectList = criteriaBuilder.and(projectList, root.get("postingSeq").in(postingList));
             }
             return projectList;
         });
     }
 
-    public static Specification<Posting> bySKillList(Map<String, Object> searchKey) {
-        return ((root, query, criteriaBuilder) -> {
-            query.distinct(true);
-            List<String> skills = (ArrayList<String>) searchKey.get("postingSkillList");
-            Predicate postingList = criteriaBuilder.conjunction();
-            Join<Posting, PostingSkill> postingSkillJoin = root.join("postingSkillList");
-            postingList = criteriaBuilder.and(postingList, postingSkillJoin.get("skillCode").in(skills));
-            return postingList;
-        });
-    }
 
     public static Specification<Project> byUserSeq(Integer userSeq, String projectCode){
         return ((root, query, criteriaBuilder) -> {
