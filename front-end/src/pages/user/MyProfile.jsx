@@ -32,6 +32,10 @@ function MyProfile() {
     setAlertOpen(true)
   }
 
+  const handleToClose = () => {
+    setAlertOpen(close)
+  }
+
   const handleToMain = () => {
     const userSeq = sessionStorage.getItem('userSeq')
     setAlertOpen(false)
@@ -103,7 +107,12 @@ function MyProfile() {
             >
               회원 탈퇴
             </SignalBtn>
-            <AlertModal msg="탈퇴하시겠습니까?" open={alertOpen} onClick={handleToMain}></AlertModal>
+            <AlertModal
+              msg="탈퇴하시겠습니까?"
+              open={alertOpen}
+              onClick={handleToMain}
+              onClose={handleToClose}
+            ></AlertModal>
           </div>
         </div>
         <div className="my-profile">

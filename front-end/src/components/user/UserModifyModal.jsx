@@ -27,6 +27,10 @@ function UserModifyModal({ open, onClose }) {
     onClose(onClose(true))
   }
 
+  const handleToClose = () => {
+    setAlertOpen(false)
+    onClose(true)
+  }
   const handleInput = (e) => {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
@@ -106,7 +110,12 @@ function UserModifyModal({ open, onClose }) {
             >
               수정하기
             </SignalBtn>
-            <AlertModal msg="수정되었습니다." open={alertOpen} onClick={handleToProfile}></AlertModal>
+            <AlertModal
+              msg="수정하시겠습니까?"
+              open={alertOpen}
+              onClick={handleToProfile}
+              onClose={handleToClose}
+            ></AlertModal>
           </div>
         </Box>
       </Modal>
