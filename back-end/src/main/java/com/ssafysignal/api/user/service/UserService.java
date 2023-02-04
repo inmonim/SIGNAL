@@ -1,16 +1,16 @@
 package com.ssafysignal.api.user.service;
 
 import com.ssafysignal.api.auth.entity.Auth;
-import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.auth.repository.AuthRepository;
 import com.ssafysignal.api.auth.repository.UserAuthRepository;
 import com.ssafysignal.api.common.dto.EmailDto;
+import com.ssafysignal.api.common.entity.ImageFile;
+import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.EmailService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
+import com.ssafysignal.api.user.dto.request.UserInfo;
 import com.ssafysignal.api.user.dto.request.RegistUserRequest;
-import com.ssafysignal.api.user.dto.response.FindUserResponse;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,10 +35,15 @@ public class UserService {
     private final UserAuthRepository userAuthRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final ImageFileRepository imageFileRepository;
 
     @Value("${server.host}")
     private String host;
 
+    @Value("${app.fileUpload.uploadPath}")
+    private String uploadPath;
+    @Value("${app.fileUpload.uploadDir.userImage}")
+    private String uploadDir;
 
     @Transactional(readOnly = true)
     public User findUser(final int userSeq) {
@@ -88,13 +97,63 @@ public class UserService {
     }
     
     @Transactional
-    public void modifyUser(int userSeq, ModifyUserRequest userInfo) throws RuntimeException {
+    public void modifyUser(int userSeq, UserInfo userInfo) throws RuntimeException, IOException {
     	User user = userRepository.findByUserSeq(userSeq)
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-    	user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), userInfo.getBirth());
-    	userRepository.save(user);
-    	
-    	//파일 이미지  변경 코드 추가하기
+
+        user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), userInfo.getBirth());
+
+        if(!userInfo.getProfileImageFile().isEmpty()) {
+            MultipartFile uploadImage = userInfo.getProfileImageFile();
+            String uploadFullPath = uploadPath + File.separator + uploadDir;
+
+            // 디렉토리 없으면 생성
+            File uploadPosition = new File(uploadFullPath);
+            if (!uploadPosition.exists()) uploadPosition.mkdir();
+
+            // 이름, 확장자, url 생성
+            String fileName = uploadImage.getOriginalFilename();
+            String name = UUID.randomUUID().toString();
+            String type = Optional.ofNullable(fileName)
+                    .filter(f -> f.contains("."))
+                    .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+            String url = String.format("%s%s%s.%s", uploadFullPath, File.separator, name, type);
+
+            // 프로젝트 대표 이미지가 있는 경우
+            if (user.getImageFile().getImageFileSeq() != 0) {
+                File deleteFile = new File(user.getImageFile().getUrl());
+                // 기존 파일 삭제
+                if (deleteFile.exists()) deleteFile.delete();
+
+                ImageFile imageFile = imageFileRepository.findById(user.getImageFile().getImageFileSeq())
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+                imageFile.setName(uploadImage.getOriginalFilename());
+                imageFile.setSize(uploadImage.getSize());
+                imageFile.setType(type);
+                imageFile.setUrl(url);
+                imageFileRepository.save(imageFile);
+                user.setImageFileSeq(imageFile.getImageFileSeq());
+            } else {
+                // 이미지 Entity 생성
+                ImageFile imageFile = ImageFile.builder()
+                        .name(uploadImage.getOriginalFilename())
+                        .size(uploadImage.getSize())
+                        .type(type)
+                        .url(url)
+                        .build();
+                imageFileRepository.save(imageFile);
+                System.out.println("새이미지 넣기완료");
+                user.setImageFileSeq(imageFile.getImageFileSeq());
+            }
+
+            // 이미지 저장
+            File saveFile = new File(url);
+            uploadImage.transferTo(saveFile);
+
+        }
+        userRepository.save(user);
+
     }
 
 

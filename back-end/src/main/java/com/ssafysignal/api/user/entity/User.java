@@ -45,8 +45,11 @@ public class User {
     private LocalDateTime regDt;
     @Column(name = "heart_cnt")
     private int heartCnt;
+    @Column(name = "user_image_file_seq")
+    private Integer userImageFileSeq;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_image_file_seq")
+    @JoinColumn(name = "user_image_file_seq", insertable = false, updatable = false)
     private ImageFile imageFile;
 
     @Builder
@@ -73,6 +76,8 @@ public class User {
     public void modifyPassword(String password){
         this.password = password;
     }
+
+    public void setImageFileSeq(int imageFileSeq){this.userImageFileSeq=imageFileSeq;}
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

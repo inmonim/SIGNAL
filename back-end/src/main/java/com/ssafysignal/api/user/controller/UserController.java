@@ -3,7 +3,7 @@ package com.ssafysignal.api.user.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
+import com.ssafysignal.api.user.dto.request.UserInfo;
 import com.ssafysignal.api.user.dto.request.RegistUserRequest;
 import com.ssafysignal.api.user.dto.response.FindUserResponse;
 import com.ssafysignal.api.user.entity.User;
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -82,10 +83,21 @@ public class UserController {
     @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
     @PostMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
-    													@Parameter(description = "회원 정보", required = true) @RequestBody ModifyUserRequest userInfo) {
+                                                     @Parameter(description = "이름", required = true)  @RequestParam String name,
+                                                     @Parameter(description = "닉네임", required = true)  @RequestParam String nickname,
+                                                     @Parameter(description = "생일", required = true)  @RequestParam String birth,
+                                                     @Parameter(description = "전화번호", required = true)  @RequestParam String phone,
+    													@Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
         log.info("modifyUser - Call");
+
+        UserInfo userInfo = UserInfo.builder()
+                .name(name)
+                .nickname(nickname)
+                .birth(birth)
+                .phone(phone)
+                .profileImageFile(profileImageFile)
+                .build();
         System.out.println(userInfo);
-        //service에서 파일 변경 추가하기
         try {
             userService.modifyUser(userSeq, userInfo);
         } catch (Exception e){
