@@ -125,10 +125,11 @@ public class UserService {
                     .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
                     .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
             String url = String.format("%s%s%s.%s", uploadFullPath, File.separator, name, type);
-
+            System.out.println("기존 이미지 seq "+user.getImageFile().getImageFileSeq());
             // 프로젝트 대표 이미지가 있는 경우
             if (user.getImageFile().getImageFileSeq() != 0) {
                 File deleteFile = new File(user.getImageFile().getUrl());
+
                 // 기존 파일 삭제
                 if (deleteFile.exists()) deleteFile.delete();
 
@@ -139,7 +140,7 @@ public class UserService {
                 imageFile.setType(type);
                 imageFile.setUrl(url);
                 imageFileRepository.save(imageFile);
-                user.setImageFileSeq(imageFile.getImageFileSeq());
+                
             } else {
                 // 이미지 Entity 생성
                 ImageFile imageFile = ImageFile.builder()
@@ -149,7 +150,6 @@ public class UserService {
                         .url(url)
                         .build();
                 imageFileRepository.save(imageFile);
-                System.out.println("새이미지 넣기완료");
                 user.setImageFileSeq(imageFile.getImageFileSeq());
             }
 
@@ -158,7 +158,9 @@ public class UserService {
             uploadImage.transferTo(saveFile);
 
         }
+        System.out.println("!!!!!");
         userRepository.save(user);
+        System.out.println("!!!!!");
     	
     }
 
