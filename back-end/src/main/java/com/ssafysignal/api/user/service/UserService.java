@@ -39,6 +39,8 @@ public class UserService {
 
     @Value("${server.host}")
     private String host;
+    @Value("${server.port}")
+    private Integer port;
 
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
@@ -56,13 +58,15 @@ public class UserService {
         String authCode = UUID.randomUUID().toString();
 
         // 비밀번호 암호화
-        registUserRequest.setPassword(passwordEncoder.encode(registUserRequest.getPassword()));
+        String passwordEncode = passwordEncoder.encode(registUserRequest.getPassword());
+
+        if (passwordEncoder.matches(registUserRequest.getPassword(), passwordEncode)) System.out.println(true);
 
         // 데이터베이스 저장
         User user = userRepository.save(User.builder()
                         .name(registUserRequest.getName())
                         .email(registUserRequest.getEmail())
-                        .password(registUserRequest.getPassword())
+                        .password(passwordEncode)
                         .nickname(registUserRequest.getNickname())
                         .birth(registUserRequest.getBirth())
                         .phone(registUserRequest.getPhone())
@@ -82,9 +86,11 @@ public class UserService {
         emailService.sendMail(
                 EmailDto.builder()
                         .receiveAddress(user.getEmail())
-                        .title("Signal 회원가입 인증")
-                        .text("url을 클릭하면 인증이 완료됩니다.")
+                        .title("Signal 회원 가입 - 이메일 인증")
+                        .content("아래 버튼을 클릭하여 이메일을 인증해주세요.")
+                        .text("이메일 인증")
                         .host(host)
+                        .port(port)
                         .url(String.format("/auth/emailauth/%s", authCode))
                         .build());
     }
@@ -153,8 +159,7 @@ public class UserService {
 
         }
         userRepository.save(user);
-
+    	
     }
-
 
 }

@@ -1,14 +1,10 @@
 package com.ssafysignal.api.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,13 +12,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@ToString
-@Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @DynamicInsert
 @DynamicUpdate
+@Builder
 @Table(name = "user")
 public class User {
     @Id
@@ -65,7 +61,7 @@ public class User {
         this.heartCnt = heartCnt;
         this.imageFile = imageFile;
     }
-
+    
     public void modifyUser(String name, String nickname,String phone, String birth) {
         this.name = name;
         this.nickname = nickname;
@@ -79,6 +75,8 @@ public class User {
 
     public void setImageFileSeq(int imageFileSeq){this.userImageFileSeq=imageFileSeq;}
 
+
+    // Security 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<UserAuth> authorities = new ArrayList<>();

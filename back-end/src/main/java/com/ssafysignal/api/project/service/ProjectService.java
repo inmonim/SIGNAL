@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +118,11 @@ public class ProjectService {
 
         ProjectFindResponse projectFindResponse = ProjectFindResponse.fromEntity(project);
         projectFindResponse.setProjectUserList(projectUserList.stream()
-                .map(user -> user.getUser().getNickname())
+                .map(user -> new HashMap<String, Object>() {{
+                    put("userSeq", user.getUserSeq());
+                    put("nickname", user.getUser().getNickname());
+                    put("userImageUrl", user.getUser().getImageFile());
+                }})
                 .collect(Collectors.toList()));
 
         projectFindResponse.setHeartCnt(projectUser.getHeartCnt());

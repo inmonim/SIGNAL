@@ -1,5 +1,6 @@
 package com.ssafysignal.api.apply.dto.Response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.project.entity.Project;
@@ -23,6 +24,23 @@ public class ApplyWriterFindResponse {
     private Integer userSeq;
     @Schema(description = "지원자 nickname")
     private String nickname;
-    @Schema(description = "지원서의 진행 상황")
-    private CommonCode statusCode;
+    @Schema(description = "지원자 포지션코드")
+    private CommonCode positionCode;
+    @Schema(description = "지원자 메모")
+    private String memo;
+    @Schema(description = "지원서의 상태코드")
+    private CommonCode applyCode;
+    @Schema(description = "사전미팅 Seq", example = "1")
+    private Integer postingMeetingSeq;
+    @Schema(description = "사전미팅 상태코드")
+    private CommonCode postingMeetingCode;
+    @Schema(description = "사전미팅 시간")
+    private String meetingDt;
+    @Schema(description = "총 모집 인원")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer totalCnt;
+    @Schema(description = "모집 된 인원")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer selectCnt;
+
 }
