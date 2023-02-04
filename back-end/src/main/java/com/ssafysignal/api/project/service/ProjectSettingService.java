@@ -37,7 +37,6 @@ public class ProjectSettingService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ProjectEvaluationRepository projectEvaluationRepository;
-    private final ApplyRepository applyRepository;
     private final ProjectPositionRepository projectPositionRepository;
     private final ImageFileRepository imageFileRepository;
 
@@ -113,6 +112,7 @@ public class ProjectSettingService {
                 imageFile.setType(type);
                 imageFile.setUrl(url);
                 imageFileRepository.save(imageFile);
+                project.setProjectImageFileSeq(imageFile.getImageFileSeq());
             } else {
                 // 이미지 Entity 생성
                 ImageFile imageFile = ImageFile.builder()
@@ -146,7 +146,7 @@ public class ProjectSettingService {
     public void deleteProjectUser(Integer projectUserSeq) throws RuntimeException {
         ProjectUser projectUser = projectUserRepository.findById(projectUserSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
-        projectUserRepository.delete(projectUser);
+        projectUserRepository.deleteById(projectUserSeq);
 
         ProjectPosition projectPosition = projectPositionRepository.findByProjectSeqAndPositionCode(projectUser.getProjectSeq(), projectUser.getPositionCode())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));

@@ -6,6 +6,7 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
@@ -206,10 +207,19 @@ public class PostingService {
     public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        apply.setSelect(true);
+//        apply.setSelect(true);
         // 대기중으로 상태 변경
         apply.setApplyCode("AS100");
         applyRepository.save(apply);
+    }
+
+    @Transactional
+    public void applySelectConfirm(ApplySelectConfirmRequest applySelectConfirmRequest) {
+        Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        if (applySelectConfirmRequest.isSelect()) apply.setApplyCode("AS101");
+        else apply.setApplyCode("AS102");
     }
 
     @Transactional(readOnly = true)
