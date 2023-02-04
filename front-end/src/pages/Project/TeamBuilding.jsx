@@ -5,7 +5,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import '../../assets/styles/teamSelect.css'
+import '../../assets/styles/teamBuilding.css'
 import MemoModal from '../../components/Memo/MemoModal'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
@@ -68,14 +68,12 @@ function TeamSelect() {
   }
 
   const handleConfirmClose = () => {
-    console.log(false)
     setConfirmOpen(false)
   }
 
   const handlePageChange = (page) => {
     setPage(page)
     applyListFetch(page)
-    console.log(page)
   }
 
   const applyListFetch = async (param) => {
@@ -89,7 +87,6 @@ function TeamSelect() {
         })
         .then((res) => {
           setApplyList(res.data.body)
-          console.log(res.data.body)
         })
 
       await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
@@ -114,15 +111,11 @@ function TeamSelect() {
 
   const checkButtonValid = () => {
     if (teamTotalCnt === teamCnt) setValid('false')
-    console.log(teamTotalCnt)
-    console.log(teamCnt)
-    console.log(valid)
   }
 
   const projectPost = async () => {
     try {
-      const res = await api.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq })
-      console.log(res)
+      await api.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq })
     } catch (error) {
       console.log(error)
     }
@@ -141,11 +134,6 @@ function TeamSelect() {
         clearInterval(timerInterval)
         navigate('/')
       },
-    }).then((result) => {
-      /* Read more about handling dismissals below */
-      if (result.dismiss === Swal.DismissReason.timer) {
-        console.log('I was closed by the timer')
-      }
     })
   }
 
@@ -164,15 +152,15 @@ function TeamSelect() {
 
   return (
     <CssVarsProviderm>
-      <div className="team-select-container">
-        <div className="team-select-banner">
+      <div className="team-building-container">
+        <div className="team-building-banner">
           <div>팀 빌딩</div>
         </div>
         <div className="team-selct-width">
           <div className="team-selct-table">
             <TableContainer>
               <Table>
-                <TableHead className="team-select-table-header">
+                <TableHead className="team-building-table-header">
                   <TableRow sx={[{ backgroundColor: 'rgba(244, 246, 249, 0.5)' }]}>
                     <TableCell align="center"> 닉네임 </TableCell>
                     <TableCell align="center"> 사전미팅참가 </TableCell>
@@ -235,7 +223,7 @@ function TeamSelect() {
             </TableContainer>
           </div>
 
-          <div className="team-select-submit-button">
+          <div className="team-building-submit-button">
             <SignalBtn sigwidth="250px" onClick={handleConfirmOpen}>
               프로젝트 시작
             </SignalBtn>

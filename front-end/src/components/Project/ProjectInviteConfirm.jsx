@@ -46,6 +46,7 @@ function ProjectTeamSelectConfirmModal(props) {
     setOpen(false)
   }
   const handleTeamSelect = async (e) => {
+    console.log(props.valid)
     if (props.valid) {
       handleClose()
       return Swal.fire({
