@@ -1,19 +1,16 @@
 package com.ssafysignal.api.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ssafysignal.api.common.entity.ImageFile;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
-import java.time.LocalDateTime;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ApiModel(value = "ModifyUserRequest", description = "회원 수정 정보")
-public class ModifyUserRequest {
+public class UserInfo {
 	@Schema(description = "사용자 이름")
 	private String name;
 	@Schema(description = "닉네임")
@@ -23,5 +20,5 @@ public class ModifyUserRequest {
 	@Schema(description = "생년월일", example = "2023-01-01")
 	private String birth;
 	@Schema(description = "사용자 프로필 이미지")
-	private ImageFile profileImageFile;
+	private MultipartFile profileImageFile;
 }

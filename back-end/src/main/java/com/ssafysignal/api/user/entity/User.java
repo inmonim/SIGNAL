@@ -41,8 +41,11 @@ public class User {
     private LocalDateTime regDt;
     @Column(name = "heart_cnt")
     private int heartCnt;
+    @Column(name = "user_image_file_seq")
+    private Integer userImageFileSeq;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_image_file_seq")
+    @JoinColumn(name = "user_image_file_seq", insertable = false, updatable = false)
     private ImageFile imageFile;
 
     @Builder
@@ -59,6 +62,20 @@ public class User {
         this.imageFile = imageFile;
     }
     
+    public void modifyUser(String name, String nickname,String phone, String birth) {
+        this.name = name;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.birth = birth;
+    }
+    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
+    public void modifyPassword(String password){
+        this.password = password;
+    }
+
+    public void setImageFileSeq(int imageFileSeq){this.userImageFileSeq=imageFileSeq;}
+
+
     // Security 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
