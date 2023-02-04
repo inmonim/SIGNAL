@@ -3,8 +3,9 @@ import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/mater
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
+// import { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
+// import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { Skilldata, getSkillCode } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
@@ -13,6 +14,8 @@ import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
 import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router-dom'
 // import { useNavigate, useLocation } from 'react-router-dom'
+import ReactSelect from 'react-select'
+import { changeSkillForm } from 'utils/changeForm'
 import api from 'api/Api.js'
 
 const inputStyle = {
@@ -60,6 +63,7 @@ function ApplyRegister() {
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
+
   // ene >> useState
 
   // start >> Fetch
@@ -175,11 +179,12 @@ function ApplyRegister() {
   // start >> handle skill
 
   const handleSkillInput = (value) => {
-    const skillArr = [...skillList, value]
-    console.log(skillArr)
-    const set = new Set(skillArr)
-    const uniqueArr = Array.from(set)
-    setSkillList(uniqueArr)
+    console.log(value)
+    // const skillArr = [...skillList, value]
+    // console.log(skillArr)
+    // const set = new Set(skillArr)
+    // const uniqueArr = Array.from(set)
+    // setSkillList(uniqueArr)
   }
 
   const handleSkillRemove = (id) => {
@@ -191,10 +196,10 @@ function ApplyRegister() {
   }
 
   // start >> skill filter
-  const skillSearchFilter = createFilterOptions({
-    matchFrom: 'start',
-    stringify: (option) => option.name,
-  })
+  // const skillSearchFilter = createFilterOptions({
+  //   matchFrom: 'start',
+  //   stringify: (option) => option.label,
+  // })
 
   // end >> skill filter
 
@@ -412,12 +417,13 @@ function ApplyRegister() {
                 <span className="apply-register-label">사용기술</span>
               </div>
               <div>
-                <Autocomplete
+                <ReactSelect onChange={handleSkillInput} options={changeSkillForm(Skilldata)} isMulti />
+                {/* <Autocomplete
                   disablePortal
                   id="combo-box-demo"
                   sx={{ width: 300 }}
                   options={Skilldata}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => option.label}
                   filterOptions={skillSearchFilter}
                   renderInput={(params) => (
                     <TextField
@@ -429,8 +435,8 @@ function ApplyRegister() {
                       }}
                       sx={inputStyle}
                     />
-                  )}
-                />
+                  )} 
+                /> */}
               </div>
             </div>
             <div style={{ display: 'inline-block', marginRight: '7px' }}>
