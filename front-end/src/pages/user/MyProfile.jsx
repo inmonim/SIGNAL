@@ -133,7 +133,7 @@ function MyProfile() {
                     <img className="my-profile-plus-btn-img" src={plusbtn} alt="" onClick={handleToInputModal} />
                   </div>
                   <InputModal open={openInputModal} onClose={handleToClose} insertTitle="포지션"></InputModal>
-                  <div className="my-profile-top-position-title">포지션</div>
+                  <div className="my-profile-top-position-title">포지션임</div>
                   <div>
                     <Chip label="FrontEnd" variant="outlined" sx={{ fontSize: '20px' }} />
                   </div>
