@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,15 +34,15 @@ public class Todolist {
     private String toDoCode;
 
     @Column(name = "reg_dt")
-    private LocalDateTime reg_dt;
+    private LocalDateTime regDt;
 
     @Builder
-    public Todolist(Integer projectToDoSeq, Integer projectSeq, Integer userSeq, String content, String toDoCode, LocalDateTime reg_dt) {
+    public Todolist(Integer projectToDoSeq, Integer projectSeq, Integer userSeq, String content, String toDoCode, LocalDateTime regDt) {
         this.projectToDoSeq = projectToDoSeq;
         this.projectSeq = projectSeq;
         this.userSeq = userSeq;
         this.content = content;
         this.toDoCode = toDoCode;
-        this.reg_dt = reg_dt;
+        this.regDt = regDt;
     }
 }
