@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "회원", description = "회원에 대한 정보를 CRUD 할 수 있는 컨트롤러")
@@ -108,10 +110,10 @@ public class UserController {
     @Operation(summary = "비밀번호 변경", description = "회원의 비밀번호 변경.")
     @PutMapping("/password/{userSeq}")
     private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
-                                                     @Parameter(description = "비밀번호", required = true)  @RequestParam String password){
+                                                     @Parameter(description = "비밀번호", required = true)  @RequestBody Map<String,String> info){
         log.info("modifyPassword - Call");
 
-
+        String password = info.get("password");
         System.out.println(password);
         try {
             userService.modifyPassword(userSeq, password);
