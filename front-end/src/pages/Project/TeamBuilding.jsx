@@ -48,10 +48,13 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
 }))
 
 function TeamSelect() {
-  const postingSeq = 458
+  const postingSeq = 747
   const [applyList, setApplyList] = useState([])
-  const [teamTotalCnt, setTeamTotalCnt] = useState(1)
-  const [teamCnt, setTeamCnt] = useState(0)
+  const [teamTotalCnt, setTeamTotalCnt] = useState(0)
+  // const [teamCnt, setTeamCnt] = useState(0)
+
+  const [selectCnt, setSelectCnt] = useState(1)
+  const [waitCnt, setWaitCnt] = useState(2)
 
   const [applySeqList, setapplySeqList] = useState([])
   const [size] = useState(8)
@@ -73,7 +76,6 @@ function TeamSelect() {
 
   const handlePageChange = (page) => {
     setPage(page)
-    applyListFetch(page)
   }
 
   const applyListFetch = async (param) => {
@@ -86,11 +88,16 @@ function TeamSelect() {
           },
         })
         .then((res) => {
-          setApplyList(res.data.body)
+          setApplyList(res.data.body.applyList)
+          console.log('1번 api', res.data.body)
+
+          setSelectCnt(res.data.body.selectCnt)
+          setWaitCnt(res.data.body.waitCnt)
         })
 
       await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
         setCount(res.data.body.count)
+        console.log('2번 api', res.data.body)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
@@ -99,18 +106,16 @@ function TeamSelect() {
             return sum + value.positionCnt
           }, 0)
         )
+        console.log('3번 api', res.data.body)
       })
-
-      await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
-        setTeamCnt(res.data.body.selectCnt)
-      })
+      // 공고에서 올린 모집인원 계산위해 >> apply/writer에서 주기로 수정했음.
     } catch (error) {
       console.log(error)
     }
   }
 
   const checkButtonValid = () => {
-    if (teamTotalCnt === teamCnt) setValid('false')
+    if (selectCnt + waitCnt === teamTotalCnt) setValid('false')
   }
 
   const projectPost = async () => {
@@ -140,13 +145,14 @@ function TeamSelect() {
   const stateCodeColor = (stateCode) => {}
 
   useEffect(() => {
-    applyListFetch(1)
-  }, [])
+    applyListFetch(page)
+  }, [page])
+
   useEffect(() => {}, [applySeqList])
 
   useEffect(() => {
     checkButtonValid()
-  }, [teamTotalCnt, teamCnt])
+  }, [selectCnt, waitCnt])
 
   useEffect(() => {}, [confirmOpen])
 
@@ -170,7 +176,7 @@ function TeamSelect() {
                     <TableCell align="center"> 상세보기 </TableCell>
                     <TableCell align="center"> 선택 </TableCell>
                     <TableCell align="center">
-                      {teamCnt}/{teamTotalCnt}
+                      {selectCnt}/{teamTotalCnt}
                     </TableCell>
                   </TableRow>
                 </TableHead>

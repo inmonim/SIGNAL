@@ -12,8 +12,8 @@ import QnAList from 'components/Apply/QnaList'
 import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
 import SignalBtn from 'components/common/SignalBtn'
-import { useNavigate } from 'react-router-dom'
-// import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+// import { useNavigate, useLocation } from 'react-router-dom'/
 import ReactSelect from 'react-select'
 import { changeSkillForm } from 'utils/changeForm'
 import api from 'api/Api.js'
@@ -37,9 +37,9 @@ function ApplyRegister() {
   // 3. import { useNavigate, useLocation } from 'react-router-dom'
 
   // const postingSeq = location.state.postingSeq
-
+  const location = useLocation()
   const userSeq = sessionStorage.getItem('userSeq')
-  const postingSeq = 458
+  const postingSeq = location.state.postingSeq
 
   // end >> parameter
 
@@ -307,7 +307,7 @@ function ApplyRegister() {
 
   const handleApplySubmit = async () => {
     const userSeq = 1
-    const postingSeq = 458
+    const postingSeq = location.state.postingSeq
     try {
       const req = {
         applyAnswerList: answerList,

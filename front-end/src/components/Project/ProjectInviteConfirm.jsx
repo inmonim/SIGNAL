@@ -36,7 +36,7 @@ const TeamSelectBtn = styled(Button)(({ theme, state, valid }) => ({
 }))
 
 function ProjectTeamSelectConfirmModal(props) {
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(false)
 
   const handleOpen = (e) => {
     setOpen(true)
@@ -48,16 +48,8 @@ function ProjectTeamSelectConfirmModal(props) {
   const handleTeamSelect = async (e) => {
     console.log(props.valid)
     if (props.valid) {
-      handleClose()
-      return Swal.fire({
-        title: '모집인원이 가득 찼습니다',
-        text: '팀원이 부족하다면 공고를 수정해주세요',
-        icon: 'error',
-        confirmButtonText: '돌아가기',
-      })
-    } else {
       const applySeq = props.apply.applySeq
-      const adminSeq = 5
+      // const adminSeq = 5
 
       try {
         await api
@@ -69,19 +61,19 @@ function ProjectTeamSelectConfirmModal(props) {
 
         console.log('팀원선택 put')
 
-        const letterReq = {
-          content: '팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요~^^',
-          nickname: props.apply.nickname,
-          title: '팀원 확정 메일',
-          userSeq: adminSeq,
-        }
+        // const letterReq = {
+        //   content: '팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요~^^',
+        //   nickname: props.apply.nickname,
+        //   title: '팀원 확정 메일',
+        //   userSeq: adminSeq,
+        // }
 
-        await api
-          .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
-          .then((res) => {})
-          .catch((err) => {
-            console.log(err)
-          })
+        // await api
+        //   .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
+        //   .then((res) => {})
+        //   .catch((err) => {
+        //     console.log(err)
+        //   })
 
         const copy = [...props.applySeqList]
         copy.push(applySeq)
@@ -90,6 +82,14 @@ function ProjectTeamSelectConfirmModal(props) {
         console.log(error)
       }
       handleClose()
+    } else {
+      handleClose()
+      return Swal.fire({
+        title: '모집인원이 가득 찼습니다',
+        text: '팀원이 부족하다면 공고를 수정해주세요',
+        icon: 'error',
+        confirmButtonText: '돌아가기',
+      })
     }
   }
 
