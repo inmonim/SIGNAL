@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 import Paging from 'components/Paging'
 import { Link } from 'react-router-dom'
 import 'assets/styles/notice.css'
+import 'assets/styles/table.css'
 import api from 'api/Api.js'
 
 function Notice() {
@@ -33,9 +34,9 @@ function Notice() {
       view: item.view,
     })
   })
-
-  if (rows.length !== size && rows.length !== 0) {
-    for (let i = 0; i < size - rows.length; i++)
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
       rows.push({
         id: ' ',
         title: ' ',
@@ -43,6 +44,9 @@ function Notice() {
         view: ' ',
       })
   }
+
+  console.log(size - rows.length)
+
   return (
     <div className="notice-page-container">
       <div className="notice-container">
@@ -59,8 +63,8 @@ function Notice() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="left">
                       <Link to={`/noticeDetail`} state={{ id: row.id }}>

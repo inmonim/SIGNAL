@@ -16,7 +16,6 @@ function Qna() {
 
   const handlePageChange = (page) => {
     setPage(page)
-    console.log(page)
   }
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/board/qna?page=${page}&size=${size}`).then((res) => {
@@ -36,8 +35,9 @@ function Qna() {
       view: item.view,
     })
   })
-  if (rows.length !== size && rows.length !== 0) {
-    for (let i = 0; i < size - rows.length; i++)
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
       rows.push({
         id: ' ',
         title: ' ',
@@ -79,8 +79,8 @@ function Qna() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="left">
                       <Link to={`/qnaDetail`} state={{ id: row.id }}>
