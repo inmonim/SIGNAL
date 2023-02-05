@@ -4,6 +4,7 @@ import Paging from 'components/Paging'
 import { Link, useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/qna.css'
+import 'assets/styles/table.css'
 import api from 'api/Api.js'
 
 function Qna() {
@@ -35,6 +36,15 @@ function Qna() {
       view: item.view,
     })
   })
+  if (rows.length !== size && rows.length !== 0) {
+    for (let i = 0; i < size - rows.length; i++)
+      rows.push({
+        id: ' ',
+        title: ' ',
+        regDt: ' ',
+        view: ' ',
+      })
+  }
 
   const navigate = useNavigate()
 

@@ -80,7 +80,8 @@
   background-color: rgba(255, 255, 255, 0.28);
 }
 
-.my-profile-four {
+.my-profile-four,
+.my-posting-apply {
   /* border: 1px solid black; */
   margin: 107px 95px;
 }
@@ -94,7 +95,7 @@
 .my-profile-top-position,
 .my-profile-top-skill {
   width: 353px;
-  height: 253px;
+  height: 233px;
 }
 .my-profile-bottom-exp,
 .my-profile-bottom-career {
@@ -131,4 +132,46 @@
   flex-grow: 1;
   border: 3px solid #796fb2;
   margin-left: 20px;
+}
+
+.my-profile-top-skill-list{
+  display: flex;
+  padding-left: 10px;
+}
+
+.my-profile-top-skill-list-item{
+  margin: 5px;
+}
+
+.my-profile-bottom-exp-list,
+.my-profile-bottom-career-list{
+  padding-left: 10px;
+  font-size: 22px;
+}
+
+.my-profile-bottom-exp-list-item,
+.my-profile-bottom-career-list-item{
+  margin: 5px 0px;
+}
+
+.my-profile-table{
+  border-top: 2px solid #796fb2;
+}
+
+.my-profile-tab-list{
+  display: flex;
+  font-size: 24px;
+}
+
+.my-profile-tab{
+  background-color: white;
+  border:2px solid #796fb2;
+  border-bottom: 0px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 8px 10px;
+}
+.my-profile-tab.active{
+  background-color: #796fb2;
+  color: #fff;
 }
