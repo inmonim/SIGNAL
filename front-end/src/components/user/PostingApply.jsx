@@ -36,8 +36,9 @@ function PostingApply() {
       meetingDt: item.meetingDt.split(' ', 1),
     })
   })
-  if (rows.length !== size && rows.length !== 0) {
-    for (let i = 0; i < size - rows.length; i++)
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
       rows.push({
         state: ' ',
         subject: ' ',
@@ -73,8 +74,8 @@ function PostingApply() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.id} className="my-profile-table">
+                  {rows.map((row, index) => (
+                    <TableRow key={index} className="my-profile-table">
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">{row.subject !== ' ' ? <SignalBtn>참가</SignalBtn> : ' '}</TableCell>
@@ -102,8 +103,8 @@ function PostingApply() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.id} className="my-profile-table">
+                  {rows.map((row, index) => (
+                    <TableRow key={index} className="my-profile-table">
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">

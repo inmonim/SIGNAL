@@ -12,6 +12,7 @@ import AlertModal from 'components/AlertModal'
 
 import closeBtn from 'assets/image/x.png'
 import { PatternFormat } from 'react-number-format'
+import api from 'api/Api'
 
 const style = {
   width: 727,
@@ -113,59 +114,30 @@ function RegistModal({ open, onClose }) {
 
   async function emailDupCheck() {
     const email = inputs.email
-    return await fetch(process.env.REACT_APP_API_URL + `/auth/email/${email}`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-      },
+    return await api.get(process.env.REACT_APP_API_URL + `/auth/email/${email}`).then((response) => {
+      console.log(response)
+      if (response.data.body === true) {
+        return true
+      } else {
+        return false
+      }
     })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response)
-        if (response.body === true) {
-          return true
-        } else {
-          return false
-        }
-      })
   }
   async function nicknameDupCheck() {
     const nickname = inputs.nickname
-    return await fetch(process.env.REACT_APP_API_URL + `/auth/nickname/${nickname}`, {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-      },
+    return await api.get(process.env.REACT_APP_API_URL + `/auth/nickname/${nickname}`).then((response) => {
+      console.log(response)
+      if (response.data.body === true) {
+        return true
+      } else {
+        return false
+      }
     })
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response)
-        if (response.body === true) {
-          return true
-        } else {
-          return false
-        }
-      })
   }
   function registUser() {
-    fetch(process.env.REACT_APP_API_URL + '/user', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
+    api.post(process.env.REACT_APP_API_URL + '/user', JSON.stringify(inputs)).then((response) => {
+      console.log(`data: ${JSON.stringify(response.data)}`)
     })
-      .then((response) => {
-        if (response.ok === true) {
-          return response.json()
-        } else {
-          alert('다시 시도')
-          return false
-        }
-      })
-      .then((data) => {
-        console.log(`data: ${JSON.stringify(data)}`)
-      })
   }
 
   async function regist() {

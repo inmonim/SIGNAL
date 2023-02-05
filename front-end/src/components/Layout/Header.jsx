@@ -60,7 +60,7 @@ function Header() {
         setLetterCnt(res.data.body.count)
       })
     }
-  }, [])
+  })
 
   const navigate = useNavigate()
 
