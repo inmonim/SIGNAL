@@ -3,6 +3,7 @@ package com.ssafysignal.api.project.entity;
 import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.posting.entity.Posting;
+import com.ssafysignal.api.todolist.entity.Todolist;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -77,13 +78,17 @@ public class Project {
     private List<ProjectPosition> projectPositionList;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_seq")
-    private List<ProjectToDo> projectToDoList;
+    private List<Todolist> toDoList;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_seq")
     private List<ProjectUser> projectUserList;
 
     @Builder
-    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact, Integer weekCnt, Integer term, String gitUrl, String content, LocalDateTime evaluationDt, String projectCode, ImageFile imageFile, Posting posting, List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList, List<ProjectPosition> projectPositionList, List<ProjectToDo> projectToDoList, List<ProjectUser> projectUserList) {
+    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact,
+                   Integer weekCnt, Integer term, String gitUrl, String content, LocalDateTime evaluationDt, String projectCode,
+                   ImageFile imageFile, Posting posting,
+                   List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList,
+                   List<ProjectPosition> projectPositionList, List<Todolist> toDolist, List<ProjectUser> projectUserList) {
         this.projectSeq = projectSeq;
         this.postingSeq = postingSeq;
         this.subject = subject;
@@ -101,7 +106,7 @@ public class Project {
         this.projectEvaluationList = projectEvaluationList;
         this.projectNotionDocsList = projectNotionDocsList;
         this.projectPositionList = projectPositionList;
-        this.projectToDoList = projectToDoList;
+        this.toDoList = toDolist;
         this.projectUserList = projectUserList;
     }
 }
