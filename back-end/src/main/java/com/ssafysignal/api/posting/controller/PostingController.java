@@ -3,6 +3,7 @@ package com.ssafysignal.api.posting.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
@@ -180,6 +181,28 @@ public class PostingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
+    @Tag(name = "공고")
+    @Operation(summary = "팀원 선택 확정", description = "팀원으로 선택된 지원자가 선택에 대한 확정을 한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팀원 선택 확정 완료"),
+            @ApiResponse(responseCode = "400", description = "팀원 선택 확정 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @PutMapping("/member/confirm")
+    private ResponseEntity<BasicResponse> applySelectConfirm(@Parameter(name = "applySelectConfirmRequest", description = "확정, 거절 여부 요청 정보") @RequestBody ApplySelectConfirmRequest applySelectConfirmRequest){
+        log.info("applySelectConfirm - Call");
+
+        try {
+            postingService.applySelectConfirm(applySelectConfirmRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
+    }
+
     @Tag(name = "공고")
     @Operation(summary = "지원한 공고 목록 조회", description = "지원한 공고 전체 목록을 조회한다.")
     @ApiResponses({

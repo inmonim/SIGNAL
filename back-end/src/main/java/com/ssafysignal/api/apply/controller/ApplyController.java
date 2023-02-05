@@ -147,7 +147,7 @@ public class ApplyController {
         log.info("findALlApplyToWriter - Call");
 
         try {
-            List<ApplyWriterFindResponse> resList = applyService.findAllApplyWriter(postingSeq, page, size);
+            Map<String, Object> resList = applyService.findAllApplyWriter(postingSeq, page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resList));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -187,19 +187,7 @@ public class ApplyController {
         log.info("findAllApplyApplyer - Call");
 
         try {
-            // dummy
-            List<ApplyApplyerFindResponse> applyList = new ArrayList<>();
-
-            for (int i = 0; i < size; i++){
-                applyList.add(ApplyApplyerFindResponse.builder()
-                        .applySeq(i)
-                        .subject("작성자 지원서 목록 조회 더미 " + i)
-                        .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
-                        .meetingDt(LocalDateTime.now())
-                        .build());
-            }
-
-//            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyWriter(postingSeq);
+            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyApplyer(userSeq, page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -270,5 +258,4 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
-
 }

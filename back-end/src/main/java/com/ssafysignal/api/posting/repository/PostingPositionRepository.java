@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface PostingPositionRepository extends JpaRepository<PostingPosition, Integer> {
     Optional<List<PostingPosition>> findPostingPositiosnByPostingSeq(Integer postingSeq);
+    Integer countByPostingSeq(Integer postingSeq);
 }
