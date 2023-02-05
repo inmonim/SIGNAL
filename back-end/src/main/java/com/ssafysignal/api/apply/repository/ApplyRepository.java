@@ -11,14 +11,12 @@ import java.util.Optional;
 
 public interface ApplyRepository extends JpaRepository<Apply, Integer>{
     List<Apply> findByUserSeq(Integer userSeq);
-    List<Apply> findByPostingSeq(Integer postingSeq);
-
     int countByPostingSeq(int postingSeq);
-
-    int countByPostingSeqAndIsSelect(int postingSeq, boolean isSelect);
-
     int countByUserSeq(int userSeq);
-
     List<Apply> findAllByPostingSeq(int postingSeq, PageRequest pagenation);
+    List<Apply> findALlByUserSeq(int userSeq, PageRequest pagenation);
+    Integer countByPostingSeqAndApplyCode(int postingSeq, String as101);
+    List<Integer> findUserSeqByPostingSeqAndApplyCode(Integer postingSeq, String as101);
 
+    Optional<Apply> findByUserSeqAndPostingSeq(Integer userSeq, Integer postingSeq);
 }

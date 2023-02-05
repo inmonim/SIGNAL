@@ -6,6 +6,7 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
@@ -107,13 +108,13 @@ public class PostingService {
             List<Integer> postingList = postingSkillRepository.findBySkillList(postingSkillList, postingSkillList.size());
             if (postingList != null && postingList.size() > 0) {
                 searchKeys.put("postingList", postingList);
-                Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
-                return projectList.stream()
-                        .map(PostingFindAllResponse::fromEntity)
-                        .collect(Collectors.toList());
             }
         }
-        return new ArrayList<>();
+
+        Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
+        return projectList.stream()
+                .map(PostingFindAllResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -206,10 +207,19 @@ public class PostingService {
     public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        apply.setSelect(true);
+//        apply.setSelect(true);
         // 대기중으로 상태 변경
         apply.setApplyCode("AS100");
         applyRepository.save(apply);
+    }
+
+    @Transactional
+    public void applySelectConfirm(ApplySelectConfirmRequest applySelectConfirmRequest) {
+        Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        if (applySelectConfirmRequest.isSelect()) apply.setApplyCode("AS101");
+        else apply.setApplyCode("AS102");
     }
 
     @Transactional(readOnly = true)
