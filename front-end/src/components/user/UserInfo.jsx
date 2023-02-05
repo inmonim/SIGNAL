@@ -23,7 +23,7 @@ function UserInfo() {
     setUserPwdOpen(true)
   }
 
-  const [alertOpen, setAlertOpen] = useState('')
+  const [alertOpen, setAlertOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleToOut = () => {
