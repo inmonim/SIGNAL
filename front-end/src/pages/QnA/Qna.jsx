@@ -4,6 +4,7 @@ import Paging from 'components/Paging'
 import { Link, useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/qna.css'
+import 'assets/styles/table.css'
 import api from 'api/Api.js'
 
 function Qna() {
@@ -15,7 +16,6 @@ function Qna() {
 
   const handlePageChange = (page) => {
     setPage(page)
-    console.log(page)
   }
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/board/qna?page=${page}&size=${size}`).then((res) => {
@@ -35,6 +35,16 @@ function Qna() {
       view: item.view,
     })
   })
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
+      rows.push({
+        id: ' ',
+        title: ' ',
+        regDt: ' ',
+        view: ' ',
+      })
+  }
 
   const navigate = useNavigate()
 
@@ -69,8 +79,8 @@ function Qna() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
                     <TableCell align="center">{row.id}</TableCell>
                     <TableCell align="left">
                       <Link to={`/qnaDetail`} state={{ id: row.id }}>

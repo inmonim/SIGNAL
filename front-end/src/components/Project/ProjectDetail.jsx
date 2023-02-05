@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react'
 import 'assets/styles/projectDetail.css'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
 import proejctBackground2 from 'assets/image/projectBackground2.png'
-import settings from 'assets/image/settings.png'
 import heart from 'assets/image/heart.png'
 import noProfile from 'assets/image/noProfileImg.png'
 import SignalBtn from 'components/common/SignalBtn'
+
 import api from 'api/Api.js'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function ProjectDetail() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   // const location = useLocation()
   // const projectSeq = location.state.applySeq
   // const userSeq = sessionStorage.getItem('userSeq')
 
+  // const [mode, setMode] = useState(0)
+
   // TEST params데이터 셋
   const userSeq = 82
-  const projectSeq = 448
+  const projectSeq = 458
 
   const [project, setProject] = useState([])
 
@@ -33,7 +35,6 @@ function ProjectDetail() {
       },
     })
       .then((res) => {
-        console.log(res.data.body)
         setProject(res.data.body)
       })
       .catch((e) => {
@@ -44,18 +45,11 @@ function ProjectDetail() {
   useEffect(() => {
     getProject()
   }, [])
+
   return (
-    <div className="project-detail-container">
-      <div className="project-detail-width">
-        <img className="project-detail-img-proejct-background-1" src={proejctBackground1} />
-        <img
-          className="project-detail-img-settings"
-          src={settings}
-          alt=""
-          onClick={() => {
-            navigate('/teamMaintain')
-          }}
-        />
+    <div>
+      <img className="project-detail-img-proejct-background-1" src={proejctBackground1} />
+      <div>
         <div style={{ position: 'absolute' }}>
           <div className="project-detail-my-section">
             <div className="project-detail-my-warning-section">
@@ -110,10 +104,10 @@ function ProjectDetail() {
         >
           <div className="project-detail-team-detail-list">
             {project.projectUserList &&
-              project.projectUserList.map((item) => (
-                <div className="project-detail-team" key={item}>
+              project.projectUserList.map((item, index) => (
+                <div className="project-detail-team" key={index}>
                   <img src={noProfile} alt="" />
-                  <div>{item}</div>
+                  <div>{item.nickname}</div>
                 </div>
               ))}
           </div>

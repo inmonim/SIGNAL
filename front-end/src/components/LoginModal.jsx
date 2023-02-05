@@ -13,6 +13,7 @@ import FindModal from './FindEmailPwdModal'
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import api from 'api/Api'
 
 const style = {
   width: 727,
@@ -59,42 +60,31 @@ function LoginModal({ open, onClose }) {
   const handleFindClose = () => {
     setFindOpen(false)
   }
-  const handleToMain = () => {
+  const handleToMain = async () => {
     console.log('click login')
     console.log('Email: ', inputEmail)
     console.log('Pwd: ', inputPwd)
 
-    fetch(process.env.REACT_APP_API_URL + '/auth/login', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: inputEmail,
-        password: inputPwd,
-      }),
-    })
-      .then((res) => {
-        if (res.ok === true) {
-          return res.json()
-        } else {
-          throw new Error('다시 시도')
-        }
-      })
-      .then((data) => {
+    await api
+      .post(
+        process.env.REACT_APP_API_URL + '/auth/login',
+        JSON.stringify({
+          email: inputEmail,
+          password: inputPwd,
+        })
+      )
+      .then((response) => {
         console.log('로그인 성공')
         // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
         if (isAutoLogin) {
-          localStorage.setItem('refreshToken', data.body.refreshToken)
+          localStorage.setItem('refreshToken', response.data.body.refreshToken)
         }
-        console.log(data.body.accessToken)
-        sessionStorage.setItem('accessToken', data.body.accessToken)
-        sessionStorage.setItem('refreshToken', data.body.refreshToken)
-        sessionStorage.setItem('userEmail', data.body.email)
-        sessionStorage.setItem('username', data.body.name)
-        sessionStorage.setItem('nickname', data.body.nickname)
-        sessionStorage.setItem('userSeq', data.body.userSeq)
-        console.log(sessionStorage.getItem('accessToken'))
+        sessionStorage.setItem('accessToken', response.data.body.accessToken)
+        sessionStorage.setItem('refreshToken', response.data.body.refreshToken)
+        sessionStorage.setItem('userEmail', response.data.body.email)
+        sessionStorage.setItem('username', response.data.body.name)
+        sessionStorage.setItem('nickname', response.data.body.nickname)
+        sessionStorage.setItem('userSeq', response.data.body.userSeq)
         onClose(onClose(true))
       })
       .catch((e) => {
