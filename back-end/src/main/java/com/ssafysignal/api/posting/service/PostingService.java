@@ -106,9 +106,7 @@ public class PostingService {
     public List<PostingFindAllResponse> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
         if (postingSkillList != null && postingSkillList.size() > 0) {
             List<Integer> postingList = postingSkillRepository.findBySkillList(postingSkillList, postingSkillList.size());
-            if (postingList != null && postingList.size() > 0) {
-                searchKeys.put("postingList", postingList);
-            }
+            searchKeys.put("postingList", postingList);
         }
 
         Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
@@ -127,7 +125,7 @@ public class PostingService {
     public void modifyPosting(Integer postingSeq, PostingBasicRequest postingModifyRequest) throws RuntimeException {
         // 공고 수정
         Posting posting = postingRepository.findById(postingSeq)
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
         posting.setContent(postingModifyRequest.getContent());
         posting.setPostingEndDt(postingModifyRequest.getPostingEndDt());
         posting.setLevel(postingModifyRequest.getLevel());
