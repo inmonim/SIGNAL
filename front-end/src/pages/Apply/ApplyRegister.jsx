@@ -15,7 +15,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import { useLocation, useNavigate } from 'react-router-dom'
 // import { useNavigate, useLocation } from 'react-router-dom'/
 import ReactSelect from 'react-select'
-import { changeSkillForm } from 'utils/changeForm'
+import { changeSelectForm } from 'utils/changeForm'
 import api from 'api/Api.js'
 
 const inputStyle = {
@@ -417,7 +417,7 @@ function ApplyRegister() {
                 <span className="apply-register-label">사용기술</span>
               </div>
               <div>
-                <ReactSelect onChange={handleSkillInput} options={changeSkillForm(Skilldata)} isMulti />
+                <ReactSelect onChange={handleSkillInput} options={changeSelectForm(Skilldata)} isMulti />
                 {/* <Autocomplete
                   disablePortal
                   id="combo-box-demo"
