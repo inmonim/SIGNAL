@@ -1,5 +1,7 @@
 package com.ssafysignal.api.project.service;
 
+import com.ssafysignal.api.admin.Entity.BlackUser;
+import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.common.entity.ImageFile;
@@ -39,6 +41,8 @@ public class ProjectSettingService {
     private final ProjectEvaluationRepository projectEvaluationRepository;
     private final ProjectPositionRepository projectPositionRepository;
     private final ImageFileRepository imageFileRepository;
+
+    private final BlackUserRepository blackUserRepository;
 
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
@@ -146,8 +150,17 @@ public class ProjectSettingService {
     public void deleteProjectUser(Integer projectUserSeq) throws RuntimeException {
         ProjectUser projectUser = projectUserRepository.findById(projectUserSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
-        projectUserRepository.deleteById(projectUserSeq);
 
+        // 블랙리스트 등록
+        blackUserRepository.save(BlackUser.builder()
+                        .userSeq(projectUser.getUserSeq())
+                        .projectSeq(projectUser.getProjectSeq())
+                        .build());
+        
+        // 현재 프로젝트 인원에서 제거
+        projectUserRepository.deleteById(projectUserSeq);
+        
+        // 포지션 인원 맞춤 (제거된 인원 포지션 -1)
         ProjectPosition projectPosition = projectPositionRepository.findByProjectSeqAndPositionCode(projectUser.getProjectSeq(), projectUser.getPositionCode())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
         projectPosition.setPositionCnt(projectPosition.getPositionCnt() - 1);

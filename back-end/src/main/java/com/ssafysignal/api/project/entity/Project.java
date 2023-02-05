@@ -3,7 +3,6 @@ package com.ssafysignal.api.project.entity;
 import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.posting.entity.Posting;
-import com.ssafysignal.api.todolist.entity.Todolist;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -48,6 +47,8 @@ public class Project {
     private String projectCode;
     @Column(name = "project_image_file_seq")
     private Integer projectImageFileSeq;
+    @Column(name = "reg_dt")
+    private LocalDateTime regDt;
 
     // 1 : 1 관계
     @OneToOne
@@ -78,17 +79,13 @@ public class Project {
     private List<ProjectPosition> projectPositionList;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_seq")
-    private List<Todolist> toDoList;
+    private List<ProjectToDo> projectToDoList;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_seq")
     private List<ProjectUser> projectUserList;
 
     @Builder
-    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact,
-                   Integer weekCnt, Integer term, String gitUrl, String content, LocalDateTime evaluationDt, String projectCode,
-                   ImageFile imageFile, Posting posting,
-                   List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList,
-                   List<ProjectPosition> projectPositionList, List<Todolist> toDolist, List<ProjectUser> projectUserList) {
+    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact, Integer weekCnt, Integer term, String gitUrl, String content, LocalDateTime evaluationDt, String projectCode, ImageFile imageFile, Posting posting, List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList, List<ProjectPosition> projectPositionList, List<ProjectToDo> projectToDoList, List<ProjectUser> projectUserList, LocalDateTime regDt) {
         this.projectSeq = projectSeq;
         this.postingSeq = postingSeq;
         this.subject = subject;
@@ -106,7 +103,8 @@ public class Project {
         this.projectEvaluationList = projectEvaluationList;
         this.projectNotionDocsList = projectNotionDocsList;
         this.projectPositionList = projectPositionList;
-        this.toDoList = toDolist;
+        this.projectToDoList = projectToDoList;
         this.projectUserList = projectUserList;
+        this.regDt = regDt;
     }
 }
