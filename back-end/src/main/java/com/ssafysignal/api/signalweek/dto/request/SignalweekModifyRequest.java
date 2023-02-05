@@ -7,16 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ApiModel(value = "SignalweekRegistRequest", description = "시그널 위크 등록 정보")
-public class SignalweekRegistRequest {
-
-    @Schema(name = "프로젝트 Seq")
-    private Integer projectSeq;
-
+public class SignalweekModifyRequest {
     @Schema(name = "타이틀")
     private String title;
 
@@ -28,12 +25,6 @@ public class SignalweekRegistRequest {
 
     @Schema(name = "내용")
     private String content;
-
-    @Schema(name = "ppt 파일 seq")
-    private Integer pptFileSeq;
-
-    @Schema(name = "readme 파일")
-    private Integer readmeFileSeq;
 
     // ppt
 
