@@ -34,8 +34,15 @@ function Notice() {
     })
   })
 
-  // const [selectedRow, setSelectedRow] = useState({})
-  // console.log(selectedRow.id)
+  if (rows.length !== size && rows.length !== 0) {
+    for (let i = 0; i < size - rows.length; i++)
+      rows.push({
+        id: ' ',
+        title: ' ',
+        regDt: ' ',
+        view: ' ',
+      })
+  }
   return (
     <div className="notice-page-container">
       <div className="notice-container">
