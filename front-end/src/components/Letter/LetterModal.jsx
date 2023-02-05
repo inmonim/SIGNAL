@@ -104,7 +104,6 @@ function LetterModal({ open, onClose }) {
                 <ListItemButton
                   selected={selectedListIndex === 1}
                   onClick={() => {
-                    console.log('뇸')
                     setSelectedListIndex(1)
                     setView(0)
                   }}
