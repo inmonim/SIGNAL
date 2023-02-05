@@ -164,16 +164,17 @@ public class UserService {
     }
 
     @Transactional
-    public void modifyPassword(int userSeq, String password){
+    public void modifyPassword(int userSeq, String password, String newPassword){
         User user = userRepository.findByUserSeq(userSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        // 비밀번호 암호화
-        String passwordEncode = passwordEncoder.encode(password);
-        if (passwordEncoder.matches(password, passwordEncode)) System.out.println(true);
 
+        if (!passwordEncoder.matches(password, user.getPassword())){
+            throw new NotFoundException(ResponseCode.UNAUTHORIZED);
+        }
+        // 비밀번호 암호화
+        String passwordEncode = passwordEncoder.encode(newPassword);
         user.modifyPassword(passwordEncode);
         userRepository.save(user);
-
     }
 
 }

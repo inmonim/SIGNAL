@@ -115,9 +115,10 @@ public class UserController {
         log.info("modifyPassword - Call");
 
         String password = info.get("password");
+        String newPassword = info.get("newPassword");
         System.out.println(password);
         try {
-            userService.modifyPassword(userSeq, password);
+            userService.modifyPassword(userSeq, password, newPassword);
         } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
