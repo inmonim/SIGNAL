@@ -66,10 +66,10 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
-          <Route path="/signalList" element={<SignalList />} />
+          <Route path="/signal" element={<SignalList />} />
           <Route path="/signalregister" element={<Signalregister />} />
-          <Route path="/signalDetail/:id" element={<SignalDetail />} />
-          <Route path="/signalHonor" element={<SignalHonor />} />
+          <Route path="/signal/:id" element={<SignalDetail />} />
+          <Route path="/signal/rank" element={<SignalHonor />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
