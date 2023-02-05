@@ -25,7 +25,7 @@ import java.util.List;
 public class OpenProfileController {
 
     private final OpenProfileService openProfileService;
-    @Tag(name = "오픈프로필")
+    @Tag(name = "오픈 프로필")
     @Operation(summary = "오픈 프로필 등록", description = "오픈 프로필을 등록한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "오픈프로필 등록 완료"),
@@ -45,7 +45,7 @@ public class OpenProfileController {
     }
 
 
-    @Tag(name = "오픈프로필")
+    @Tag(name = "오픈 프로필")
     @Operation(summary = "오픈 프로필 조회", description = "오픈 프로필을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "오픈프로필 조회 완료"),

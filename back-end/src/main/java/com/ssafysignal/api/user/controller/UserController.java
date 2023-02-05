@@ -51,6 +51,7 @@ public class UserController {
         try {
         	User user = userService.findUser(userSeq);
             FindUserResponse findUserResponse = FindUserResponse.builder()
+                    .userSeq(user.getUserSeq())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .phone(user.getPhone())
