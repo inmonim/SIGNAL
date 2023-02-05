@@ -50,6 +50,9 @@ public class Posting {
     // 1 : N 관계
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "posting_seq")
+    private List<Apply> applyList;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_seq")
     private List<PostingSkill> postingSkillList;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "posting_seq")
@@ -62,7 +65,7 @@ public class Posting {
     private List<PostingQuestion> postingQuestionList;
 
     @Builder
-    public Posting(Integer postingSeq, Integer userSeq, String content, LocalDateTime postingStartDt, LocalDateTime postingEndDt, Integer level, String postingCode, LocalDateTime regDt, Project project, CommonCode code, List<PostingSkill> postingSkillList, List<PostingMeeting> postingMeetingList, List<PostingPosition> postingPositionList, List<PostingQuestion> postingQuestionList) {
+    public Posting(Integer postingSeq, Integer userSeq, String content, LocalDateTime postingStartDt, LocalDateTime postingEndDt, Integer level, String postingCode, LocalDateTime regDt, Project project, CommonCode code, List<Apply> applyList, List<PostingSkill> postingSkillList, List<PostingMeeting> postingMeetingList, List<PostingPosition> postingPositionList, List<PostingQuestion> postingQuestionList) {
         this.postingSeq = postingSeq;
         this.userSeq = userSeq;
         this.content = content;
@@ -73,6 +76,7 @@ public class Posting {
         this.regDt = regDt;
         this.project = project;
         this.code = code;
+        this.applyList = applyList;
         this.postingSkillList = postingSkillList;
         this.postingMeetingList = postingMeetingList;
         this.postingPositionList = postingPositionList;
