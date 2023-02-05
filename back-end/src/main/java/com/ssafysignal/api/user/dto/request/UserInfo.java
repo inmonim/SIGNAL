@@ -11,14 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ApiModel(value = "ModifyUserRequest", description = "회원 수정 정보")
 public class UserInfo {
-	@Schema(description = "사용자 이름")
-	private String name;
+
 	@Schema(description = "닉네임")
 	private String nickname;
 	@Schema(description = "전화번호")
 	private String phone;
-	@Schema(description = "생년월일", example = "2023-01-01")
-	private String birth;
 	@Schema(description = "사용자 프로필 이미지")
 	private MultipartFile profileImageFile;
 }

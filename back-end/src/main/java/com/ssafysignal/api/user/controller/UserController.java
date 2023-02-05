@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "회원", description = "회원에 대한 정보를 CRUD 할 수 있는 컨트롤러")
@@ -83,23 +85,38 @@ public class UserController {
     @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
     @PostMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
-                                                     @Parameter(description = "이름", required = true)  @RequestParam String name,
                                                      @Parameter(description = "닉네임", required = true)  @RequestParam String nickname,
-                                                     @Parameter(description = "생일", required = true)  @RequestParam String birth,
                                                      @Parameter(description = "전화번호", required = true)  @RequestParam String phone,
     													@Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
         log.info("modifyUser - Call");
 
         UserInfo userInfo = UserInfo.builder()
-                .name(name)
                 .nickname(nickname)
-                .birth(birth)
                 .phone(phone)
                 .profileImageFile(profileImageFile)
                 .build();
         System.out.println(userInfo);
         try {
             userService.modifyUser(userSeq, userInfo);
+        } catch (Exception e){
+            System.out.println(e);
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+    }
+
+    @Tag(name = "회원")
+    @Operation(summary = "비밀번호 변경", description = "회원의 비밀번호 변경.")
+    @PutMapping("/password/{userSeq}")
+    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
+                                                     @Parameter(description = "비밀번호", required = true)  @RequestBody Map<String,String> info){
+        log.info("modifyPassword - Call");
+
+        String password = info.get("password");
+        System.out.println(password);
+        try {
+            userService.modifyPassword(userSeq, password);
         } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));

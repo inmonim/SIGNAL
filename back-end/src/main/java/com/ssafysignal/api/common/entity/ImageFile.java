@@ -16,24 +16,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "image_file")
 public class ImageFile {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_file_seq")
     private Integer imageFileSeq;
-
     @Column(name = "name")
     private String name;
-
     @Column(name = "size")
     private Long size;
-
     @Column(name = "type")
     private String type;
-
     @Column(name = "url")
     private String url;
-
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
 
