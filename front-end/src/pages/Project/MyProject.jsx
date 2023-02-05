@@ -3,6 +3,7 @@ import noImage from 'assets/image/noImage.png'
 import styled from 'styled-components'
 import 'assets/styles/myproject.css'
 import Paging from 'components/Paging'
+import api from 'api/Api'
 
 const Container = styled.section`
   padding: 80px 220px;
@@ -14,15 +15,11 @@ function MyProject() {
   // const [img, setImg] = useState('')
   useEffect(() => {
     console.log(sessionStorage.getItem('useSeq'))
-    fetch(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`).then((res) => {
+      setEndData(res.data.body.endProjectList)
+      setIngData(res.data.body.ingProjectList)
+      // setImg(res.body.endProjectList.projectImageUrl)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setEndData(res.body.endProjectList)
-        setIngData(res.body.ingProjectList)
-        // setImg(res.body.endProjectList.projectImageUrl)
-      })
   }, [])
   // console.log(img)
   console.log(endData)
