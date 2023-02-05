@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import LetterDetail from './LetterDetail'
+import api from 'api/Api'
 
 function ToLetter({ handleChangeView, view, handleMenuListItemClick }) {
   console.log(view + 'sssss')
   const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/letter/from/${sessionStorage.getItem('userSeq')}`, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + `/letter/from/${sessionStorage.getItem('userSeq')}`).then((res) => {
+      console.log(res.data.body)
+      setData(res.data.body)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.body)
-        setData(res.body)
-      })
   }, [])
 
   const columns = [

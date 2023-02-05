@@ -7,20 +7,20 @@ import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
 import Chip from '@mui/material/Chip'
 
-function InputModal({ open, onClose, insertTitle }) {
+function InputTopModal({ open, onClose, inputTopTitle }) {
   const [tag, setTag] = useState('')
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
-  const handleDelete = (chipToDelete) => () => {
-    addTag((chips) => chips.filter((tag) => tag !== tag.key))
+  const handleDelete = (h) => () => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag !== h))
   }
   const handleHashtagChange = (event) => {
     setTag(event.target.value)
   }
-
   const newTag = () => {
     setNumberOfTags(numberOfTags + 1)
     addTag((arrayOfTags) => arrayOfTags.concat(tag))
+    console.log(tag)
   }
   const tags = arrayOfTags.map((h, index) => (
     <Chip
@@ -31,6 +31,10 @@ function InputModal({ open, onClose, insertTitle }) {
       onDelete={handleDelete(h)}
     />
   ))
+
+  const handleToProfile = () => {
+    onClose(onClose(true))
+  }
 
   return (
     <>
@@ -43,7 +47,7 @@ function InputModal({ open, onClose, insertTitle }) {
                 display: 'inline-block',
                 position: 'absolute',
                 left: '90%',
-                bottom: '85%',
+                bottom: '80%',
                 transform: 'translate(-50%, 0%)',
               }}
               src={closeBtn}
@@ -52,12 +56,12 @@ function InputModal({ open, onClose, insertTitle }) {
             />
           </div>
           <div className="user-profile-input-main">
-            <div className="user-profile-input-title">{insertTitle}</div>
+            <div className="user-profile-input-title">{inputTopTitle}</div>
             <div className="user-profile-input-input">
               <TextField
                 id="filled-multiline-flexible"
-                name={insertTitle}
-                label={insertTitle}
+                name={inputTopTitle}
+                label={inputTopTitle}
                 value={tag}
                 sx={inputStyle}
                 onChange={handleHashtagChange}
@@ -74,6 +78,17 @@ function InputModal({ open, onClose, insertTitle }) {
               </SignalBtn>
             </div>
             <div className="user-profile-input-chip">{numberOfTags > 0 ? tags : ''}</div>
+            <div className="user-profile-input-check-btn">
+              <SignalBtn
+                sigwidth="60px"
+                sigheight="40px"
+                sigfontsize="20px"
+                sigborderradius={15}
+                onClick={handleToProfile}
+              >
+                확인
+              </SignalBtn>
+            </div>
           </div>
         </Box>
       </Modal>
@@ -83,7 +98,7 @@ function InputModal({ open, onClose, insertTitle }) {
 
 const style = {
   width: 607,
-  height: 400,
+  height: 500,
   bgcolor: 'background.paper',
   borderRadius: 20,
   border: 'none',
@@ -111,4 +126,4 @@ const inputStyle = {
   },
 }
 
-export default InputModal
+export default InputTopModal

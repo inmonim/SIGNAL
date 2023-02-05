@@ -9,7 +9,7 @@ import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/ma
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import SignalBtn from 'components/common/SignalBtn'
 // import { Link, useLocation } from 'react-router-dom'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import api from 'api/Api.js'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
@@ -25,14 +25,14 @@ function ApplyDetail() {
   // 1. 아래 default userSeq, applySeq 지우기
   // 2. import { Link, useLocation } from 'react-router-dom'
 
-  // const location = useLocation()
-  // const userSeq = location.state.userSeq
-  // const applySeq = location.state.applySeq
+  const location = useLocation()
+  const userSeq = location.state.userSeq
+  const applySeq = location.state.applySeq
 
   const navigate = useNavigate()
 
-  const userSeq = 1
-  const applySeq = 82
+  // const userSeq = 1
+  // const applySeq = 82
 
   const currentUserSeq = sessionStorage.getItem('userSeq')
   const showButton = (

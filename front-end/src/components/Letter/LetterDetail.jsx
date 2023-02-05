@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Divider } from '@mui/material'
 import trashcan from 'assets/image/TrashLetter.png'
 import AlertModal from 'components/AlertModal'
+import api from 'api/Api'
 
 const detailStyle = {
   width: '800px',
@@ -18,26 +19,18 @@ function LetterDetail({ handleChangeView, view, fromto, handleMenuListItemClick 
   console.log(fromtoCheck)
   console.log('view_Detail: ', view)
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + '/letter/' + letterSeq, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + '/letter/' + letterSeq).then((res) => {
+      console.log(res.data.body)
+      console.log(res.data.body.regDt)
+      setData(res.data.body)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.body)
-        console.log(res.body.regDt)
-        setData(res.body)
-      })
   }, [])
 
   const handleToTrash = () => {
-    fetch(process.env.REACT_APP_API_URL + '/letter/' + letterSeq, {
-      method: 'DELETE',
+    api.delete(process.env.REACT_APP_API_URL + '/letter/' + letterSeq).then((res) => {
+      console.log(res.data.body)
+      setAlertOpen(true)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res.body)
-        setAlertOpen(true)
-      })
   }
 
   const handleAlert = (e) => {
