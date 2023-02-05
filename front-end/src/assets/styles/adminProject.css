@@ -1,0 +1,18 @@
+.admin-project-container{
+  margin-top: 108px;
+}
+
+.admin-project-width{
+  margin: 15% 10%;
+}
+
+.admin-project-header{
+  display: flex;
+  font-size: 44px;
+  margin: 20px;
+}
+
+.admin-project-title{
+  margin: auto;
+}
+

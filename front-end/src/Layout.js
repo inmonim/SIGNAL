@@ -21,10 +21,14 @@ import MyProject from './pages/Project/MyProject'
 import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
-import ProjectDetail from './pages/Project/ProjectDetail'
-import TeamMaintain from 'pages/Project/TeamMaintain'
-import ProjectMaintain from 'pages/Project/ProjectMaintain'
+import ProjectHeader from './pages/Project/ProjectHeader'
+import TeamMaintain from 'components/Project/TeamMaintain'
+import ProjectMaintain from 'components/Project/ProjectMaintain'
 import ScrollTop from 'components/common/ScrollTop'
+
+import AdminBalckList from 'pages/Admin/AdminBlackList'
+import AdminProject from 'pages/Admin/AdminProject'
+import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -50,7 +54,7 @@ function App() {
           <Route path="/applymodify" element={<ApplyModify />} />
           <Route path="/applydetail" element={<ApplyDetail />} />
           <Route path="/teamBuilding" element={<TeamBuilding />} />
-          <Route path="/projectDetail" element={<ProjectDetail />} />
+          <Route path="/project" element={<ProjectHeader />} />
           <Route path="/teamMaintain" element={<TeamMaintain />} />
           <Route path="/projectMaintain" element={<ProjectMaintain />} />
           <Route path="/myproject" element={<MyProject />} />
@@ -62,6 +66,9 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
+          <Route path="/adminblacklist" element={<AdminBalckList />} />
+          <Route path="/adminproject" element={<AdminProject />} />
+          <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
