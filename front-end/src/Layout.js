@@ -72,16 +72,12 @@ function App() {
           <Route path="/beforemeeting" element={<Beforemeeting />} />
           <Route path="/signal" element={<SignalList />} />
           <Route path="/signalregister" element={<Signalregister />} />
-<<<<<<< HEAD
           <Route path="/signal/:id" element={<SignalDetail />} />
           <Route path="/signal/rank" element={<SignalHonor />} />
-=======
-          <Route path="/signalDetail/:id" element={<SignalDetail />} />
-          <Route path="/signalHonor" element={<SignalHonor />} />
+
           <Route path="/adminblacklist" element={<AdminBalckList />} />
           <Route path="/adminproject" element={<AdminProject />} />
           <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
->>>>>>> 13d4646f89439c9616288d3ef373dcbc7520f8ba
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
