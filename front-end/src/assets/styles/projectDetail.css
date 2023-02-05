@@ -1,13 +1,13 @@
-.project-detail-container {
+.project-header-container {
   width: 1200px;
   font-size: 20px;
   margin: auto;
-  margin-top: 178px;
+  margin-top: 158px;
   margin-bottom: 70px;
   height: 100vh;
   min-height: 1300px;
 }
-.project-detail-width {
+.project-header-width {
   min-width: 1500;
   background-color: #dddbec;
   border-radius: 150px 150px 0px 0px;
@@ -54,13 +54,13 @@
   width: 230px;
 }
 
-.project-detail-img-settings {
+.project-header-img-settings {
   position: relative;
   width: 50px;
-  top: -90px;
-  left: 800px;
+  top: 5%;
+  left: 85%;
 }
-.project-detail-img-settings:hover {
+.project-header-img-settings:hover {
   cursor: pointer;
 }
 
@@ -83,6 +83,7 @@
   width: 600px;
   position: relative;
   font-size: x-large;
+  margin-left: 5%;
 }
 
 .project-detail-side-bar > div {
