@@ -39,8 +39,8 @@ public class Apply {
     private String positionCode;
     @Column(name = "memo")
     private String memo;
-//    @Column(name = "is_select")
-//    private boolean isSelect;
+    @Column(name = "state_code")
+    private String stateCode;
     @Column(name = "apply_code")
     private String applyCode;
     @Column(name = "reg_dt")
@@ -50,6 +50,9 @@ public class Apply {
     @OneToOne
     @JoinColumn(name = "apply_code", insertable = false, updatable = false)
     private CommonCode code;
+    @OneToOne
+    @JoinColumn(name = "state_code", insertable = false, updatable = false)
+    private CommonCode state;
     @OneToOne
     @JoinColumn(name = "position_code", insertable = false, updatable = false)
     private CommonCode position;
@@ -78,7 +81,7 @@ public class Apply {
     private List<ApplyAnswer> applyAnswerList;
 
     @Builder
-    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, Integer postingMeetingSeq, String content, String positionCode, String memo, boolean isSelect, String applyCode, LocalDateTime regDt, CommonCode code, Posting posting, PostingMeeting postingMeeting, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList, List<ApplyAnswer> applyAnswerList) {
+    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, Integer postingMeetingSeq, String content, String positionCode, String memo, CommonCode state, String applyCode, LocalDateTime regDt, CommonCode code, Posting posting, PostingMeeting postingMeeting, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList, List<ApplyAnswer> applyAnswerList) {
         this.applySeq = applySeq;
         this.userSeq = userSeq;
         this.postingSeq = postingSeq;
@@ -86,7 +89,7 @@ public class Apply {
         this.content = content;
         this.positionCode = positionCode;
         this.memo = memo;
-//        this.isSelect = isSelect;
+        this.state = state;
         this.applyCode = applyCode;
         this.regDt = regDt;
         this.code = code;

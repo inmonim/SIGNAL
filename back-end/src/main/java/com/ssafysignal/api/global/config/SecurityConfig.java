@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/board/qna", "/board/qna/count", "/board/notice", "/board/notice/count").permitAll()
                 .antMatchers("/board/qna/**", "/board/notice/**").hasAnyAuthority("USER")
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .anyRequest().permitAll()
 
                 .and()

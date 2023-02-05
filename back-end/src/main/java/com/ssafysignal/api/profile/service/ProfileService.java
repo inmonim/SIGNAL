@@ -18,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class ProfileService {
                 .userCareerList(userCareerRepository.findByUserSeq(userSeq))
                 .userExpList(userExpRepository.findByUserSeq(userSeq))
                 .userPositionList(userPositionRepository.findByUserSeq(userSeq))
-                .userSkillList(userSkillRepository.findByUserSeq(userSeq))
+                .userSkillList(userSkillRepository.findByUserSeq(userSeq).stream().map(UserSkill::fromEntity).collect(Collectors.toList()))
                 .build();
     }
 
@@ -105,7 +106,7 @@ public class ProfileService {
     @Transactional
     public ProfileBasicResponse findAllSkill(Integer userSeq) throws RuntimeException {
         return ProfileBasicResponse.builder()
-                .userSkillList(userSkillRepository.findByUserSeq(userSeq))
+                .userSkillList(userSkillRepository.findByUserSeq(userSeq).stream().map(UserSkill::fromEntity).collect(Collectors.toList()))
                 .build();
 
     }

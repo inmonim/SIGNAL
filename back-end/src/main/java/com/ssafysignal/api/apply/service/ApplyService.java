@@ -145,14 +145,6 @@ public class ApplyService {
         return res;
     }
 
-//    @Transactional(readOnly = true)
-//    public Apply findWriterApply(Integer postingSeq, Integer applySeq) {
-//        Posting posting = postingRepository.findById(postingSeq).get();
-//        Apply apply = applyRepository.findByApplySeq(applySeq).get();
-//        Integer posting posting.getPostingSeq()
-//    }
-
-
     @Transactional
     public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
         System.out.println("asdf"+applySeq);
@@ -253,8 +245,8 @@ public class ApplyService {
         	postingMeeting.setPostingMeetingCode("PM102");
         	postingMeetingRepository.save(postingMeeting);
         }
-        
-        apply.setApplyCode("PAS104");
+        apply.setApplyCode("AS104");
+        apply.setStateCode("PAS104");
         applyRepository.save(apply);
     }
 
@@ -299,7 +291,7 @@ public class ApplyService {
 
     @Transactional(readOnly = true)
     public List<ApplyApplyerFindResponse> findAllApplyApplyer(int userSeq, int page, int size){
-        List<Apply> applyList = applyRepository.findALlByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
+        List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
         return ApplyApplyerFindResponse.toList(applyList);
     }
 }

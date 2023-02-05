@@ -40,12 +40,13 @@ public class TodolistService{
     public List<TodolistFindResponse> findAllTodoList(Integer userSeq,
                                                       Integer projectSeq,
                                                       String regDt) {
-        List<Todolist> toDoList = todolistRepository.findAllByUserSeq(userSeq);
+        List<Todolist> toDoList = todolistRepository.findByUserSeq(userSeq);
         List<Todolist> responseTodolist = new ArrayList<>();
+
 
         for (Todolist toDo:toDoList) {
             if (toDo.getProjectSeq().equals(projectSeq)
-                    && toDo.getRegDt().format(DateTimeFormatter.ofPattern("yyyyMMdd")).equals(regDt)) {
+                    && toDo.getRegDt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).equals(regDt)) {
                 responseTodolist.add(toDo);
             }
         }
