@@ -97,16 +97,7 @@ const PostingModify = () => {
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
     postingSkillList: ['WE100', 'WE101'],
-    postingPositionList: [
-      {
-        positionCode: 'PO100',
-        positionCnt: 5,
-      },
-      {
-        positionCode: 'PO101',
-        positionCnt: 10,
-      },
-    ],
+    postingPositionList: [],
     postingQuestionList: [
       {
         num: 1,
