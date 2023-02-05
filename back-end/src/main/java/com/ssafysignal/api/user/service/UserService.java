@@ -107,7 +107,7 @@ public class UserService {
     	User user = userRepository.findByUserSeq(userSeq)
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        user.modifyUser(userInfo.getName(), userInfo.getNickname(), userInfo.getPhone(), userInfo.getBirth());
+        user.modifyUser( userInfo.getNickname(), userInfo.getPhone());
 
         if(!userInfo.getProfileImageFile().isEmpty()) {
             MultipartFile uploadImage = userInfo.getProfileImageFile();
@@ -125,7 +125,7 @@ public class UserService {
                     .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
                     .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
             String url = String.format("%s%s%s.%s", uploadFullPath, File.separator, name, type);
-            System.out.println("기존 이미지 seq "+user.getImageFile().getImageFileSeq());
+            
             // 프로젝트 대표 이미지가 있는 경우
             if (user.getImageFile().getImageFileSeq() != 0) {
                 File deleteFile = new File(user.getImageFile().getUrl());
@@ -158,10 +158,22 @@ public class UserService {
             uploadImage.transferTo(saveFile);
 
         }
-        System.out.println("!!!!!");
+
         userRepository.save(user);
-        System.out.println("!!!!!");
-    	
+
+    }
+
+    @Transactional
+    public void modifyPassword(int userSeq, String password){
+        User user = userRepository.findByUserSeq(userSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        // 비밀번호 암호화
+        String passwordEncode = passwordEncoder.encode(password);
+        if (passwordEncoder.matches(password, passwordEncode)) System.out.println(true);
+
+        user.modifyPassword(passwordEncode);
+        userRepository.save(user);
+
     }
 
 }
