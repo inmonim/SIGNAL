@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import cancleButton from '../../assets/image/x.png'
 import Swal from 'sweetalert2'
 import { Button } from '@mui/material'
+import api from 'api/Api.js'
 
 const ComfirmButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.vars.palette.common.white,
@@ -33,16 +34,6 @@ function ProjectProfile({ Data }) {
     setOpen(false)
   }
 
-  const handleProjectCreate = () => {
-    handleClose()
-
-    Swal.fire({
-      icon: 'warning',
-      title: '퇴출 완료',
-      text: '팀원이 퇴출되었습니다',
-    })
-  }
-
   const position = Data.position.name
   const warningCnt = Data.warningCnt
   const nickname = Data.nickname
@@ -60,29 +51,50 @@ function ProjectProfile({ Data }) {
     }
   }
 
+  const handleProjectCreate = () => {
+    handleClose()
+    try {
+      api.delete(process.env.REACT_APP_API_URL + '/project/member?projectUserSeq=' + Data.projectUserSeq)
+
+      Swal.fire({
+        icon: 'warning',
+        title: '퇴출 완료',
+        text: '팀원이 퇴출되었습니다',
+      })
+    } catch (error) {
+      console.log(error)
+
+      Swal.fire({
+        icon: 'warning',
+        title: '시스템 오류',
+        text: '관리자에게 문의하세요',
+      })
+    }
+  }
+
   useEffect(() => {
     checkUser()
   }, [kickAble])
 
   return (
-    <div className="project-maintain-profile">
-      <div className="project-maintain-profile-section">
-        <div className="project-maintain-profile-image">
+    <div className="team-maintain-profile">
+      <div className="team-maintain-profile-section">
+        <div className="team-maintain-profile-image">
           <img src={noProfile} alt="" />
         </div>
-        <div className="project-maintain-profile-text">
-          <div className="project-maintain-profile-nickname">{nickname}</div>
-          <div className="project-maintain-profile-position"> {position}</div>
+        <div className="team-maintain-profile-text">
+          <div className="team-maintain-profile-nickname">{nickname}</div>
+          <div className="team-maintain-profile-position"> {position}</div>
         </div>
       </div>
-      <div className="project-maintain-warning-section">
-        <div className="project-maintain-warning">경고 {warningCnt}회</div>
+      <div className="team-maintain-warning-section">
+        <div className="team-maintain-warning">경고 {warningCnt}회</div>
         <div>
           {kickAble === true && (
             <>
               <SignalBtn
-                className="project-maintain-ban"
-                sigborderradius="50px"
+                className="team-maintain-ban"
+                sapiigborderradius="50px"
                 sigmargin="auto"
                 sigfontsize="20px"
                 sigwidth="80px"

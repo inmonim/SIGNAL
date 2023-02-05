@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 400px;
     /* justify-content: center; */
   }
   
@@ -21,8 +22,11 @@
 
   .user-profile-input-chip{
     overflow: overlay;
+    width: 400px;
+    height: 200px;
+    padding: 5px;
   }
 
-  .MuiChip-root{
-    margin: 5px;
+  .user-profile-input-check-btn{
+    padding: 10px;
   }

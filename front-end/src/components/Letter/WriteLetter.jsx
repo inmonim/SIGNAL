@@ -4,6 +4,7 @@ import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import './WriteLetter.css'
 import AlertModal from 'components/AlertModal'
+import api from 'api/Api'
 
 const inputStyle = {
   backgroundColor: '#DDDBEC',
@@ -55,23 +56,14 @@ function WriteLetter({ handleMenuListItemClick }) {
   }
 
   const handleWrite = () => {
-    fetch(process.env.REACT_APP_API_URL + '/letter', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(inputs),
-    })
-      .then((res) => {
-        if (res.ok === true) {
-          setAlertOpen(true)
-          return res.json()
-        } else {
-          alert('다시 시도')
-        }
+    api
+      .post(process.env.REACT_APP_API_URL + '/letter', JSON.stringify(inputs), {
+        headers: {
+          'content-type': 'application/json',
+        },
       })
-      .then((data) => {
-        console.log(`data: ${JSON.stringify(data)}`)
+      .then((res) => {
+        console.log(`data: ${JSON.stringify(res.data)}`)
       })
   }
 
