@@ -1,0 +1,23 @@
+.team-building-container {
+  width: 100%;
+  font-size: 45px;
+  margin-top: 158px;
+  text-align: center;
+}
+
+.team-selct-width {
+  width: 1125px;
+  margin: auto;
+}
+
+.team-submit {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.team-building-submit-button {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0px;
+}
