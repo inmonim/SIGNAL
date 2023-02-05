@@ -38,30 +38,38 @@ public class FileService {
 
 
     public Integer registImageFile(MultipartFile uploadImage) throws IOException {
-        String uploadFullPath = uploadPath + File.separator + uploadDir;
+        try {
+            String uploadFullPath = uploadPath + File.separator + uploadDir;
 
-        File uploadPosition = new File(uploadFullPath);
-        if (!uploadPosition.exists()) uploadPosition.mkdir();
-        String fileName = uploadImage.getOriginalFilename();
-        String name = UUID.randomUUID().toString();
-        String type = Optional.ofNullable(fileName)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
-                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        String url = String.format("%s%s%s.%s", referancePath, File.separator, name, type);
+            File uploadPosition = new File(uploadFullPath);
+            if (!uploadPosition.exists()) uploadPosition.mkdir();
+            String fileName = uploadImage.getOriginalFilename();
+            String name = UUID.randomUUID().toString();
+            String type = Optional.ofNullable(fileName)
+                    .filter(f -> f.contains("."))
+                    .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+            String url = String.format("%s%s%s%s%s.%s", referancePath, File.separator, uploadDir, File.separator, name, type);
 
-        // 이미지 저장
-        File saveFile = new File(uploadFullPath);
-        uploadImage.transferTo(saveFile);
+            System.out.println("url = " + url);
+            System.out.println("referance = " + uploadFullPath + File.separator + name + "." + type);
 
-        ImageFile imageFile = ImageFile.builder()
-                .name(uploadImage.getOriginalFilename())
-                .size(uploadImage.getSize())
-                .type(type)
-                .url(url)
-                .build();
-        imageFileRepository.save(imageFile);
-        return imageFile.getImageFileSeq();
+            // 이미지 저장
+            File saveFile = new File(uploadFullPath + File.separator + name + "." + type);
+            uploadImage.transferTo(saveFile);
+
+            ImageFile imageFile = ImageFile.builder()
+                    .name(uploadImage.getOriginalFilename())
+                    .size(uploadImage.getSize())
+                    .type(type)
+                    .url(url)
+                    .build();
+            imageFileRepository.save(imageFile);
+            return imageFile.getImageFileSeq();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }
