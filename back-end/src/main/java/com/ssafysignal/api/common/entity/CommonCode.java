@@ -15,22 +15,22 @@ public class CommonCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
     private String code;
-
     @Column(name = "name")
     private String name;
-
     @Column(name = "group_code")
     private String groupCode;
-
     @Column(name = "groupName")
     private String groupName;
+    @Column(name = "url")
+    private String url;
 
     @Builder
-    public CommonCode(final String code, final String name, final String groupCode, final String groupName) {
+    public CommonCode(String code, String name, String groupCode, String groupName, String url) {
         this.code = code;
         this.name = name;
         this.groupCode = groupCode;
         this.groupName = groupName;
+        this.url = url;
     }
 
 
