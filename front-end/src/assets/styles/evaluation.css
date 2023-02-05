@@ -1,0 +1,52 @@
+.evaluation-container{
+  margin-top : 108px; 
+  
+}
+
+.evaluation-question{
+  background-color: white;
+  border: 0.5px solid #574B9F;
+  border-radius: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 27px;
+}
+
+.evaluation-question> img{
+  margin: 0px 20px 0px 20px;
+}
+
+.evaluation-date{
+  color: #574B9F;
+  font-size: 22px;
+}
+
+
+.evaluation-section{
+  display: flex;
+}
+
+.evaluation-member-bar{
+  width: 100px;
+  height: 500px;
+}
+
+.evaluation-member{
+  font-size: 22px;
+  background-color: #DDDBEC;
+  border: 1px solid #574B9F;
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  justify-content: center;
+  margin: auto;
+  display: flex;  
+  align-items: center;
+}
+
+.evaluation-member:hover{
+  box-shadow: 0 10px 10px rgba(0,0,0,0.22);
+  transition: 0.4s;
+}

@@ -1,25 +1,57 @@
-import React from 'react'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
+import React, { useEffect, useState } from 'react'
+import 'assets/styles/evaluation.css'
+import api from 'api/Api'
+import EvaluationQna from 'components/Project/EvaluationQna'
 
 function Evaluation() {
+  const userSeq = sessionStorage.getItem('userSeq')
+  const [toUserSeq, setToUserSeq] = useState('')
+  const [member, setMember] = useState([])
+  const projectSeq = 721
+  // location 에서 받아오기
+  const [score, setScore] = useState([0, 0, 0, 0, 0])
+
+  const handleScoreChange = (e, index) => {
+    console.log(e.target.name)
+    const scoreArr = [...score]
+    scoreArr.splice(e.target.name, 1, e.target.value)
+    setScore(scoreArr)
+    console.log(scoreArr)
+  }
+
+  const projectMemeberFetch = async () => {
+    try {
+      await api.get(process.env.REACT_APP_API_URL + '/project/member/' + projectSeq).then((res) => {
+        setMember(res.data.body.projectUserList)
+        console.log(res.data.body)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    projectMemeberFetch()
+  }, [])
+
   return (
     <div className="evaluation-container">
-      <div className="evaluation-member-bar">
-        <div className="evaluation-member">이름</div>
-      </div>
-      <div className="evaluaiton-body">
-        <div className="evaluation-date">3회차 2022.00.00 ~ 2022.00.00</div>
-        <div className="evaluation-question">question</div>
-        <div className="evaluation-radio-btn">
-          <RadioGroup name="radio-buttons-group">
-            <FormControlLabel value="0" control={<Radio />} label="매우 그렇지 않다" />
-            <FormControlLabel value="1" control={<Radio />} label="그렇지 않다" />
-            <FormControlLabel value="2" control={<Radio />} label="보통이다" />
-            <FormControlLabel value="3" control={<Radio />} label="그렇다" />
-            <FormControlLabel value="4" control={<Radio />} label="매우 그렇다" />
-          </RadioGroup>
+      <div className="evaluation-section">
+        <div className="evaluation-member-bar">
+          {member.map((item, index) => (
+            <div
+              className="evaluation-member"
+              key={index}
+              onClick={() => {
+                setToUserSeq(item.projectUserSeq)
+              }}
+            >
+              <div>{item.nickname}</div>
+            </div>
+          ))}
         </div>
+        // mode 해서 만약 선택된 user가 평가가 완료되었으면 평가 완료 띄우기
+        <EvaluationQna toUserSeq={toUserSeq}></EvaluationQna>
       </div>
     </div>
   )
