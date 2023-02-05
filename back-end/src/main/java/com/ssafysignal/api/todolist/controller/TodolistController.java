@@ -47,7 +47,7 @@ public class TodolistController {
     @Operation(summary = "ToDoList 목록 조회", description = "To Do List 목록을 조회한다.")
     @GetMapping("")
     private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(description = "UserSeq") Integer userSeq,
-                                                          @Parameter(description = "porjectSeq") Integer projectSeq,
+                                                          @Parameter(description = "projectSeq") Integer projectSeq,
                                                           @Parameter(description = "reg_dt") String regDt) {
         log.info("findAllTodo - Call");
 
@@ -61,8 +61,8 @@ public class TodolistController {
 
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 상세 조회", description = "To Do를 조회한다.")
-    @GetMapping("{toDoSeq}")
-    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(description = "UserSeq") @PathVariable Integer toDoSeq){
+    @GetMapping("/{toDoSeq}")
+    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq){
 
         log.info("findAllTodo - Call");
 
@@ -70,15 +70,15 @@ public class TodolistController {
             TodolistFindResponse toDo = todolistService.findTodo(toDoSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, toDo));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 수정", description = "To Do List 상태 및 내용을 수정한다")
-    @PutMapping("{toDoSeq}")
-    private ResponseEntity<BasicResponse> modifyTodo(@Parameter(name = "toDoSeq", description = "To Do Seq") @PathVariable Integer toDoSeq,
-                                                     @Parameter @RequestBody TodoModifyRequest toDoListModifyRequest) {
+    @PutMapping("/{toDoSeq}")
+    private ResponseEntity<BasicResponse> modifyTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq, @RequestBody TodoModifyRequest toDoListModifyRequest) {
 
         log.info(String.format("modifyTodo - %d - Call", toDoSeq));
         try {
@@ -91,8 +91,8 @@ public class TodolistController {
 
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoLIST 삭제", description = "To Do List 삭제")
-    @DeleteMapping("{toDoSeq}")
-    private ResponseEntity<BasicResponse> deleteTodo(@Parameter(name = "ToDoSeq", description = "To Do seq") @PathVariable Integer toDoSeq) {
+    @DeleteMapping("/{toDoSeq}")
+    private ResponseEntity<BasicResponse> deleteTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq) {
         log.info(String.format("delete - %d - call", toDoSeq));
         try {
             todolistService.deleteToDo(toDoSeq);
