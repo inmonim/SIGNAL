@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface TodolistRepository extends JpaRepository<Todolist, Integer> {
-    List<Todolist> findAllByUserSeq(Integer userSeq);
-
     Optional<Todolist> findByProjectToDoSeq(Integer toDoSeq);
+    List<Todolist> findByUserSeq(Integer userSeq);
 }

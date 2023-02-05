@@ -32,7 +32,7 @@ public class TodolistController {
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 등록", description = "To Do List를 생성한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registTodo(@Parameter(description = "Todo 정보") @RequestBody TodoRegistRequest todoRegistRequest) {
+    private ResponseEntity<BasicResponse> registTodo(@Parameter(name = "todoRegistRequest", description = "Todo 정보") @RequestBody TodoRegistRequest todoRegistRequest) {
         log.info("registTodo - Call");
 
         try {
@@ -46,9 +46,9 @@ public class TodolistController {
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 목록 조회", description = "To Do List 목록을 조회한다.")
     @GetMapping("")
-    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(description = "UserSeq") Integer userSeq,
-                                                          @Parameter(description = "projectSeq") Integer projectSeq,
-                                                          @Parameter(description = "reg_dt") String regDt) {
+    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(name = "userSeq") Integer userSeq,
+                                                          @Parameter(name = "projectSeq") Integer projectSeq,
+                                                          @Parameter(name = "regDt") String regDt) {
         log.info("findAllTodo - Call");
 
         try {
@@ -62,7 +62,7 @@ public class TodolistController {
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 상세 조회", description = "To Do를 조회한다.")
     @GetMapping("/{toDoSeq}")
-    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq){
+    private ResponseEntity<BasicResponse> findAllTodoList(@Parameter(name = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq){
 
         log.info("findAllTodo - Call");
 
