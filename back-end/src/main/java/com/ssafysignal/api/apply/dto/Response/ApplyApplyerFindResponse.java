@@ -25,7 +25,7 @@ public class ApplyApplyerFindResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime meetingDt;
     @Schema(description = "지원서의 진행 상황")
-    private CommonCode applyCode;
+    private CommonCode stateCode;
 
     public static List<ApplyApplyerFindResponse> toList(List<Apply> applyList){
         return applyList.stream()
@@ -38,7 +38,7 @@ public class ApplyApplyerFindResponse {
                 .applySeq(apply.getApplySeq())
                 .subject(apply.getPosting().getProject().getSubject())
                 .meetingDt(apply.getPostingMeeting().getMeetingDt())
-                .applyCode(apply.getCode())
+                .stateCode(apply.getState())
                 .build();
     }
 }
