@@ -3,6 +3,7 @@ package com.ssafysignal.api.posting.entity;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.project.entity.Project;
+import com.ssafysignal.api.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -43,6 +44,9 @@ public class Posting {
     // 1 : 1 관계
     @OneToOne(mappedBy = "posting")
     private Project project;
+    @OneToOne
+    @JoinColumn(name = "user_seq", insertable = false, updatable = false)
+    private User user;
     @OneToOne
     @JoinColumn(name = "posting_code", insertable = false, updatable = false)
     private CommonCode code;

@@ -50,13 +50,14 @@ public class SignalweekSchedule {
     @JoinColumn(name = "signalweek_schedule_seq")
     private List<Signalweek> signalweekList;
 
+    @Builder
     public SignalweekSchedule(Integer signalweekScheduleSeq, LocalDate openStartDt, LocalDate openEndDt,
-                              LocalDate voteStartDt, LocalDate voteEndDte, Integer quarter, Integer year, LocalDate regDt) {
+                              LocalDate voteStartDt, LocalDate voteEndDt, Integer quarter, Integer year, LocalDate regDt) {
         this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.openStartDt = openStartDt;
         this.openEndDt = openEndDt;
         this.voteStartDt = voteStartDt;
-        this.voteEndDt = voteEndDte;
+        this.voteEndDt = voteEndDt;
         this.quarter = quarter;
         this.year = year;
         this.regDt = regDt;
