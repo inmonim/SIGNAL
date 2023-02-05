@@ -13,7 +13,7 @@ function TodoPlusModal({ open, onClose }) {
     const { name, value } = e.target
     const nextInputs = { ...todo, [name]: value }
     setTodo(nextInputs)
-    console.log('.', todo)
+    console.log('.', nextInputs)
   }
   // console.log(todo)
 
@@ -27,7 +27,7 @@ function TodoPlusModal({ open, onClose }) {
         userSeq,
       }
       await api
-        .post(process.env.REACT_APP_API_URL + '/todo', todoReq)
+        .post(process.env.REACT_APP_API_URL + '/todo', JSON.stringify(todoReq))
         .then((res) => console.log(res))
         .catch((err) => {
           console.log(err)
