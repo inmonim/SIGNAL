@@ -6,6 +6,7 @@ import AlertModal from 'components/AlertModal'
 import 'assets/styles/profile/userpwd.css'
 import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
+import api from 'api/Api'
 
 function UserPwdModal({ open, onClose }) {
   const [inputs, setInputs] = useState({
@@ -26,7 +27,19 @@ function UserPwdModal({ open, onClose }) {
     setAlertOpen(true)
   }
 
-  const handleToProfile = () => {
+  const handleToProfile = async () => {
+    // 비밀번호 유효성 검사
+    await api
+      .put(
+        process.env.REACT_APP_API_URL + '/user/password/' + sessionStorage.getItem('userSeq'),
+        JSON.stringify({
+          password: inputs.password,
+          newPassword: inputs.newpwd,
+        })
+      )
+      .then((res) => {
+        console.log(res.data)
+      })
     setAlertOpen(false)
     onClose(true)
   }
