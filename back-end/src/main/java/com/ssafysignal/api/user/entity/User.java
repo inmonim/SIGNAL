@@ -62,12 +62,11 @@ public class User {
         this.imageFile = imageFile;
     }
     
-    public void modifyUser(String name, String nickname,String phone, String birth) {
-        this.name = name;
+    public void modifyUser( String nickname,String phone) {
         this.nickname = nickname;
         this.phone = phone;
-        this.birth = birth;
     }
+    
     public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
     public void modifyPassword(String password){
         this.password = password;
