@@ -9,11 +9,11 @@ function PostingApply() {
   const userSeq = sessionStorage.getItem('userSeq')
   const [data, setData] = useState([])
 
-  useEffect(async () => {
-    await api.get(process.env.REACT_APP_API_URL + '/apply/applyer/count/' + userSeq).then((res) => {
+  useEffect(() => {
+    api.get(process.env.REACT_APP_API_URL + '/apply/applyer/count/' + userSeq).then((res) => {
       setCount(res.data.body.count)
     })
-    await api
+    api
       .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + page + '&size=' + size)
       .then((res) => {
         setData(res.data.body)
