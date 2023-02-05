@@ -268,4 +268,66 @@ function getSkillCode(name) {
   return code
 }
 
-export { Skilldata, getSkillCode }
+const Skilldatabtn = [
+  {
+    code: 'WE100',
+    name: 'angular',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'WE103',
+    name: 'django',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'WE104',
+    name: 'flask',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'WE109',
+    name: 'reactjs',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'WE110',
+    name: 'spring',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'WE111',
+    name: 'vue',
+    groupCode: 'WE',
+    groupName: '웹 기술스택 구분',
+  },
+  {
+    code: 'PL112',
+    name: 'python',
+    groupCode: 'PL',
+    groupName: '프로그래밍언어 기술스택 구분',
+  },
+  {
+    code: 'PL106',
+    name: 'java',
+    groupCode: 'PL',
+    groupName: '프로그래밍언어 기술스택 구분',
+  },
+  {
+    code: 'PL107',
+    name: 'kotlin',
+    groupCode: 'PL',
+    groupName: '프로그래밍언어 기술스택 구분',
+  },
+  {
+    code: 'DB102',
+    name: 'mysql',
+    groupCode: 'DB',
+    groupName: '데이터베이스 기술스택 구분',
+  },
+]
+export { Skilldata, getSkillCode, Skilldatabtn }

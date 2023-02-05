@@ -10,7 +10,7 @@ import Localdata from 'data/Localdata'
 import TabPanel from '@mui/lab/TabPanel'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import { Skilldata } from 'data/Skilldata'
+import { Skilldata, Skilldatabtn } from 'data/Skilldata'
 import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
@@ -60,29 +60,14 @@ function Posting() {
   // )
   // `${process.env.REACT_APP_API_URL}/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
   // console.log(result.data?.body?.postingList)
+  // const userName = sessionStorage.getItem('username')
+  // console.log(userName)
   const navigate = useNavigate()
   const [postingList, setPostingList] = useState([])
   // result.data && setPostingList(result.data?.body?.postingList)
   // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('FI100')
   // 버튼 색 변경
-  const skillBtnList1 = ['JavaScript', 'React', 'Java', 'Nodejs', 'Vue', 'Spring', 'Typescript']
-  const skillBtnList2 = ['Java', 'Flutter', 'Kotlin']
-  const skillBtnList3 = ['React', 'Flutter', 'Swift']
-  const skillBtnList4 = ['Java']
-  const skillBtnList5 = ['Java', 'Flutter']
-  const skillBtnList6 = [
-    'JavaScript',
-    'React',
-    'Java',
-    'Flutter',
-    'Nodejs',
-    'Vue',
-    'Kotlin',
-    'Spring',
-    'Swift',
-    'Typescript',
-  ]
   // console.log(...skillBtnList)
   const [local, setLocal] = useState('')
   const [skillImgIs, setSkillImgIst] = useState({
@@ -105,6 +90,8 @@ function Posting() {
   // 버튼 누르면 데이터 담기게 state
   const [skillList, setSkillList] = useState([])
   const [skillListauto, setSkillListauto] = useState([])
+  const [skillaxios, setSkillAxios] = useState([])
+
   const handleChangeSkill = (value) => {
     const copy = value.map((ele) => ele.code)
     console.log(copy)
@@ -154,9 +141,10 @@ function Posting() {
   const btnClickAxios = async () => {
     const res = await api.get(
       process.env.REACT_APP_API_URL +
-        `/posting?page=${page}&size=${size}&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillListauto}`
+        `/posting?page=${page}&size=${size}&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillaxios}`
     )
     setPostingList(res.data.body.postingList)
+
     // console.log(Title)/
   }
   useEffect(() => {
@@ -164,14 +152,19 @@ function Posting() {
   }, [])
   useEffect(() => {
     btnClickAxios()
-  }, [value, local, Title, skillListauto, page])
+  }, [value, local, Title, skillaxios, page])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [local])
   // useEffect(() => {
   //   btnClickAxios()
   // }, [Title])
-
+  useEffect(() => {
+    const copy = [...skillList, ...skillListauto]
+    const set = new Set(copy)
+    const copy2 = Array.from(set)
+    setSkillAxios(copy2)
+  }, [skillList, skillListauto])
   return (
     <div>
       <Banner />
@@ -181,6 +174,7 @@ function Posting() {
             onClick={() => {
               console.log(skillList, 'SkillList')
               console.log(skillListauto, 'skillListauto')
+              console.log(skillaxios)
             }}
           >
             ㅇ
@@ -202,162 +196,17 @@ function Posting() {
             </Box>
             <TabPanel value="FI100">
               <SkillSelectBox>
-                {skillBtnList1.map((ele, i) => (
+                {Skilldatabtn.map((ele, i) => (
                   <Skillbtn
                     style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
                     onClick={() => {
                       changeSkillBtn(i)
                       const copy = [...skillList]
                       const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
                       } else {
-                        set.add(ele)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    <img
-                      src={`/images/${ele}.png`}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="FI101">
-              <SkillSelectBox>
-                {skillBtnList2.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
-                      } else {
-                        set.add(ele)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    <img
-                      src={`/images/${ele}.png`}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="FI102">
-              <SkillSelectBox>
-                {skillBtnList3.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
-                      } else {
-                        set.add(ele)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    <img
-                      src={`/images/${ele}.png`}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="FI104">
-              <SkillSelectBox>
-                {skillBtnList4.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
-                      } else {
-                        set.add(ele)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    <img
-                      src={`/images/${ele}.png`}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="FI105">
-              <SkillSelectBox>
-                {skillBtnList5.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
-                      } else {
-                        set.add(ele)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    <img
-                      src={`/images/${ele}.png`}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="">
-              <SkillSelectBox>
-                {skillBtnList6.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele)) {
-                        set.delete(ele)
-                      } else {
-                        set.add(ele)
+                        set.add(ele.code)
                       }
                       const copy2 = Array.from(set)
                       setSkillList(copy2)
@@ -365,18 +214,169 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    <img
+                    {/* <img
                       src={`/images/${ele}.png`}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele}
+                    /> */}
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI101">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    {/* <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    /> */}
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI102">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    {/* <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    /> */}
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI104">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    {/* <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    /> */}
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="FI105">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    {/* <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    /> */}
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
+            <TabPanel value="">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    {/* <img
+                      src={`/images/${ele}.png`}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    /> */}
+                    {ele.name}
                   </Skillbtn>
                 ))}
               </SkillSelectBox>
             </TabPanel>
           </TabContext>
         </Box>
+
         <Box sx={{ display: 'flex' }}>
           <Autocomplete
             multiple

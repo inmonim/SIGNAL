@@ -25,6 +25,10 @@ import ProjectHeader from './pages/Project/ProjectHeader'
 import TeamMaintain from 'components/Project/TeamMaintain'
 import ProjectMaintain from 'components/Project/ProjectMaintain'
 import ScrollTop from 'components/common/ScrollTop'
+import SignalList from 'pages/Signal/SignalList'
+import Signalregister from 'pages/Signal/Signalregister'
+import SignalDetail from 'pages/Signal/SignalDetail'
+import SignalHonor from 'pages/Signal/SignalHonor'
 
 import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
@@ -66,6 +70,10 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
+          <Route path="/signalList" element={<SignalList />} />
+          <Route path="/signalregister" element={<Signalregister />} />
+          <Route path="/signalDetail/:id" element={<SignalDetail />} />
+          <Route path="/signalHonor" element={<SignalHonor />} />
           <Route path="/adminblacklist" element={<AdminBalckList />} />
           <Route path="/adminproject" element={<AdminProject />} />
           <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
