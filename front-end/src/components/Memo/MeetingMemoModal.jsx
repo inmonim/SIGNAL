@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import { Modal, Box, Typography } from '@mui/material'
 import cancleButton from '../../assets/image/x.png'
+import api from 'api/Api'
 
 const style = {
   position: 'absolute',
@@ -38,13 +39,9 @@ function MeetingMemoModal({ open, close }) {
   const [memo, setMemo] = useState('')
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + '/apply/memo/' + 1, {
-      method: 'GET',
+    api.get(process.env.REACT_APP_API_URL + '/apply/memo/' + 1).then((res) => {
+      setMemo(res.data.body.content)
     })
-      .then((res) => res.json())
-      .then((res) => {
-        setMemo(res.data.body.content)
-      })
   }, [])
 
   return (
