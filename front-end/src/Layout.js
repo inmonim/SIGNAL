@@ -25,6 +25,10 @@ import ProjectDetail from './pages/Project/ProjectDetail'
 import TeamMaintain from 'pages/Project/TeamMaintain'
 import ProjectMaintain from 'pages/Project/ProjectMaintain'
 import ScrollTop from 'components/common/ScrollTop'
+import SignalList from 'pages/Signal/SignalList'
+import Signalregister from 'pages/Signal/Signalregister'
+import SignalDetail from 'pages/Signal/SignalDetail'
+import SignalHonor from 'pages/Signal/SignalHonor'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -62,6 +66,10 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
+          <Route path="/signalList" element={<SignalList />} />
+          <Route path="/signalregister" element={<Signalregister />} />
+          <Route path="/signalDetail/:id" element={<SignalDetail />} />
+          <Route path="/signalHonor" element={<SignalHonor />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>

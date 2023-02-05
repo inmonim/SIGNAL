@@ -15,6 +15,7 @@ import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import { Link } from 'react-router-dom'
 // import { ko } from 'date-fns/esm/locale'
 // import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
@@ -533,9 +534,11 @@ const PostingRegister = () => {
         </div>
 
         <div className="submit-button">
-          <button className="apply-button" onClick={handleApplySubmit}>
-            공고 등록
-          </button>
+          <Link to="/posting">
+            <button className="apply-button" onClick={handleApplySubmit}>
+              공고 등록
+            </button>
+          </Link>
         </div>
       </div>
     </Container>
