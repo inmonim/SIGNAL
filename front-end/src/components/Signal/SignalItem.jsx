@@ -3,11 +3,15 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { Box } from '@mui/system'
+import { useNavigate } from 'react-router-dom'
 // import { useNavigate } from 'react-router-dom'
 export default function SignalItem({ signal }) {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <Card
+      onClick={() => {
+        navigate(`/signaldetail`)
+      }}
       sx={{
         minWidth: 275,
         mb: 2,
@@ -18,9 +22,6 @@ export default function SignalItem({ signal }) {
         },
       }}
     >
-      {/* onClick={() => {
-          navigate(`/signal/${signal.postingSeq}`)
-        }} */}
       <CardContent>
         <Box sx={{ display: 'flex' }}>{signal.subject}</Box>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>

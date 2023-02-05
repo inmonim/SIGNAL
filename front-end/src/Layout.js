@@ -72,7 +72,7 @@ function App() {
           <Route path="/beforemeeting" element={<Beforemeeting />} />
           <Route path="/signal" element={<SignalList />} />
           <Route path="/signalregister" element={<Signalregister />} />
-          <Route path="/signal/:id" element={<SignalDetail />} />
+          <Route path="/signaldetail" element={<SignalDetail />} />
           <Route path="/signal/rank" element={<SignalHonor />} />
 
           <Route path="/adminblacklist" element={<AdminBalckList />} />

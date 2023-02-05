@@ -49,7 +49,7 @@ function SignalList() {
               sigborderradius={14}
               sigmargin="0px 0px 5px 0px"
               variant="contained"
-              onClick={() => navigate(`/signalregist`)}
+              onClick={() => navigate(`/signalregister`)}
             >
               등록
             </SignalBtn>
