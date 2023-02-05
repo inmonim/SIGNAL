@@ -1,5 +1,6 @@
 package com.ssafysignal.api.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class CommonCode {
     @Column(name = "groupName")
     private String groupName;
     @Column(name = "url")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String url;
 
     @Builder

@@ -5,15 +5,10 @@ import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
-import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
-import com.ssafysignal.api.apply.entity.Apply;
-import com.ssafysignal.api.apply.entity.ApplyAnswer;
 import com.ssafysignal.api.apply.service.ApplyService;
-import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.posting.entity.PostingQuestion;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,13 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +29,6 @@ import java.util.Map;
 @Tag(name = "지원", description = "지원서 API")
 @RestController
 @RequestMapping("/apply")
-
 public class ApplyController {
 
     private final ApplyService applyService;
