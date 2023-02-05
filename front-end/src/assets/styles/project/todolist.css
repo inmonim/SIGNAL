@@ -40,7 +40,7 @@
 
 .todo-todos-container{
   width: 50%;
-  height:70vh;
+  height:100vh;
   border-right: 1px solid black;
 }
 
@@ -49,14 +49,80 @@
   padding: 0px 16px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 40px;
 }
 
 .todo-todos-title,
 .todo-completed-title{
-  font-size: 24px;
+  font-size: 27px;
 }
 .todo-completed-container{
   width: 50%;
+}
+
+.todo-todos-list,
+.todo-completed-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.todo-todos-list-item{
+  width: 482px;
+  height: 94px;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid #574B9F;
+  font-size: 27px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 13px 0px;
+  padding: 25px;
+}
+
+.todo-completed-list-item{
+  width: 482px;
+  height: 94px;
+  color: white;
+  border-radius: 10px;
+  background-color: #574B9F;
+  font-size: 27px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 13px 0px;
+  padding: 25px;
+}
+.todo-todos-list-item:last-child,
+.todo-completed-list-item:last-child{
+  margin-bottom: 0px;
+}
+
+.todo-todos-list-item-container,
+.todo-completed-list-item-container{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0px 30px;
+}
+
+.todo-todos-list-item-content,
+.todo-completed-list-item-content{
+  margin-bottom: 5px;
+}
+
+.todo-completed-list-item-content{
+  text-decoration: line-through;
+}
+
+.todo-todos-list-item-regDt{
+  font-size: 15px;
+  color:#616161;
+}
+.todo-completed-list-item-regDt{
+  font-size: 15px;
+  color:#fff;
 }
 
 /* todo추가 Modal */

@@ -9,8 +9,8 @@ function ProjectDocs() {
   const handleToClose = () => setOpenTodoPlus(false)
   return (
     <div className="docs-container">
-      <div className="todo-todos-header">
-        <div className="todo-todos-title">ToDos</div>
+      <div className="docs-header">
+        <div className="docs-title">프로젝트 문서</div>
         <div className="todo-todos-plus" onClick={handleToAlert}>
           <img src={plusBtn} alt="" />
         </div>

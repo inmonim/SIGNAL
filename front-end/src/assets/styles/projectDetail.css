@@ -4,13 +4,13 @@
   margin: auto;
   margin-top: 158px;
   /* margin-bottom: 70px; */
-  height: 100vh;
+  /* height: 100vh; */
   /* min-height: 1300px; */
 }
 .project-header-width {
   background-color: #dddbec;
   border-radius: 150px 150px 0px 0px;
-  height: 100%;
+  min-height: 1200px;
   position: relative;
 }
 
@@ -121,14 +121,13 @@
 
 .project-detail-team-detail-list {
   display: flex;
-  position: relative;
-  width: 480px;
-  justify-content: space-between;
-  left: 220px;
+  justify-content: center;
+  padding: auto;
 }
 
 .project-detail-team {
   text-align: center;
+  margin: 0px 20px;
 }
 
 .project-detail-team > img {

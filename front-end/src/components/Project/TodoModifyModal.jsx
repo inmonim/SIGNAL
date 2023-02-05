@@ -4,11 +4,10 @@ import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
 import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
-import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
-function TodoPlusModal({ open, onClose, flag }) {
+function TodoModifyModal({ open, onClose }) {
   const [todo, setTodo] = useState('')
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -17,17 +16,6 @@ function TodoPlusModal({ open, onClose, flag }) {
     console.log('.', nextInputs)
   }
   // console.log(todo)
-  const [alert, setAlert] = useState(false)
-  const handleToPlus = () => {
-    setAlert(false)
-    onClose(true)
-    flag(true)
-  }
-  const handleToClose = () => {
-    setAlert(false)
-    onClose(true)
-    flag(false)
-  }
 
   const handleToAdd = async () => {
     const userSeq = sessionStorage.getItem('userSeq')
@@ -44,10 +32,7 @@ function TodoPlusModal({ open, onClose, flag }) {
             'content-type': 'application/json',
           },
         })
-        .then((res) => {
-          console.log(res)
-          setAlert(true)
-        })
+        .then((res) => console.log(res))
         .catch((err) => {
           console.log(err)
         })
@@ -89,12 +74,6 @@ function TodoPlusModal({ open, onClose, flag }) {
               <SignalBtn sigwidth="60px" sigheight="40px" sigfontsize="20px" sigborderradius={15} onClick={handleToAdd}>
                 등록
               </SignalBtn>
-              <AlertModal
-                msg="등록되었습니다."
-                open={alert}
-                onClick={handleToPlus}
-                onClose={handleToClose}
-              ></AlertModal>
             </div>
           </div>
         </Box>
@@ -133,4 +112,4 @@ const inputStyle = {
   },
 }
 
-export default TodoPlusModal
+export default TodoModifyModal

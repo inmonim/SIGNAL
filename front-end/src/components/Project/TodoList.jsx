@@ -1,25 +1,116 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'assets/styles/project/todolist.css'
 import TextField from '@mui/material/TextField'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { FormControlLabel } from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
 import TodoPlusModal from './TodoPlusModal'
 
 import plusBtn from 'assets/image/plusButton.png'
+import api from 'api/Api'
 
 function TodoList() {
   const [tab, setTab] = useState(0)
   const now = new Date()
   const year = now.getFullYear()
-  const month = now.getMonth() + 1
-  const date = now.getDate()
+  const month = ('0' + (now.getMonth() + 1)).slice(-2)
+  const date = ('0' + now.getDate()).slice(-2)
   const today = year + '-' + month + '-' + date
   const [dateValue, setDateValue] = useState(today)
 
   const [openTodoPlus, setOpenTodoPlus] = useState(false)
   const handleToAlert = () => setOpenTodoPlus(true)
   const handleToClose = () => setOpenTodoPlus(false)
+
+  function dateToString(value) {
+    if (value !== null) {
+      const year = String(value.$y)
+      let month = ''
+      let day = ''
+      if (value.$M + 1 >= 10) {
+        month = String(value.$M + 1)
+      } else {
+        month = '0' + String(value.$M + 1)
+      }
+      if (value.$D >= 10) {
+        day = String(value.$D)
+      } else {
+        day = '0' + String(value.$D)
+      }
+      const birthString = `${year}-${month}-${day}`
+      return birthString
+    }
+  }
+
+  const userSeq = sessionStorage.getItem('userSeq')
+  const projectSeq = 721
+  const regDt = dateValue
+
+  const [data, setData] = useState('')
+  const [flag, setFlag] = useState(false)
+
+  const dateInput = (e) => {
+    setDateValue(dateToString(e))
+    setFlag(!flag)
+  }
+
+  const handleFlag = (n) => {
+    setFlag(n)
+  }
+
+  useEffect(() => {
+    api({
+      url: process.env.REACT_APP_API_URL + '/todo',
+      method: 'GET',
+      params: { userSeq, projectSeq, regDt },
+    }).then((res) => {
+      console.log(res.data.body)
+      setData(res.data.body)
+    })
+  }, [flag])
+
+  const todoList = []
+  const completedTodoList = []
+  const [code, setCode] = useState('TD100')
+
+  const AddArray = () => {
+    Array.from(data).forEach((item) => {
+      item.toDoCode.code === 'TD100'
+        ? todoList.push({
+            todoSeq: item.projectToDoSeq,
+            content: item.content,
+            todoCode: item.toDoCode.code,
+          })
+        : completedTodoList.push({
+            todoSeq: item.projectToDoSeq,
+            content: item.content,
+            todoCode: item.toDoCode.code,
+          })
+    })
+  }
+  AddArray()
+
+  const [completeTodo, setCompleteTodo] = useState(false)
+
+  const handleCompleteTodo = async () => {
+    const nextCompleteTodo = completeTodo
+    setCompleteTodo(true)
+    setCode('TD101') // 수정하기로
+    console.log(nextCompleteTodo)
+    console.log(code)
+    AddArray()
+    await api
+      .put(process.env.REACT_APP_API_URL + '/todo/' + data.projectToDoSeq)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   return (
     <>
       <div className="todo-person-tab-container">
@@ -35,9 +126,7 @@ function TodoList() {
               <DatePicker
                 value={dateValue}
                 inputFormat="YYYY-MM-DD"
-                onChange={(newValue) => {
-                  setDateValue(newValue)
-                }}
+                onChange={dateInput}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -47,6 +136,7 @@ function TodoList() {
                   />
                 )}
               />
+              {console.log(dateValue)}
             </LocalizationProvider>
           </div>
         </div>
@@ -58,13 +148,56 @@ function TodoList() {
             <div className="todo-todos-plus" onClick={handleToAlert}>
               <img src={plusBtn} alt="" />
             </div>
-            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} />
+            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} flag={handleFlag} />
           </div>
-          <div className="todo-todos-list"></div>
+          <div className="todo-todos-list">
+            {todoList.map((todo, index) => (
+              <div className="todo-todos-list-item" key={todo.todoSeq}>
+                <FormControlLabel
+                  onChange={handleCompleteTodo}
+                  style={{ color: '#574b9f' }}
+                  control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+                />
+                <div className="todo-todos-list-item-container">
+                  <div id={todo.todoSeq} className="todo-todos-list-item-content" draggable>
+                    {todo.content}
+                  </div>
+                  <div className="todo-todos-list-item-regDt">{regDt}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="todo-completed-container">
           <div className="todo-completed-header">
             <div className="todo-completed-title">Completed</div>
+          </div>
+          <div className="todo-completed-list">
+            {completedTodoList.map((todo, index) => (
+              <div className="todo-completed-list-item" key={todo.todoSeq}>
+                <FormControlLabel
+                  onChange={handleCompleteTodo}
+                  style={{ color: '#fff' }}
+                  control={
+                    <Checkbox
+                      sx={{
+                        '& .MuiSvgIcon-root': { fontSize: 30 },
+                        color: 'white',
+                        '&.Mui-checked': { color: 'white' },
+                      }}
+                      disabled
+                      checked
+                    />
+                  }
+                />
+                <div className="todo-completed-list-item-container">
+                  <div id={todo.todoSeq} className="todo-completed-list-item-content" draggable>
+                    {todo.content}
+                  </div>
+                  <div className="todo-completed-list-item-regDt">{regDt}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
