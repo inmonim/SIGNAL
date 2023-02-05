@@ -2,6 +2,8 @@ package com.ssafysignal.api.signalweek.service;
 
 import com.ssafysignal.api.common.entity.File;
 import com.ssafysignal.api.common.repository.FileRepository;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.signalweek.dto.request.SignalweekRegistRequest;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
@@ -19,7 +21,6 @@ import java.util.List;
 public class SignalweekService {
 
     private final SignalweekRepository signalweekRepository;
-
     private final SignalweekScheduleRepository signalweekScheduleRepository;
     private final FileRepository fileRepository;
 
@@ -59,5 +60,28 @@ public class SignalweekService {
 
 
         signalweekRepository.save(signalweek);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Signalweek> findAllSignalweek() {
+        List<Signalweek> signalweekList =  signalweekRepository.findAll();
+
+        return signalweekList;
+    }
+
+    @Transactional(readOnly = true)
+    public Signalweek findSignalweek(Integer signalweekSeq) {
+        Signalweek signalweek = signalweekRepository.findBySignalweekSeq(signalweekSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        return signalweek;
+    }
+
+    @Transactional
+    public void deleteSignalweek(Integer signalweekSeq) {
+        Signalweek signalweek = signalweekRepository.findById(signalweekSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        signalweekRepository.delete(signalweek);
     }
 }
