@@ -198,6 +198,12 @@ public class PostingService {
         Posting posting = postingRepository.findById(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
         posting.setPostingCode("PPS100");
+
+        for (Apply apply : posting.getApplyList()) {
+            apply.setStateCode("PAS100");
+            apply.setApplyCode("AS104");
+        }
+
         postingRepository.save(posting);
     }
 
@@ -205,8 +211,7 @@ public class PostingService {
     public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-//        apply.setSelect(true);
-        // 대기중으로 상태 변경
+        apply.setStateCode("PAS101");
         apply.setApplyCode("AS100");
         applyRepository.save(apply);
     }
@@ -230,11 +235,15 @@ public class PostingService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostingFindAllByUserSeq> findAllPostPosting(Integer userSeq){
-        List<Posting> postingList = postingRepository.findByUserSeq(userSeq);
-        System.out.println("postingList.toString() = " + postingList.toString());
+    public List<PostingFindAllByUserSeq> findAllPostPosting(Integer page, Integer size, Integer userSeq){
+        List<Posting> postingList = postingRepository.findByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "postingSeq"));
         return postingList.stream()
                 .map(PostingFindAllByUserSeq::toWriter)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Integer countPostPosting(Integer userSeq) {
+        return postingRepository.countByUserSeq(userSeq);
     }
 }
