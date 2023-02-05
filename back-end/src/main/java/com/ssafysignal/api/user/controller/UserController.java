@@ -51,6 +51,7 @@ public class UserController {
         try {
         	User user = userService.findUser(userSeq);
             FindUserResponse findUserResponse = FindUserResponse.builder()
+                    .userSeq(user.getUserSeq())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .phone(user.getPhone())
@@ -114,9 +115,10 @@ public class UserController {
         log.info("modifyPassword - Call");
 
         String password = info.get("password");
+        String newPassword = info.get("newPassword");
         System.out.println(password);
         try {
-            userService.modifyPassword(userSeq, password);
+            userService.modifyPassword(userSeq, password, newPassword);
         } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
