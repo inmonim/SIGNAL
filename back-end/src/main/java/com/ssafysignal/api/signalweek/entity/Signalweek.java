@@ -24,7 +24,7 @@ public class Signalweek {
     private Integer signalweekSeq;
 
     @Column(name = "signalweek_schedule_seq")
-    private Integer signalweekSchedulSeq;
+    private Integer signalweekScheduleSeq;
 
     @Column(name = "title")
     private String title;
@@ -34,9 +34,6 @@ public class Signalweek {
 
     @Column(name = "deploy_url")
     private String deployUrl;
-
-    @Column(name = "content")
-    private String content;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_seq")
@@ -51,15 +48,14 @@ public class Signalweek {
     private File readmeFile;
 
     @Builder
-    public Signalweek(Integer signalweekSeq, Integer signalweekSchedulSeq, String title, Project project,
-                      String uccUrl, String deployUrl, String content, File pptFile, File readmeFile) {
+    public Signalweek(Integer signalweekSeq, Integer signalweekScheduleSeq, String title, Project project,
+                      String uccUrl, String deployUrl, File pptFile, File readmeFile) {
         this.signalweekSeq = signalweekSeq;
-        this.signalweekSchedulSeq = signalweekSchedulSeq;
+        this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.title = title;
         this.project = project;
         this.uccUrl = uccUrl;
         this.deployUrl = deployUrl;
-        this.content = content;
         this.pptFile = pptFile;
         this.readmeFile = readmeFile;
     }

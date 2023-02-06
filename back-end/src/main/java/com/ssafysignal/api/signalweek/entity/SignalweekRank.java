@@ -20,15 +20,22 @@ public class SignalweekRank {
     @Column(name = "signalweek_rank_seq")
     private Integer signalweekRankSeq;
 
-    @Column(name = "signalweek_seq")
-    private Integer signalweekSeq;
-
     @Column(name = "signalweek_schedule_seq")
     private Integer signalweekScheduleSeq;
 
     @Column(name = "rank")
     private Integer rank;
 
-//    @Builder
-//    public SignalweekRank(signal)
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "signalweek_seq")
+    private Signalweek signalweek;
+
+    @Builder
+    public SignalweekRank(Integer signalweekRankSeq, Integer signalweekScheduleSeq, Integer rank, Signalweek signalweek){
+        this.signalweekRankSeq = signalweekRankSeq;
+        this.signalweekScheduleSeq = signalweekScheduleSeq;
+        this.rank = rank;
+        this.signalweek = signalweek;
+    }
 }

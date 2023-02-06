@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface SignalweekScheduleRepository extends JpaRepository<SignalweekSchedule, Integer> {
 
     List<SignalweekSchedule> findTop1ByOrderByRegDtAsc();
+
+    List<SignalweekSchedule> findByYearAndQuarter(Integer year, Integer quarter);
 }

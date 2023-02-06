@@ -7,7 +7,9 @@ import com.ssafysignal.api.signalweek.dto.request.SignalweekRegistRequest;
 import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
+import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
+import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.service.SignalweekService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +39,21 @@ public class SignalweekController {
     @Tag(name = "시그널 위크")
     @Operation(summary = "시그널 위크 등록", description = "프로젝트를 시그널 위크에 등록한다")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registSignalweek(@Parameter(description = "시그널 위크 등록 정보", required = true) @RequestBody SignalweekRegistRequest signalweekRegistRequest,
-                                                           @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
-                                                           @RequestPart(value = "readameFile", required = false) MultipartFile readmeFile) {
+    private ResponseEntity<BasicResponse> registSignalweek(
+                                                            @Parameter(name = "projectSeq", required = true) Integer projectSeq,
+                                                            @Parameter(name = "title", required = true) String title,
+                                                            @Parameter(name = "uccUrl", required = true) String uccUrl,
+                                                            @Parameter(name = "deployUrl", required = true) String deployUrl,
+                                                            @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
+                                                            @RequestPart(value = "readmeFile", required = false) MultipartFile readmeFile) {
         log.info("registSignalweek - Call");
+        HashMap<String, Object> signalweekRegistRequest = new HashMap<>();
+        signalweekRegistRequest.put("projectSeq", projectSeq);
+        signalweekRegistRequest.put("title", title);
+        signalweekRegistRequest.put("uccUrl", uccUrl);
+        signalweekRegistRequest.put("deployUrl", deployUrl);
+
+        System.out.println(signalweekRegistRequest);
 
         try {
             signalweekService.registSinalweek(signalweekRegistRequest, pptFile, readmeFile);
@@ -114,12 +128,28 @@ public class SignalweekController {
                                                                 @Parameter(description = "분기") Integer quarter) {
         log.info("findAllSignalweekRank - Call");
 
-//        try {
-//            signalweekService.
-//        }
-        return null;
+        try {
+            List<SignalweekRankFindResponse> signalweekRankList = signalweekService.findAllSiganlweekRank(year, quarter);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekRankList));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
     }
 
+
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "시그널 위크 쿼터 종료 시 정산", description = "시그널 위크 투표 결과에 따라 명예의 전당 등록, 쿼터 종료, 하트 지급")
+    @PostMapping("ending")
+    private ResponseEntity<BasicResponse> quarterEndSignalweek() {
+        log.info("quarterEndSignalweek - Call");
+
+        try {
+            signalweekService.endSignalweek();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
 
 
     // 삭제는 관리자만 가능!
