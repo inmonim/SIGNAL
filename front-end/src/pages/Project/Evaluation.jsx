@@ -4,20 +4,11 @@ import api from 'api/Api'
 import EvaluationQna from 'components/Project/EvaluationQna'
 
 function Evaluation() {
-  const userSeq = sessionStorage.getItem('userSeq')
-  const [toUserSeq, setToUserSeq] = useState('')
   const [member, setMember] = useState([])
   const projectSeq = 721
-  // location 에서 받아오기
-  const [score, setScore] = useState([0, 0, 0, 0, 0])
 
-  const handleScoreChange = (e, index) => {
-    console.log(e.target.name)
-    const scoreArr = [...score]
-    scoreArr.splice(e.target.name, 1, e.target.value)
-    setScore(scoreArr)
-    console.log(scoreArr)
-  }
+  const [toUserSeq, setToUserSeq] = useState('')
+  // location 에서 받아오기
 
   const projectMemeberFetch = async () => {
     try {
@@ -50,8 +41,7 @@ function Evaluation() {
             </div>
           ))}
         </div>
-        // mode 해서 만약 선택된 user가 평가가 완료되었으면 평가 완료 띄우기
-        <EvaluationQna toUserSeq={toUserSeq}></EvaluationQna>
+        <EvaluationQna toUserSeq={toUserSeq} projectSeq={projectSeq}></EvaluationQna>
       </div>
     </div>
   )

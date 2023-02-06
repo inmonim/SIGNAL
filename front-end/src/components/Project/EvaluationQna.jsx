@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
@@ -8,7 +8,17 @@ import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/evaluation.css'
 import api from 'api/Api'
 
-function EvaluationQna(toUserSeq) {
+function EvaluationQna(toUserSeq, projectSeq) {
+  const userSeq = sessionStorage.getItem('userSeq')
+  const [score, setScore] = useState([0, 0, 0, 0, 0])
+
+  const handleScoreChange = (e, index) => {
+    console.log(e.target.name)
+    const scoreArr = [...score]
+    scoreArr.splice(e.target.name, 1, e.target.value)
+    setScore(scoreArr)
+    console.log(scoreArr)
+  }
   const question = [
     '의사소통에 적극적으로 참여했나요?',
     '약속 시간을 잘 지켰나요?',
