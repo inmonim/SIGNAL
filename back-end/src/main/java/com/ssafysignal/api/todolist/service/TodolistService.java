@@ -83,4 +83,14 @@ public class TodolistService{
 
         todolistRepository.delete(toDo);
     }
+
+    @Transactional
+    public void modifyStateTodo(Integer toDoSeq, boolean isComplete) {
+        Todolist todo = todolistRepository.findById(toDoSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        if (isComplete) todo.setToDoCode("TD101");
+        else todo.setToDoCode("TD100");
+        todolistRepository.save(todo);
+    }
 }

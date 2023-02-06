@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +45,8 @@ public class ProjectSettingService {
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
+    @Value("${app.fileUpload.uploadDir.projectImage}")
+    private String uploadDir;
 
     @Transactional(readOnly = true)
     public ProjectSettingFindResponse findProjectSetting(Integer projectSeq) {
@@ -81,13 +84,24 @@ public class ProjectSettingService {
 
         if (!uploadImage.isEmpty()){
             // 사진올리고
-            fileService.registImageFile(uploadImage);
+            ImageFile imageFile = fileService.registImageFile(uploadImage, uploadDir);
             if (project.getProjectImageFileSeq() != 1) {
-                fileService.deleteImageFile(project.getImageFile().getUrl());
-                imageFileRepository.deleteById(project.getProjectImageFileSeq());
+                fileService.deleteImageFile("/home/" + project.getImageFile().getUrl());
+                project.getImageFile().setType(imageFile.getType());
+                project.getImageFile().setUrl(imageFile.getUrl());
+                project.getImageFile().setName(imageFile.getName());
+                project.getImageFile().setSize(imageFile.getSize());
+                project.getImageFile().setRegDt(LocalDateTime.now());
+            } else {
+                ImageFile newImageFile = ImageFile.builder()
+                        .name(imageFile.getName())
+                        .size(imageFile.getSize())
+                        .url(imageFile.getUrl())
+                        .type(imageFile.getType())
+                        .build();
+                imageFileRepository.save(newImageFile);
+                project.setProjectImageFileSeq(newImageFile.getImageFileSeq());
             }
-            Integer imageFileSeq = fileService.registImageFile(uploadImage);
-            project.setProjectImageFileSeq(imageFileSeq);
         }
         /*
             프로젝트 설정 데이터 처리
