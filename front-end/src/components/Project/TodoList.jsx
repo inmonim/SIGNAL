@@ -173,13 +173,13 @@ function TodoList() {
           <div className="todo-todos-list">
             {todoList.map((todo, index) => (
               <>
-                <div className="todo-todos-list-item" key={index} id={todo.todoSeq} onClick={handleToModify}>
+                <div className="todo-todos-list-item" key={index} id={todo.todoSeq}>
                   <FormControlLabel
                     onChange={handleCompleteTodo}
                     style={{ color: '#574b9f' }}
                     control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
                   />
-                  <div className="todo-todos-list-item-container">
+                  <div className="todo-todos-list-item-container" onClick={handleToModify}>
                     <div id={todo.todoSeq} className="todo-todos-list-item-content" draggable>
                       {todo.content}
                     </div>

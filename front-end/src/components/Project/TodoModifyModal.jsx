@@ -10,15 +10,19 @@ import api from 'api/Api'
 
 function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
   const [content, setContent] = useState('')
+  const todoModifyFetch = async () => {
+    try {
+      await api.get(process.env.REACT_APP_API_URL + '/todo/' + todoSeq).then((res) => {
+        setContent(res.data.body.content)
+        console.log(res.data.body)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   useEffect(() => {
-    api({
-      url: process.env.REACT_APP_API_URL + '/todo/' + todoSeq,
-      method: 'GET',
-      params: { todoSeq },
-    }).then((res) => {
-      console.log(res.data.body)
-      setContent(res.data.body.content)
-    })
+    todoModifyFetch()
   }, [todoSeq])
 
   const [todo, setTodo] = useState('')
