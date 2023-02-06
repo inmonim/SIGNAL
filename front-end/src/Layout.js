@@ -34,8 +34,6 @@ import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
 import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 
-import Evaluation from 'pages/Project/Evaluation'
-
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
@@ -80,7 +78,6 @@ function App() {
           <Route path="/adminblacklist" element={<AdminBalckList />} />
           <Route path="/adminproject" element={<AdminProject />} />
           <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
-          <Route path="/evaluation" element={<Evaluation />} />
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
       </BrowserRouter>
