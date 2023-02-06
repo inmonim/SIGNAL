@@ -44,8 +44,10 @@ public class UserService {
     private String host;
     @Value("${server.port}")
     private Integer port;
-    @Value("${app.fileUpload.uploadDir.userImage}")
-    private String uploadDir;
+    @Value("${app.fileUpload.uploadPath.userImage}")
+    private String imageUploadPath;
+    @Value("${app.fileUpload.uploadPath}")
+    private String uploadPath;
 
     @Transactional(readOnly = true)
     public User findUser(final int userSeq) {
@@ -107,13 +109,15 @@ public class UserService {
     	User user = userRepository.findByUserSeq(userSeq)
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        if(!userInfo.getProfileImageFile().isEmpty()) {
+        System.out.println("userInfo = " + userInfo);
+
+        if(userInfo.getProfileImageFile() != null) {
             // 이미지 파일 업로드
-            ImageFile imageFile = fileService.registImageFile(userInfo.getProfileImageFile(), uploadDir);
+            ImageFile imageFile = fileService.registImageFile(userInfo.getProfileImageFile(), imageUploadPath);
             // 이미 존재하는 이미지가 있으면 삭제
             if (user.getImageFile().getImageFileSeq() != 0) {
                 // 물리 사진 파일 삭제
-                fileService.deleteImageFile("/home" + user.getImageFile().getUrl());
+                fileService.deleteImageFile(uploadPath + user.getImageFile().getUrl());
                 user.getImageFile().setType(imageFile.getType());
                 user.getImageFile().setUrl(imageFile.getUrl());
                 user.getImageFile().setName(imageFile.getName());

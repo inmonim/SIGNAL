@@ -6,7 +6,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,12 +15,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Table(name = "file")
-public class File {
+@Table(name = "project_file")
+public class ProjectFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "file_seq")
+    @Column(name = "project_file_seq")
     private Integer fileSeq;
 
     @Column(name = "name")
@@ -41,7 +40,7 @@ public class File {
     private LocalDateTime regDt;
 
     @Builder
-    private File(Integer fileSeq, String name, Long size, String type, String url, LocalDateTime regDt) {
+    private ProjectFile(Integer fileSeq, String name, Long size, String type, String url, LocalDateTime regDt) {
         this.fileSeq = fileSeq;
         this.name = name;
         this.size = size;

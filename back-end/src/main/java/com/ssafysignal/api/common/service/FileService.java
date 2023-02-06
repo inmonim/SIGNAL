@@ -1,6 +1,8 @@
 package com.ssafysignal.api.common.service;
 
+import com.ssafysignal.api.common.dto.FileDto;
 import com.ssafysignal.api.common.entity.ImageFile;
+import com.ssafysignal.api.common.entity.ProjectFile;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class FileService {
-    @Value("${server.host}")
-    private String host;
-    @Value("${server.port}")
-    private Integer port;
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
     @Value("${app.fileUpload.referancePath}")
@@ -31,54 +29,51 @@ public class FileService {
     }
 
     public ImageFile registImageFile(MultipartFile uploadImage, String uploadDir) throws IOException {
-        String uploadFullPath = uploadPath + File.separator + uploadDir;
-
-        File uploadPosition = new File(uploadFullPath);
-        if (!uploadPosition.exists()) uploadPosition.mkdir();
-        String fileName = uploadImage.getOriginalFilename();
-        String name = UUID.randomUUID().toString();
-        String type = Optional.ofNullable(fileName)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
-                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        String url = String.format("%s%s%s%s%s.%s", referancePath, File.separator, uploadDir, File.separator, name, type);
-
-        // 이미지 저장
-        File saveFile = new File(uploadFullPath + File.separator + name + "." + type);
-        uploadImage.transferTo(saveFile);
-
+        FileDto fileDto = uploadFile(uploadImage, uploadDir);
         return ImageFile.builder()
-                .name(uploadImage.getOriginalFilename())
-                .size(uploadImage.getSize())
-                .type(type)
-                .url(url)
+                .name(fileDto.getOriginalName())
+                .size(fileDto.getSize())
+                .type(fileDto.getType())
+                .url(fileDto.getUrl())
                 .build();
     }
 
-    public com.ssafysignal.api.common.entity.File registFile(MultipartFile uploadFile, String uploadDir) throws IOException {
-        String uploadFullPath = uploadPath + File.separator + uploadDir;
-
-        File uploadPosition = new File(uploadFullPath);
+    public ProjectFile registFile(MultipartFile uploadFile, String uploadDir) throws IOException {
+        FileDto fileDto = uploadFile(uploadFile, uploadDir);
+        return ProjectFile.builder()
+                .name(fileDto.getOriginalName())
+                .size(fileDto.getSize())
+                .type(fileDto.getType())
+                .url(fileDto.getUrl())
+                .build();
+    }
+    public FileDto uploadFile(MultipartFile uploadFile, String uploadDir) throws IOException {
+        File uploadPosition = new File(uploadPath + referancePath + File.separator + uploadDir);
         if (!uploadPosition.exists()) uploadPosition.mkdir();
+
         String fileName = uploadFile.getOriginalFilename();
         String name = UUID.randomUUID().toString();
         String type = Optional.ofNullable(fileName)
                 .filter(f -> f.contains("."))
                 .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        String uploadUrl = String.format("%s%s%s%s%s.%s", uploadPath + referancePath, File.separator, uploadDir, File.separator, name, type);
         String url = String.format("%s%s%s%s%s.%s", referancePath, File.separator, uploadDir, File.separator, name, type);
 
+        System.out.println("uploadUrl = " + uploadUrl);
+        System.out.println("url = " + url);
+
         // 이미지 저장
-        File saveFile = new File(uploadFullPath + File.separator + name + "." + type);
+        File saveFile = new File(uploadUrl);
         uploadFile.transferTo(saveFile);
 
-        return com.ssafysignal.api.common.entity.File.builder()
-                .name(uploadFile.getOriginalFilename())
+        return FileDto.builder()
+                .originalName(uploadFile.getOriginalFilename())
                 .size(uploadFile.getSize())
                 .type(type)
+                .name(name)
                 .url(url)
                 .build();
     }
-
-
 }

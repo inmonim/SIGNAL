@@ -1,7 +1,7 @@
 package com.ssafysignal.api.signalweek.service;
 
-import com.ssafysignal.api.common.entity.File;
-import com.ssafysignal.api.common.repository.FileRepository;
+import com.ssafysignal.api.common.entity.ProjectFile;
+import com.ssafysignal.api.common.repository.ProjectFileRepository;
 import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
@@ -37,18 +37,14 @@ public class SignalweekService {
 
     private final SignalweekRepository signalweekRepository;
     private final SignalweekScheduleRepository signalweekScheduleRepository;
-    private final FileRepository fileRepository;
+    private final ProjectFileRepository projectfileRepository;
     private final SignalweekVoteRepository signalweekVoteRepository;
     private final ProjectRepository projectRepository;
     private final FileService fileService;
 
-    @Value("${server.host}")
-    private String host;
-    @Value("${server.port}")
-    private Integer port;
-    @Value("${app.fileUpload.uploadDir.ppt}")
+    @Value("${app.fileUpload.uploadPath.ppt}")
     private String pptUploadDir;
-    @Value("${app.fileUpload.uploadDir.readme}")
+    @Value("${app.fileUpload.uploadPath.readme}")
     private String readmeUploadDir;
     private final SignalweekRankRepository signalweekRankRepository;
 
@@ -67,10 +63,10 @@ public class SignalweekService {
                     // 물리 피피티 파일 삭제
                     fileService.deleteImageFile(signalweek.getPptFile().getUrl());
                     // 디비 삭제
-                    fileRepository.deleteById(signalweek.getPptFile().getFileSeq());
+                    projectfileRepository.deleteById(signalweek.getPptFile().getFileSeq());
                 }
                 // 피피티 파일 업로드
-                File signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
+                ProjectFile signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
                 // 데이터베이스 업데이트
                 signalweek.setPptFile(signalweekPptFile);
             }
@@ -81,10 +77,10 @@ public class SignalweekService {
                     // 물리 릳미 파일 삭제
                     fileService.deleteImageFile(signalweek.getReadmeFile().getUrl());
                     // 디비 삭제
-                    fileRepository.deleteById(signalweek.getReadmeFile().getFileSeq());
+                    projectfileRepository.deleteById(signalweek.getReadmeFile().getFileSeq());
                 }
                 // 릳미 파일 업로드
-                File signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
+                ProjectFile signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
                 // 데이터베이스 업데이트
                 signalweek.setPptFile(signalweekReadmeFile);
             }
@@ -99,16 +95,16 @@ public class SignalweekService {
 
             // 처음 생성인 경우
         } else {
-            File registPptFile = null;
+            ProjectFile registPptFile = null;
             if (pptFile.getSize() >= 1) {
                 registPptFile = fileService.registFile(pptFile, pptUploadDir);
-                fileRepository.save(registPptFile);
+                projectfileRepository.save(registPptFile);
             }
 
-            File signalweekReadmeFile = null;
+            ProjectFile signalweekReadmeFile = null;
             if (readmeFile.getSize() >= 1) {
                 signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
-                fileRepository.save(signalweekReadmeFile);
+                projectfileRepository.save(signalweekReadmeFile);
             }
 
             List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc();

@@ -1,6 +1,6 @@
 package com.ssafysignal.api.signalweek.entity;
 
-import com.ssafysignal.api.common.entity.File;
+import com.ssafysignal.api.common.entity.ProjectFile;
 import com.ssafysignal.api.project.entity.Project;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -41,15 +41,15 @@ public class Signalweek {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "ppt_file_seq")
-    private File pptFile;
+    private ProjectFile pptFile;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "readme_file_seq")
-    private File readmeFile;
+    private ProjectFile readmeFile;
 
     @Builder
     public Signalweek(Integer signalweekSeq, Integer signalweekScheduleSeq, String title, Project project,
-                      String uccUrl, String deployUrl, File pptFile, File readmeFile) {
+                      String uccUrl, String deployUrl, ProjectFile pptFile, ProjectFile readmeFile) {
         this.signalweekSeq = signalweekSeq;
         this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.title = title;

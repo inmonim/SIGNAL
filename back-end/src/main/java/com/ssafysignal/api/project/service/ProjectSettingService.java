@@ -45,9 +45,12 @@ public class ProjectSettingService {
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
-    @Value("${app.fileUpload.uploadDir.projectImage}")
-    private String uploadDir;
 
+    @Value("${app.fileUpload.uploadPath}")
+    private String uploadPath;
+
+    @Value("${app.fileUpload.uploadPath.projectImage}")
+    private String projectUploadPath;
     @Transactional(readOnly = true)
     public ProjectSettingFindResponse findProjectSetting(Integer projectSeq) {
         Project project = projectRepository.findById(projectSeq)
@@ -82,11 +85,11 @@ public class ProjectSettingService {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        if (!uploadImage.isEmpty()){
+        if (uploadImage != null){
             // 사진올리고
-            ImageFile imageFile = fileService.registImageFile(uploadImage, uploadDir);
+            ImageFile imageFile = fileService.registImageFile(uploadImage, projectUploadPath);
             if (project.getProjectImageFileSeq() != 1) {
-                fileService.deleteImageFile("/home/" + project.getImageFile().getUrl());
+                fileService.deleteImageFile(uploadPath + project.getImageFile().getUrl());
                 project.getImageFile().setType(imageFile.getType());
                 project.getImageFile().setUrl(imageFile.getUrl());
                 project.getImageFile().setName(imageFile.getName());
@@ -159,4 +162,5 @@ public class ProjectSettingService {
             }
         } else throw new NotFoundException(ResponseCode.REGIST_ALREADY);
     }
+
 }
