@@ -1,6 +1,5 @@
 package com.ssafysignal.api.openprofile.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafysignal.api.profile.entity.UserCareer;
 import com.ssafysignal.api.profile.entity.UserExp;
 import com.ssafysignal.api.profile.entity.UserPosition;
@@ -15,8 +14,8 @@ import java.util.List;
 
 @Data
 @Builder
-@ApiModel(value = "FindAllReq", description = "오픈프로필 리스트")
-public class FindAllReq {
+@ApiModel(value = "FindAllOpenProfile", description = "오픈프로필 리스트")
+public class FindAllOpenProfile {
     @Schema(description = "유저 seq")
     private int userSeq;
 

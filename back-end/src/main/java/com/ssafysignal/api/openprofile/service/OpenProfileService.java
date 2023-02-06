@@ -2,7 +2,8 @@ package com.ssafysignal.api.openprofile.service;
 
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.openprofile.dto.response.FindAllReq;
+import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfile;
+import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfileRes;
 import com.ssafysignal.api.openprofile.entity.OpenProfile;
 import com.ssafysignal.api.openprofile.repository.OpenProfileRepository;
 import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
@@ -39,13 +40,14 @@ public class OpenProfileService {
     }
 
     @Transactional(readOnly = true)
-    public List<FindAllReq> findAllOpenProfile(int size, int page){
+    public FindAllOpenProfileRes findAllOpenProfile(int size, int page){
         Page<OpenProfile> openProfileList = openProfileRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "openProfileSeq"));
-        List<FindAllReq> profileList = new ArrayList<>();
+
+        List<FindAllOpenProfile> profileList = new ArrayList<>();
         for(OpenProfile openProfile : openProfileList){
             int userSeq = openProfile.getUserSeq();
             ProfileBasicResponse profileBasic =profileService.findProfile(userSeq);
-            FindAllReq profile = FindAllReq.builder()
+            FindAllOpenProfile profile = FindAllOpenProfile.builder()
                     .userSeq(userSeq)
                     .regDt(openProfile.getRegDt())
                     .userPositionList(profileBasic.getUserPositionList())
@@ -55,7 +57,13 @@ public class OpenProfileService {
                     .build();
             profileList.add(profile);
         }
-        return profileList;
+
+        FindAllOpenProfileRes openProfileRes = FindAllOpenProfileRes.builder()
+                .openProfileList(profileList)
+                .totalNum(openProfileList.getTotalElements())
+                .totalPage(openProfileList.getTotalPages())
+                .build();
+        return openProfileRes;
 
     }
 }
