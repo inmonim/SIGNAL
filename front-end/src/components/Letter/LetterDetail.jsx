@@ -39,6 +39,8 @@ function LetterDetail({ handleChangeView, view, fromto, handleMenuListItemClick 
     handleMenuListItemClick(2)
   }
 
+  const letterContent = data.content
+
   return (
     <div style={detailStyle}>
       <div className="letter-header" style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -75,16 +77,11 @@ function LetterDetail({ handleChangeView, view, fromto, handleMenuListItemClick 
         {fromtoCheck === 'from' ? <div>{data.fromNickname}</div> : <div>{data.toNickname}</div>}
       </div>
       <Divider />
-      <div className="letter-content" style={{ fontSize: '24px', margin: '32px' }}>
-        {(data.content || '').split('\n').map((line, index) => {
-          return (
-            <span key={index}>
-              {line}
-              <br />
-            </span>
-          )
-        })}
-      </div>
+      <div
+        dangerouslySetInnerHTML={{ __html: letterContent }}
+        className="letter-content"
+        style={{ fontSize: '24px', margin: '32px', whiteSpace: 'pre-wrap' }}
+      ></div>
     </div>
   )
 }
