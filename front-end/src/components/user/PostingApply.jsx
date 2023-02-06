@@ -110,10 +110,8 @@ function PostingApply() {
   const handleProjectAccept = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: true,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 확정')
     } catch (error) {
@@ -124,10 +122,8 @@ function PostingApply() {
   const handleProjectRefuse = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: false,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 거절')
     } catch (error) {
@@ -205,7 +201,7 @@ function PostingApply() {
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">
                         {row.subject !== ' ' ? (
-                          <SignalBtn onClick={() => window.open('/projectmeeting', '_blank')}>참가</SignalBtn>
+                          <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
                         ) : (
                           ' '
                         )}
