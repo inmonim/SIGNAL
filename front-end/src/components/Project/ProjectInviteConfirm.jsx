@@ -49,7 +49,7 @@ function ProjectTeamSelectConfirmModal(props) {
     console.log(props.valid)
     if (props.valid) {
       const applySeq = props.apply.applySeq
-      // const adminSeq = 5
+      const adminSeq = sessionStorage.getItem('userSeq')
 
       try {
         await api
@@ -60,20 +60,28 @@ function ProjectTeamSelectConfirmModal(props) {
           })
 
         console.log('팀원선택 put')
+        console.log(props.postingSeq)
+        console.log(props.subject)
 
-        // const letterReq = {
-        //   content: '팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요~^^',
-        //   nickname: props.apply.nickname,
-        //   title: '팀원 확정 메일',
-        //   userSeq: adminSeq,
-        // }
+        const letterContent = `<div>팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요 (ง˙∇˙)ว</div>
+<br>
+<a href="/posting/${props.postingSeq}" style="color:#574B9F; text-decoration:underline;">지원한 공고 확인하기 &gt;&gt;</a>
 
-        // await api
-        //   .post(process.env.REACT_APP_API_URL + '/letter/', letterReq)
-        //   .then((res) => {})
-        //   .catch((err) => {
-        //     console.log(err)
-        //   })
+<a href="/myprofile" style="color: #574B9F; text-decoration:underline;">마이페이지로 가기 &gt; &gt;</a>`
+
+        const letterReq = {
+          content: letterContent,
+          nickname: props.apply.nickname,
+          title: '팀원 확정 메일',
+          userSeq: adminSeq,
+        }
+
+        await api
+          .post(process.env.REACT_APP_API_URL + '/letter', letterReq)
+          .then((res) => {})
+          .catch((err) => {
+            console.log(err)
+          })
 
         const copy = [...props.applySeqList]
         copy.push(applySeq)

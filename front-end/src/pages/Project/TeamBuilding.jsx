@@ -211,6 +211,7 @@ function TeamSelect() {
                             apply={apply}
                             applySeqList={applySeqList}
                             setapplySeqList={setapplySeqList}
+                            postingSeq={postingSeq}
                             valid={valid}
                           ></ProjectInviteConfirm>
                         </TableCell>
