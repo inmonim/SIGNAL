@@ -7,18 +7,18 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.repository.ProjectRepository;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekModifyRequest;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekRegistRequest;
 import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
+import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
+import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
 import com.ssafysignal.api.signalweek.entity.SignalweekVote;
+import com.ssafysignal.api.signalweek.repository.SignalweekRankRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekVoteRepository;
-import com.ssafysignal.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -29,8 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -51,15 +52,17 @@ public class SignalweekService {
     private String pptUploadDir;
     @Value("${app.fileUpload.uploadDir.readme}")
     private String readmeUploadDir;
+    private final SignalweekRankRepository signalweekRankRepository;
 
 
     // 등록
     @Transactional
-    public void registSinalweek(SignalweekRegistRequest signalweekRegistRequest, MultipartFile pptFile, MultipartFile readmeFile) throws IOException {
-
+    public void registSinalweek(HashMap<String, Object> signalweekRegistRequest, MultipartFile pptFile, MultipartFile readmeFile) throws IOException {
+        Project project = projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq")).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         // 이미 있던 경우
-        if (signalweekRepository.findByProject(signalweekRegistRequest.getProjectSeq()).isPresent()) {
-            Signalweek signalweek = signalweekRepository.findByProject(signalweekRegistRequest.getProjectSeq()).get();
+        if (signalweekRepository.findByProject(project).isPresent()) {
+            Signalweek signalweek = signalweekRepository.findByProject(project)
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
             if (!pptFile.isEmpty()) {
                 // 피피티올리고
                 if (signalweek.getPptFile().getFileSeq() != 0) {
@@ -88,40 +91,38 @@ public class SignalweekService {
                 signalweek.setPptFile(signalweekReadmeFile);
             }
 
-            signalweek.setContent(signalweekRegistRequest.getContent());
-            signalweek.setTitle(signalweekRegistRequest.getTitle());
-            signalweek.setUccUrl(signalweekRegistRequest.getUccUrl());
-            signalweek.setDeployUrl(signalweekRegistRequest.getDeployUrl());
+            signalweek.setTitle(signalweekRegistRequest.get("title").toString());
+            signalweek.setUccUrl(signalweekRegistRequest.get("uccUrl").toString());
+            signalweek.setDeployUrl(signalweekRegistRequest.get("deployUrl").toString());
+            signalweek.setProject(projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq"))
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)));
 
             signalweekRepository.save(signalweek);
 
             // 처음 생성인 경우
         } else {
-
-            File signalweekPptFile = null;
-            if (!pptFile.isEmpty()) {
-                signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
+            File registPptFile = null;
+            if (pptFile.getSize() >= 1) {
+                registPptFile = fileService.registFile(pptFile, pptUploadDir);
+                fileRepository.save(registPptFile);
             }
 
             File signalweekReadmeFile = null;
-            if (!readmeFile.isEmpty()) {
+            if (readmeFile.getSize() >= 1) {
                 signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
+                fileRepository.save(signalweekReadmeFile);
             }
 
             List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc();
             SignalweekSchedule signalweekSchedule = signalweekScheduleList.get(0);
 
-            Project project = projectRepository.findById(signalweekRegistRequest.getProjectSeq())
-                    .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-
-
             Signalweek signalweek = Signalweek.builder()
                     .signalweekSchedulSeq(signalweekSchedule.getSignalweekScheduleSeq())
+                    .title(signalweekRegistRequest.get("title").toString())
                     .project(project)
-                    .content(signalweekRegistRequest.getContent())
-                    .deployUrl(signalweekRegistRequest.getDeployUrl())
-                    .uccUrl(signalweekRegistRequest.getUccUrl())
-                    .pptFile(signalweekPptFile)
+                    .deployUrl(signalweekRegistRequest.get("deployUrl").toString())
+                    .uccUrl(signalweekRegistRequest.get("uccUrl").toString())
+                    .pptFile(registPptFile)
                     .readmeFile(signalweekReadmeFile)
                     .build();
 
@@ -156,7 +157,6 @@ public class SignalweekService {
                         .readmeUrl(signalweek.getReadmeFile().getUrl())
                         .uccUrl(signalweek.getUccUrl())
                         .deployUrl(signalweek.getDeployUrl())
-                        .content(signalweek.getContent())
                         .vote(vote)
                         .build();
 
@@ -215,9 +215,38 @@ public class SignalweekService {
         }
     }
 
-    // 띵예의 전당
-//    @Transactional(readOnly = true)
-//    public
+//     띵예의 전당
+    @Transactional(readOnly = true)
+    public List<SignalweekRankFindResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
+        List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
+        Integer signalweekScheduleSeq = signalweekScheduleList.get(0).getSignalweekScheduleSeq();
+
+        List<SignalweekRank> signalweekRankList = signalweekRankRepository.findAllBySignalweekScheduleSeq(signalweekScheduleSeq);
+
+        List<SignalweekRankFindResponse> responseSignalweekRank = new ArrayList<>();
+
+        for (SignalweekRank signalweekRank:signalweekRankList) {
+
+            responseSignalweekRank.add(SignalweekRankFindResponse.builder()
+                    .rank(signalweekRank.getRank())
+                    .subject(signalweekRank.getSignalweek().getTitle())
+                    .signalweekSeq(signalweekRank.getSignalweek().getSignalweekSeq())
+                    .projectImageUrl(signalweekRank.getSignalweek().getProject().getImageFile().getUrl())
+                    .build());
+        }
+
+        return responseSignalweekRank;
+    }
+
+
+
+    // 시그널 위크 엔딩 정산
+//    @Transactional
+//    public void endSignalweek() {
+//        signalweekVoteRepository.find
+//    }
+
+
 
 
 
