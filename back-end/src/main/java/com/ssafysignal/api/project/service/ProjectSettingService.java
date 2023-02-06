@@ -46,7 +46,7 @@ public class ProjectSettingService {
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
     @Value("${app.fileUpload.uploadDir.projectImage}")
-    private final String uploadDir;
+    private String uploadDir;
 
     @Transactional(readOnly = true)
     public ProjectSettingFindResponse findProjectSetting(Integer projectSeq) {
