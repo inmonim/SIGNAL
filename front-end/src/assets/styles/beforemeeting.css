@@ -194,8 +194,7 @@
   background-position: center;
 }
 
-
-.before-meeting-qna-section{
+.before-meeting-qna-section {
   position: absolute;
   top: 400px;
   left: 73%;
@@ -206,41 +205,40 @@
   font-size: 33px;
 }
 
-
-.before-meeting-qna-cancel-btn:hover{
+.before-meeting-qna-cancel-btn:hover {
   cursor: pointer;
 }
 
-.before-meeting-body{
+.before-meeting-body {
   font-size: 22px;
   padding: 10px;
 }
 
-.before-meeting-qna-heade{
+.before-meeting-qna-heade {
   height: 70px;
 }
 
-.before-meeting-qna-title{
+.before-meeting-qna-title {
   text-align: center;
   margin: auto;
   position: relative;
   top: 27px;
 }
 
-.before-meeting-qna-cancel-btn{
+.before-meeting-qna-cancel-btn {
   position: relative;
   top: -20px;
   left: 80%;
 }
 
-.before-meeting-qusetion{
+.before-meeting-qusetion {
   background-color: rgb(204, 204, 204, 0.3);
   border-radius: 15px;
   padding: 10px;
   margin: 20px 0px;
 }
 
-.before-meeting-answer{
+.before-meeting-answer {
   background-color: white;
   border-radius: 15px;
   border: 1px solid #574b9f;
