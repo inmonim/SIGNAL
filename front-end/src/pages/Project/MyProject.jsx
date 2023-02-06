@@ -35,7 +35,7 @@ function MyProject() {
 
   return (
     <Container>
-      <div>
+      <div className="my-project-container">
         <div className="hr-sect">진행중인 프로젝트</div>
         <div className="project-list-container">
           {ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {

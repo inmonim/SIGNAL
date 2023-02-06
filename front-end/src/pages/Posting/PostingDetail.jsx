@@ -147,7 +147,7 @@ function PostingDetail() {
                 <SignalBtn
                   style={{ width: '50%' }}
                   onClick={() => {
-                    navigate('/applyregister', { state: posting.postingSeq })
+                    navigate('/applyregister', { state: { postingSeq: posting.postingSeq } })
                   }}
                 >
                   지원하기

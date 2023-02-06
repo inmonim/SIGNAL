@@ -1,3 +1,7 @@
+.my-project-container {
+  margin: 108px 0px;
+}
+
 .hr-sect {
   display: flex;
   flex-basis: 100%;
@@ -27,7 +31,7 @@ hr {
 
 .project-list-ing {
   border-radius: 8px;
-  background-color: #DDDBEC;
+  background-color: #dddbec;
   box-shadow: 0px 4px 4px 0px rgba(1, 1, 1, 0.25);
   display: flex;
   width: 281px;
@@ -39,7 +43,7 @@ hr {
 
 .project-list-end {
   border-radius: 8px;
-  background-color: #BCB7D9;
+  background-color: #bcb7d9;
   box-shadow: 0px 4px 4px 0px rgba(1, 1, 1, 0.25);
   display: flex;
   width: 281px;
@@ -49,17 +53,17 @@ hr {
   align-items: center;
 }
 
-.project-list-img{
+.project-list-img {
   width: 252px;
   height: 125px;
   background-color: white;
   border-radius: 8px;
-  display: flex; 
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.project-list-subject{
+.project-list-subject {
   width: 252px;
   height: 56px;
   font-size: 27px;
