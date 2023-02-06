@@ -5,8 +5,6 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.todolist.dto.request.TodoModifyRequest;
 import com.ssafysignal.api.todolist.dto.request.TodoRegistRequest;
 import com.ssafysignal.api.todolist.dto.response.TodolistFindResponse;
-import com.ssafysignal.api.todolist.entity.Todolist;
-import com.ssafysignal.api.todolist.repository.TodolistRepository;
 import com.ssafysignal.api.todolist.service.TodolistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,9 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -83,6 +79,21 @@ public class TodolistController {
         log.info(String.format("modifyTodo - %d - Call", toDoSeq));
         try {
             todolistService.modifyToDo(toDoSeq, toDoListModifyRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
+        }
+    }
+
+    @Tag(name = "ToDoList")
+    @Operation(summary = "ToDoList 수정", description = "To Do List 상태 및 내용을 수정한다")
+    @PutMapping("/state/{toDoSeq}")
+    private ResponseEntity<BasicResponse> modifyStateTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq,
+                                                          @Parameter(name = "isComplete") @RequestBody boolean isComplete) {
+
+        log.info("modifyStateTodo - Call");
+        try {
+            todolistService.modifyStateTodo(toDoSeq, isComplete);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));

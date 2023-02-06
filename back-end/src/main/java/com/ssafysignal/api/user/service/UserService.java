@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,6 +44,8 @@ public class UserService {
     private String host;
     @Value("${server.port}")
     private Integer port;
+    @Value("${app.fileUpload.uploadDir.userImage}")
+    private String uploadDir;
 
     @Transactional(readOnly = true)
     public User findUser(final int userSeq) {
@@ -105,19 +108,27 @@ public class UserService {
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
         if(!userInfo.getProfileImageFile().isEmpty()) {
-            // 사진올리고
-            fileService.registImageFile(userInfo.getProfileImageFile());
+            // 이미지 파일 업로드
+            ImageFile imageFile = fileService.registImageFile(userInfo.getProfileImageFile(), uploadDir);
             // 이미 존재하는 이미지가 있으면 삭제
             if (user.getImageFile().getImageFileSeq() != 0) {
                 // 물리 사진 파일 삭제
-                fileService.deleteImageFile(user.getImageFile().getUrl());
-                // 디비 삭제
-                imageFileRepository.deleteById(user.getUserImageFileSeq());
+                fileService.deleteImageFile("/home" + user.getImageFile().getUrl());
+                user.getImageFile().setType(imageFile.getType());
+                user.getImageFile().setUrl(imageFile.getUrl());
+                user.getImageFile().setName(imageFile.getName());
+                user.getImageFile().setSize(imageFile.getSize());
+                user.getImageFile().setRegDt(LocalDateTime.now());
+            } else {
+                ImageFile newImageFile = ImageFile.builder()
+                        .name(imageFile.getName())
+                        .size(imageFile.getSize())
+                        .url(imageFile.getUrl())
+                        .type(imageFile.getType())
+                        .build();
+                imageFileRepository.save(newImageFile);
+                user.setUserImageFileSeq(newImageFile.getImageFileSeq());
             }
-            // 이미지 파일 업로드
-            Integer imageFileSeq = fileService.registImageFile(userInfo.getProfileImageFile());
-            // 데이터베이스 업데이트
-            user.setUserImageFileSeq(imageFileSeq);
         }
         user.modifyUser( userInfo.getNickname(), userInfo.getPhone());
         userRepository.save(user);

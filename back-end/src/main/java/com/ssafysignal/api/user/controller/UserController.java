@@ -100,6 +100,7 @@ public class UserController {
         try {
             userService.modifyUser(userSeq, userInfo);
         } catch (Exception e){
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
 
