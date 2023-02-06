@@ -14,6 +14,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @ApiModel(value = "SignalweekRegistRequest", description = "시그널 위크 등록 정보")
 public class SignalweekModifyRequest {
+    
+    
+    // 미사용
+    
+    
+    
     @Schema(name = "타이틀")
     private String title;
 
