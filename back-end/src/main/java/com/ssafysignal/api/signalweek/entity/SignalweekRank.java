@@ -26,13 +26,13 @@ public class SignalweekRank {
     @Column(name = "rank")
     private Integer rank;
 
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "signalweek_seq")
     private Signalweek signalweek;
 
     @Builder
-    public SignalweekRank(Integer signalweekRankSeq, Integer signalweekScheduleSeq, Integer rank,
-                          Signalweek signalweek){
+    public SignalweekRank(Integer signalweekRankSeq, Integer signalweekScheduleSeq, Integer rank, Signalweek signalweek){
         this.signalweekRankSeq = signalweekRankSeq;
         this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.rank = rank;
