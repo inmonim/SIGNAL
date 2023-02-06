@@ -7,6 +7,7 @@
   width: 10%;
   transition-duration: 0.5s;
   text-align: center;
+  font-size: 17px;
 }
 .post-button:hover {
   color: #574b9f;
