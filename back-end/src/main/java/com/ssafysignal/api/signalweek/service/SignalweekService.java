@@ -20,6 +20,7 @@ import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekVoteRepository;
 import com.ssafysignal.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -42,6 +43,14 @@ public class SignalweekService {
     private final ProjectRepository projectRepository;
     private final FileService fileService;
 
+    @Value("${server.host}")
+    private String host;
+    @Value("${server.port}")
+    private Integer port;
+    @Value("${app.fileUpload.uploadDir.ppt}")
+    private String pptUploadDir;
+    @Value("${app.fileUpload.uploadDir.readme}")
+    private String readmeUploadDir;
 
 
     // 등록
@@ -60,9 +69,9 @@ public class SignalweekService {
                     fileRepository.deleteById(signalweek.getPptFile().getFileSeq());
                 }
                 // 피피티 파일 업로드
-                Integer pptFileSeq = fileService.registFile(pptFile);
+                File signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
                 // 데이터베이스 업데이트
-                signalweek.setPptFile(fileRepository.findById(pptFileSeq).get());
+                signalweek.setPptFile(signalweekPptFile);
             }
 
             if (!readmeFile.isEmpty()) {
@@ -74,9 +83,9 @@ public class SignalweekService {
                     fileRepository.deleteById(signalweek.getReadmeFile().getFileSeq());
                 }
                 // 릳미 파일 업로드
-                Integer readmeFileSeq = fileService.registFile(readmeFile);
+                File signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
                 // 데이터베이스 업데이트
-                signalweek.setReadmeFile(fileRepository.findById(readmeFileSeq).get());
+                signalweek.setPptFile(signalweekReadmeFile);
             }
 
             signalweek.setContent(signalweekRegistRequest.getContent());
@@ -89,20 +98,14 @@ public class SignalweekService {
             // 처음 생성인 경우
         } else {
 
-            File signalwwekPptFile = null;
+            File signalweekPptFile = null;
             if (!pptFile.isEmpty()) {
-                // 피피티 파일 업로드
-                Integer pptFileSeq = fileService.registFile(pptFile);
-                // 데이터베이스 업데이트
-                signalwwekPptFile = fileRepository.findById(pptFileSeq).orElseThrow(() -> new IOException("pptx 파일 등록 실패"));
+                signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
             }
 
             File signalweekReadmeFile = null;
             if (!readmeFile.isEmpty()) {
-                // 릳미올리고
-                Integer readmeFileSeq = fileService.registFile(readmeFile);
-                // 디비 업데이트
-                signalweekReadmeFile = fileRepository.findById(readmeFileSeq).orElseThrow(() -> new IOException("Readme 파일 등록 실패"));
+                signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
             }
 
             List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc();
@@ -118,7 +121,7 @@ public class SignalweekService {
                     .content(signalweekRegistRequest.getContent())
                     .deployUrl(signalweekRegistRequest.getDeployUrl())
                     .uccUrl(signalweekRegistRequest.getUccUrl())
-                    .pptFile(signalwwekPptFile)
+                    .pptFile(signalweekPptFile)
                     .readmeFile(signalweekReadmeFile)
                     .build();
 
