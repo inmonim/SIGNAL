@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @ApiModel(value = "SignalweekFindAllResponse", description = "시그널 위크 프로젝트 목록 조회 response")
 public class SignalweekFindAllResponse {
 
-    @Schema(description = "시그널 위크 프로젝트 목록", required = true)
+    @Schema(description = "시그널 위크 스케쥴별 랭킹 목록", required = true)
     private List<SignalweekFindAllResponseItem> signalweekList;
 
     private SignalweekFindAllResponse(final List<SignalweekFindAllResponseItem> signalweekList) {
