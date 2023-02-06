@@ -1,0 +1,27 @@
+.chatting-container{
+  background-color: rgba(221, 219, 236, 0.8);
+  width: 477px;
+  z-index: 1;
+  position: absolute;
+  left: 60%;
+  height: 858px;
+  border-radius: 45px;
+}
+
+.chatting-body{
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+
+.chatting-content{
+  min-height: calc(100% - 100px);
+}
+
+.chatting-footer{
+  height: 80px;
+  border-radius: 50px;
+  width: 95%;
+  margin: auto;
+  background-color: white;
+}

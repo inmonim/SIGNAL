@@ -1,18 +1,23 @@
 import React, { useState } from 'react'
 import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
-import moment from 'moment'
+import MeetingDoor from 'assets/image/meeting-door.png'
+import Share from 'assets/image/share.png'
+import Eraser from 'assets/image/eraser.png'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
+import Chatting from 'components/Meeting/Chatting'
 
 function ProjectMeeting() {
   const [voice, setVoice] = useState(false)
   const [video, setVideo] = useState(false)
-  const personList = [0, 0, 0, 0, 0, 0, 0]
+  const [chatOpen, setChatOpen] = useState(false)
+  const [color, setColor] = useState('black')
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const personList = [0, 0, 0, 0, 0]
 
   const [mode, setMode] = useState(0)
-
-  const time = new Date()
 
   const handleToVoice = () => {
     setVoice(!voice)
@@ -27,41 +32,74 @@ function ProjectMeeting() {
       <div className="project-meeting-main">
         {mode === 0 ? (
           <div className="project-meeting-video-list">
-            {personList.map((item) => (
-              <VideoBox key={item} className="project-meeting-person" size={personList.length}>
-                <video className="project-meeting-video" alt="나" />
+            {personList.map((item, index) => (
+              <VideoBox key={index} className="project-meeting-person" size={personList.length}>
+                <video className="project-meeting-video" alt="나" style={{ width: '100%', height: '100%' }} />
                 <div className="project-meeting-person-name">나</div>
               </VideoBox>
             ))}
           </div>
         ) : mode === 1 ? (
-          <div>코드편집</div>
+          <div className="project-meeting-video-code-edit">
+            <video> 코드편집</video>
+          </div>
         ) : (
-          <div>화면공유</div>
+          <div className="project-meeting-video-share-section">
+            <div className="project-meeting-video-share-palette">
+              <div className="project-meeting-video-share-palette2">
+                <div
+                  className="project-meeting-video-share-color"
+                  color={color}
+                  onClick={() => setPaletteOpen(!paletteOpen)}
+                ></div>
+
+                <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
+
+                <div className="project-meeting-viedo-clear">모두지우기</div>
+              </div>
+            </div>
+            {paletteOpen ? (
+              <div className="project-meeting-video-share-color-palette">
+                <Color onClick={() => setColor('black')} color={'black'}></Color>
+                <Color onClick={() => setColor('white')} color={'white'}></Color>
+                <Color onClick={() => setColor('red')} color={'red'}></Color>
+                <Color onClick={() => setColor('blue')} color={'blue'}></Color>
+              </div>
+            ) : (
+              ''
+            )}
+            <div className="project-meeting-video-share">
+              <video> 비디오</video>
+            </div>
+          </div>
         )}
+        {chatOpen ? <Chatting key={100000}></Chatting> : ''}
       </div>
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
-          {moment(time).format('YYYY-MM-DD LT')} 접속 인원 : {personList.length}명
+          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
         </div>
         <div className="project-meeting-btn">
-          <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(0)}>
+          <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
             <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
-            <div className="project-meeting-btn-code-edit">회의실</div>
+            <div className="project-meeting-btn-meeting">회의실</div>
           </div>
           <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(1)}>
             <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
             <div className="project-meeting-btn-code-edit">코드 편집</div>
+            {/* 고정 아니여도 됨 */}
           </div>
-          <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(2)}>
-            <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
-            <div className="project-meeting-btn-code-edit">화면 공유</div>
+          <div className="project-meeting-btn-share-container" onClick={() => setMode(2)}>
+            <img src={Share} alt="" className="project-meeting-btn-share-icon" />
+            <div className="project-meeting-btn-share">화면 공유</div>
+            {/* 고정이여야함  absolute */}
           </div>
-          <div className="project-meeting-btn-code-edit-container" onClick={() => alert('close')}>
-            <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
-            <div className="project-meeting-btn-code-edit">종료</div>
+          <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
+            <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
+            <div className="project-meeting-btn-close">종료</div>
           </div>
         </div>
+
         <div className="project-meeting-footer-right">
           {voice === false ? (
             <div className="project-meeting-footer-right-novoice" onClick={handleToVoice}></div>
@@ -73,7 +111,7 @@ function ProjectMeeting() {
           ) : (
             <div className="project-meeting-footer-right-video" onClick={handleToVideo}></div>
           )}
-          <div className="project-meeting-footer-right-chat"></div>
+          <div className="project-meeting-footer-right-chat" onClick={() => setChatOpen(!chatOpen)}></div>
         </div>
       </div>
     </div>
@@ -119,4 +157,28 @@ const videobox = (props) => {
 
 const VideoBox = styled.div`
   ${videobox};
+`
+
+const colorBox = (props) => {
+  const color = props.color
+  return css`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: ${color === 'white' ? '1px solid black' : ''};
+    margin: 15px 0px;
+    background-color: ${color === 'black'
+      ? '#000'
+      : color === 'white'
+      ? '#fff'
+      : color === 'red'
+      ? '#FF3333'
+      : '#0075FF'};
+    :hover {
+      cursor: pointer;
+    }
+  `
+}
+const Color = styled.div`
+  ${colorBox}
 `
