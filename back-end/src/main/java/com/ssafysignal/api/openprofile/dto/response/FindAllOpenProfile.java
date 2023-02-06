@@ -1,5 +1,6 @@
 package com.ssafysignal.api.openprofile.dto.response;
 
+import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.profile.entity.UserCareer;
 import com.ssafysignal.api.profile.entity.UserExp;
 import com.ssafysignal.api.profile.entity.UserPosition;
@@ -19,6 +20,9 @@ public class FindAllOpenProfile {
     @Schema(description = "유저 seq")
     private int userSeq;
 
+    @Schema(description = "닉네임")
+    private String nickname;
+
     @Schema(description = "오픈프로필 등록일")
     private LocalDateTime regDt;
     
@@ -33,4 +37,9 @@ public class FindAllOpenProfile {
 
     @Schema(description = "경험 목록")
     private List<UserExp> userExpList;
+
+    @Schema(description = "유저 프로필 이미지")
+    private String imageUrl;
+
+
 }

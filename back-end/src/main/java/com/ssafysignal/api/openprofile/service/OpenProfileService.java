@@ -8,6 +8,7 @@ import com.ssafysignal.api.openprofile.entity.OpenProfile;
 import com.ssafysignal.api.openprofile.repository.OpenProfileRepository;
 import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
 import com.ssafysignal.api.profile.service.ProfileService;
+import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,14 +47,20 @@ public class OpenProfileService {
         List<FindAllOpenProfile> profileList = new ArrayList<>();
         for(OpenProfile openProfile : openProfileList){
             int userSeq = openProfile.getUserSeq();
+            User user = userRepository.findByUserSeq(userSeq).get();
+            String nickname = user.getNickname();
+            String imageUrl = user.getImageFile().getUrl();
             ProfileBasicResponse profileBasic =profileService.findProfile(userSeq);
+
             FindAllOpenProfile profile = FindAllOpenProfile.builder()
                     .userSeq(userSeq)
+                    .nickname(nickname)
                     .regDt(openProfile.getRegDt())
                     .userPositionList(profileBasic.getUserPositionList())
                     .userSkillList(profileBasic.getUserSkillList())
                     .userCareerList(profileBasic.getUserCareerList())
                     .userExpList(profileBasic.getUserExpList())
+                    .imageUrl(imageUrl)
                     .build();
             profileList.add(profile);
         }
