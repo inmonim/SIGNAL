@@ -4,29 +4,49 @@ import Chip from '@mui/material/Chip'
 import InputTopModal from 'components/user/InputTopModal'
 import InputBottomModal from 'components/user/InputBottomModal'
 import { Avatar } from '@mui/material'
-import skillimg from 'assets/image/Skilltest/React.png'
+// import skillimg from 'assets/image/Skilltest/React.png'
+import { commonCodeListFetch } from 'utils/commonCodeFetch'
+import { changeSelectForm } from 'utils/changeForm'
+import { getPositionName } from 'data/Positiondata'
 
-function Profile() {
+function Profile(profile) {
+  const [inputTopTitle, setInputTopTitle] = useState('')
+  const [openInputPositionModal, setOpenInputPositionModal] = useState(false)
+  const [openInputSkillModal, setOpenInputSkillModal] = useState(false)
+
+  const [options, setOptions] = useState([])
+
+  const data = profile.profile
+
   const handleToClose = () => {
     setOpenInputPositionModal(false)
     setOpenInputSkillModal(false)
     setOpenInputExpModal(false)
     setOpenInputCareerModal(false)
   }
-  const [inputTopTitle, setInputTopTitle] = useState('')
-  const [openInputPositionModal, setOpenInputPositionModal] = useState(false)
-  const [openInputSkillModal, setOpenInputSkillModal] = useState(false)
-  const handleToInputPositionModal = () => {
+
+  // const [data, setData] = useState([])
+
+  const handleToInputPositionModal = async () => {
     setInputTopTitle('포지션')
     setOpenInputPositionModal(true)
+    setOptions(changeSelectForm(await commonCodeListFetch('PO')))
   }
-  const handleToInputSkillModal = () => {
+  const handleToInputSkillModal = async () => {
     setInputTopTitle('스킬')
     setOpenInputSkillModal(true)
+    const arr = []
+    changeSelectForm(await commonCodeListFetch('AI')).map((item) => arr.push(item))
+    changeSelectForm(await commonCodeListFetch('DB')).map((item) => arr.push(item))
+    changeSelectForm(await commonCodeListFetch('FI')).map((item) => arr.push(item))
+    changeSelectForm(await commonCodeListFetch('WE')).map((item) => arr.push(item))
+    changeSelectForm(await commonCodeListFetch('PL')).map((item) => arr.push(item))
+    setOptions(arr)
   }
 
   const [openInputExpModal, setOpenInputExpModal] = useState(false)
   const [openInputCareerModal, setOpenInputCareerModal] = useState(false)
+
   const handleToInputExpModal = () => {
     setInputTopTitle('경험')
     setOpenInputCareerModal(true)
@@ -35,6 +55,7 @@ function Profile() {
     setInputTopTitle('경력')
     setOpenInputCareerModal(true)
   }
+
   return (
     <div className="my-profile-four">
       <div className="my-profile-top">
@@ -46,10 +67,19 @@ function Profile() {
             open={openInputPositionModal}
             onClose={handleToClose}
             inputTopTitle={inputTopTitle}
+            Options={options}
           ></InputTopModal>
           <div className="my-profile-top-position-title">포지션</div>
           <div>
-            <Chip label="FrontEnd" variant="outlined" sx={{ fontSize: '20px' }} />
+            {data.userPositionList &&
+              data.userPositionList.map((item, index) => (
+                <Chip
+                  label={getPositionName(item.positionCode)}
+                  variant="outlined"
+                  sx={{ fontSize: '20px' }}
+                  key={index}
+                />
+              ))}
           </div>
         </div>
         <div className="my-profile-top-skill">
@@ -60,12 +90,18 @@ function Profile() {
             open={openInputSkillModal}
             onClose={handleToClose}
             inputTopTitle={inputTopTitle}
+            Options={options}
           ></InputTopModal>
           <div className="my-profile-top-skill-title">스킬</div>
           <div className="my-profile-top-skill-list">
-            <Avatar className="my-profile-top-skill-list-item" src={skillimg}></Avatar>
-            <Avatar className="my-profile-top-skill-list-item" src={skillimg}></Avatar>
-            <Avatar className="my-profile-top-skill-list-item" src={skillimg}></Avatar>
+            {data.userSkillList &&
+              data.userSkillList.map((item, index) => (
+                <Avatar
+                  className="my-profile-top-skill-list-item"
+                  src={process.env.REACT_APP_API_URL + item.ImgUrl}
+                  key={index}
+                ></Avatar>
+              ))}
           </div>
         </div>
       </div>
@@ -81,9 +117,12 @@ function Profile() {
           ></InputBottomModal>
           <div className="my-profile-bottom-exp-title">경험</div>
           <div className="my-profile-bottom-exp-list">
-            <div className="my-profile-bottom-exp-list-item">- 경험 내용</div>
-            <div className="my-profile-bottom-exp-list-item">- 경험 내용</div>
-            <div className="my-profile-bottom-exp-list-item">- 경험 내용</div>
+            {data.userExpList &&
+              data.userExpList.map((item, index) => (
+                <div className="my-profile-bottom-exp-list-item" key={index}>
+                  {item.content}
+                </div>
+              ))}
           </div>
         </div>
         <div className="my-profile-bottom-career">
@@ -97,9 +136,12 @@ function Profile() {
           ></InputBottomModal>
           <div className="my-profile-bottom-career-title">경력</div>
           <div className="my-profile-bottom-career-list">
-            <div className="my-profile-bottom-career-list-item">- 경력 내용</div>
-            <div className="my-profile-bottom-career-list-item">- 경력 내용</div>
-            <div className="my-profile-bottom-career-list-item">- 경력 내용</div>
+            {data.userCareerList &&
+              data.userCareerList.map((item, index) => (
+                <div className="my-profile-bottom-career-list-item" key={index}>
+                  {item.content}
+                </div>
+              ))}
           </div>
         </div>
       </div>

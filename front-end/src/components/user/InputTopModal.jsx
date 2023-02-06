@@ -1,27 +1,34 @@
 import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
-import { TextField } from '@mui/material'
 import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
 import Chip from '@mui/material/Chip'
+import Select from 'react-select'
+import { getSkillCode } from 'data/Skilldata'
+import { getPositionCode } from 'data/Positiondata'
+import api from 'api/Api'
 
-function InputTopModal({ open, onClose, inputTopTitle }) {
+function InputTopModal({ open, onClose, inputTopTitle, Options }) {
+  const userSeq = sessionStorage.getItem('userSeq')
   const [tag, setTag] = useState('')
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
+
   const handleDelete = (h) => () => {
     addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag !== h))
   }
   const handleHashtagChange = (event) => {
-    setTag(event.target.value)
+    setTag(event.label)
   }
   const newTag = () => {
-    setNumberOfTags(numberOfTags + 1)
-    addTag((arrayOfTags) => arrayOfTags.concat(tag))
-    console.log(tag)
+    const set = new Set(arrayOfTags.concat(tag))
+    setNumberOfTags(set.size)
+    const uniqueTags = Array.from(set)
+    addTag(uniqueTags)
   }
+
   const tags = arrayOfTags.map((h, index) => (
     <Chip
       label={h}
@@ -32,7 +39,24 @@ function InputTopModal({ open, onClose, inputTopTitle }) {
     />
   ))
 
-  const handleToProfile = () => {
+  const handleToProfile = async () => {
+    if (inputTopTitle === '스킬') {
+      arrayOfTags.map(async (item) => {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/skill/${userSeq}`, {
+          skillCode: getSkillCode(item),
+        })
+      })
+
+      console.log(arrayOfTags.map((item) => getSkillCode(item)))
+    } else {
+      arrayOfTags.map(async (item) => {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/position/${userSeq}`, {
+          positionCode: getPositionCode(item),
+        })
+      })
+      console.log(arrayOfTags.map((item) => getPositionCode(item)))
+    }
+
     onClose(onClose(true))
   }
 
@@ -58,14 +82,43 @@ function InputTopModal({ open, onClose, inputTopTitle }) {
           <div className="user-profile-input-main">
             <div className="user-profile-input-title">{inputTopTitle}</div>
             <div className="user-profile-input-input">
-              <TextField
-                id="filled-multiline-flexible"
-                name={inputTopTitle}
-                label={inputTopTitle}
-                value={tag}
-                sx={inputStyle}
+              <Select
+                className="basic-single"
+                classNamePrefix="select"
+                isSearchable={true}
+                name="position"
+                options={Options}
                 onChange={handleHashtagChange}
+                styles={{
+                  control: (baseStyles, state) => ({
+                    ...baseStyles,
+                    borderColor: '#574b9f',
+                    backgroundColor: '#DDDBEC',
+                    width: '300px',
+                    height: '50px',
+                    fontSize: '22px',
+                    ':hover': {
+                      backgroundColor: '#DDDBEC',
+                      borderColor: '#574b9f',
+                      cursor: 'pointer',
+                    },
+                  }),
+                  option: (baseStyles) => ({
+                    ...baseStyles,
+                    fontSize: '22px',
+                    ':hover': {
+                      backgroundColor: '#DDDBEC',
+                    },
+                    ':focus': {
+                      backgroundColor: '#574b9f',
+                    },
+                    ':checked': {
+                      backgroundColor: '#574b9f',
+                    },
+                  }),
+                }}
               />
+
               <SignalBtn
                 sigwidth="80px"
                 sigheight="50px"
@@ -113,17 +166,17 @@ const style = {
   // overflow: 'hidden',
 }
 
-const inputStyle = {
-  backgroundColor: '#DDDBEC',
-  width: '300px',
-  '& label.Mui-focused': {
-    color: '#574b9f',
-  },
-  '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: '#574b9f',
-    },
-  },
-}
+// const inputStyle = {
+//   backgroundColor: '#DDDBEC',
+//   width: '300px',
+//   '& label.Mui-focused': {
+//     color: '#574b9f',
+//   },
+//   '& .MuiOutlinedInput-root': {
+//     '&.Mui-focused fieldset': {
+//       borderColor: '#574b9f',
+//     },
+//   },
+// }
 
 export default InputTopModal

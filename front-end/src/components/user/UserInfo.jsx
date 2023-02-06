@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
-import ProfileImg from 'assets/image/profileimg2.jpeg'
+// import ProfileImg from 'assets/image/profileimg2.jpeg'
 import heart from 'assets/image/heart.png'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import api from 'api/Api'
 
 function UserInfo() {
+  const [userInfo, setUserInfo] = useState([])
   const [userModifyOpen, setUserModifyOpen] = useState(false)
   const handleToModify = () => {
     setUserModifyOpen(true)
@@ -21,7 +23,7 @@ function UserInfo() {
     setUserPwdOpen(true)
   }
 
-  const [alertOpen, setAlertOpen] = useState('')
+  const [alertOpen, setAlertOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleToOut = () => {
@@ -56,16 +58,31 @@ function UserInfo() {
       console.log(err)
     }
   }
+
+  const userFetch = async () => {
+    try {
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + sessionStorage.getItem('userSeq')).then((res) => {
+        setUserInfo(res.data.body)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    userFetch()
+  }, [])
+
   return (
     <div className="my-user">
-      <img className="my-user-img" src={ProfileImg} alt="" />
+      <img className="my-user-img" src={process.env.REACT_APP_API_URL + userInfo.userImageUrl} alt="" />
       <div className="my-user-info">
-        <div className="my-user-nickname">{sessionStorage.getItem('username')}</div>
-        <div className="my-user-email">{sessionStorage.getItem('userEmail')}</div>
+        <div className="my-user-nickname">{userInfo.nickname}</div>
+        <div className="my-user-email">{userInfo.email}</div>
       </div>
       <div className="my-user-heart">
         <img className="my-user-heart-img" src={heart} alt="" />
-        <div className="my-user-heart-cnt">100</div>
+        <div className="my-user-heart-cnt">{userInfo.heartCnt}</div>
       </div>
       <div className="my-user-btn">
         <SignalBtn

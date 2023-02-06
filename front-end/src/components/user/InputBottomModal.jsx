@@ -5,8 +5,10 @@ import { TextField } from '@mui/material'
 import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
+import api from 'api/Api'
 
 function InputBottomModal({ open, onClose, inputTopTitle }) {
+  const userSeq = sessionStorage.getItem('userSeq')
   const [tag, setTag] = useState('')
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
@@ -28,7 +30,25 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
     </div>
   ))
 
-  const handleToProfile = () => {
+  const handleToProfile = async () => {
+    if (inputTopTitle === '경력') {
+      arrayOfTags.map(async (item) => {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/career/${userSeq}`, {
+          content: item,
+        })
+      })
+      console.log(arrayOfTags)
+    } else {
+      arrayOfTags.map(async (item) => {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/exp/${userSeq}`, {
+          content: item,
+        })
+      })
+      console.log(arrayOfTags)
+    }
+    addTag([])
+    setNumberOfTags(0)
+    setTag('')
     onClose(onClose(true))
   }
 
