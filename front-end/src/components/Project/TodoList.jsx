@@ -96,13 +96,16 @@ function TodoList() {
 
   const handleCompleteTodo = async () => {
     const nextCompleteTodo = completeTodo
-    setCompleteTodo(true)
+    setCompleteTodo(!nextCompleteTodo)
     setCode('TD101') // 수정하기로
     console.log(nextCompleteTodo)
     console.log(code)
     AddArray()
+    const req = {
+      isComplete: true,
+    }
     await api
-      .put(process.env.REACT_APP_API_URL + '/todo/' + data.projectToDoSeq)
+      .put(process.env.REACT_APP_API_URL + '/todo/state/' + data.projectToDoSeq, req)
       .then((res) => {
         console.log(res)
       })
