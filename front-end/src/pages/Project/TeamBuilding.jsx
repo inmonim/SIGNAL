@@ -122,7 +122,7 @@ function TeamSelect() {
 
   const projectPost = async () => {
     try {
-      await api.post(process.env.REACT_APP_API_URL + '/project', { params: postingSeq })
+      await api.post(process.env.REACT_APP_API_URL + '/project/' + postingSeq)
     } catch (error) {
       console.log(error)
     }
