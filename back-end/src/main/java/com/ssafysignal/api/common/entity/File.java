@@ -1,5 +1,6 @@
 package com.ssafysignal.api.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -27,7 +28,7 @@ public class File {
     private String name;
 
     @Column(name = "size")
-    private Integer size;
+    private Long size;
 
     @Column(name = "type")
     private String type;
@@ -36,10 +37,11 @@ public class File {
     private String url;
 
     @Column(name = "reg_dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
 
     @Builder
-    private File(Integer fileSeq, String name, Integer size, String type, String url, LocalDateTime regDt) {
+    private File(Integer fileSeq, String name, Long size, String type, String url, LocalDateTime regDt) {
         this.fileSeq = fileSeq;
         this.name = name;
         this.size = size;

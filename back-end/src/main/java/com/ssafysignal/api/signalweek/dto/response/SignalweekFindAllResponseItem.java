@@ -26,7 +26,7 @@ public class SignalweekFindAllResponseItem {
         return SignalweekFindAllResponseItem.builder()
                 .singalweekSeq(signalweek.getSignalweekSeq())
                 .subject(signalweek.getTitle())
-                .projectImageUrl("noImage")
+                .projectImageUrl(signalweek.getProject().getImageFile().getUrl())
                 .build();
     }
 }

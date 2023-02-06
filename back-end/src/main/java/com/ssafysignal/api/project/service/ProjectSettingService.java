@@ -6,6 +6,7 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.common.repository.ImageFileRepository;
+import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,12 +42,9 @@ public class ProjectSettingService {
     private final ProjectUserRepository projectUserRepository;
     private final ProjectEvaluationRepository projectEvaluationRepository;
     private final ProjectPositionRepository projectPositionRepository;
-    private final ImageFileRepository imageFileRepository;
-
     private final BlackUserRepository blackUserRepository;
-
-    @Value("${app.fileUpload.uploadPath}")
-    private String uploadPath;
+    private final ImageFileRepository imageFileRepository;
+    private final FileService fileService;
     @Value("${app.fileUpload.uploadDir.projectImage}")
     private String uploadDir;
 
@@ -80,58 +79,29 @@ public class ProjectSettingService {
 
     @Transactional
     public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ProjectSettingModifyRequest projectSettingModifyRequest) throws RuntimeException, IOException {
-
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        // 업로딩 이미지가 있으면
         if (!uploadImage.isEmpty()){
-            String uploadFullPath = uploadPath + File.separator + uploadDir;
-
-            /*
-                이미지 처리
-             */
-            // 디렉토리 없으면 생성
-            File uploadPosition = new File(uploadFullPath);
-            if (!uploadPosition.exists()) uploadPosition.mkdir();
-            // 이름, 확장자, url 생성
-            String fileName = uploadImage.getOriginalFilename();
-            String name = UUID.randomUUID().toString();
-            String type = Optional.ofNullable(fileName)
-                    .filter(f -> f.contains("."))
-                    .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
-                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-            String url = String.format("%s%s%s.%s", uploadFullPath, File.separator, name, type);
-
-            // 프로젝트 대표 이미지가 있는 경우
-            if (project.getImageFile().getImageFileSeq() != 0) {
-                File deleteFile = new File(project.getImageFile().getUrl());
-                // 기존 파일 삭제
-                if (deleteFile.exists()) deleteFile.delete();
-
-                ImageFile imageFile = imageFileRepository.findById(project.getImageFile().getImageFileSeq())
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-                imageFile.setName(uploadImage.getOriginalFilename());
-                imageFile.setSize(uploadImage.getSize());
-                imageFile.setType(type);
-                imageFile.setUrl(url);
-                imageFileRepository.save(imageFile);
-                project.setProjectImageFileSeq(imageFile.getImageFileSeq());
+            // 사진올리고
+            ImageFile imageFile = fileService.registImageFile(uploadImage, uploadDir);
+            if (project.getProjectImageFileSeq() != 1) {
+                fileService.deleteImageFile("/home/" + project.getImageFile().getUrl());
+                project.getImageFile().setType(imageFile.getType());
+                project.getImageFile().setUrl(imageFile.getUrl());
+                project.getImageFile().setName(imageFile.getName());
+                project.getImageFile().setSize(imageFile.getSize());
+                project.getImageFile().setRegDt(LocalDateTime.now());
             } else {
-                // 이미지 Entity 생성
-                ImageFile imageFile = ImageFile.builder()
-                        .name(uploadImage.getOriginalFilename())
-                        .size(uploadImage.getSize())
-                        .type(type)
-                        .url(url)
+                ImageFile newImageFile = ImageFile.builder()
+                        .name(imageFile.getName())
+                        .size(imageFile.getSize())
+                        .url(imageFile.getUrl())
+                        .type(imageFile.getType())
                         .build();
-                imageFileRepository.save(imageFile);
-                project.setProjectImageFileSeq(imageFile.getImageFileSeq());
+                imageFileRepository.save(newImageFile);
+                project.setProjectImageFileSeq(newImageFile.getImageFileSeq());
             }
-
-            // 이미지 저장
-            File saveFile = new File(url);
-            uploadImage.transferTo(saveFile);
         }
         /*
             프로젝트 설정 데이터 처리
