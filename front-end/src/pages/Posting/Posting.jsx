@@ -214,11 +214,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}
@@ -244,11 +244,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}
@@ -274,11 +274,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}
@@ -304,11 +304,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}
@@ -334,11 +334,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}
@@ -364,11 +364,11 @@ function Posting() {
                     key={i}
                   >
                     {' '}
-                    {/* <img
-                      src={`/images/${ele}.png`}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
                       alt="JavaScript"
                       style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    /> */}
+                    />
                     {ele.name}
                   </Skillbtn>
                 ))}

@@ -15,7 +15,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import { useLocation, useNavigate } from 'react-router-dom'
 // import { useNavigate, useLocation } from 'react-router-dom'/
 import ReactSelect from 'react-select'
-import { changeSkillForm } from 'utils/changeForm'
+import { changeSelectForm } from 'utils/changeForm'
 import api from 'api/Api.js'
 
 const inputStyle = {
@@ -40,6 +40,7 @@ function ApplyRegister() {
   const location = useLocation()
   const userSeq = sessionStorage.getItem('userSeq')
   const postingSeq = location.state.postingSeq
+  console.log('postingSeq', postingSeq)
 
   // end >> parameter
 
@@ -84,11 +85,13 @@ function ApplyRegister() {
         meetingFetchFilter(res.data.body.postingMeetingList)
         setAnswerList(answerArr)
         setQuestionList(res.data.body.postingQuestionList)
+        console.log(res.data.body)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq).then((res) => {
         careerFetchFilter(res.data.body.userCareerList)
         expFetchFilter(res.data.body.userExpList)
+        console.log(res.data.body)
       })
     } catch (error) {
       console.log(error)
@@ -417,7 +420,7 @@ function ApplyRegister() {
                 <span className="apply-register-label">사용기술</span>
               </div>
               <div>
-                <ReactSelect onChange={handleSkillInput} options={changeSkillForm(Skilldata)} isMulti />
+                <ReactSelect onChange={handleSkillInput} options={changeSelectForm(Skilldata)} isMulti />
                 {/* <Autocomplete
                   disablePortal
                   id="combo-box-demo"
