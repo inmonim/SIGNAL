@@ -110,10 +110,8 @@ function PostingApply() {
   const handleProjectAccept = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: true,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 확정')
     } catch (error) {
@@ -124,10 +122,8 @@ function PostingApply() {
   const handleProjectRefuse = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: false,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 거절')
     } catch (error) {
