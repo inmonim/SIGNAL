@@ -29,9 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -117,7 +115,7 @@ public class SignalweekService {
             SignalweekSchedule signalweekSchedule = signalweekScheduleList.get(0);
 
             Signalweek signalweek = Signalweek.builder()
-                    .signalweekSchedulSeq(signalweekSchedule.getSignalweekScheduleSeq())
+                    .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
                     .title(signalweekRegistRequest.get("title").toString())
                     .project(project)
                     .deployUrl(signalweekRegistRequest.get("deployUrl").toString())
@@ -241,21 +239,48 @@ public class SignalweekService {
 
 
     // 시그널 위크 엔딩 정산
-//    @Transactional
-//    public void endSignalweek() {
-//        signalweekVoteRepository.find
-//    }
+    @Transactional
+    public void endSignalweek() {
 
+        Integer nowQuarter = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc().get(0).getSignalweekScheduleSeq();
 
+        List<Signalweek> nowQuarterSignalweekList = signalweekRepository.findBySignalweekScheduleSeq(nowQuarter);
 
+        List<List<Integer>> voteCntList = new ArrayList<>();
+        for (Signalweek nowQarterSignalweek:nowQuarterSignalweekList) {
+            List<Integer> voteCnt = new ArrayList<>(Arrays.asList(nowQarterSignalweek.getSignalweekSeq(), signalweekVoteRepository.countBySignalweekSeq(nowQarterSignalweek.getSignalweekSeq()).intValue()));
+            voteCntList.add(voteCnt);
+        }
 
+        Collections.sort(voteCntList, (i1, i2) -> i2.get(1) - i1.get(1));
 
+        Integer rank = 1;
+        for (List<Integer> voteCnt:voteCntList.subList(0, 3)) {
+            if (signalweekRepository.findBySignalweekSeq(voteCnt.get(0)).isPresent()) {
+                SignalweekRank signalweekRank = SignalweekRank.builder()
+                        .signalweekScheduleSeq(nowQuarter)
+                        .signalweek(signalweekRepository.findBySignalweekSeq(voteCnt.get(0)).get())
+                        .rank(rank)
+                        .build();
+                signalweekRankRepository.save(signalweekRank);
+            }
+            rank++;
+        }
 
-//    @Transactional
-//    public void deleteSignalweek(Integer signalweekSeq) {
-//        Signalweek signalweek = signalweekRepository.findById(signalweekSeq)
+//        Signalweek fistTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(0).get(0))
 //                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 //
-//        signalweekRepository.delete(signalweek);
-//    }
+//        Signalweek secondTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(1).get(0))
+//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+//
+//        Signalweek thirdTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(2).get(0))
+//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+//
+//
+
+    }
+
+
+
+
 }

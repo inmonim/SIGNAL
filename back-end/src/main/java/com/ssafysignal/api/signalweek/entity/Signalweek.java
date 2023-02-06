@@ -24,7 +24,7 @@ public class Signalweek {
     private Integer signalweekSeq;
 
     @Column(name = "signalweek_schedule_seq")
-    private Integer signalweekSchedulSeq;
+    private Integer signalweekScheduleSeq;
 
     @Column(name = "title")
     private String title;
@@ -48,10 +48,10 @@ public class Signalweek {
     private File readmeFile;
 
     @Builder
-    public Signalweek(Integer signalweekSeq, Integer signalweekSchedulSeq, String title, Project project,
+    public Signalweek(Integer signalweekSeq, Integer signalweekScheduleSeq, String title, Project project,
                       String uccUrl, String deployUrl, File pptFile, File readmeFile) {
         this.signalweekSeq = signalweekSeq;
-        this.signalweekSchedulSeq = signalweekSchedulSeq;
+        this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.title = title;
         this.project = project;
         this.uccUrl = uccUrl;

@@ -132,11 +132,24 @@ public class SignalweekController {
             List<SignalweekRankFindResponse> signalweekRankList = signalweekService.findAllSiganlweekRank(year, quarter);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekRankList));
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
 
+
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "시그널 위크 쿼터 종료 시 정산", description = "시그널 위크 투표 결과에 따라 명예의 전당 등록, 쿼터 종료, 하트 지급")
+    @PostMapping("ending")
+    private ResponseEntity<BasicResponse> quarterEndSignalweek() {
+        log.info("quarterEndSignalweek - Call");
+
+        try {
+            signalweekService.endSignalweek();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
 
 
     // 삭제는 관리자만 가능!
