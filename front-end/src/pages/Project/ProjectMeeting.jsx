@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
-import moment from 'moment'
 import styled from '@emotion/styled'
 import { css } from '@emotion/react'
+import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
 
 function ProjectMeeting() {
   const [voice, setVoice] = useState(false)
   const [video, setVideo] = useState(false)
-  const personList = [0, 0, 0, 0, 0, 0, 0]
+  const personList = [0, 0, 0, 0]
+  console.log(personList.length)
 
   const [mode, setMode] = useState(0)
-
-  const time = new Date()
 
   const handleToVoice = () => {
     setVoice(!voice)
@@ -27,22 +26,26 @@ function ProjectMeeting() {
       <div className="project-meeting-main">
         {mode === 0 ? (
           <div className="project-meeting-video-list">
-            {personList.map((item) => (
-              <VideoBox key={item} className="project-meeting-person" size={personList.length}>
+            {personList.map((item, index) => (
+              <VideoBox key={index} className="project-meeting-person" size={personList.length}>
                 <video className="project-meeting-video" alt="나" />
                 <div className="project-meeting-person-name">나</div>
               </VideoBox>
             ))}
           </div>
         ) : mode === 1 ? (
-          <div>코드편집</div>
+          <div className="project-meeting-video-code-edit">
+            <div> 코드편집</div>
+          </div>
         ) : (
-          <div>화면공유</div>
+          <div className="project-meeting-video-share">
+            <div> 화면공유</div>
+          </div>
         )}
       </div>
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
-          {moment(time).format('YYYY-MM-DD LT')} 접속 인원 : {personList.length}명
+          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
         </div>
         <div className="project-meeting-btn">
           <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(0)}>
@@ -52,10 +55,12 @@ function ProjectMeeting() {
           <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(1)}>
             <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
             <div className="project-meeting-btn-code-edit">코드 편집</div>
+            {/* 고정 아니여도 됨 */}
           </div>
           <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(2)}>
             <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
             <div className="project-meeting-btn-code-edit">화면 공유</div>
+            {/* 고정이여야함  absolute */}
           </div>
           <div className="project-meeting-btn-code-edit-container" onClick={() => alert('close')}>
             <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />

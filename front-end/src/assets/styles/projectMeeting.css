@@ -5,7 +5,9 @@
 }
 
 .project-meeting-main {
-  padding: 130px 80px 150px 80px;
+  padding: 30px 80px 160px 80px;
+  height: 95%;
+  display: flex;
 }
 
 .project-meeting-footer {
@@ -120,4 +122,22 @@
 
 .project-meeting-btn-code-edit-icon {
   width: 35px;
+}
+
+.project-meeting-video-code-edit {
+  border: 1px solid black;
+  border-radius: 25px;
+  height: 95%;
+  width: 90%;
+  margin: auto;
+}
+
+.project-meeting-video-share {
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 25px;
+  height: 800px;
+  width: 1700px;
+  display: flex;
+  justify-content: start;
 }
