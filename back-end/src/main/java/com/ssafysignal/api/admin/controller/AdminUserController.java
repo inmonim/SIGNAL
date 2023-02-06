@@ -1,9 +1,7 @@
 package com.ssafysignal.api.admin.controller;
 
 import com.ssafysignal.api.admin.dto.Response.FindAdminUserResponse;
-import com.ssafysignal.api.admin.service.AdminNoticeService;
 import com.ssafysignal.api.admin.service.AdminUserService;
-import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
