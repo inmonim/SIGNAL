@@ -116,7 +116,7 @@ public class UserController {
 
         String password = info.get("password");
         String newPassword = info.get("newPassword");
-        System.out.println(password);
+        //System.out.println(password);
         try {
             userService.modifyPassword(userSeq, password, newPassword);
         } catch (Exception e){

@@ -27,7 +27,8 @@ public class OpenProfileController {
     @Operation(summary = "오픈 프로필 등록", description = "오픈 프로필을 등록한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "오픈프로필 등록 완료"),
-            @ApiResponse(responseCode = "400", description = "오픈프로필 등록 중 오류 발생"),
+            @ApiResponse(responseCode = "301", description = "오픈프로필 등록 중 유저 정보 오류 발생"),
+            @ApiResponse(responseCode = "402", description = "오픈프로필 중복 등록 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/{userSeq}")
@@ -47,7 +48,7 @@ public class OpenProfileController {
     @Operation(summary = "오픈 프로필 조회", description = "오픈 프로필을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "오픈프로필 조회 완료"),
-            @ApiResponse(responseCode = "400", description = "오픈프로필 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "301", description = "오픈프로필 조회 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("")
