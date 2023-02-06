@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player/lazy'
 import Badge from '@mui/material/Badge'
 import { IconButton } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
-// import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import 'assets/styles/signaldetail.css'
-// import api from 'api/Api.js'
+import api from 'api/Api.js'
 
 function signalDetail() {
-  // const location = useLocation()
+  const location = useLocation()
+  const signalSeq = parseInt(location.state)
+  console.log(signalSeq)
   // const signaldetailSeq = parseInt(location.state.id)
-  // const [data, setData] = useState([])
+  const [data, setData] = useState([])
   const [likes, setLikes] = useState(1)
   const [liked, setLiked] = useState(false)
   const handleClick = async () => {
@@ -41,15 +43,16 @@ function signalDetail() {
     }
   }
 
-  // useEffect(() => {
-  //   api.get(process.env.REACT_APP_API_URL + `/board/signaldetail/` + signaldetailSeq).then((res) => {
-  //     setData(res.data.body)
-  //   })
-  // }, [])
+  useEffect(() => {
+    api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}`).then((res) => {
+      setData(res.data.body)
+    })
+  }, [])
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
-        <div className="signaldetail-detail-title">이 사랑 노래가 싫어 다신 안 부르리</div>
+        {JSON.stringify(data)}
+        <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right' }}>
           <IconButton size="medium" onClick={handleClick}>
@@ -76,13 +79,13 @@ function signalDetail() {
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>Git 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            https://github.com/myonjin/TIL_edu
+            {data.deployUrl}
           </div>
         </div>
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>배포 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            https://www.ssafysignal.site/
+            {data.deployUrl}
           </div>
         </div>
         <div className="apply-detail-content-section">

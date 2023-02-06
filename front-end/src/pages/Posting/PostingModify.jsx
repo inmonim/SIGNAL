@@ -31,7 +31,7 @@ import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 
 const Container = styled.section`
-  padding: 109px 10em;
+  padding: 130px 10em;
 `
 const skillStyle = {
   width: '100%',
@@ -320,15 +320,7 @@ const PostingModify = () => {
     <Container>
       <div>
         <div>
-          <button
-            onClick={() => {
-              console.log(JSON.stringify(posting))
-              console.log(Skilldata)
-            }}
-          >
-            d
-          </button>
-          <Title>공고 등록</Title>
+          <Title>공고 수정</Title>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
