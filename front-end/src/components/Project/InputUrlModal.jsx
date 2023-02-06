@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
@@ -8,19 +8,7 @@ import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
-function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
-  const [content, setContent] = useState('')
-  useEffect(() => {
-    api({
-      url: process.env.REACT_APP_API_URL + '/todo/' + todoSeq,
-      method: 'GET',
-      params: { todoSeq },
-    }).then((res) => {
-      console.log(res.data.body)
-      setContent(res.data.body.content)
-    })
-  }, [todoSeq])
-
+function InputUrlModal({ open, onClose, inputTitle, handleFlag }) {
   const [todo, setTodo] = useState('')
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -28,28 +16,9 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
     setTodo(nextInputs)
     console.log('.', nextInputs)
   }
-
+  // console.log(todo)
   const [alert, setAlert] = useState(false)
-  const handleToMAlert = async () => {
-    try {
-      const req = {
-        todoSeq,
-      }
-      await api.put(process.env.REACT_APP_API_URL + '/todo/' + todoSeq, req).then((res) => {
-        console.log(res)
-        setAlert(true)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  const handleToDAlert = async () => {}
-  const handleToModify = () => {
-    setAlert(false)
-    onClose(true)
-    handleFlag(true)
-  }
-  const handleToDelete = () => {
+  const handleToPlus = () => {
     setAlert(false)
     onClose(true)
     handleFlag(true)
@@ -57,6 +26,34 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
   const handleToClose = () => {
     setAlert(false)
     onClose(true)
+    handleFlag(false)
+  }
+
+  const handleToAdd = async () => {
+    const userSeq = sessionStorage.getItem('userSeq')
+    const projectSeq = 721
+    try {
+      const todoReq = {
+        content: todo.content,
+        projectSeq,
+        userSeq,
+      }
+      await api
+        .post(process.env.REACT_APP_API_URL + '/todo', JSON.stringify(todoReq), {
+          headers: {
+            'content-type': 'application/json',
+          },
+        })
+        .then((res) => {
+          console.log(res)
+          setAlert(true)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    } catch (e) {
+      console.log(e)
+    }
   }
   return (
     <>
@@ -78,47 +75,24 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
             />
           </div>
           <div className="todo-input-main">
-            <div className="todo-input-title">To Do 수정</div>
+            <div className="todo-input-title">{inputTitle}</div>
             <div className="todo-input-input">
               <TextField
                 id="filled-multiline-flexible"
                 name="content"
-                defaultValue={content}
+                label={inputTitle}
                 sx={inputStyle}
                 onChange={handleInput}
               />
             </div>
-            <div className="todo-modify-btn">
-              <SignalBtn
-                sigwidth="60px"
-                sigheight="40px"
-                sigfontsize="20px"
-                sigborderradius={15}
-                sigmargin="0px 5px"
-                onClick={handleToMAlert}
-              >
-                수정
+            <div className="user-profile-input-check-btn">
+              <SignalBtn sigwidth="60px" sigheight="40px" sigfontsize="20px" sigborderradius={15} onClick={handleToAdd}>
+                등록
               </SignalBtn>
               <AlertModal
-                msg="수정하시겠습니까?"
+                msg="등록되었습니다."
                 open={alert}
-                onClick={handleToModify}
-                onClose={handleToClose}
-              ></AlertModal>
-              <SignalBtn
-                sigwidth="60px"
-                sigheight="40px"
-                sigfontsize="20px"
-                sigborderradius={15}
-                sigmargin="0px 5px"
-                onClick={handleToDAlert}
-              >
-                삭제
-              </SignalBtn>
-              <AlertModal
-                msg="삭제하시겠습니까?."
-                open={alert}
-                onClick={handleToDelete}
+                onClick={handleToPlus}
                 onClose={handleToClose}
               ></AlertModal>
             </div>
@@ -159,4 +133,4 @@ const inputStyle = {
   },
 }
 
-export default TodoModifyModal
+export default InputUrlModal

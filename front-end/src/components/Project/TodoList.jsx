@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { FormControlLabel } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
 import TodoPlusModal from './TodoPlusModal'
+import TodoModifyModal from './TodoModifyModal'
 
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
@@ -22,7 +23,10 @@ function TodoList() {
 
   const [openTodoPlus, setOpenTodoPlus] = useState(false)
   const handleToAlert = () => setOpenTodoPlus(true)
-  const handleToClose = () => setOpenTodoPlus(false)
+  const handleToClose = () => {
+    setOpenTodoPlus(false)
+    setModalOpen(false)
+  }
 
   function dateToString(value) {
     if (value !== null) {
@@ -108,11 +112,24 @@ function TodoList() {
       .put(process.env.REACT_APP_API_URL + '/todo/state/' + data.projectToDoSeq, req)
       .then((res) => {
         console.log(res)
+        setFlag(!flag)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const [todoSeq, setTodoSeq] = useState(0)
+  const handleToModify = (e) => {
+    console.log(e.target.id)
+    setTodoSeq(e.target.id)
+    setModalOpen(true)
+  }
+  // const handleToClose = () => {
+  //   setOpenTodoPlus(false)
+  //   setModalOpen(false)
+  // }
 
   return (
     <>
@@ -151,24 +168,32 @@ function TodoList() {
             <div className="todo-todos-plus" onClick={handleToAlert}>
               <img src={plusBtn} alt="" />
             </div>
-            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} flag={handleFlag} />
+            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} handleFlag={handleFlag} />
           </div>
           <div className="todo-todos-list">
             {todoList.map((todo, index) => (
-              <div className="todo-todos-list-item" key={todo.todoSeq}>
-                <FormControlLabel
-                  onChange={handleCompleteTodo}
-                  style={{ color: '#574b9f' }}
-                  control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
-                />
-                <div className="todo-todos-list-item-container">
-                  <div id={todo.todoSeq} className="todo-todos-list-item-content" draggable>
-                    {todo.content}
+              <>
+                <div className="todo-todos-list-item" key={index} id={todo.todoSeq} onClick={handleToModify}>
+                  <FormControlLabel
+                    onChange={handleCompleteTodo}
+                    style={{ color: '#574b9f' }}
+                    control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+                  />
+                  <div className="todo-todos-list-item-container">
+                    <div id={todo.todoSeq} className="todo-todos-list-item-content" draggable>
+                      {todo.content}
+                    </div>
+                    <div className="todo-todos-list-item-regDt">{regDt}</div>
                   </div>
-                  <div className="todo-todos-list-item-regDt">{regDt}</div>
                 </div>
-              </div>
+              </>
             ))}
+            <TodoModifyModal
+              todoSeq={todoSeq}
+              open={modalOpen}
+              onClose={handleToClose}
+              handleFlag={handleFlag}
+            ></TodoModifyModal>
           </div>
         </div>
         <div className="todo-completed-container">

@@ -5,10 +5,10 @@ import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
 import { FormControlLabel } from '@mui/material'
 import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
-import 'assets/styles/evaluation.css'
-import api from 'api/Api'
+import 'assets/styles/eval.css'
+// import api from 'api/Api'
 
-function EvaluationQna(toUserSeq, projectSeq) {
+function EvalQna(toUserSeq, projectSeq) {
   const userSeq = sessionStorage.getItem('userSeq')
   const [score, setScore] = useState([0, 0, 0, 0, 0])
 
@@ -29,7 +29,14 @@ function EvaluationQna(toUserSeq, projectSeq) {
 
   const evaluationSubmit = async () => {
     try {
-      await api.post(process.env.REACT_APP_API_URL + '/project/evaluation', {
+      // await api.post(process.env.REACT_APP_API_URL + '/project/evaluation', {
+      //   fromUserSeq: userSeq,
+      //   projectSeq,
+      //   scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
+      //   // term: ???/
+      //   toUserSeq,
+      // })
+      console.log({
         fromUserSeq: userSeq,
         projectSeq,
         scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
@@ -41,15 +48,15 @@ function EvaluationQna(toUserSeq, projectSeq) {
     }
   }
   return (
-    <div className="evaluaiton-body">
-      <div className="evaluation-date">3회차 2022.00.00 ~ 2022.00.00</div>
+    <div className="eval-body">
+      <div className="eval-date">3회차 2022.00.00 ~ 2022.00.00</div>
       {question.map((item, index) => (
         <div key={index}>
-          <div className="evaluation-question">
+          <div className="eval-question">
             <img src={QuestionIcon} alt="" style={{ width: '30px' }} />
             {item}
           </div>
-          <div className="evaluation-radio-btn">
+          <div className="eval-radio-btn">
             <RadioGroup name={index} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
               <FormControlLabel
                 value="10"
@@ -91,4 +98,4 @@ function EvaluationQna(toUserSeq, projectSeq) {
     </div>
   )
 }
-export default EvaluationQna
+export default EvalQna

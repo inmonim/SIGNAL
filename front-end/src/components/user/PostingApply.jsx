@@ -65,7 +65,7 @@ function PostingApply() {
       rowsArr.push({
         // state: item.stateCode.name,
         applySeq: item.applySeq,
-        state: item.applyCode.name,
+        state: item.stateCode.name,
         subject: item.subject,
         meetingDt: item.meetingDt.split(' ', 1),
       })
@@ -110,10 +110,8 @@ function PostingApply() {
   const handleProjectAccept = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: true,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 확정')
     } catch (error) {
@@ -124,10 +122,8 @@ function PostingApply() {
   const handleProjectRefuse = async (applySeq) => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
-        data: {
-          applySeq,
-          select: false,
-        },
+        applySeq,
+        select: true,
       })
       console.log('지원서 거절')
     } catch (error) {
@@ -203,10 +199,16 @@ function PostingApply() {
                     <TableRow key={index} className="my-profile-table">
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
-                      <TableCell align="center">{row.subject !== ' ' ? <SignalBtn>참가</SignalBtn> : ' '}</TableCell>
+                      <TableCell align="center">
+                        {row.subject !== ' ' ? (
+                          <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
+                        ) : (
+                          ' '
+                        )}
+                      </TableCell>
                       <TableCell align="center">{row.meetingDt}</TableCell>
                       <TableCell align="center">
-                        {row.state === '대기중' ? (
+                        {row.state === '합격' ? (
                           <div
                             style={{
                               display: 'flex',
