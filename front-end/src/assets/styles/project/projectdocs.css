@@ -1,0 +1,11 @@
+/* kanban board */
+.docs-container{
+display: flex;
+width: 1110px;
+}
+
+.docs-title{
+padding: 0px 16px;
+font-size: 27px;
+display: flex;
+}
