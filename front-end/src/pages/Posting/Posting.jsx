@@ -170,7 +170,7 @@ function Posting() {
       <Banner />
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}>
-          <button
+          {/* <button
             onClick={() => {
               console.log(skillList, 'SkillList')
               console.log(skillListauto, 'skillListauto')
@@ -178,7 +178,7 @@ function Posting() {
             }}
           >
             ㅇ
-          </button>
+          </button> */}
           <TabContext value={value}>
             <Box sx={{ borderBottom: 2, color: '#574B9F' }}>
               <TabList

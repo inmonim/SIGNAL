@@ -67,6 +67,7 @@ const Label = styled.h1`
 const inputStyle = {
   backgroundColor: '#ffffff',
   position: 'static',
+  width: 1,
 }
 
 const textAreaStyle = {
@@ -97,16 +98,7 @@ const PostingRegister = () => {
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
     postingSkillList: ['WE100', 'WE101'],
-    postingPositionList: [
-      {
-        positionCode: 'PO100',
-        positionCnt: 5,
-      },
-      {
-        positionCode: 'PO101',
-        positionCnt: 10,
-      },
-    ],
+    postingPositionList: [],
     postingQuestionList: [
       {
         num: 1,
@@ -274,64 +266,80 @@ const PostingRegister = () => {
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <Label>프로젝트 주제 </Label>
-              <TextField
-                sx={inputStyle}
-                onChange={(e) => {
-                  // console.log(e.target.value)
-                  setSubject(e.target.value)
-                  setPosting({ ...posting, subject: e.target.value })
-                  // console.log(subject)
-                }}
-              />
+              <div style={{ width: '20%' }}>
+                <Label>프로젝트 주제</Label>
+              </div>
+              <div style={{ width: '80%' }}>
+                <TextField
+                  sx={inputStyle}
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    setSubject(e.target.value)
+                    setPosting({ ...posting, subject: e.target.value })
+                    // console.log(subject)
+                  }}
+                />
+              </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <Label>프로젝트 모집 기간</Label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="마감 날짜"
-                  value={datevalue}
-                  onChange={(newValue) => {
-                    const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
-                    setDateValue(time)
-                    setPosting({ ...posting, postingEndDt: time })
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
+              <div style={{ width: '30%' }}>
+                <Label>프로젝트 모집 기간</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="마감 날짜"
+                    value={datevalue}
+                    onChange={(newValue) => {
+                      const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
+                      setDateValue(time)
+                      setPosting({ ...posting, postingEndDt: time })
+                    }}
+                    renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
+                  />
+                </LocalizationProvider>
+              </div>
             </div>
           </div>
           {/* 여기는 진행지역,분야 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <Label>진행 지역</Label>
-              <FilterSelect
-                onChange={(e) => {
-                  console.log(e.target.value)
-                  setPosting({ ...posting, localCode: e.target.value })
-                }}
-              >
-                {Object.keys(Localdata).map((ele, i) => (
-                  <option key={i} value={ele}>
-                    {Localdata[ele].name}
-                  </option>
-                ))}
-              </FilterSelect>
+              <div style={{ width: '20%' }}>
+                <Label>진행 지역</Label>
+              </div>
+              <div style={{ width: '80%' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    console.log(e.target.value)
+                    setPosting({ ...posting, localCode: e.target.value })
+                  }}
+                >
+                  {Object.keys(Localdata).map((ele, i) => (
+                    <option key={i} value={ele}>
+                      {Localdata[ele].name}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
             </div>
             <div className="email-section " style={{ marginLeft: '3em' }}>
-              <Label style={{ width: '10%' }}>분야</Label>
-              <FilterSelect
-                onChange={(e) => {
-                  // console.log(e.target.value)
-                  setPosting({ ...posting, fieldCode: e.target.value })
-                }}
-              >
-                {Fielddata2.map((ele, i) => (
-                  <option key={ele.code} value={ele.code}>
-                    {ele.name}
-                  </option>
-                ))}
-              </FilterSelect>
+              <div style={{ width: '30%' }}>
+                <Label>분야</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPosting({ ...posting, fieldCode: e.target.value })
+                  }}
+                >
+                  {Fielddata2.map((ele, i) => (
+                    <option key={ele.code} value={ele.code}>
+                      {ele.name}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
             </div>
           </div>
           {/* 여기는 진행유형,프로젝트기간 */}
@@ -546,8 +554,7 @@ const PostingRegister = () => {
 }
 const FilterSelect = styled.select`
   width: 100%;
-  max-width: 378px;
-  height: 42px;
+  height: 60px;
   padding: 0 14px;
   border: 1px solid #d7e2eb;
   border-radius: 4px;

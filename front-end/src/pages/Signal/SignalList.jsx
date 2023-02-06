@@ -1,19 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Paging from 'components/Paging'
 import { useNavigate } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/signal.css'
 import SignalItem from 'components/Signal/SignalItem'
-// import api from 'api/Api.js'
+import api from 'api/Api.js'
 
 function SignalList() {
   // const [data, setData] = useState([])
 
-  const [size] = useState(8)
+  const navigate = useNavigate()
   const [page, setPage] = useState(1)
-  const [count] = useState(0)
-  const [signalList] = useState([
+  const [size] = useState(8)
+  const [count] = useState(20)
+  const [signalList, setSignalList] = useState([
     { subject: '제목1' },
     { subject: '제목2' },
     { subject: '제목1' },
@@ -27,13 +28,17 @@ function SignalList() {
     setPage(page)
     console.log(page)
   }
-  // const signalList = async () => {
-  //   await api.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}&fieldCode=FI100`).then((res) => {
-  //     setSignalList(res.data.body.signalList)
-  //   })
-  // }
-
-  const navigate = useNavigate()
+  const signalListAxios = async () => {
+    await api.get(process.env.REACT_APP_API_URL + `/signalweek?page=${page}&size=${size}`).then((res) => {
+      setSignalList(res.data.body)
+    })
+  }
+  useEffect(() => {
+    signalListAxios()
+  }, [])
+  useEffect(() => {
+    signalListAxios()
+  }, [page])
 
   return (
     <div className="signal-page-container">

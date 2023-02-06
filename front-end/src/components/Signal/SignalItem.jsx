@@ -10,7 +10,7 @@ export default function SignalItem({ signal }) {
   return (
     <Card
       onClick={() => {
-        navigate(`/signaldetail`)
+        navigate('/signalDetail', { state: signal.signalweekSeq })
       }}
       sx={{
         minWidth: 275,
@@ -23,14 +23,14 @@ export default function SignalItem({ signal }) {
       }}
     >
       <CardContent>
-        <Box sx={{ display: 'flex' }}>{signal.subject}</Box>
+        <Box sx={{ display: 'flex' }}>{signal.title}</Box>
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          뭐넣어야 하냐능
+          {signal.title}
         </Typography>
         {/* 여기는 스킬아이콘 */}
         <hr />
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          {signal.subject}
+          {signal.title}
         </Typography>
       </CardContent>
     </Card>
