@@ -58,7 +58,7 @@ function MeetingConfirmModal() {
           </DialogTitle>
           <img src={cancleButton} alt="cancleButton" className="cancle-button" onClick={handleClose} />
           <DialogActions className="delete-button">
-            <ComfirmButton>예</ComfirmButton>
+            <ComfirmButton onClick={() => window.open('/beforemeeting', '_blank')}>예</ComfirmButton>
           </DialogActions>
         </div>
       </Dialog>

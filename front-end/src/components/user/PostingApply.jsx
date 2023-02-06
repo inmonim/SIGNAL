@@ -201,7 +201,7 @@ function PostingApply() {
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">
                         {row.subject !== ' ' ? (
-                          <SignalBtn onClick={() => window.open('/projectmeeting', '_blank')}>참가</SignalBtn>
+                          <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
                         ) : (
                           ' '
                         )}
