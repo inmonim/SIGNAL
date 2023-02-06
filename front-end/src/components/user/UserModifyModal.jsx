@@ -6,23 +6,40 @@ import { PatternFormat } from 'react-number-format'
 import SignalBtn from 'components/common/SignalBtn'
 import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
-import ProfileImg from 'assets/image/profileimg2.jpeg'
 import 'assets/styles/profile/usermodify.css'
-import axios from 'axios'
+import api from 'api/Api'
 
 function UserModifyModal({ open, onClose }) {
-  const [inputs, setInputs] = useState({
-    nickname: '',
-    phone: '',
-  })
+  const [inputs, setInputs] = useState([])
   const [data, setData] = useState([])
   const [alertOpen, setAlertOpen] = useState('')
+  const [fileImage, setFileImage] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const fileInput = React.useRef(null)
 
   const handleToAlert = () => {
     setAlertOpen(true)
   }
 
-  const handleToProfile = () => {
+  const handleToProfile = async () => {
+    console.log(inputs.nickname)
+    console.log(inputs.phone)
+
+    const formData = new FormData()
+    formData.append('profileImageFile ', fileImage)
+    formData.append('nickname ', inputs.nickname)
+    formData.append('phone ', inputs.phone)
+
+    api
+      .post(process.env.REACT_APP_API_URL + '/user/' + data.userSeq, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        console.log(res)
+      })
+
     setAlertOpen(false)
     onClose(onClose(true))
   }
@@ -36,11 +53,20 @@ function UserModifyModal({ open, onClose }) {
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
   }
+  const handleButtonClick = (e) => {
+    fileInput.current.click()
+  }
+  const handleChange = (e) => {
+    setImageUrl(URL.createObjectURL(e.target.files[0]))
+    setFileImage(e.target.files[0])
+  }
 
   const userModifyFetch = async () => {
     try {
-      await axios.get(process.env.REACT_APP_API_URL + '/user/' + sessionStorage.getItem('userSeq')).then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + sessionStorage.getItem('userSeq')).then((res) => {
         setData(res.data.body)
+        setInputs(res.data.body)
+        setImageUrl(process.env.REACT_APP_API_URL + res.data.body.userImageUrl)
         console.log(res.data.body)
       })
     } catch (e) {
@@ -74,8 +100,11 @@ function UserModifyModal({ open, onClose }) {
           <div className="user-modify-main">
             <div className="user-modify-title">회원정보 수정</div>
             <div className="user-modify-img-container">
-              <img className="user-modify-img" src={ProfileImg} alt="" />
-              <div className="user-modify-img-hover">이미지 선택</div>
+              <img className="my-user-img" src={imageUrl} alt="" />
+              <div className="user-modify-img-hover" onClick={handleButtonClick}>
+                이미지 선택
+              </div>
+              <input type="file" ref={fileInput} accept="image/*" onChange={handleChange} style={{ display: 'none' }} />
             </div>
             <div className="user-modify-input-container">
               <div className="user-modify-input">

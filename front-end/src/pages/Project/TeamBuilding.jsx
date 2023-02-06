@@ -10,7 +10,7 @@ import MemoModal from '../../components/Memo/MemoModal'
 import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
 import moment from 'moment'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Paging from 'components/Paging'
 import { Button } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
@@ -48,7 +48,9 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
 }))
 
 function TeamSelect() {
-  const postingSeq = 747
+  const location = useLocation()
+
+  const postingSeq = location.state.postingSeq
   const [applyList, setApplyList] = useState([])
   const [teamTotalCnt, setTeamTotalCnt] = useState(0)
   // const [teamCnt, setTeamCnt] = useState(0)
@@ -211,6 +213,7 @@ function TeamSelect() {
                             apply={apply}
                             applySeqList={applySeqList}
                             setapplySeqList={setapplySeqList}
+                            postingSeq={postingSeq}
                             valid={valid}
                           ></ProjectInviteConfirm>
                         </TableCell>

@@ -70,10 +70,11 @@ function App() {
           <Route path="/qnaModify" element={<QnaModify />} />
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/beforemeeting" element={<Beforemeeting />} />
-          <Route path="/signalList" element={<SignalList />} />
+          <Route path="/signal" element={<SignalList />} />
           <Route path="/signalregister" element={<Signalregister />} />
-          <Route path="/signalDetail/:id" element={<SignalDetail />} />
-          <Route path="/signalHonor" element={<SignalHonor />} />
+          <Route path="/signaldetail" element={<SignalDetail />} />
+          <Route path="/signal/rank" element={<SignalHonor />} />
+
           <Route path="/adminblacklist" element={<AdminBalckList />} />
           <Route path="/adminproject" element={<AdminProject />} />
           <Route path="/adminsignalweek" element={<AdminSignalWeek />} />

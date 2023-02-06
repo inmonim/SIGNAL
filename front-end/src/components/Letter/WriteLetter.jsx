@@ -55,8 +55,8 @@ function WriteLetter({ handleMenuListItemClick }) {
     console.log(nextInputs)
   }
 
-  const handleWrite = () => {
-    api
+  const handleWrite = async () => {
+    await api
       .post(process.env.REACT_APP_API_URL + '/letter', JSON.stringify(inputs), {
         headers: {
           'content-type': 'application/json',

@@ -86,7 +86,7 @@ const PostingRegister = () => {
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
-    userSeq: 1,
+    userSeq: sessionStorage.getItem('userSeq'),
     subject,
     localCode: '11',
     fieldCode: 'FI100',
