@@ -40,8 +40,10 @@
 
 .todo-todos-container{
   width: 50%;
-  height:100vh;
+  height:100%;
   border-right: 1px solid black;
+  /* overflow: scroll; */
+  margin-bottom: 30px;
 }
 
 .todo-todos-header,
@@ -144,4 +146,9 @@
   display: flex;
   align-items: center;
   padding: 10px;
+}
+
+/* 투두 수정 모달 */
+.todo-modify-btn{
+  display: flex;
 }

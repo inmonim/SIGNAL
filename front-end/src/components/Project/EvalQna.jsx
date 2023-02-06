@@ -8,7 +8,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 // import api from 'api/Api'
 
-function EvaluationQna(toUserSeq, projectSeq) {
+function EvalQna(toUserSeq, projectSeq) {
   const userSeq = sessionStorage.getItem('userSeq')
   const [score, setScore] = useState([0, 0, 0, 0, 0])
 
@@ -98,4 +98,4 @@ function EvaluationQna(toUserSeq, projectSeq) {
     </div>
   )
 }
-export default EvaluationQna
+export default EvalQna
