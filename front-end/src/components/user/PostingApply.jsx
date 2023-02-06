@@ -65,7 +65,7 @@ function PostingApply() {
       rowsArr.push({
         // state: item.stateCode.name,
         applySeq: item.applySeq,
-        state: item.applyCode.name,
+        state: item.stateCode.name,
         subject: item.subject,
         meetingDt: item.meetingDt.split(' ', 1),
       })
@@ -203,10 +203,16 @@ function PostingApply() {
                     <TableRow key={index} className="my-profile-table">
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
-                      <TableCell align="center">{row.subject !== ' ' ? <SignalBtn>참가</SignalBtn> : ' '}</TableCell>
+                      <TableCell align="center">
+                        {row.subject !== ' ' ? (
+                          <SignalBtn onClick={() => window.open('/projectmeeting', '_blank')}>참가</SignalBtn>
+                        ) : (
+                          ' '
+                        )}
+                      </TableCell>
                       <TableCell align="center">{row.meetingDt}</TableCell>
                       <TableCell align="center">
-                        {row.state === '대기중' ? (
+                        {row.state === '합격' ? (
                           <div
                             style={{
                               display: 'flex',

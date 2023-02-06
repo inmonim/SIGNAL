@@ -40,6 +40,7 @@ function ApplyRegister() {
   const location = useLocation()
   const userSeq = sessionStorage.getItem('userSeq')
   const postingSeq = location.state.postingSeq
+  console.log('postingSeq', postingSeq)
 
   // end >> parameter
 
@@ -84,11 +85,13 @@ function ApplyRegister() {
         meetingFetchFilter(res.data.body.postingMeetingList)
         setAnswerList(answerArr)
         setQuestionList(res.data.body.postingQuestionList)
+        console.log(res.data.body)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq).then((res) => {
         careerFetchFilter(res.data.body.userCareerList)
         expFetchFilter(res.data.body.userExpList)
+        console.log(res.data.body)
       })
     } catch (error) {
       console.log(error)
