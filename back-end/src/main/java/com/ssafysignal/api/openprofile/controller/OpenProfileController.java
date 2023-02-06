@@ -3,7 +3,7 @@ package com.ssafysignal.api.openprofile.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.openprofile.dto.response.FindAllReq;
+import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfileRes;
 import com.ssafysignal.api.openprofile.service.OpenProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -58,8 +56,8 @@ public class OpenProfileController {
         log.info("findProfile - Call");
 
         try {
-            List<FindAllReq> profileList = openProfileService.findAllOpenProfile(size, page);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileList));
+            FindAllOpenProfileRes openProfileListRes = openProfileService.findAllOpenProfile(size, page);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, openProfileListRes));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
