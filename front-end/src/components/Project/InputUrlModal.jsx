@@ -6,54 +6,59 @@ import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
 import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
-import api from 'api/Api'
+// import api from 'api/Api'
 
-function InputUrlModal({ open, onClose, inputTitle, handleFlag }) {
-  const [todo, setTodo] = useState('')
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    const nextInputs = { ...todo, [name]: value }
-    setTodo(nextInputs)
-    console.log('.', nextInputs)
-  }
+function InputUrlModal({ open, onClose, inputTitle, handleSetValue }) {
+  const [url, setUrl] = useState('')
+  //   const handleInput = (e) => {
+  //     const { name, value } = e.target
+  //     const nextInputs = { ...url, [name]: value }
+  //     setUrl(nextInputs)
+  //     console.log('.', nextInputs)
+  //   }
   // console.log(todo)
   const [alert, setAlert] = useState(false)
   const handleToPlus = () => {
+    handleSetValue(url)
     setAlert(false)
     onClose(true)
-    handleFlag(true)
   }
   const handleToClose = () => {
     setAlert(false)
     onClose(true)
-    handleFlag(false)
   }
 
-  const handleToAdd = async () => {
-    const userSeq = sessionStorage.getItem('userSeq')
-    const projectSeq = 721
-    try {
-      const todoReq = {
-        content: todo.content,
-        projectSeq,
-        userSeq,
-      }
-      await api
-        .post(process.env.REACT_APP_API_URL + '/todo', JSON.stringify(todoReq), {
-          headers: {
-            'content-type': 'application/json',
-          },
-        })
-        .then((res) => {
-          console.log(res)
-          setAlert(true)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    } catch (e) {
-      console.log(e)
-    }
+  const handleInput = (e) => {
+    e.preventDefault()
+    setUrl(e.target.value)
+  }
+
+  const handleToAdd = () => {
+    setAlert(true)
+    // const userSeq = sessionStorage.getItem('userSeq')
+    // const projectSeq = 721
+    // try {
+    //   const todoReq = {
+    //     content: url.content,
+    //     projectSeq,
+    //     userSeq,
+    //   }
+    //   await api
+    //     .post(process.env.REACT_APP_API_URL + '/todo', JSON.stringify(todoReq), {
+    //       headers: {
+    //         'content-type': 'application/json',
+    //       },
+    //     })
+    //     .then((res) => {
+    //       console.log(res)
+    //       setAlert(true)
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
   return (
     <>
@@ -83,6 +88,7 @@ function InputUrlModal({ open, onClose, inputTitle, handleFlag }) {
                 label={inputTitle}
                 sx={inputStyle}
                 onChange={handleInput}
+                value={url}
               />
             </div>
             <div className="user-profile-input-check-btn">
