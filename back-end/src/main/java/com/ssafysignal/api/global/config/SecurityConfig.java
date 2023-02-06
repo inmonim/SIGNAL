@@ -33,7 +33,7 @@ public class SecurityConfig {
                 // 세분화 되어있을수록 위쪽에 위치해야한다.
                 .authorizeRequests()
                 .antMatchers("/board/qna", "/board/qna/count", "/board/notice", "/board/notice/count").permitAll()
-                .antMatchers("/board/qna/**", "/board/notice/**").hasAnyAuthority("USER")
+                .antMatchers("/board/qna/**", "/board/notice/**").hasAnyAuthority("USER","ADMIN")
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .anyRequest().permitAll()
 
