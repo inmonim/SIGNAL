@@ -1,0 +1,105 @@
+.apply-button {
+  color: white;
+  background-color: #574b9f;
+  border: 1px solid white;
+  padding: 10px 30px;
+  border-radius: 8px;
+  width: 70%;
+  transition-duration: 0.5s;
+}
+.apply-button:hover {
+  color: #574b9f;
+  background-color: white;
+  border: 1px solid #574b9f;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.input {
+  width: 160px !important;
+  /* font-size: 13px; */
+}
+
+hr {
+  border: 1.5px solid #dddbec;
+}
+
+.container {
+  padding: 5% 30% 5% 30%;
+  /* font-size: 16px; */
+  line-height: 40px;
+  width: 100%;
+  /* background: linear-gradient(89.98deg, rgba(255, 255, 255, 0), #bcb7d9 99.99%); */
+  border-radius: 0px;
+}
+
+.application-section {
+  background: #ffffff;
+}
+
+.career-exp-section,
+.skill-meeting-section {
+  display: flex;
+  padding: 1em 0em;
+}
+
+.content-section,
+.question-answer-section {
+  padding: 1em 1.2em;
+}
+
+.career-section,
+.meeting-section,
+.skill-section {
+  width: 45%;
+}
+
+.exp-section {
+  width: 30%;
+}
+.label {
+  padding-bottom: 20px;
+  font-weight: bold;
+}
+
+.phone-section,
+.email-section {
+  width: 45%;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.career-label,
+.exp-label {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-button {
+  text-align: center;
+}
+.question-label {
+  font-size: 18px;
+  padding: 20px;
+  color: #574b9f;
+  font-weight: bold;
+}
+
+.plus-button:hover,
+.minus-button:hover {
+  cursor: pointer;
+}
+
+.career-div,
+.exp-div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.minus-button-section {
+  display: flex;
+  align-items: center;
+}
