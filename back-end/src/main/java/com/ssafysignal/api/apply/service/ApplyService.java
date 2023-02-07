@@ -39,9 +39,17 @@ public class ApplyService {
     private final PostingMeetingRepository postingMeetingRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final PostingPositionRepository postingPositionRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
+
+        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
+                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+        int userHeartCnt = user.getHeartCnt();
+        if (userHeartCnt < 100) {
+            RuntimeException e;
+        }
 
         // 지원서 등록
         Apply apply = Apply.builder()

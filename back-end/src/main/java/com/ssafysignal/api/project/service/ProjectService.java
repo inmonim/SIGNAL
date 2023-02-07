@@ -4,14 +4,13 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
-import com.ssafysignal.api.project.entity.Project;
-import com.ssafysignal.api.project.entity.ProjectPosition;
-import com.ssafysignal.api.project.entity.ProjectSpecification;
-import com.ssafysignal.api.project.entity.ProjectUser;
+import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.ProjectRepository;
+import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ApplyRepository applyRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
     @Transactional
     public void registProject(Integer postingSeq) throws RuntimeException {
@@ -74,6 +75,18 @@ public class ProjectService {
                     .build());
         }
         projectRepository.save(project);
+
+        List<ProjectUser> projectUserList = projectRepository.findByPostingSeq(postingSeq).get().getProjectUserList();
+
+        for (ProjectUser projectUser:projectUserList) {
+            ProjectUserHeartLog projectUserHeartLog = ProjectUserHeartLog.builder()
+                .projectUserSeq(projectUser.getProjectUserSeq())
+                .heartCnt(100)
+                .content("프로젝트 시작")
+                .build();
+
+            projectUserHeartLogRepository.save(projectUserHeartLog);
+        }
     }
 
     @Transactional(readOnly = true)

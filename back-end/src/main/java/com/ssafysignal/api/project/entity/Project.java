@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class Project {
     @Column(name = "content")
     private String content;
     @Column(name = "evaluation_dt")
-    private LocalDateTime evaluationDt;
+    private LocalDate evaluationDt;
     @Column(name = "project_code")
     private String projectCode;
     @Column(name = "project_image_file_seq")
@@ -85,7 +86,7 @@ public class Project {
     private List<ProjectUser> projectUserList;
 
     @Builder
-    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact, Integer weekCnt, Integer term, String gitUrl, String content, LocalDateTime evaluationDt, String projectCode, ImageFile imageFile, Posting posting, List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList, List<ProjectPosition> projectPositionList, List<ProjectToDo> projectToDoList, List<ProjectUser> projectUserList, LocalDateTime regDt) {
+    public Project(Integer projectSeq, Integer postingSeq, String subject, String localCode, String fieldCode, boolean isContact, Integer weekCnt, Integer term, String gitUrl, String content, LocalDate evaluationDt, String projectCode, ImageFile imageFile, Posting posting, List<ProjectEvaluation> projectEvaluationList, List<ProjectNotionDocs> projectNotionDocsList, List<ProjectPosition> projectPositionList, List<ProjectToDo> projectToDoList, List<ProjectUser> projectUserList, LocalDateTime regDt) {
         this.projectSeq = projectSeq;
         this.postingSeq = postingSeq;
         this.subject = subject;
