@@ -143,7 +143,6 @@ function Posting() {
       process.env.REACT_APP_API_URL +
         `/posting?page=${page}&size=${size}&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillaxios}`
     )
-    console.log(skillaxios)
     setPostingList(res.data.body.postingList)
 
     // console.log(Title)/
