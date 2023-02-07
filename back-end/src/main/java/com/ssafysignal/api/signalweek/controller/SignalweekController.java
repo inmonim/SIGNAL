@@ -44,6 +44,7 @@ public class SignalweekController {
                                                             @Parameter(name = "title", required = true) String title,
                                                             @Parameter(name = "uccUrl", required = true) String uccUrl,
                                                             @Parameter(name = "deployUrl", required = true) String deployUrl,
+                                                            @Parameter(name = "content", required = true) String content,
                                                             @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
                                                             @RequestPart(value = "readmeFile", required = false) MultipartFile readmeFile) {
         log.info("registSignalweek - Call");
@@ -52,8 +53,7 @@ public class SignalweekController {
         signalweekRegistRequest.put("title", title);
         signalweekRegistRequest.put("uccUrl", uccUrl);
         signalweekRegistRequest.put("deployUrl", deployUrl);
-
-        System.out.println(signalweekRegistRequest);
+        signalweekRegistRequest.put("content", content);
 
         try {
             signalweekService.registSinalweek(signalweekRegistRequest, pptFile, readmeFile);

@@ -5,7 +5,10 @@ import com.ssafysignal.api.common.repository.ProjectFileRepository;
 import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.profile.entity.UserHeartLog;
+import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.entity.Project;
+import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
@@ -19,6 +22,7 @@ import com.ssafysignal.api.signalweek.repository.SignalweekRankRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
 import com.ssafysignal.api.signalweek.repository.SignalweekVoteRepository;
+import com.ssafysignal.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -47,6 +51,7 @@ public class SignalweekService {
     @Value("${app.fileUpload.uploadPath.readme}")
     private String readmeUploadDir;
     private final SignalweekRankRepository signalweekRankRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
 
 
     // 등록
@@ -55,34 +60,39 @@ public class SignalweekService {
         Project project = projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq")).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         // 이미 있던 경우
         if (signalweekRepository.findByProject(project).isPresent()) {
-            Signalweek signalweek = signalweekRepository.findByProject(project)
-                    .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+            System.out.println("이미 있던 경우로 넘어옴");
+            Signalweek signalweek = signalweekRepository.findByProject(project).get();
             if (!pptFile.isEmpty()) {
                 // 피피티올리고
-                if (signalweek.getPptFile().getFileSeq() != 0) {
+                ProjectFile prePptFile = signalweek.getPptFile();
+                if (signalweek.getPptFile() != null) {
                     // 물리 피피티 파일 삭제
                     fileService.deleteImageFile(signalweek.getPptFile().getUrl());
-                    // 디비 삭제
-                    projectfileRepository.deleteById(signalweek.getPptFile().getFileSeq());
+                    ProjectFile newPptFile = fileService.registFile(pptFile, pptUploadDir);
+                    prePptFile.setUrl(newPptFile.getUrl());
+                    prePptFile.setType(newPptFile.getType());
+                    prePptFile.setName(newPptFile.getName());
+                    projectfileRepository.save(prePptFile);
                 }
-                // 피피티 파일 업로드
-                ProjectFile signalweekPptFile = fileService.registFile(pptFile, pptUploadDir);
-                // 데이터베이스 업데이트
-                signalweek.setPptFile(signalweekPptFile);
+                // 시그널 위크 객체에 새로 할당
+                signalweek.setPptFile(prePptFile);
+
             }
 
             if (!readmeFile.isEmpty()) {
+                ProjectFile preReadmeFile = signalweek.getReadmeFile();
                 // 이미 존재하는 릳미가 있으면 삭제
-                if (signalweek.getReadmeFile().getFileSeq() != 0) {
+                if (signalweek.getReadmeFile() != null) {
                     // 물리 릳미 파일 삭제
                     fileService.deleteImageFile(signalweek.getReadmeFile().getUrl());
                     // 디비 삭제
-                    projectfileRepository.deleteById(signalweek.getReadmeFile().getFileSeq());
+                    ProjectFile newReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
+                    preReadmeFile.setUrl(newReadmeFile.getUrl());
+                    preReadmeFile.setName(newReadmeFile.getName());
+                    preReadmeFile.setType(newReadmeFile.getType());
+                    projectfileRepository.save(preReadmeFile);
                 }
-                // 릳미 파일 업로드
-                ProjectFile signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
-                // 데이터베이스 업데이트
-                signalweek.setPptFile(signalweekReadmeFile);
+                signalweek.setReadmeFile(preReadmeFile);
             }
 
             signalweek.setTitle(signalweekRegistRequest.get("title").toString());
@@ -90,22 +100,25 @@ public class SignalweekService {
             signalweek.setDeployUrl(signalweekRegistRequest.get("deployUrl").toString());
             signalweek.setProject(projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq"))
                     .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)));
+            signalweek.setContent(signalweekRegistRequest.get("content").toString());
 
             signalweekRepository.save(signalweek);
 
             // 처음 생성인 경우
         } else {
+            System.out.println("처음 생성으로 넘어옴");
             ProjectFile registPptFile = null;
             if (pptFile.getSize() >= 1) {
                 registPptFile = fileService.registFile(pptFile, pptUploadDir);
                 projectfileRepository.save(registPptFile);
             }
 
-            ProjectFile signalweekReadmeFile = null;
+            ProjectFile registReadmeFile = null;
             if (readmeFile.getSize() >= 1) {
-                signalweekReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
-                projectfileRepository.save(signalweekReadmeFile);
+                registReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
+                projectfileRepository.save(registReadmeFile);
             }
+
 
             List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc();
             SignalweekSchedule signalweekSchedule = signalweekScheduleList.get(0);
@@ -117,7 +130,8 @@ public class SignalweekService {
                     .deployUrl(signalweekRegistRequest.get("deployUrl").toString())
                     .uccUrl(signalweekRegistRequest.get("uccUrl").toString())
                     .pptFile(registPptFile)
-                    .readmeFile(signalweekReadmeFile)
+                    .readmeFile(registReadmeFile)
+                    .content(signalweekRegistRequest.get("content").toString())
                     .build();
 
             signalweekRepository.save(signalweek);
@@ -134,7 +148,6 @@ public class SignalweekService {
 
         return signalweekFindAllResponse;
     }
-
     
     // 상세 조회
     @Transactional(readOnly = true)
@@ -144,47 +157,16 @@ public class SignalweekService {
 
         boolean vote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(signalweekSeq, userSeq).isPresent();
 
-        SignalweekFindResponse signalweekFindResponse =
-                SignalweekFindResponse.builder()
-                        .title(signalweek.getTitle())
-                        .pptUrl(signalweek.getPptFile().getUrl())
-                        .readmeUrl(signalweek.getReadmeFile().getUrl())
-                        .uccUrl(signalweek.getUccUrl())
-                        .deployUrl(signalweek.getDeployUrl())
-                        .vote(vote)
-                        .build();
-
-        return signalweekFindResponse;
+        return SignalweekFindResponse.builder()
+                .title(signalweek.getTitle())
+                .pptUrl(signalweek.getPptFile().getUrl())
+                .readmeUrl(signalweek.getReadmeFile().getUrl())
+                .uccUrl(signalweek.getUccUrl())
+                .deployUrl(signalweek.getDeployUrl())
+                .vote(vote)
+                .build();
     }
 
-
-    // 수정
-//    @Transactional
-//    public void modifySignalweek(Integer signalweekSeq, SignalweekModifyRequest signalweekModifyRequest) {
-//        Signalweek signalweek = signalweekRepository.findBySignalweekSeq(signalweekSeq)
-//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-//        File pptFile = signalweek.getPptFile();
-//        File readmeFile = signalweek.getReadmeFile();
-//
-//        pptFile.setName(signalweekModifyRequest.getPptName());
-//        pptFile.setUrl(signalweekModifyRequest.getPptUrl());
-//        pptFile.setSize(signalweekModifyRequest.getPptSize());
-//
-//        fileRepository.save(pptFile);
-//
-//        readmeFile.setName(signalweekModifyRequest.getReadmeName());
-//        readmeFile.setUrl(signalweekModifyRequest.getReadmeUrl());
-//        readmeFile.setSize(signalweekModifyRequest.getReadmeSize());
-//
-//        fileRepository.save(readmeFile);
-//
-//        signalweek.setTitle(signalweekModifyRequest.getTitle());
-//        signalweek.setContent(signalweekModifyRequest.getContent());
-//        signalweek.setDeployUrl(signalweekModifyRequest.getDeployUrl());
-//        signalweek.setUccUrl(signalweekModifyRequest.getUccUrl());
-//
-//        signalweekRepository.save(signalweek);
-//    }
 
     // 투표
 
@@ -222,7 +204,7 @@ public class SignalweekService {
         for (SignalweekRank signalweekRank:signalweekRankList) {
 
             responseSignalweekRank.add(SignalweekRankFindResponse.builder()
-                    .rank(signalweekRank.getRank())
+                    .rank(signalweekRank.getRanking())
                     .subject(signalweekRank.getSignalweek().getTitle())
                     .signalweekSeq(signalweekRank.getSignalweek().getSignalweekSeq())
                     .projectImageUrl(signalweekRank.getSignalweek().getProject().getImageFile().getUrl())
@@ -240,43 +222,45 @@ public class SignalweekService {
 
         Integer nowQuarter = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc().get(0).getSignalweekScheduleSeq();
 
-        List<Signalweek> nowQuarterSignalweekList = signalweekRepository.findBySignalweekScheduleSeq(nowQuarter);
+        List<List<Integer>> voteCntList = signalweekRankRepository.findByRank(nowQuarter);
+        System.out.println(voteCntList);
 
-        List<List<Integer>> voteCntList = new ArrayList<>();
-        for (Signalweek nowQarterSignalweek:nowQuarterSignalweekList) {
-            List<Integer> voteCnt = new ArrayList<>(Arrays.asList(nowQarterSignalweek.getSignalweekSeq(), signalweekVoteRepository.countBySignalweekSeq(nowQarterSignalweek.getSignalweekSeq()).intValue()));
-            voteCntList.add(voteCnt);
-        }
-
-        Collections.sort(voteCntList, (i1, i2) -> i2.get(1) - i1.get(1));
-
-        Integer rank = 1;
+//        List<Signalweek> nowQuarterSignalweekList = signalweekRepository.findBySignalweekScheduleSeq(nowQuarter);
+//
+//        List<List<Integer>> voteCntList = new ArrayList<>();
+//        for (Signalweek nowQarterSignalweek:nowQuarterSignalweekList) {
+//            List<Integer> voteCnt = new ArrayList<>(Arrays.asList(nowQarterSignalweek.getSignalweekSeq(), signalweekVoteRepository.countBySignalweekSeq(nowQarterSignalweek.getSignalweekSeq()).intValue()));
+//            voteCntList.add(voteCnt);
+//        }
+//
+//        Collections.sort(voteCntList, (i1, i2) -> i2.get(1) - i1.get(1));
+//
         for (List<Integer> voteCnt:voteCntList.subList(0, 3)) {
+            SignalweekRank signalweekRank = null;
             if (signalweekRepository.findBySignalweekSeq(voteCnt.get(0)).isPresent()) {
-                SignalweekRank signalweekRank = SignalweekRank.builder()
+                signalweekRank = SignalweekRank.builder()
                         .signalweekScheduleSeq(nowQuarter)
                         .signalweek(signalweekRepository.findBySignalweekSeq(voteCnt.get(0)).get())
-                        .rank(rank)
+                        .ranking(voteCnt.get(2))
                         .build();
                 signalweekRankRepository.save(signalweekRank);
             }
-            rank++;
+
+            List<ProjectUser> projectUserList = signalweekRank != null ? signalweekRank.getSignalweek().getProject().getProjectUserList() : null;
+
+            int mul = Math.abs(voteCnt.get(2)-4);
+            for (ProjectUser projectUser: projectUserList) {
+
+                User rankUser = projectUser.getUser();
+                rankUser.setHeartCnt(rankUser.getHeartCnt() + mul*100);
+
+                UserHeartLog heartLog = UserHeartLog.builder()
+                        .heartCnt(mul*100)
+                        .userSeq(rankUser.getUserSeq())
+                        .content("시그널 위크"+voteCnt.get(2)+"등")
+                        .build();
+                userHeartLogRepository.save(heartLog);
+            }
         }
-
-//        Signalweek fistTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(0).get(0))
-//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-//
-//        Signalweek secondTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(1).get(0))
-//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-//
-//        Signalweek thirdTeam = signalweekRepository.findBySignalweekSeq(voteCntList.get(2).get(0))
-//                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-//
-//
-
     }
-
-
-
-
 }
