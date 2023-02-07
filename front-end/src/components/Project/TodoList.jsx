@@ -157,9 +157,10 @@ function TodoList() {
     <>
       <div className="todo-person-tab-container">
         <div className="todo-person-tab-list">
-          {memberList.map((mem) => (
+          {memberList.map((mem, index) => (
             <div
               key={mem.userSeq}
+              id={index}
               className={`todo-person-tab ${tab === mem.userSeq ? 'active' : ''}`}
               onClick={() => {
                 setTab(mem.userSeq)
@@ -200,7 +201,13 @@ function TodoList() {
             ) : (
               <></>
             )}
-            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} handleFlag={handleFlag} flag={flag} />
+            <TodoPlusModal
+              userSeq={userSeq}
+              open={openTodoPlus}
+              onClose={handleToClose}
+              handleFlag={handleFlag}
+              flag={flag}
+            />
           </div>
           <div className="todo-todos-list">
             {todoList.map((todo, index) => (

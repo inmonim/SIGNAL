@@ -14,7 +14,6 @@ function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) 
     const { name, value } = e.target
     const nextInputs = { ...todo, [name]: value }
     setTodo(nextInputs.content)
-    console.log('.', nextInputs.content)
   }
 
   const [modifyOpen, setModifyOpen] = useState('')
@@ -29,7 +28,6 @@ function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) 
         content: todo,
       }
       api.put(process.env.REACT_APP_API_URL + '/todo/' + todoSeq, req).then((res) => {
-        console.log(res)
         handleFlag(!flag)
       })
     } catch (e) {
