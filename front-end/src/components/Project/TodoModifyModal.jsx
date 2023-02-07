@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
@@ -8,40 +8,22 @@ import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
-function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
-  const [content, setContent] = useState('')
-  const todoModifyFetch = async () => {
-    try {
-      await api.get(process.env.REACT_APP_API_URL + '/todo/' + todoSeq).then((res) => {
-        setContent(res.data.body.content)
-        console.log(res.data.body)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    todoModifyFetch()
-  }, [todoSeq])
-
+function TodoModifyModal({ open, onClose, handleFlag, todoSeq, content }) {
   const [todo, setTodo] = useState('')
   const handleInput = (e) => {
     const { name, value } = e.target
     const nextInputs = { ...todo, [name]: value }
-    setTodo(nextInputs)
-    console.log('.', nextInputs)
+    setTodo(nextInputs.content)
+    console.log('.', nextInputs.content)
   }
 
-  const [alert, setAlert] = useState(false)
-  const handleToMAlert = async () => {
+  const handleToMAlert = () => {
     try {
       const req = {
-        todoSeq,
+        content: todo,
       }
-      await api.put(process.env.REACT_APP_API_URL + '/todo/' + todoSeq, req).then((res) => {
+      api.put(process.env.REACT_APP_API_URL + '/todo/' + todoSeq, req).then((res) => {
         console.log(res)
-        setAlert(true)
       })
     } catch (e) {
       console.log(e)
@@ -49,17 +31,14 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq }) {
   }
   const handleToDAlert = async () => {}
   const handleToModify = () => {
-    setAlert(false)
     onClose(true)
     handleFlag(true)
   }
   const handleToDelete = () => {
-    setAlert(false)
     onClose(true)
     handleFlag(true)
   }
   const handleToClose = () => {
-    setAlert(false)
     onClose(true)
   }
   return (
