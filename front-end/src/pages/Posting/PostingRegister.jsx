@@ -34,8 +34,7 @@ const Container = styled.section`
 `
 const skillStyle = {
   width: '100%',
-  maxwidth: '378px',
-  height: '42px',
+  height: '60px',
   padding: '0 14px',
   border: '1px solid #d7e2eb',
   borderradius: '4px',
@@ -62,6 +61,7 @@ const Label = styled.h1`
   margin-right: 20px;
   display: flex;
   align-items: center;
+  color: #574b9f;
 `
 
 const inputStyle = {
@@ -345,68 +345,82 @@ const PostingRegister = () => {
           {/* 여기는 진행유형,프로젝트기간 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <Label>진행 유형 </Label>
-              <FilterSelect
-                onChange={(e) => {
-                  // console.log(e.target.value)
-                  if (e.target.value === 'true') {
-                    setPosting({ ...posting, isContact: true })
-                  } else {
-                    setPosting({ ...posting, isContact: false })
-                  }
-                  // console.log(typeof e.target.value)
-                  // console.log(range(10, 3))
-                }}
-              >
-                {contactList.map((ele, i) => (
-                  <option key={i} value={ele.status}>
-                    {ele.name}
-                  </option>
-                ))}
-              </FilterSelect>
+              <div style={{ width: '20%' }}>
+                <Label>진행 유형 </Label>
+              </div>
+              <div style={{ width: '80%' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    if (e.target.value === 'true') {
+                      setPosting({ ...posting, isContact: true })
+                    } else {
+                      setPosting({ ...posting, isContact: false })
+                    }
+                    // console.log(typeof e.target.value)
+                    // console.log(range(10, 3))
+                  }}
+                >
+                  {contactList.map((ele, i) => (
+                    <option key={i} value={ele.status}>
+                      {ele.name}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <Label>프로젝트 기간</Label>
-              <FilterSelect
-                onChange={(e) => {
-                  // console.log(e.target.value)
-                  setPosting({ ...posting, term: Number(e.target.value) })
-                }}
-              >
-                {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
-                  <option key={i} value={ele}>
-                    {ele}주
-                  </option>
-                ))}
-              </FilterSelect>
+              <div style={{ width: '30%' }}>
+                <Label>프로젝트 기간</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPosting({ ...posting, term: Number(e.target.value) })
+                  }}
+                >
+                  {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
+                    <option key={i} value={ele}>
+                      {ele}주
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
             </div>
           </div>
-          {/* 여기는 사용기술 , 시간선택 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <Label>사용 기술 </Label>
-              <Autocomplete
-                multiple
-                limitTags={5}
-                size="small"
-                id="multiple-limit-tags"
-                options={Skilldata}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  // console.log(newValue)
-                  // console.log(event.target)
-                  handleChangeSkill(newValue)
-                }}
-                renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                sx={{ skillStyle, width: 2 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
-              />
+              <div style={{ width: '20%' }}>
+                <Label>사용 기술 </Label>
+              </div>
+              <div style={{ width: '80%' }}>
+                <Autocomplete
+                  multiple
+                  limitTags={5}
+                  size="small"
+                  id="multiple-limit-tags"
+                  options={Skilldata}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    // console.log(newValue)
+                    // console.log(event.target)
+                    handleChangeSkill(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                  sx={{ skillStyle, backgroundColor: '#fbfbfd' }}
+                />
+              </div>
             </div>
-            <div style={{ flexDirection: 'column' }}>
-              <div className="email-section" style={{ marginLeft: '3em' }}>
-                <Label>화상 미팅 예약</Label>
-                <Box sx={{ flexDirection: 'row' }}>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>화상미팅 예약</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <Box>
                   <DateSelect setDate={setDate} />
                   <button
+                    className="post-button-modi"
                     onClick={() => {
                       if (!DateList.includes(Date)) {
                         const copy = [...DateList]
@@ -419,7 +433,16 @@ const PostingRegister = () => {
                   </button>
                 </Box>
               </div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '500px' }}>
+            </div>
+          </div>
+          {/* 여기는 사용기술 , 시간선택 */}
+          <div style={{ display: 'flex', marginLeft: '5em' }}>
+            <div className="phone-section">
+              <div style={{ width: '20%' }}></div>
+              <div style={{ width: '80%' }}></div>
+            </div>
+            <div>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '6 00px' }}>
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
@@ -430,37 +453,70 @@ const PostingRegister = () => {
                   />
                 ))}
               </Stack>
+              <div className="email-section" style={{ marginLeft: '3em' }}>
+                <div style={{ width: '30%' }}></div>
+                <div style={{ width: '70%' }}></div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+            <div className="phone-section">
+              <div style={{ width: '20%' }}>
+                <Label>포지션 인원</Label>
+              </div>
+              <div style={{ width: '80%', display: 'flex' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    const position = JSON.parse(e.target.value)
+                    setPosi({ code: position.code, name: position.name })
+                  }}
+                >
+                  {positionData.map((ele, i) => (
+                    <option key={i} value={JSON.stringify(ele)}>
+                      {ele.name}
+                    </option>
+                  ))}
+                </FilterSelect>
+                <img
+                  style={{ marginTop: '7px', marginBottom: '7px' }}
+                  src={plusButton}
+                  alt="plusButton"
+                  className="plus-button"
+                  onClick={() => {
+                    dispatch(add(posi))
+                  }}
+                />
+              </div>
+            </div>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>난이도</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <FilterSelect
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    setPosting({ ...posting, level: Number(e.target.value) })
+                  }}
+                >
+                  {[1, 2, 3, 4, 5].map((ele, i) => (
+                    <option key={i} value={ele}>
+                      LEVEL : {ele}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
             </div>
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
             <div className="phone-section1">
               <div>
                 <div>
                   <div className="career-label">
-                    <Label>포지션 인원</Label>
-                    <FilterSelect
-                      onChange={(e) => {
-                        // console.log(e.target.value)
-                        const position = JSON.parse(e.target.value)
-                        setPosi({ code: position.code, name: position.name })
-                      }}
-                    >
-                      {positionData.map((ele, i) => (
-                        <option key={i} value={JSON.stringify(ele)}>
-                          {ele.name}
-                        </option>
-                      ))}
-                    </FilterSelect>
-                    <img
-                      style={{ marginTop: '7px', marginBottom: '7px' }}
-                      src={plusButton}
-                      alt="plusButton"
-                      className="plus-button"
-                      onClick={() => {
-                        dispatch(add(posi))
-                      }}
-                    />
+                    <div style={{ width: '20%' }}></div>
+                    <div style={{ width: '80%', display: 'flex' }}></div>
                   </div>
                   <hr></hr>
                   <PositionTodo />
@@ -473,21 +529,9 @@ const PostingRegister = () => {
                 ></CareerList>
               </div>
             </div>
-            <Box style={{ width: '5%' }}></Box>
-            <div className="phone-section" style={{ marginLeft: '3em' }}>
-              <Label style={{ marginBottom: '1em', marginTop: '1em  ' }}>난이도</Label>
-              <FilterSelect
-                onChange={(e) => {
-                  // console.log(e.target.value)
-                  setPosting({ ...posting, level: Number(e.target.value) })
-                }}
-              >
-                {[1, 2, 3, 4, 5].map((ele, i) => (
-                  <option key={i} value={ele}>
-                    LEVEL : {ele}
-                  </option>
-                ))}
-              </FilterSelect>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}></div>
+              <div style={{ width: '70%' }}></div>
             </div>
           </div>
 
