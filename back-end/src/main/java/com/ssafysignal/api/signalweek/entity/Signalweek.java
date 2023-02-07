@@ -35,6 +35,9 @@ public class Signalweek {
     @Column(name = "deploy_url")
     private String deployUrl;
 
+    @Column(name = "content")
+    private String content;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_seq")
     private Project project;
@@ -48,12 +51,13 @@ public class Signalweek {
     private ProjectFile readmeFile;
 
     @Builder
-    public Signalweek(Integer signalweekSeq, Integer signalweekScheduleSeq, String title, Project project,
+    public Signalweek(Integer signalweekSeq, Integer signalweekScheduleSeq, String title, Project project, String content,
                       String uccUrl, String deployUrl, ProjectFile pptFile, ProjectFile readmeFile) {
         this.signalweekSeq = signalweekSeq;
         this.signalweekScheduleSeq = signalweekScheduleSeq;
         this.title = title;
         this.project = project;
+        this.content = content;
         this.uccUrl = uccUrl;
         this.deployUrl = deployUrl;
         this.pptFile = pptFile;
