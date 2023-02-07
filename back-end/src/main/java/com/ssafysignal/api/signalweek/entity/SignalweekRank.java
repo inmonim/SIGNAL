@@ -23,8 +23,8 @@ public class SignalweekRank {
     @Column(name = "signalweek_schedule_seq")
     private Integer signalweekScheduleSeq;
 
-    @Column(name = "rank")
-    private Integer rank;
+    @Column(name = "ranking")
+    private Integer ranking;
 
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -32,10 +32,10 @@ public class SignalweekRank {
     private Signalweek signalweek;
 
     @Builder
-    public SignalweekRank(Integer signalweekRankSeq, Integer signalweekScheduleSeq, Integer rank, Signalweek signalweek){
+    public SignalweekRank(Integer signalweekRankSeq, Integer signalweekScheduleSeq, Integer ranking, Signalweek signalweek){
         this.signalweekRankSeq = signalweekRankSeq;
         this.signalweekScheduleSeq = signalweekScheduleSeq;
-        this.rank = rank;
+        this.ranking = ranking;
         this.signalweek = signalweek;
     }
 }
