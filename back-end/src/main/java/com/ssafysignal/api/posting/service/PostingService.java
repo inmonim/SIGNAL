@@ -14,6 +14,7 @@ import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.posting.repository.*;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectSpecification;
+import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
 import io.swagger.models.auth.In;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 public class PostingService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;
     private final PostingSkillRepository postingSkillRepository;
     private final ApplyRepository applyRepository;
@@ -100,6 +102,14 @@ public class PostingService {
                 .term(10)
                 .build();
         projectRepository.save(project);
+
+        // 팀장 포지션 등록
+        projectUserRepository.save(ProjectUser.builder()
+                        .userSeq(postingRegistRequest.getUserSeq())
+                        .projectSeq(project.getProjectSeq())
+                        .isLeader(true)
+                        .positionCode(postingRegistRequest.getLeaderPosition())
+                        .build());
     }
 
     @Transactional(readOnly = true)

@@ -43,6 +43,10 @@ public class ProjectService {
         project.getProjectUserList().clear();
         // 선정된 팀원 (인원 추가되는 기능까지 포함한 구현)
         for (Integer userSeq : userSeqList){
+            if (userSeq == project.getPosting().getUserSeq()) {
+                ProjectUser leader = projectUserRepository.
+                continue;
+            }
             Apply apply = applyRepository.findByUserSeqAndPostingSeqAndApplyCode(userSeq, postingSeq, "AS101")
                     .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 

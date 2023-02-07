@@ -65,6 +65,8 @@ public class PostingController {
     private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingRegistRequest) {
         log.info("registPosting - Call");
 
+        System.out.println("postingRegistRequest = " + postingRegistRequest);
+
         try {
             postingService.registPosting(postingRegistRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
