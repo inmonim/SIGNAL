@@ -70,7 +70,6 @@ public class TodolistService{
         Todolist toDo = todolistRepository.findByProjectToDoSeq(toDoSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        toDo.setToDoCode(todoModifyRequest.getToDoCode());
         toDo.setContent(todoModifyRequest.getContent());
 
         todolistRepository.save(toDo);
