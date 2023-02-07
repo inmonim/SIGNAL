@@ -11,21 +11,18 @@ import TodoModifyModal from './TodoModifyModal'
 
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
+import moment from 'moment'
 
 function TodoList() {
   const [tab, setTab] = useState(0)
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = ('0' + (now.getMonth() + 1)).slice(-2)
-  const date = ('0' + now.getDate()).slice(-2)
-  const today = year + '-' + month + '-' + date
+  const today = moment(new Date()).format('YYYY-MM-DD')
   const [dateValue, setDateValue] = useState(today)
 
   const [openTodoPlus, setOpenTodoPlus] = useState(false)
   const handleToAlert = () => setOpenTodoPlus(true)
   const handleToClose = () => {
     setOpenTodoPlus(false)
-    setModalOpen(false)
+    setTodoModifyOpen(false)
   }
 
   function dateToString(value) {
@@ -77,7 +74,6 @@ function TodoList() {
 
   const todoList = []
   const completedTodoList = []
-  const [code, setCode] = useState('TD100')
 
   const AddArray = () => {
     Array.from(data).forEach((item) => {
@@ -96,40 +92,40 @@ function TodoList() {
   }
   AddArray()
 
-  const [completeTodo, setCompleteTodo] = useState(false)
-
-  const handleCompleteTodo = async () => {
-    const nextCompleteTodo = completeTodo
-    setCompleteTodo(!nextCompleteTodo)
-    setCode('TD101') // 수정하기로
-    console.log(nextCompleteTodo)
-    console.log(code)
-    AddArray()
-    const req = {
-      isComplete: true,
+  const handleCompleteTodo = async (e) => {
+    if (e.target.checked === true) {
+      await api
+        .put(process.env.REACT_APP_API_URL + '/todo/state/' + e.target.id, true)
+        .then(() => {
+          setFlag(!flag)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
-    await api
-      .put(process.env.REACT_APP_API_URL + '/todo/state/' + data.projectToDoSeq, req)
-      .then((res) => {
-        console.log(res)
-        setFlag(!flag)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
   }
 
-  const [modalOpen, setModalOpen] = useState(false)
+  const [todoModifyOpen, setTodoModifyOpen] = useState(false)
   const [todoSeq, setTodoSeq] = useState(0)
-  const handleToModify = (e) => {
-    console.log(e.target.id)
-    setTodoSeq(e.target.id)
-    setModalOpen(true)
+  const [content, setContent] = useState('')
+  const handleToModify = async (e) => {
+    const { id } = e.target
+    const nextSeq = { ...todoSeq, id }
+    setTodoSeq(nextSeq.id)
+    console.log('.', nextSeq.id)
+    try {
+      await api.get(process.env.REACT_APP_API_URL + '/todo/' + e.target.id).then((res) => {
+        setContent(res.data.body.content)
+        console.log(res.data.body.content)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+    alertOpen()
   }
-  // const handleToClose = () => {
-  //   setOpenTodoPlus(false)
-  //   setModalOpen(false)
-  // }
+  const alertOpen = () => {
+    setTodoModifyOpen(true)
+  }
 
   return (
     <>
@@ -165,21 +161,50 @@ function TodoList() {
         <div className="todo-todos-container">
           <div className="todo-todos-header">
             <div className="todo-todos-title">ToDos</div>
-            <div className="todo-todos-plus" onClick={handleToAlert}>
-              <img src={plusBtn} alt="" />
-            </div>
-            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} handleFlag={handleFlag} />
+            {dateValue === today ? (
+              <div className="todo-todos-plus" onClick={handleToAlert}>
+                <img src={plusBtn} alt="" />
+              </div>
+            ) : (
+              <></>
+            )}
+            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} handleFlag={handleFlag} flag={flag} />
           </div>
           <div className="todo-todos-list">
             {todoList.map((todo, index) => (
               <>
-                <div className="todo-todos-list-item" key={index} id={todo.todoSeq} onClick={handleToModify}>
-                  <FormControlLabel
-                    onChange={handleCompleteTodo}
-                    style={{ color: '#574b9f' }}
-                    control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
-                  />
-                  <div className="todo-todos-list-item-container">
+                <div className="todo-todos-list-item" key={todo.todoSeq} id={todo.todoSeq}>
+                  {dateValue === today ? (
+                    <FormControlLabel
+                      onChange={handleCompleteTodo}
+                      control={
+                        <Checkbox
+                          id={todo.todoSeq}
+                          defaultChecked={false}
+                          sx={{
+                            '& .MuiSvgIcon-root': { fontSize: 30 },
+                            color: '#574B9F',
+                            '&.Mui-checked': { color: '#574B9F' },
+                          }}
+                        />
+                      }
+                    />
+                  ) : (
+                    <FormControlLabel
+                      onChange={handleCompleteTodo}
+                      control={
+                        <Checkbox
+                          indeterminate
+                          id={todo.todoSeq}
+                          sx={{
+                            '& .MuiSvgIcon-root': { fontSize: 30 },
+                          }}
+                        />
+                      }
+                      disabled
+                    />
+                  )}
+                  <div className="todo-todos-list-item-container" id={todo.todoSeq} onClick={handleToModify}>
                     <div id={todo.todoSeq} className="todo-todos-list-item-content" draggable>
                       {todo.content}
                     </div>
@@ -190,9 +215,10 @@ function TodoList() {
             ))}
             <TodoModifyModal
               todoSeq={todoSeq}
-              open={modalOpen}
+              open={todoModifyOpen}
               onClose={handleToClose}
               handleFlag={handleFlag}
+              content={content}
             ></TodoModifyModal>
           </div>
         </div>
@@ -201,30 +227,32 @@ function TodoList() {
             <div className="todo-completed-title">Completed</div>
           </div>
           <div className="todo-completed-list">
-            {completedTodoList.map((todo, index) => (
-              <div className="todo-completed-list-item" key={todo.todoSeq}>
-                <FormControlLabel
-                  onChange={handleCompleteTodo}
-                  style={{ color: '#fff' }}
-                  control={
-                    <Checkbox
-                      sx={{
-                        '& .MuiSvgIcon-root': { fontSize: 30 },
-                        color: 'white',
-                        '&.Mui-checked': { color: 'white' },
-                      }}
-                      disabled
-                      checked
-                    />
-                  }
-                />
-                <div className="todo-completed-list-item-container">
-                  <div id={todo.todoSeq} className="todo-completed-list-item-content" draggable>
-                    {todo.content}
+            {completedTodoList.map((todo) => (
+              <>
+                <div className="todo-completed-list-item" key={todo.todoSeq} id={todo.todoSeq}>
+                  <FormControlLabel
+                    onChange={handleCompleteTodo}
+                    control={
+                      <Checkbox
+                        id={todo.todoSeq}
+                        sx={{
+                          '& .MuiSvgIcon-root': { fontSize: 30 },
+                          color: 'white',
+                          '&.Mui-checked': { color: 'white' },
+                        }}
+                      />
+                    }
+                    disabled
+                    checked
+                  />
+                  <div className="todo-completed-list-item-container" id={todo.todoSeq}>
+                    <div id={todo.todoSeq} className="todo-completed-list-item-content">
+                      {todo.content}
+                    </div>
+                    <div className="todo-completed-list-item-regDt">{regDt}</div>
                   </div>
-                  <div className="todo-completed-list-item-regDt">{regDt}</div>
                 </div>
-              </div>
+              </>
             ))}
           </div>
         </div>
