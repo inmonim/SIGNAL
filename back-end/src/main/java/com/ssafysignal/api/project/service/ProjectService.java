@@ -35,7 +35,6 @@ public class ProjectService {
     public void registProject(Integer postingSeq) throws RuntimeException {
         Project project = projectRepository.findByPostingSeq(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
-        System.out.println("project = " + project.getProjectSeq());
 
         Set<Integer> userSeqList = project.getProjectUserList().stream().map(ProjectUser::getUserSeq).collect(Collectors.toSet());
         List<Apply> pickList = applyRepository.findUserSeqByPostingSeqAndApplyCode(postingSeq, "AS101");
@@ -44,8 +43,7 @@ public class ProjectService {
         project.getProjectUserList().clear();
         // 선정된 팀원 (인원 추가되는 기능까지 포함한 구현)
         for (Integer userSeq : userSeqList){
-            System.out.println(userSeq + " + " + postingSeq);
-            Apply apply = applyRepository.findByUserSeqAndPostingSeq(userSeq, postingSeq)
+            Apply apply = applyRepository.findByUserSeqAndPostingSeqAndApplyCode(userSeq, postingSeq, "AS101")
                     .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 
             project.getProjectUserList().add(ProjectUser.builder()

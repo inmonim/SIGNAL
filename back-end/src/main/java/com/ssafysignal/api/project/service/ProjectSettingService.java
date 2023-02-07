@@ -9,18 +9,17 @@ import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
 import com.ssafysignal.api.project.entity.*;
-import com.ssafysignal.api.project.repository.ProjectEvaluationRepository;
-import com.ssafysignal.api.project.repository.ProjectPositionRepository;
-import com.ssafysignal.api.project.repository.ProjectRepository;
-import com.ssafysignal.api.project.repository.ProjectUserRepository;
+import com.ssafysignal.api.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +40,7 @@ public class ProjectSettingService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ProjectEvaluationRepository projectEvaluationRepository;
+    private final ProjectEvaluationQuestionRepository projectEvaluationQuestionRepository;
     private final ProjectPositionRepository projectPositionRepository;
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
@@ -163,4 +163,14 @@ public class ProjectSettingService {
         } else throw new NotFoundException(ResponseCode.REGIST_ALREADY);
     }
 
+    @Transactional(readOnly = true)
+    public FindEvaluationResponse findAllEvalution(Integer projectSeq) {
+
+        Project project = projectRepository.findById(projectSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        List<ProjectEvaluationQuestion> projectEvaluationQuestionList = projectEvaluationQuestionRepository.findAll();
+
+        return FindEvaluationResponse.fromEntity(project.getWeekCnt(), projectEvaluationQuestionList);
+    }
 }

@@ -29,7 +29,7 @@ public class ProjectNotionDocsController {
     @Tag(name = "노션")
     @Operation(summary = "노션 문서 등록", description = "프로젝트에 노션 문서를 등록한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "오픈프로필 등록 완료"),
+            @ApiResponse(responseCode = "200", description = "노션 문서 등록 완료"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "등록실패")})
     @PostMapping("/{projectSeq}")
