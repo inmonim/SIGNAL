@@ -10,13 +10,6 @@ import closeBtn from 'assets/image/x.png'
 
 function InputUrlModal({ open, onClose, inputTitle, handleSetValue }) {
   const [url, setUrl] = useState('')
-  //   const handleInput = (e) => {
-  //     const { name, value } = e.target
-  //     const nextInputs = { ...url, [name]: value }
-  //     setUrl(nextInputs)
-  //     console.log('.', nextInputs)
-  //   }
-  // console.log(todo)
   const [alert, setAlert] = useState(false)
   const handleToPlus = () => {
     handleSetValue(url)
@@ -35,30 +28,6 @@ function InputUrlModal({ open, onClose, inputTitle, handleSetValue }) {
 
   const handleToAdd = () => {
     setAlert(true)
-    // const userSeq = sessionStorage.getItem('userSeq')
-    // const projectSeq = 721
-    // try {
-    //   const todoReq = {
-    //     content: url.content,
-    //     projectSeq,
-    //     userSeq,
-    //   }
-    //   await api
-    //     .post(process.env.REACT_APP_API_URL + '/todo', JSON.stringify(todoReq), {
-    //       headers: {
-    //         'content-type': 'application/json',
-    //       },
-    //     })
-    //     .then((res) => {
-    //       console.log(res)
-    //       setAlert(true)
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // } catch (e) {
-    //   console.log(e)
-    // }
   }
   return (
     <>
