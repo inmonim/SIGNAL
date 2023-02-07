@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/react'
 import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
 import Chatting from 'components/Meeting/Chatting'
+import SignalBtn from 'components/common/SignalBtn'
 
 function ProjectMeeting() {
   const [voice, setVoice] = useState(false)
@@ -15,7 +16,7 @@ function ProjectMeeting() {
   const [chatOpen, setChatOpen] = useState(false)
   const [color, setColor] = useState('black')
   const [paletteOpen, setPaletteOpen] = useState(false)
-  const personList = [0, 0, 0, 0, 0]
+  const personList = [0, 0, 0, 0]
 
   const [mode, setMode] = useState(0)
 
@@ -41,21 +42,21 @@ function ProjectMeeting() {
           </div>
         ) : mode === 1 ? (
           <div className="project-meeting-video-code-edit">
-            <video> 코드편집</video>
+            <video style={{ width: '100%', height: '100%' }}> 코드편집</video>
           </div>
         ) : (
           <div className="project-meeting-video-share-section">
             <div className="project-meeting-video-share-palette">
               <div className="project-meeting-video-share-palette2">
-                <div
-                  className="project-meeting-video-share-color"
-                  color={color}
-                  onClick={() => setPaletteOpen(!paletteOpen)}
-                ></div>
-
-                <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
-
-                <div className="project-meeting-viedo-clear">모두지우기</div>
+                <div style={{ margin: '30px auto' }}>
+                  <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
+                </div>
+                <div style={{ textAlign: 'center', margin: '30px' }}>
+                  <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <SignalBtn>모두지우기</SignalBtn>
+                </div>
               </div>
             </div>
             {paletteOpen ? (
@@ -69,12 +70,25 @@ function ProjectMeeting() {
               ''
             )}
             <div className="project-meeting-video-share">
-              <video> 비디오</video>
+              <video style={{ width: '100%', height: '100%', borderRadius: '25px' }}> 비디오</video>
+            </div>
+            <div className="project-meeting-video-sare-painht" style={{ border: '1px solid' }}>
+              <div
+                style={{
+                  backgroundColor: 'rgba(87, 75, 159, 0.3)',
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: '25px',
+                }}
+              >
+                그림판
+              </div>
             </div>
           </div>
         )}
         {chatOpen ? <Chatting key={100000}></Chatting> : ''}
       </div>
+
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
           <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
@@ -181,4 +195,20 @@ const colorBox = (props) => {
 }
 const Color = styled.div`
   ${colorBox}
+`
+
+const selectedColor = (props) => {
+  const color = props.color
+  return css`
+    border-radius: 20px;
+    background-color: ${color};
+    width: 80px;
+    height: 80px;
+    margin: auto;
+    cursor: pointer;
+  `
+}
+
+const SelectedColor = styled.div`
+  ${selectedColor}
 `
