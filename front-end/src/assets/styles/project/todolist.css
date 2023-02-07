@@ -42,7 +42,6 @@
   width: 50%;
   height:100%;
   border-right: 1px solid black;
-  /* overflow: scroll; */
   margin-bottom: 30px;
 }
 
@@ -60,13 +59,31 @@
 }
 .todo-completed-container{
   width: 50%;
+  height:100%;
+  margin-bottom: 30px;
 }
 
 .todo-todos-list,
 .todo-completed-list{
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   align-items: center;
+  height: 900px;
+}
+
+.todo-todos-list::-webkit-scrollbar,
+.todo-completed-list::-webkit-scrollbar
+ {
+  width: 10px;
+}
+
+.todo-todos-list::-webkit-scrollbar-thumb,
+.todo-completed-list::-webkit-scrollbar-thumb {
+  background-color: #9A93C5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .todo-todos-list-item{
@@ -86,9 +103,9 @@
 .todo-completed-list-item{
   width: 482px;
   height: 94px;
+  background-color: #574B9F;
   color: white;
   border-radius: 10px;
-  background-color: #574B9F;
   font-size: 27px;
   display: flex;
   justify-content: left;
@@ -96,6 +113,7 @@
   margin: 13px 0px;
   padding: 25px;
 }
+
 .todo-todos-list-item:last-child,
 .todo-completed-list-item:last-child{
   margin-bottom: 0px;
@@ -122,6 +140,7 @@
   font-size: 15px;
   color:#616161;
 }
+
 .todo-completed-list-item-regDt{
   font-size: 15px;
   color:#fff;

@@ -24,7 +24,7 @@ let numOfUsers
 let socket
 
 const prevMeetingSetting = () => {
-  socket = io('https://i8e207.p.ssafy.io:443', { secure: true, cors: { origin: '*' } })
+  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('사전 미팅 소켓 통신 시작!')
 
