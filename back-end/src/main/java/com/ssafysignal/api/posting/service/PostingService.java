@@ -211,7 +211,9 @@ public class PostingService {
     public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        apply.setStateCode("PAS101");
+        // 지원자 기준 '선발'상태로 변경
+        apply.setStateCode("PAS105");
+        // 작성자 기준 '대기중'으로 변경
         apply.setApplyCode("AS100");
         applyRepository.save(apply);
     }
@@ -221,8 +223,19 @@ public class PostingService {
         Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        if (applySelectConfirmRequest.isSelect()) apply.setApplyCode("AS101");
-        else apply.setApplyCode("AS102");
+        if (applySelectConfirmRequest.isSelect()) {
+            // 지원자 기준 '합격'상태로 변경
+            apply.setStateCode("PAS101");
+            // 작성자 기준 '확정'상태로 변경
+            apply.setApplyCode("AS101");
+        }
+        else {
+            // 지원자 기준 '지원취소'상태로 변경
+            apply.setStateCode("PAS104");
+            // 작성자 기준 '거절'상태로 변경
+            apply.setApplyCode("AS102");
+        }
+            
     }
 
     @Transactional(readOnly = true)

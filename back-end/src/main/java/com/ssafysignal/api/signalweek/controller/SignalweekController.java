@@ -40,11 +40,11 @@ public class SignalweekController {
     @Operation(summary = "시그널 위크 등록", description = "프로젝트를 시그널 위크에 등록한다")
     @PostMapping("")
     private ResponseEntity<BasicResponse> registSignalweek(
-                                                            @Parameter(name = "projectSeq", required = true) Integer projectSeq,
-                                                            @Parameter(name = "title", required = true) String title,
-                                                            @Parameter(name = "uccUrl", required = true) String uccUrl,
-                                                            @Parameter(name = "deployUrl", required = true) String deployUrl,
-                                                            @Parameter(name = "content", required = true) String content,
+                                                            @Parameter(name = "projectSeq", required = true) @RequestPart Integer projectSeq,
+                                                            @Parameter(name = "title", required = true) @RequestPart String title,
+                                                            @Parameter(name = "uccUrl", required = true) @RequestPart String uccUrl,
+                                                            @Parameter(name = "deployUrl", required = true) @RequestPart String deployUrl,
+                                                            @Parameter(name = "content", required = true) @RequestPart String content,
                                                             @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
                                                             @RequestPart(value = "readmeFile", required = false) MultipartFile readmeFile) {
         log.info("registSignalweek - Call");
@@ -94,19 +94,6 @@ public class SignalweekController {
         }
     }
 
-    
-    // 파일 등록 이슈로 regist 와 통합
-//    @Tag(name = "시그널 위크")
-//    @Operation(summary = "시그널 위크 정보 수정", description = "시그널 위크 등록 정보를 수정한다")
-//    @PutMapping("{signalweekSeq}")
-//    private ResponseEntity<BasicResponse> modifySignalweek(@Parameter(description = "시그널 위크 seq") @PathVariable(name = "signalweekSeq") Integer signalweekSeq,
-//                                                           @Parameter(description = "modify RequestBody") @RequestBody SignalweekModifyRequest signalweekModifyRequest) {
-//        log.info("modifySignalweek - Call");
-//
-//        signalweekService.modifySignalweek(signalweekSeq, signalweekModifyRequest);
-//        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
-//    }
-
     @Tag(name = "시그널 위크")
     @Operation(summary = "시그널 위크 투표", description = "시그널 위크 프로젝트에 투표를 한다.")
     @PostMapping("vote")
@@ -150,20 +137,4 @@ public class SignalweekController {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
-
-
-    // 삭제는 관리자만 가능!
-//    @Tag(name = "시그널 위크")
-//    @Operation(summary = "시그널 위크 삭제", description = "시그널 위크 등록 정보를 삭제한다")
-//    @DeleteMapping("{signalweekSeq}")
-//    private ResponseEntity<BasicResponse> deleteSignalweek(@Parameter(description = "시그널 위크 Seq") @PathVariable(name = "signalweekSeq") Integer signalweekSeq) {
-//        log.info("deleteSignalweek - Call");
-//
-//        try {
-//            signalweekService.deleteSignalweek(signalweekSeq);
-//            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
-//        }
-//    }
 }

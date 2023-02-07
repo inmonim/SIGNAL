@@ -72,7 +72,7 @@ public class TodolistController {
     }
 
     @Tag(name = "ToDoList")
-    @Operation(summary = "ToDoList 수정", description = "To Do List 상태 및 내용을 수정한다")
+    @Operation(summary = "ToDoList 수정", description = "To Do List 내용을 수정한다")
     @PutMapping("/{toDoSeq}")
     private ResponseEntity<BasicResponse> modifyTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq, @RequestBody TodoModifyRequest toDoListModifyRequest) {
 
@@ -86,7 +86,7 @@ public class TodolistController {
     }
 
     @Tag(name = "ToDoList")
-    @Operation(summary = "ToDoList 수정", description = "To Do List 상태 및 내용을 수정한다")
+    @Operation(summary = "ToDoList 상태 수정", description = "To Do List 상태 및 내용을 수정한다")
     @PutMapping("/state/{toDoSeq}")
     private ResponseEntity<BasicResponse> modifyStateTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq,
                                                           @Parameter(name = "isComplete") @RequestBody boolean isComplete) {
