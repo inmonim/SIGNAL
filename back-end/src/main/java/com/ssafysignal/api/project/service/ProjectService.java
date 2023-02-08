@@ -4,15 +4,16 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
-import com.ssafysignal.api.project.entity.Project;
-import com.ssafysignal.api.project.entity.ProjectPosition;
-import com.ssafysignal.api.project.entity.ProjectSpecification;
-import com.ssafysignal.api.project.entity.ProjectUser;
+import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.ProjectRepository;
+import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
+import com.ssafysignal.api.user.entity.User;
+import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ApplyRepository applyRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void registProject(Integer postingSeq) throws RuntimeException {
@@ -77,6 +81,18 @@ public class ProjectService {
                     .build());
         }
         projectRepository.save(project);
+
+        List<ProjectUser> projectUserList = projectRepository.findByPostingSeq(postingSeq).get().getProjectUserList();
+
+        for (ProjectUser projectUser:projectUserList) {
+            ProjectUserHeartLog projectUserHeartLog = ProjectUserHeartLog.builder()
+                .projectUserSeq(projectUser.getProjectUserSeq())
+                .heartCnt(100)
+                .content("프로젝트 시작")
+                .build();
+
+            projectUserHeartLogRepository.save(projectUserHeartLog);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -125,6 +141,31 @@ public class ProjectService {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
         project.setProjectCode("PS101");
+
+        List<ProjectUser> projectUserList = projectUserRepository.findByProjectSeq(projectSeq);
+
+        for (ProjectUser projectUser:projectUserList) {
+
+            // global user 가져오기
+            User user = projectUser.getUser();
+
+            // global user에 보증금을 더해준다
+            user.setHeartCnt(user.getHeartCnt() + projectUser.getHeartCnt());
+
+            // project user의 하트 로그에 보증금 반환 내역 작성 및 저장
+            projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                    .heartCnt(-projectUser.getHeartCnt())
+                    .content(project.getSubject()+" 종료로 인한 보증금 반환")
+                    .build());
+
+            // project user의 하트 0으로 만들기
+            projectUser.setHeartCnt(0);
+            
+            // projectUser, globalUser 저장
+            userRepository.save(user);
+            projectUserRepository.save(projectUser);
+        }
+
         projectRepository.save(project);
     }
 }

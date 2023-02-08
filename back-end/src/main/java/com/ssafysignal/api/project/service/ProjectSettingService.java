@@ -15,18 +15,17 @@ import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
 import com.ssafysignal.api.project.entity.*;
-import com.ssafysignal.api.project.repository.ProjectEvaluationRepository;
-import com.ssafysignal.api.project.repository.ProjectPositionRepository;
-import com.ssafysignal.api.project.repository.ProjectRepository;
-import com.ssafysignal.api.project.repository.ProjectUserRepository;
+import com.ssafysignal.api.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class ProjectSettingService {
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
-
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
 
@@ -131,6 +130,12 @@ public class ProjectSettingService {
                         .build());
         
         // 현재 프로젝트 인원에서 제거
+        projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                .projectUserSeq(projectUserSeq)
+                .heartCnt(-projectUser.getHeartCnt())
+                .content("팀 퇴출로 인한 보증금 몰수")
+                .build());
+
         projectUserRepository.deleteById(projectUserSeq);
         
         // 포지션 인원 맞춤 (제거된 인원 포지션 -1)
@@ -162,5 +167,4 @@ public class ProjectSettingService {
             }
         } else throw new NotFoundException(ResponseCode.REGIST_ALREADY);
     }
-
 }
