@@ -133,9 +133,15 @@ function PostingDetail() {
                 </div>
                 {posting &&
                   posting.postingSkillList.map((ele, i) => (
-                    <p style={{ marginRight: '5px' }} key={i}>
-                      {ele.skillCode}
-                    </p>
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.code.url}
+                      style={{
+                        marginRight: '5px',
+                        width: '37px',
+                        height: '37px',
+                      }}
+                      key={i}
+                    ></img>
                   ))}
               </Box>
 

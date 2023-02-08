@@ -526,5 +526,10 @@ const FilterInput = styled.input`
     border: 1px solid #3396f4;
     box-shadow: inset 0 0 0 1px#3396f4;
   }
+  &.active-warning {
+    margin-bottom: 4px;
+    border: 1px solid #f44336;
+    box-shadow: inset 0 0 0 1px #ff77774d;
+  }
 `
 export { Posting, FilterInput }
