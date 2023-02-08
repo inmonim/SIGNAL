@@ -288,7 +288,9 @@ function PostingApply() {
             </>
           )
         ) : postingRowLen === 0 ? (
-          <div className="my-profile-no-table">지원한 공고가 없습니다.</div>
+          <div className="my-profile-no-table-container">
+            <div className="my-profile-no-table">작성한 공고가 없습니다.</div>
+          </div>
         ) : (
           <>
             <TableContainer>
