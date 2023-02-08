@@ -217,7 +217,9 @@ public class PostingService {
     public void applySelect(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-        apply.setStateCode("PAS101");
+        // 지원자 기준 '선발'상태로 변경
+        apply.setStateCode("PAS105");
+        // 작성자 기준 '대기중'으로 변경
         apply.setApplyCode("AS100");
         applyRepository.save(apply);
     }
@@ -227,22 +229,30 @@ public class PostingService {
         Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        if (applySelectConfirmRequest.isSelect()) {
-            apply.setApplyCode("AS101");
-            User applyUser = apply.getUser();
-            applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
-            userRepository.save(applyUser);
+                if (applySelectConfirmRequest.isSelect()) {
+                    // 지원자 기준 '합격'상태로 변경
+                    apply.setStateCode("PAS101");
+                    // 작성자 기준 '확정'상태로 변경
+                    apply.setApplyCode("AS101");
 
-            UserHeartLog userHeartLog = UserHeartLog.builder()
-                    .userSeq(applyUser.getUserSeq())
-                    .heartCnt(-100)
-                    .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
-                    .build();
-            userHeartLogRepository.save(userHeartLog);
-        } else {
-            apply.setApplyCode("AS102");
-        }
-    }
+                    // 하트 차감 및 하트 로그 작성
+                    User applyUser = apply.getUser();
+                    applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
+                    userRepository.save(applyUser);
+        
+                    UserHeartLog userHeartLog = UserHeartLog.builder()
+                            .userSeq(applyUser.getUserSeq())
+                            .heartCnt(-100)
+                            .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
+                            .build();
+                    userHeartLogRepository.save(userHeartLog);
+                } else {
+                    // 지원자 기준 '지원취소'상태로 변경
+                    apply.setStateCode("PAS104");
+                    // 작성자 기준 '거절'상태로 변경
+                    apply.setApplyCode("AS102");
+                }
+            }
 
     @Transactional(readOnly = true)
     public List<PostingFindAllByUserSeq> findAllApplyPosting(Integer userSeq){

@@ -32,16 +32,20 @@ public class ProjectController {
             @ApiResponse(responseCode = "400", description = "프로젝트 생성 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
-    @PostMapping("/{projectSeq}")
-    private ResponseEntity<BasicResponse> registProject(@Parameter(description = "프로젝트 생성을 위한 프로젝트 Seq") Integer postingSeq) {
+    @PostMapping("/{postingSeq}")
+    private ResponseEntity<BasicResponse> registProject(@Parameter(description = "프로젝트 생성을 위한 프로젝트 Seq") @PathVariable("postingSeq") Integer postingSeq) {
         log.info("registProject - Call");
+
+        System.out.println("postingSeq = " + postingSeq);
 
         try {
             projectService.registProject(postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
