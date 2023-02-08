@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Dialog, DialogTitle, DialogActions, styled } from '@mui/material'
 import cancelButton from 'assets/image/x.png'
+import 'assets/styles/alertmodal.css'
 
 const ComfirmButton = styled(Button)(() => ({
   backgroundColor: '#fff',

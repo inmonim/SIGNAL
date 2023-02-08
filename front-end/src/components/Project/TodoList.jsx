@@ -8,13 +8,13 @@ import { FormControlLabel } from '@mui/material'
 import Checkbox from '@mui/material/Checkbox'
 import TodoPlusModal from './TodoPlusModal'
 import TodoModifyModal from './TodoModifyModal'
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
 
 function TodoList() {
-  const [tab, setTab] = useState(0)
   const today = moment(new Date()).format('YYYY-MM-DD')
   const [dateValue, setDateValue] = useState(today)
 
@@ -45,7 +45,31 @@ function TodoList() {
     }
   }
 
-  const userSeq = sessionStorage.getItem('userSeq')
+  // 프로젝트 팀 구성원 조회
+  const [member, setMember] = useState([])
+  const MemberFetch = async () => {
+    await api({
+      url: process.env.REACT_APP_API_URL + '/project/member/' + projectSeq,
+      method: 'GET',
+    }).then((res) => {
+      setMember(res.data.body.projectUserList)
+    })
+  }
+  const memberList = []
+  member.map((item) =>
+    memberList.push({
+      userSeq: item.userSeq,
+      nickname: item.nickname,
+    })
+  )
+  console.log(memberList)
+
+  useEffect(() => {
+    MemberFetch()
+  }, [])
+
+  const [tab, setTab] = useState(sessionStorage.getItem('userSeq'))
+  const [userSeq, setUserSeq] = useState(sessionStorage.getItem('userSeq'))
   const projectSeq = 721
   const regDt = dateValue
 
@@ -68,9 +92,11 @@ function TodoList() {
       params: { userSeq, projectSeq, regDt },
     }).then((res) => {
       console.log(res.data.body)
+      console.log('userSeq:', userSeq)
+      console.log('tab:', tab)
       setData(res.data.body)
     })
-  }, [flag])
+  }, [flag, userSeq])
 
   const todoList = []
   const completedTodoList = []
@@ -131,12 +157,19 @@ function TodoList() {
     <>
       <div className="todo-person-tab-container">
         <div className="todo-person-tab-list">
-          <div className={`todo-person-tab ${tab === 0 ? 'active' : ''}`} onClick={() => setTab(0)}>
-            황수빈
-          </div>
-          <div className={`todo-person-tab ${tab === 1 ? 'active' : ''}`} onClick={() => setTab(1)}>
-            나유진
-          </div>
+          {memberList.map((mem, index) => (
+            <div
+              key={mem.userSeq}
+              id={index}
+              className={`todo-person-tab ${userSeq === mem.userSeq ? 'active' : ''}`}
+              onClick={() => {
+                setTab(mem.userSeq)
+                setUserSeq(mem.userSeq)
+              }}
+            >
+              {mem.nickname}
+            </div>
+          ))}
           <div className="todo-date">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -168,7 +201,13 @@ function TodoList() {
             ) : (
               <></>
             )}
-            <TodoPlusModal open={openTodoPlus} onClose={handleToClose} handleFlag={handleFlag} flag={flag} />
+            <TodoPlusModal
+              userSeq={userSeq}
+              open={openTodoPlus}
+              onClose={handleToClose}
+              handleFlag={handleFlag}
+              flag={flag}
+            />
           </div>
           <div className="todo-todos-list">
             {todoList.map((todo, index) => (
@@ -190,18 +229,12 @@ function TodoList() {
                       }
                     />
                   ) : (
-                    <FormControlLabel
-                      onChange={handleCompleteTodo}
-                      control={
-                        <Checkbox
-                          indeterminate
-                          id={todo.todoSeq}
-                          sx={{
-                            '& .MuiSvgIcon-root': { fontSize: 30 },
-                          }}
-                        />
-                      }
-                      disabled
+                    <WarningAmberIcon
+                      sx={{
+                        color: 'red',
+                        borderRadius: '15px',
+                      }}
+                      fontSize="inherit"
                     />
                   )}
                   <div className="todo-todos-list-item-container" id={todo.todoSeq} onClick={handleToModify}>
@@ -214,10 +247,11 @@ function TodoList() {
               </>
             ))}
             <TodoModifyModal
-              todoSeq={todoSeq}
               open={todoModifyOpen}
               onClose={handleToClose}
+              flag={flag}
               handleFlag={handleFlag}
+              todoSeq={todoSeq}
               content={content}
             ></TodoModifyModal>
           </div>

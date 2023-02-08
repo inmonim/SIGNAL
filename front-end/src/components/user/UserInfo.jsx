@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
-// import ProfileImg from 'assets/image/profileimg2.jpeg'
 import heart from 'assets/image/heart.png'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'

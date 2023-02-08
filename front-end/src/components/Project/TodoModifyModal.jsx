@@ -8,38 +8,56 @@ import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
-function TodoModifyModal({ open, onClose, handleFlag, todoSeq, content }) {
+function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) {
   const [todo, setTodo] = useState('')
   const handleInput = (e) => {
     const { name, value } = e.target
     const nextInputs = { ...todo, [name]: value }
     setTodo(nextInputs.content)
-    console.log('.', nextInputs.content)
   }
 
+  const [modifyOpen, setModifyOpen] = useState('')
+  const [deleteOpen, setDeleteOpen] = useState('')
+
   const handleToMAlert = () => {
+    setModifyOpen(true)
+  }
+  const handleToModify = () => {
     try {
       const req = {
         content: todo,
       }
       api.put(process.env.REACT_APP_API_URL + '/todo/' + todoSeq, req).then((res) => {
-        console.log(res)
+        handleFlag(!flag)
       })
     } catch (e) {
       console.log(e)
     }
-  }
-  const handleToDAlert = async () => {}
-  const handleToModify = () => {
+    setModifyOpen(false)
     onClose(true)
-    handleFlag(true)
   }
+  const handleToDAlert = () => {
+    setDeleteOpen(true)
+  }
+
   const handleToDelete = () => {
-    onClose(true)
-    handleFlag(true)
+    try {
+      api.delete(process.env.REACT_APP_API_URL + '/todo/' + todoSeq).then((res) => {
+        console.log(res)
+        handleFlag(!flag)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+    setDeleteOpen(false)
+    onClose(onClose(true))
+    handleFlag(!flag)
   }
   const handleToClose = () => {
+    setModifyOpen(false)
+    setDeleteOpen(false)
     onClose(true)
+    handleFlag(flag)
   }
   return (
     <>
@@ -84,7 +102,7 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq, content }) {
               </SignalBtn>
               <AlertModal
                 msg="수정하시겠습니까?"
-                open={alert}
+                open={modifyOpen}
                 onClick={handleToModify}
                 onClose={handleToClose}
               ></AlertModal>
@@ -100,7 +118,7 @@ function TodoModifyModal({ open, onClose, handleFlag, todoSeq, content }) {
               </SignalBtn>
               <AlertModal
                 msg="삭제하시겠습니까?."
-                open={alert}
+                open={deleteOpen}
                 onClick={handleToDelete}
                 onClose={handleToClose}
               ></AlertModal>

@@ -43,15 +43,14 @@ const inputStyle = {
 
 function FindEmailPwdModal({ open, onClose }) {
   const [msgEmail, setEmailMsg] = useState('')
-  const [msgPwd, setMsgPwd] = useState('')
+  const [msg, setMsg] = useState('')
   const [emailAlertOpen, setEmailAlertOpen] = useState(false)
-  const [pwdAlertOpen, setPwdAlertOpen] = useState(false)
+  const [alertOpen, setAlertOpen] = useState(false)
 
   const handleFindEmail = () => {
     console.log('click Find')
     console.log('Name: ', inputName)
     console.log('PhoneNumber: ', inputPhone)
-    setEmailAlertOpen(true)
     fetch(process.env.REACT_APP_API_URL + '/auth/email', {
       method: 'POST',
       headers: {
@@ -71,27 +70,29 @@ function FindEmailPwdModal({ open, onClose }) {
       })
       .then((data) => {
         setEmailMsg(data.body.email)
+        setEmailAlertOpen(true)
         console.log(data.body.email)
       })
       .catch((e) => {
-        alert('회원정보가 존재하지 않습니다.')
+        setAlertOpen(true)
+        setMsg('회원정보가 존재하지 않습니다.')
         return e.message
       })
   }
   const handleAlertToMain = () => {
     setEmailAlertOpen(false)
-    setPwdAlertOpen(false)
+    setAlertOpen(false)
     onClose(true)
   }
   const handleToClose = () => {
     setEmailAlertOpen(false)
-    setPwdAlertOpen(false)
+    setAlertOpen(false)
     onClose(true)
   }
   const handleFindPwd = () => {
     console.log('click Find Pwd')
     console.log('Email: ', inputEmail)
-    setPwdAlertOpen(true)
+    setAlertOpen(true)
     fetch(process.env.REACT_APP_API_URL + '/auth/password', {
       method: 'POST',
       headers: {
@@ -109,10 +110,10 @@ function FindEmailPwdModal({ open, onClose }) {
         }
       })
       .then((data) => {
-        setMsgPwd('이메일 전송완료')
+        setMsg('이메일 전송완료')
       })
       .catch((e) => {
-        alert('회원정보가 존재하지 않습니다.')
+        setMsg('회원정보가 존재하지 않습니다.')
         return e.message
       })
   }
@@ -167,6 +168,7 @@ function FindEmailPwdModal({ open, onClose }) {
                   open={emailAlertOpen}
                   onClick={handleAlertToMain}
                 ></AlertFindEmail>
+                <AlertModal msg={msg} open={alertOpen} onClick={handleAlertToMain} onClose={handleToClose}></AlertModal>
               </div>
             </div>
             <div className="find-pwd">
@@ -184,12 +186,7 @@ function FindEmailPwdModal({ open, onClose }) {
                 >
                   인증 메일 전송
                 </SignalBtn>
-                <AlertModal
-                  msg={msgPwd}
-                  open={pwdAlertOpen}
-                  onClick={handleAlertToMain}
-                  onClose={handleToClose}
-                ></AlertModal>
+                <AlertModal msg={msg} open={alertOpen} onClick={handleAlertToMain} onClose={handleToClose}></AlertModal>
               </div>
             </div>
           </div>

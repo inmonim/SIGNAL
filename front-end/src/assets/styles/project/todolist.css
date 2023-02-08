@@ -9,6 +9,7 @@
   display: flex;
   font-size: 24px;
   margin-left: 40px;
+  width: 900px
 }
 
 .todo-person-tab{
@@ -17,8 +18,12 @@
   border-bottom: 0px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  padding: 8px 50px;
   cursor: pointer;
+  display: flex;
+  width: 120px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
 }
 
 .todo-person-tab.active{

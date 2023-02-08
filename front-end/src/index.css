@@ -9,10 +9,6 @@ body {
   margin: 0;
 }
 
-body::-webkit-scrollbar {
-  display: none;
-}
-
 .root-wrap {
   position: relative;
   width: 100%;
