@@ -161,7 +161,7 @@ function TodoList() {
             <div
               key={mem.userSeq}
               id={index}
-              className={`todo-person-tab ${tab === mem.userSeq ? 'active' : ''}`}
+              className={`todo-person-tab ${userSeq === mem.userSeq ? 'active' : ''}`}
               onClick={() => {
                 setTab(mem.userSeq)
                 setUserSeq(mem.userSeq)
