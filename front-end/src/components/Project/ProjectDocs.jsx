@@ -3,6 +3,7 @@ import 'assets/styles/project/projectdocs.css'
 import plusBtn from 'assets/image/plusButton.png'
 import InputUrlModal from './InputUrlModal'
 import Notion from './Notion'
+import api from 'api/Api'
 
 function ProjectDocs({ projectSeq }) {
   const [inputOpen1, setInputOpen1] = useState(false)
@@ -69,23 +70,35 @@ function ProjectDocs({ projectSeq }) {
   const [visible4, setVisible4] = useState(false)
   const [visible5, setVisible5] = useState(false)
   const [visible6, setVisible6] = useState(false)
-  const handleDisplayNone1 = () => {
+  const handleDisplayNone1 = async () => {
+    await getNotionDoc(1, setValue1)
     setVisible1(!visible1)
   }
-  const handleDisplayNone2 = () => {
+  const handleDisplayNone2 = async () => {
+    await getNotionDoc(2, setValue2)
     setVisible2(!visible2)
   }
-  const handleDisplayNone3 = () => {
+  const handleDisplayNone3 = async () => {
+    await getNotionDoc(3, setValue3)
     setVisible3(!visible3)
   }
-  const handleDisplayNone4 = () => {
+  const handleDisplayNone4 = async () => {
+    await getNotionDoc(4, setValue4)
     setVisible4(!visible4)
   }
-  const handleDisplayNone5 = () => {
+  const handleDisplayNone5 = async () => {
+    await getNotionDoc(5, setValue5)
     setVisible5(!visible5)
   }
-  const handleDisplayNone6 = () => {
+  const handleDisplayNone6 = async () => {
+    await getNotionDoc(6, setValue6)
     setVisible6(!visible6)
+  }
+
+  const getNotionDoc = async (num, setValue) => {
+    await api.get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`).then((res) => {
+      setValue(res.data.body.url)
+    })
   }
 
   return (

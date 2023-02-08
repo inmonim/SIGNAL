@@ -16,7 +16,7 @@ function InputUrlModal({ open, onClose, inputTitle, handleSetValue, index, proje
     api
       .post(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}`, {
         url,
-        subject: index,
+        num: index,
       })
       .then((res) => {
         console.log(res)
