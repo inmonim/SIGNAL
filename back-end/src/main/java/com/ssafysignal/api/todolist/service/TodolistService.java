@@ -40,12 +40,13 @@ public class TodolistService{
     public List<TodolistFindResponse> findAllTodoList(Integer userSeq,
                                                       Integer projectSeq,
                                                       String regDt) {
-        List<Todolist> toDoList = todolistRepository.findAllByUserSeq(userSeq);
+        List<Todolist> toDoList = todolistRepository.findByUserSeq(userSeq);
         List<Todolist> responseTodolist = new ArrayList<>();
+
 
         for (Todolist toDo:toDoList) {
             if (toDo.getProjectSeq().equals(projectSeq)
-                    && toDo.getRegDt().format(DateTimeFormatter.ofPattern("yyyyMMdd")).equals(regDt)) {
+                    && toDo.getRegDt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).equals(regDt)) {
                 responseTodolist.add(toDo);
             }
         }
@@ -69,7 +70,6 @@ public class TodolistService{
         Todolist toDo = todolistRepository.findByProjectToDoSeq(toDoSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        toDo.setToDoCode(todoModifyRequest.getToDoCode());
         toDo.setContent(todoModifyRequest.getContent());
 
         todolistRepository.save(toDo);
@@ -81,5 +81,15 @@ public class TodolistService{
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_FAIL));
 
         todolistRepository.delete(toDo);
+    }
+
+    @Transactional
+    public void modifyStateTodo(Integer toDoSeq, boolean isComplete) {
+        Todolist todo = todolistRepository.findById(toDoSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        if (isComplete) todo.setToDoCode("TD101");
+        else todo.setToDoCode("TD100");
+        todolistRepository.save(todo);
     }
 }

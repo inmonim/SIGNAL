@@ -220,16 +220,34 @@ public class PostingController {
     }
 
     @Tag(name = "공고")
+    @Operation(summary = "작성한 공고 개수 조회", description = "작성한 공고 개수을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "작성한 공고 개수 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "작성한 공고 개수 조회 중 오류 발생")})
+    @GetMapping(value = "/post/count/{userSeq}")
+    private ResponseEntity<BasicResponse> countPostPosting(@Parameter(name = "userSeq", description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("countPostPosting - Call");
+
+        try {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("count", postingService.countPostPosting(userSeq)); }}));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "공고")
     @Operation(summary = "작성한 공고 목록 조회", description = "작성한 공고 전체 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "작성한 공고 목록 조회 완료"),
             @ApiResponse(responseCode = "400", description = "작성한 공고 목록 조회 중 오류 발생")})
     @GetMapping(value = "/post/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllPostPosting(@Parameter(name = "userSeq", description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> findAllPostPosting(@Parameter(description = "페이지", required = true) Integer page,
+                                                             @Parameter(description = "사이즈", required = true) Integer size,
+                                                             @Parameter(name = "userSeq", description = "작성자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllPostPosting - Call");
 
         try {
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingService.findAllPostPosting(userSeq)); }}));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingService.findAllPostPosting(page, size, userSeq)); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }

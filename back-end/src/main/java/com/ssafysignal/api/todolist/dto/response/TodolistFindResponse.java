@@ -1,6 +1,7 @@
 package com.ssafysignal.api.todolist.dto.response;
 
 
+import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.todolist.entity.Todolist;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,13 +22,13 @@ public class TodolistFindResponse {
     private String content;
 
     @Schema(description = "todo code")
-    private String toDoCode;
+    private CommonCode toDoCode;
 
     public static TodolistFindResponse fromEntity(final Todolist toDolist) {
         return TodolistFindResponse.builder()
                 .projectToDoSeq(toDolist.getProjectToDoSeq())
                 .content(toDolist.getContent())
-                .toDoCode(toDolist.getToDoCode())
+                .toDoCode(toDolist.getCode())
                 .build();
     }
 

@@ -9,9 +9,6 @@ import lombok.*;
 public class TodoModifyRequest {
     @Schema(description = "내용")
     private String content;
-    @Schema(description = "코드")
-    private String toDoCode;
-
 
 }
 

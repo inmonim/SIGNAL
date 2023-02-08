@@ -49,8 +49,9 @@ public class UserController {
     private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("findUser - Call");
         try {
-        	User user = userService.findUser(userSeq);
+            User user = userService.findUser(userSeq);
             FindUserResponse findUserResponse = FindUserResponse.builder()
+                    .userSeq(user.getUserSeq())
                     .email(user.getEmail())
                     .nickname(user.getNickname())
                     .phone(user.getPhone())
@@ -64,13 +65,13 @@ public class UserController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-    
+
     @Tag(name = "회원")
     @Operation(summary = "회원 탈퇴", description = "회원의 권한을 탈퇴자로 변경.")
     @DeleteMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> deleteUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
         log.info("deleteUser - Call");
-        
+
         try {
             userService.deleteUser(userSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
@@ -80,14 +81,14 @@ public class UserController {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
-    
+
     @Tag(name = "회원")
     @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
     @PostMapping("/{userSeq}")
     private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
                                                      @Parameter(description = "닉네임", required = true)  @RequestParam String nickname,
                                                      @Parameter(description = "전화번호", required = true)  @RequestParam String phone,
-    													@Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
+                                                     @Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
         log.info("modifyUser - Call");
 
         UserInfo userInfo = UserInfo.builder()
@@ -95,11 +96,11 @@ public class UserController {
                 .phone(phone)
                 .profileImageFile(profileImageFile)
                 .build();
-        System.out.println(userInfo);
+
         try {
             userService.modifyUser(userSeq, userInfo);
         } catch (Exception e){
-            System.out.println(e);
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
 
@@ -114,9 +115,10 @@ public class UserController {
         log.info("modifyPassword - Call");
 
         String password = info.get("password");
+        String newPassword = info.get("newPassword");
         System.out.println(password);
         try {
-            userService.modifyPassword(userSeq, password);
+            userService.modifyPassword(userSeq, password, newPassword);
         } catch (Exception e){
             System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
