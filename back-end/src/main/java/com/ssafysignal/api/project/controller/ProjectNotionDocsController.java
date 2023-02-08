@@ -37,10 +37,10 @@ public class ProjectNotionDocsController {
                                                             @Parameter(description = "노션정보", required = true) @RequestBody Map<String,String> notionDocsInfo) {
         log.info("registNotionDocs - Call");
         String url = notionDocsInfo.get("url");
-        String subject = notionDocsInfo.get("subject");
+        Integer num = Integer.parseInt(notionDocsInfo.get("num"));
 
         try {
-            projectNotionDocsService.registNotionDocs(projectSeq,url,subject);
+            projectNotionDocsService.registNotionDocs(projectSeq,url, num);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
@@ -92,17 +92,18 @@ public class ProjectNotionDocsController {
     }
 
     @Tag(name = "노션")
-    @Operation(summary = "노션 문서 리스트 조회", description = "프로젝트의 노션 문서리스르를 조회한다.")
+    @Operation(summary = "노션 문서 조회", description = "프로젝트의 노션 문서리스르를 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "노션독스 조회 완료"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "302", description = "조회 에러")})
     @GetMapping("/{projectSeq}")
-    private ResponseEntity<BasicResponse> FindAllNotiondocs(@Parameter(description = "프로젝트 Seq", required = true) @PathVariable int projectSeq) {
+    private ResponseEntity<BasicResponse> FindAllNotiondocs(@Parameter(description = "프로젝트 Seq", required = true) @PathVariable int projectSeq,
+                                                            @Parameter(description = "문서 번호", required = true) @RequestParam int num) {
         log.info("FindAllNotiondocs - Call");
 
         try {
-            List<ProjectNotionDocs> projectNotionDocsList = projectNotionDocsService.FindAllNotiondocs(projectSeq);
+            ProjectNotionDocs projectNotionDocsList = projectNotionDocsService.findNotiondocs(projectSeq, num);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectNotionDocsList));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
