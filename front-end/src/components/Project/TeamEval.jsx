@@ -37,11 +37,13 @@ function TeamEval() {
                 setToUserSeq(item.projectUserSeq)
               }}
             >
-              <div>{item.nickname}</div>
+              <div className="eval-member-name">{item.nickname}</div>
             </div>
           ))}
         </div>
-        <EvalQna toUserSeq={toUserSeq} projectSeq={projectSeq}></EvalQna>
+        <div className="eval-qna-container">
+          <EvalQna toUserSeq={toUserSeq} projectSeq={projectSeq}></EvalQna>
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,55 @@
 .eval-container {
-  margin-top: 108px;
+  margin-top: 80px;
+  width: 100%;
+}
+
+.eval-section {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.eval-member-bar {
+  width: 100px;
+  height: 500px;
+  padding: 20px 60px;
+}
+
+.eval-member {
+  font-size: 22px;
+  border: 2px solid #574b9f;
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  justify-content: center;
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.eval-member:hover {
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.22);
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.eval-qna-container{
+  display: flex;
+  justify-content: center;
+}
+
+.eval-body{
+  width: 760px;
+}
+
+.eval-date {
+  color: #574b9f;
+  font-size: 22px;
+  margin-bottom: 22px;
+}
+
+.eval-question-body{
+  margin: 21px 0px;
 }
 
 .eval-question {
@@ -9,43 +59,15 @@
   text-align: center;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 15px;
   font-size: 27px;
+  margin-bottom: 21px;
 }
 
 .eval-question > img {
   margin: 0px 20px 0px 20px;
 }
 
-.eval-date {
-  color: #574b9f;
-  font-size: 22px;
-}
-
-.eval-section {
-  display: flex;
-}
-
-.eval-member-bar {
-  width: 100px;
-  height: 500px;
-}
-
-.eval-member {
-  font-size: 22px;
-  background-color: #dddbec;
-  border: 1px solid #574b9f;
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  justify-content: center;
-  margin: auto;
-  display: flex;
-  align-items: center;
-}
-
-.eval-member:hover {
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.22);
-  transition: 0.4s;
-  cursor: pointer;
+.eval-radio-btn{
+  margin-left: 50px;
 }

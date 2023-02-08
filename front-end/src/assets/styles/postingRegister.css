@@ -58,7 +58,6 @@ hr {
   width: 30%;
 }
 .label {
-  padding-bottom: 20px;
   font-weight: bold;
 }
 
@@ -68,6 +67,7 @@ hr {
   display: flex;
   align-items: center;
   font-weight: bold;
+  color: #574b9f;
 }
 
 .career-label,
@@ -102,4 +102,7 @@ hr {
 .minus-button-section {
   display: flex;
   align-items: center;
+}
+.react-datepicker-wrapper {
+  width: 100%;
 }

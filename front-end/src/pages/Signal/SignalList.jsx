@@ -12,29 +12,21 @@ function SignalList() {
 
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
-  const [size] = useState(8)
-  const [count] = useState(20)
-  const [signalList, setSignalList] = useState([
-    { subject: '제목1' },
-    { subject: '제목2' },
-    { subject: '제목1' },
-    { subject: '제목2' },
-    { subject: '제목1' },
-    { subject: '제목2' },
-    { subject: '제목1' },
-    { subject: '제목2' },
-  ])
+  const [size] = useState(16)
+  const [count, setCount] = useState(20)
+  const [signalList, setSignalList] = useState([])
   const handlePageChange = (page) => {
     setPage(page)
     console.log(page)
   }
   const signalListAxios = async () => {
     await api.get(process.env.REACT_APP_API_URL + `/signalweek?page=${page}&size=${size}`).then((res) => {
-      setSignalList(res.data.body)
+      setSignalList(res.data.body.signalweekList)
+      setCount(res.data.body.signalweekTotalElement)
     })
   }
   useEffect(() => {
-    signalListAxios()
+    // signalListAxios()
   }, [])
   useEffect(() => {
     signalListAxios()
