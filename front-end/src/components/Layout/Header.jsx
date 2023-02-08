@@ -117,7 +117,7 @@ function Header() {
                       <D.LinkWrapper href="/posting">공고</D.LinkWrapper>
                     </D.Li>
                     <D.Li>
-                      <D.LinkWrapper href="/">오픈 프로필</D.LinkWrapper>
+                      <D.LinkWrapper href="/openprofile">오픈 프로필</D.LinkWrapper>
                     </D.Li>
                   </D.Ul>
                 </D.Down>

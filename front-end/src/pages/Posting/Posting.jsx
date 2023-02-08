@@ -170,7 +170,7 @@ function Posting() {
       <Banner />
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}>
-          <button
+          {/* <button
             onClick={() => {
               console.log(skillList, 'SkillList')
               console.log(skillListauto, 'skillListauto')
@@ -178,7 +178,7 @@ function Posting() {
             }}
           >
             ㅇ
-          </button>
+          </button> */}
           <TabContext value={value}>
             <Box sx={{ borderBottom: 2, color: '#574B9F' }}>
               <TabList
@@ -442,30 +442,7 @@ const Banner = styled.div`
   background: linear-gradient(89.98deg, rgba(255, 255, 255, 0) 0.02%, #bcb7d9 99.99%);
   border-radius: 0px;
 `
-// const Field = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   padding: 3px 29px;
-//   flex-wrap: wrap;
-// `
-// const Fieldtext = styled.div`
-//   font-family: 'Roboto';
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 26px;
-//   line-height: 33px;
-//   color: #848484;
-//   &:hover {
-//     color: #574b9f;
-//   }
-//   @media (max-width: 876px) {
-//     font-size: 15px;
-//   }
-//   @media (max-width: 590px) {
-//     font-size: 14px;
-//   }
-//   margin-right: 2rem;
-// `
+
 const SkillSelectBox = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -489,14 +466,7 @@ const Skillbtn = styled.div`
   }
   cursor: pointer;
 `
-// const SkillText = styled.p`
-//   font-family: 'Roboto';
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 16px;
-//   line-height: 19px;
-//   color: #000000;
-// `
+
 const PostList = styled.div`
   display: flex;
   flex-wrap: wrap;

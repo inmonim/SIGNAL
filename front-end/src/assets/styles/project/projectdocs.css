@@ -16,19 +16,27 @@
   padding: 0px 16px;
 }
 
-.docs-list-item{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    width: 888px;
-    height: 56px;
-    border-radius: 14px;
-    margin: 19px auto;
-    padding: 0px 34px;
+.docs-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  width: 888px;
+  height: 56px;
+  border-radius: 14px;
+  margin: 19px auto;
+  padding: 0px 34px;
 }
 
-.docs-list-item-title{
-    font-size: 22px;
-    color: #616161;
+.docs-list-item-title {
+  font-size: 22px;
+  color: #616161;
+}
+
+.notion {
+  display: block;
+  background: 1px solid white;
+  background-color: white;
+  height: 500px;
+  overflow-y: scroll;
 }

@@ -51,7 +51,7 @@ function EvalQna(toUserSeq, projectSeq) {
     <div className="eval-body">
       <div className="eval-date">3회차 2022.00.00 ~ 2022.00.00</div>
       {question.map((item, index) => (
-        <div key={index}>
+        <div key={index} className="eval-question-body">
           <div className="eval-question">
             <img src={QuestionIcon} alt="" style={{ width: '30px' }} />
             {item}
@@ -89,6 +89,12 @@ function EvalQna(toUserSeq, projectSeq) {
       ))}
 
       <SignalBtn
+        sigwidth="224px"
+        sigheight="52px"
+        sigborderradius={14}
+        sigfontsize="24px"
+        sigmargin="43px auto"
+        sx={BtnStyle}
         onClick={() => {
           evaluationSubmit()
         }}
@@ -99,3 +105,12 @@ function EvalQna(toUserSeq, projectSeq) {
   )
 }
 export default EvalQna
+
+const BtnStyle = {
+  backgroundColor: '#fff',
+  color: '#574B9F',
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: '#fff',
+  },
+}

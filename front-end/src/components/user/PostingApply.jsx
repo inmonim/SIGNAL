@@ -24,25 +24,26 @@ function PostingApply() {
         .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + page + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log(res.data.body)
+          console.log('applyListFetch', res.data.body)
           rowsApplyForm(res.data.body)
         })
+      console.log('apply', count)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const postingFetch = async () => {
+  const postingListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/posting/post/count/' + userSeq).then((res) => {
         setCount(res.data.body.count)
-        console.log(res.data.body.count)
+        console.log('posting', count)
       })
       await api
         .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + page + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log(res.data.body)
+          console.log('postingListFetch', res.data.body)
           rowsPostingForm(res.data.body.postingList)
         })
     } catch (error) {
@@ -56,7 +57,6 @@ function PostingApply() {
 
   const handlePageChange = (page) => {
     setPage(page)
-    console.log(page)
   }
 
   const rowsApplyForm = (data) => {
@@ -71,6 +71,8 @@ function PostingApply() {
       })
     })
     const rowLen = rowsArr.length
+    console.log(rowLen)
+
     if (rowLen !== size && rowLen !== 0) {
       for (let i = 0; i < size - rowLen; i++)
         rowsArr.push({
@@ -80,8 +82,8 @@ function PostingApply() {
           meetingDt: ' ',
         })
     }
-    setRows(rowsArr)
     console.log(rowsArr)
+    setRows(rowsArr)
   }
 
   const rowsPostingForm = (data) => {
@@ -104,7 +106,6 @@ function PostingApply() {
         })
     }
     setRows(rowsArr)
-    console.log(rowsArr)
   }
 
   const handleProjectAccept = async (applySeq) => {
@@ -152,8 +153,13 @@ function PostingApply() {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
-    applyListFetch()
-  }, [])
+    if (tab === 0) {
+      applyListFetch()
+      console.log('count', count)
+    } else {
+      postingListFetch()
+    }
+  }, [page, tab])
 
   return (
     <div className="my-posting-apply">
@@ -163,7 +169,6 @@ function PostingApply() {
           onClick={() => {
             setTab(0)
             setPage(1)
-            applyListFetch()
           }}
         >
           지원한 공고
@@ -173,7 +178,6 @@ function PostingApply() {
           onClick={() => {
             setTab(1)
             setPage(1)
-            postingFetch()
           }}
         >
           작성한 공고
