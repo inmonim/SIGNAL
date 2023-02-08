@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
@@ -29,7 +29,6 @@ import { positionData } from 'data/Positiondata'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
-import Swal from 'sweetalert2'
 
 const Container = styled.section`
   padding: 130px 10em;
@@ -83,7 +82,7 @@ const contactList = [
 ]
 const hunjae = new Date()
 const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
-const PostingModify = () => {
+const postone = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const postingSeq = location.state.postingSeq
@@ -95,7 +94,6 @@ const PostingModify = () => {
     subject: '',
     localCode: '',
     fieldCode: '',
-    leaderPosition: 'PO100',
     isContact: '',
     term: 1,
     content: '',
@@ -127,13 +125,12 @@ const PostingModify = () => {
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
     setDateList(resultMeeting)
-    setDeSkill(getMatchingValues(resultSkill, Skilldata))
+
     setPosting({
       ...posting,
       userSeq: sessionStorage.getItem('userSeq'),
       subject: post.subject,
       localCode: post.localCode,
-      leaderPosition: post.leaderPosition,
       fieldCode: post.fieldCode,
       isContact: post.isContact,
       term: post.term,
@@ -149,7 +146,7 @@ const PostingModify = () => {
   // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
-  const navigate = useNavigate()
+
   // const profileFetch = async () => {
   //   try {
   //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
@@ -168,7 +165,6 @@ const PostingModify = () => {
   // start >> Data filter
   const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
-  const [errorBox, setErrorBox] = useState(false)
   // end >> Data filter
 
   // start >> handle position
@@ -244,15 +240,12 @@ const PostingModify = () => {
   }
   // start >> handle qna
   function getMatchingValues(postingSkillList, Skilldata) {
-    console.log('실행')
-    console.log(postingSkillList)
-    console.log(Skilldata)
     const result = []
     for (let i = 0; i < postingSkillList.length; i++) {
       for (let j = 0; j < Skilldata.length; j++) {
-        console.log(postingSkillList[i])
-        console.log(Skilldata[j].code)
-        if (postingSkillList[i] === Skilldata[j].code) {
+        // console.log(postingSkillList[i].skillCode)
+        // console.log(Skilldata[j].code)
+        if (postingSkillList[i].skillCode === Skilldata[j].code) {
           result.push(Skilldata[j])
           break
         }
@@ -270,14 +263,7 @@ const PostingModify = () => {
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    if (
-      posting.subject !== '' &&
-      posting.content !== '' &&
-      posting.postingMeetingList.length !== 0 &&
-      posting.postingSkillList.length !== 0 &&
-      posting.postingPositionList.length !== 0 &&
-      posting.postingQuestionList !== 0
-    ) {
+    try {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
@@ -292,18 +278,11 @@ const PostingModify = () => {
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
-      navigate('/posting')
-    } else {
-      setErrorBox(true)
-      window.scrollTo(0, 0)
-      Swal.fire({
-        title: '등록 실패',
-        text: '선택하지 않은 값이 있습니다.',
-        icon: 'error',
-        button: '예',
-      })
+
+      // console.log('공고 post')
+    } catch (error) {
+      // console.log('에러')
     }
-    // console.log('공고 post')
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
@@ -315,6 +294,7 @@ const PostingModify = () => {
   }
   useEffect(() => {
     postPutFetch()
+    setDeSkill(getMatchingValues(posting.postingSkillList, Skilldata))
   }, [])
   useEffect(() => {
     // postingFetch()
@@ -338,7 +318,6 @@ const PostingModify = () => {
           <button
             onClick={() => {
               console.log(posting)
-              console.log(deSkill, 'dd')
             }}
           >
             dd
@@ -489,9 +468,7 @@ const PostingModify = () => {
                     id="multiple-limit-tags"
                     options={Skilldata}
                     getOptionLabel={(option) => option.name}
-                    defaultValue={deSkill.map((e) => {
-                      return e.name
-                    })}
+                    defaultValue={deSkill}
                     onChange={(event, newValue) => {
                       // console.log(newValue)
                       // console.log(event.target)
@@ -552,44 +529,53 @@ const PostingModify = () => {
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
-            <div className="phone-section">
-              <div style={{ width: '20%' }}>
-                <Label>포지션 인원</Label>
-              </div>
-              <div style={{ width: '80%', display: 'flex' }}>
-                <FilterSelect
-                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
-                  onChange={(e) => {
-                    // console.log(e.target.value)
-                    const position = JSON.parse(e.target.value)
-                    setPosi({ code: position.code, name: position.name })
-                  }}
-                >
-                  {positionData.map((ele, i) => (
-                    <option key={i} value={JSON.stringify(ele)}>
-                      {ele.name}
-                    </option>
-                  ))}
-                </FilterSelect>
-                <img
-                  style={{ marginTop: '7px', marginBottom: '7px' }}
-                  src={plusButton}
-                  alt="plusButton"
-                  className="plus-button"
-                  onClick={() => {
-                    dispatch(add(posi))
-                  }}
-                />
+            <div className="phone-section1">
+              <div>
+                <div>
+                  <div className="career-label">
+                    <Label>포지션 인원</Label>
+                    <FilterSelect
+                      onChange={(e) => {
+                        // console.log(e.target.value)
+                        const position = JSON.parse(e.target.value)
+                        setPosi({ code: position.code, name: position.name })
+                      }}
+                    >
+                      {positionData.map((ele, i) => (
+                        <option key={i} value={JSON.stringify(ele)}>
+                          {ele.name}
+                        </option>
+                      ))}
+                    </FilterSelect>
+                    <img
+                      style={{ marginTop: '7px', marginBottom: '7px' }}
+                      src={plusButton}
+                      alt="plusButton"
+                      className="plus-button"
+                      onClick={() => {
+                        dispatch(add(posi))
+                      }}
+                    />
+                  </div>
+                  <hr></hr>
+                  <PositionTodo />
+                </div>
+                <CareerList
+                  careerList={careerList}
+                  onRemove={handleCareerRemove}
+                  onChange={handleCareerChange}
+                  key={careerList[0]}
+                ></CareerList>
               </div>
             </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
+            <Box style={{ width: '5%' }}></Box>
+            <div className="phone-section" style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>
                 <Label>난이도</Label>
               </div>
-              <div style={{ width: '70%' }}>
+              <div style={{ width: '70%', display: 'flex' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={posting.level}
@@ -597,49 +583,6 @@ const PostingModify = () => {
                   {[1, 2, 3, 4, 5].map((ele, i) => (
                     <option key={i} value={ele}>
                       LEVEL : {ele}
-                    </option>
-                  ))}
-                </FilterSelect>
-              </div>
-            </div>
-          </div>
-          {/* 여기는 포지션인원 , 예상난이도 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
-            <Box sx={{ width: '4.5%' }}></Box>
-            <div className="phone-section1">
-              <div>
-                <div className="career-label">
-                  <div style={{ width: '20%' }}></div>
-                </div>
-                <hr></hr>
-                <PositionTodo />
-                <div style={{ width: '80%', display: 'flex' }}></div>
-              </div>
-              <CareerList
-                careerList={careerList}
-                onRemove={handleCareerRemove}
-                onChange={handleCareerChange}
-                key={careerList[0]}
-              ></CareerList>
-            </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>팀장 포지션</Label>
-              </div>
-              <div style={{ width: '70%', display: 'flex' }}>
-                <FilterSelect
-                  style={{ marginRight: '0px' }}
-                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
-                  onChange={(e) => {
-                    const position = JSON.parse(e.target.value)
-                    console.log(position.code)
-                    setPosting({ ...posting, leaderPosition: position.code })
-                  }}
-                  value={posting.leaderPosition && posting.leaderPosition}
-                >
-                  {positionData.map((ele, i) => (
-                    <option key={i} value={JSON.stringify(ele)}>
-                      {ele.name}
                     </option>
                   ))}
                 </FilterSelect>
@@ -734,4 +677,4 @@ const FilterSelect = styled.select`
     box-shadow: inset 0 0 0 1px #ff77774d;
   }
 `
-export default PostingModify
+export default postone
