@@ -9,6 +9,7 @@ import 'assets/font/font.css'
 import SignalBtn from './common/SignalBtn'
 import RegistModal from './RegistModal'
 import FindModal from './FindEmailPwdModal'
+import AlertModal from './AlertModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
@@ -60,6 +61,9 @@ function LoginModal({ open, onClose }) {
   const handleFindClose = () => {
     setFindOpen(false)
   }
+  const [msg, setMsg] = useState('')
+  const [alertOpen, setAlertOpen] = useState(false)
+
   const handleToMain = async () => {
     console.log('click login')
     console.log('Email: ', inputEmail)
@@ -88,9 +92,15 @@ function LoginModal({ open, onClose }) {
         onClose(onClose(true))
       })
       .catch((e) => {
-        alert('다시 시도')
+        setMsg('로그인 다시 시도!')
+        setAlertOpen(true)
+
         return e.message
       })
+  }
+
+  const handleToClose = () => {
+    setAlertOpen(false)
   }
 
   const activeEnter = (e) => {
@@ -222,6 +232,7 @@ function LoginModal({ open, onClose }) {
                 >
                   로그인
                 </SignalBtn>
+                <AlertModal open={alertOpen} onClick={handleToClose} onClose={handleToClose} msg={msg}></AlertModal>
               </div>
             </div>
           </div>

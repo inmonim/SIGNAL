@@ -2,10 +2,6 @@
   width: 100%;
 }
 
-.MainPage::-webkit-scrollbar {
-  display: none;
-}
-
 .left {
   display: flex;
   padding-top: 150px;

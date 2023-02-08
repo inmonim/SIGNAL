@@ -6,6 +6,7 @@ import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
 import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
+import api from 'api/Api'
 // import api from 'api/Api'
 
 function InputUrlModal({ open, onClose, inputTitle, handleSetValue }) {
@@ -28,6 +29,7 @@ function InputUrlModal({ open, onClose, inputTitle, handleSetValue }) {
 
   const handleToAdd = () => {
     setAlert(true)
+    api.post(process.env.REAC_APP_API_URL)
   }
   return (
     <>

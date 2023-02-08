@@ -35,6 +35,7 @@ import AdminProject from 'pages/Admin/AdminProject'
 import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
+import Openprofile from 'pages/Openprofile/Openprofile'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -76,7 +77,7 @@ function App() {
           <Route path="/signalregister" element={<Signalregister />} />
           <Route path="/signaldetail" element={<SignalDetail />} />
           <Route path="/signal/rank" element={<SignalHonor />} />
-
+          <Route path="/openprofile" element={<Openprofile />}></Route>
           <Route path="/adminblacklist" element={<AdminBalckList />} />
           <Route path="/adminproject" element={<AdminProject />} />
           <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
