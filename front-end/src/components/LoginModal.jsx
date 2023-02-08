@@ -92,7 +92,7 @@ function LoginModal({ open, onClose }) {
         onClose(onClose(true))
       })
       .catch((e) => {
-        setMsg('로그인 다시 시도!')
+        setMsg('"이메일 인증" 또는 "계정"을 확인해주세요!')
         setAlertOpen(true)
 
         return e.message
