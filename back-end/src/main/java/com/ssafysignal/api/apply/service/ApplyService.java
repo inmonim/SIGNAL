@@ -50,28 +50,31 @@ public class ApplyService {
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
 
-//        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
-//                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
+                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 
         // 블랙리스트 확인
-//        Project project = projectRepository.findByPostingSeq(postingSeq).orElseThrow(
-//                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
-//
-//        if (blackUserRepository.findByUserSeqAndProjectSeq(user.getUserSeq(), project.getProjectSeq()).isPresent()) {
-//            throw new NotFoundException(ResponseCode.REGIST_BLACK);
-//        }
+        Project project = projectRepository.findByPostingSeq(postingSeq).orElseThrow(
+                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+
+        if (blackUserRepository.findByUserSeqAndProjectSeq(user.getUserSeq(), project.getProjectSeq()).isPresent()) {
+            throw new NotFoundException(ResponseCode.REGIST_BLACK);
+        }
 
         // 중복 지원서 확인
 
-
-
-
-
+        if (applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).isPresent()) {
+            Apply apply = applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).get();
+            if (!(apply.getApplyCode().equals("AS103") & apply.getStateCode().equals("PAS102"))) {
+                throw new NotFoundException(ResponseCode.REGIST_DUPLICATE);
+            }
+        }
+        
         // 잔여 하트 충분한지 확인
-//        int userHeartCnt = user.getHeartCnt();
-//        if (userHeartCnt < 100) {
-//            throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
-//        }
+        int userHeartCnt = user.getHeartCnt();
+        if (userHeartCnt < 100) {
+            throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
+        }
 
         // 지원서 등록
         Apply apply = Apply.builder()
