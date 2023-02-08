@@ -302,7 +302,6 @@ function ApplyRegister() {
   // start >> post
 
   const handleApplySubmit = async () => {
-    const postingSeq = location.state.postingSeq
     try {
       /**********************************************
        * 수정사항 : 블랙리스트 검거 ^_^ ㅎㅎㅎㅎㅎ
