@@ -289,3 +289,7 @@
   display: flex;
   justify-content: center;
 }
+
+.apply-register-skill-select {
+  width: 300px;
+}
