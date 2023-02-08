@@ -46,6 +46,8 @@ public class ProjectSettingService {
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
 
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
+
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
 
@@ -129,7 +131,14 @@ public class ProjectSettingService {
                         .userSeq(projectUser.getUserSeq())
                         .projectSeq(projectUser.getProjectSeq())
                         .build());
-        
+
+        // 현재 프로젝트 인원에서 제거
+        projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                .projectUserSeq(projectUserSeq)
+                .heartCnt(-projectUser.getHeartCnt())
+                .content("팀 퇴출로 인한 보증금 몰수")
+                .build());
+
         // 현재 프로젝트 인원에서 제거
         projectUserRepository.deleteById(projectUserSeq);
         
