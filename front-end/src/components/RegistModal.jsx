@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
@@ -9,14 +9,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import AlertModal from 'components/AlertModal'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 import closeBtn from 'assets/image/x.png'
 import { PatternFormat } from 'react-number-format'
 import api from 'api/Api'
+import 'assets/styles/regist.css'
 
 const style = {
   width: 727,
-  // height: '100%',
   bgcolor: 'background.paper',
   borderRadius: 20,
   border: 'none',
@@ -26,7 +29,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  overflow: 'hidden',
+  // overflow: 'hidden',
   maxHeight: 900,
 }
 
@@ -44,17 +47,19 @@ const inputStyle = {
   },
 }
 
-const listStyle = {
-  textAlign: 'center',
-  overflow: 'scroll',
-  maxHeight: '525px',
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  padding: '10px',
-  scrollbarColor: '#574B9F',
-}
-
 function RegistModal({ open, onClose }) {
+  useEffect(() => {
+    document.body.style.cssText = `
+    position: fixed;
+    top: -${window.scrollY}px;
+    overflow-y:scroll;
+    width:100%`
+    return () => {
+      const scrollY = document.body.style.top
+      document.body.style.cssText = ''
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+    }
+  }, [])
   const [value, setValue] = useState(null)
   const [alertOpen, setAlertOpen] = useState(false)
 
@@ -210,6 +215,12 @@ function RegistModal({ open, onClose }) {
     onClose(onClose(true))
   }
 
+  const [showPassword, setShowPassword] = useState(false)
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <>
       <Modal hideBackdrop open={open} onClose={onClose} aria-labelledby="modal-title" aria-describedby="modal-desc">
@@ -227,7 +238,7 @@ function RegistModal({ open, onClose }) {
           >
             회원가입
           </Typography>
-          <div id="modal-desc" style={listStyle}>
+          <div className="modal-desc">
             <TextField
               id="filled-multiline-flexible"
               name="email"
@@ -241,8 +252,21 @@ function RegistModal({ open, onClose }) {
               id="filled-multiline-flexible"
               name="password"
               label="Password"
-              type={'password'}
-              multiline
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={inputStyle}
               onChange={handleInput}
             />
@@ -251,8 +275,21 @@ function RegistModal({ open, onClose }) {
               id="filled-multiline-flexible"
               name="passwordCheck"
               label="Password Check"
-              type="password"
-              multiline
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={inputStyle}
               onChange={handleInput}
             />

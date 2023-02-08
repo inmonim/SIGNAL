@@ -44,14 +44,13 @@ function signalDetail() {
   }
 
   useEffect(() => {
-    api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}`).then((res) => {
+    api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`).then((res) => {
       setData(res.data.body)
     })
   }, [])
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
-        {JSON.stringify(data)}
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right' }}>
