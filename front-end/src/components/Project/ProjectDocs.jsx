@@ -104,6 +104,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Git Convention"
             handleSetValue={handleSetValue1}
+            index={1}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible1 && <Notion className="docs-notion" value={value1}></Notion>}
@@ -118,6 +120,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Naming Convention"
             handleSetValue={handleSetValue2}
+            index={2}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible2 && <Notion className="docs-notion" value={value2}></Notion>}
@@ -132,6 +136,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Branch Rule"
             handleSetValue={handleSetValue3}
+            index={3}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible3 && <Notion className="docs-notion" value={value3}></Notion>}
@@ -146,7 +152,9 @@ function ProjectDocs({ projectSeq }) {
           open={inputOpen4}
           onClose={handleToClose}
           inputTitle="요구 사항 명세서"
+          index={4}
           handleSetValue={handleSetValue4}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible4 && <Notion className="docs-notion" value={value4}></Notion>}
@@ -161,6 +169,8 @@ function ProjectDocs({ projectSeq }) {
           onClose={handleToClose}
           inputTitle="기능 명세서"
           handleSetValue={handleSetValue5}
+          index={5}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible5 && <Notion className="docs-notion" value={value5}></Notion>}
@@ -175,6 +185,8 @@ function ProjectDocs({ projectSeq }) {
           onClose={handleToClose}
           inputTitle="와이어 프레임"
           handleSetValue={handleSetValue6}
+          index={6}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible6 && <Notion className="docs-notion" value={value6}></Notion>}
