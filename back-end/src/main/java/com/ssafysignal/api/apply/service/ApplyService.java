@@ -22,11 +22,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static java.util.stream.Collectors.reducing;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
 
 
 @Service
@@ -147,14 +145,6 @@ public class ApplyService {
         return res;
     }
 
-//    @Transactional(readOnly = true)
-//    public Apply findWriterApply(Integer postingSeq, Integer applySeq) {
-//        Posting posting = postingRepository.findById(postingSeq).get();
-//        Apply apply = applyRepository.findByApplySeq(applySeq).get();
-//        Integer posting posting.getPostingSeq()
-//    }
-
-
     @Transactional
     public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
         System.out.println("asdf"+applySeq);
@@ -255,8 +245,8 @@ public class ApplyService {
         	postingMeeting.setPostingMeetingCode("PM102");
         	postingMeetingRepository.save(postingMeeting);
         }
-        
-        apply.setApplyCode("PAS104");
+        apply.setApplyCode("AS104");
+        apply.setStateCode("PAS104");
         applyRepository.save(apply);
     }
 
@@ -287,7 +277,7 @@ public class ApplyService {
     public Map<String, Object> findAllApplyWriter(int postingSeq, int page, int size){
 
         List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
-        Integer totalCnt = postingPositionRepository.countByPostingSeq(postingSeq);
+        Integer totalCnt = postingPositionRepository.findPostingPositiosnByPostingSeq(postingSeq).stream().map(PostingPosition::getPositionCnt).collect(reducing(Integer::sum)).get();
         Integer selectCnt = applyRepository.countByPostingSeqAndApplyCode(postingSeq, "AS101");     // 확정인 사람들만 카운트
         Integer waitCnt = applyRepository.countByPostingSeqAndApplyCode(postingSeq, "AS100");       // 대기중인 사람들만 카운트
 
@@ -301,7 +291,7 @@ public class ApplyService {
 
     @Transactional(readOnly = true)
     public List<ApplyApplyerFindResponse> findAllApplyApplyer(int userSeq, int page, int size){
-        List<Apply> applyList = applyRepository.findALlByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
+        List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
         return ApplyApplyerFindResponse.toList(applyList);
     }
 }

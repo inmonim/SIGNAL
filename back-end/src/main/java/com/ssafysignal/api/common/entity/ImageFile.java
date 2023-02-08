@@ -1,5 +1,6 @@
 package com.ssafysignal.api.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,6 +30,7 @@ public class ImageFile {
     @Column(name = "url")
     private String url;
     @Column(name = "reg_dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
 
     @Builder

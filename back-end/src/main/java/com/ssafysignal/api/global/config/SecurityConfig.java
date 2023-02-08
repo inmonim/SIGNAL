@@ -5,6 +5,7 @@ import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,8 +33,42 @@ public class SecurityConfig {
 
                 // 세분화 되어있을수록 위쪽에 위치해야한다.
                 .authorizeRequests()
-                .antMatchers("/board/qna", "/board/qna/count", "/board/notice", "/board/notice/count").permitAll()
-                .antMatchers("/board/qna/**", "/board/notice/**").hasAnyAuthority("USER")
+
+                /*.antMatchers("/user").permitAll()
+                .antMatchers("/user/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/auth/logout").hasAnyAuthority("USER","ADMIN")
+                .antMatchers("/auth/**").permitAll()
+
+                .antMatchers("/posting/apply/**","/posting/post/**").hasAnyAuthority("USER","ADMIN")
+                .antMatchers(HttpMethod.GET,"/posting","/posting/**").permitAll()
+                .antMatchers("/posting","/posting/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/apply","/apply/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/project","/project/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/todo","/todo/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/notiondocs","/notiondocs/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/profile","/profile/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/openprofile").hasAnyAuthority("USER","ADMIN")
+                .antMatchers("/openprofile/**").permitAll()
+
+                .antMatchers("/letter","/letter/**").hasAnyAuthority("USER","ADMIN")
+
+                .antMatchers("/signalweek","/signalweek/rank").permitAll()
+                .antMatchers("/signalweek/**").hasAnyAuthority("USER","ADMIN")
+
+
+                .antMatchers("/board/notice","/board/notice/**").permitAll()
+
+                .antMatchers(HttpMethod.GET,"/board/qna/**","/board/qna").permitAll()
+                .antMatchers("/board/qna/**","/board/qna").hasAnyAuthority("USER","ADMIN")*/
+
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .anyRequest().permitAll()
 
                 .and()

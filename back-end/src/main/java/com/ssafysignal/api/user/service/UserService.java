@@ -7,6 +7,7 @@ import com.ssafysignal.api.common.dto.EmailDto;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.EmailService;
+import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.dto.request.UserInfo;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,16 +38,16 @@ public class UserService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ImageFileRepository imageFileRepository;
+    private final FileService fileService;
 
     @Value("${server.host}")
     private String host;
     @Value("${server.port}")
     private Integer port;
-
+    @Value("${app.fileUpload.uploadPath.userImage}")
+    private String imageUploadPath;
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
-    @Value("${app.fileUpload.uploadDir.userImage}")
-    private String uploadDir;
 
     @Transactional(readOnly = true)
     public User findUser(final int userSeq) {
@@ -107,73 +109,47 @@ public class UserService {
     	User user = userRepository.findByUserSeq(userSeq)
     			.orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        user.modifyUser( userInfo.getNickname(), userInfo.getPhone());
+        System.out.println("userInfo = " + userInfo);
 
-        if(!userInfo.getProfileImageFile().isEmpty()) {
-            MultipartFile uploadImage = userInfo.getProfileImageFile();
-            String uploadFullPath = uploadPath + File.separator + uploadDir;
-
-            // 디렉토리 없으면 생성
-            File uploadPosition = new File(uploadFullPath);
-            if (!uploadPosition.exists()) uploadPosition.mkdir();
-
-            // 이름, 확장자, url 생성
-            String fileName = uploadImage.getOriginalFilename();
-            String name = UUID.randomUUID().toString();
-            String type = Optional.ofNullable(fileName)
-                    .filter(f -> f.contains("."))
-                    .map(f -> f.substring(fileName.lastIndexOf(".") + 1))
-                    .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-            String url = String.format("%s%s%s.%s", uploadFullPath, File.separator, name, type);
-            
-            // 프로젝트 대표 이미지가 있는 경우
+        if(userInfo.getProfileImageFile() != null) {
+            // 이미지 파일 업로드
+            ImageFile imageFile = fileService.registImageFile(userInfo.getProfileImageFile(), imageUploadPath);
+            // 이미 존재하는 이미지가 있으면 삭제
             if (user.getImageFile().getImageFileSeq() != 0) {
-                File deleteFile = new File(user.getImageFile().getUrl());
-
-                // 기존 파일 삭제
-                if (deleteFile.exists()) deleteFile.delete();
-
-                ImageFile imageFile = imageFileRepository.findById(user.getImageFile().getImageFileSeq())
-                        .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-                imageFile.setName(uploadImage.getOriginalFilename());
-                imageFile.setSize(uploadImage.getSize());
-                imageFile.setType(type);
-                imageFile.setUrl(url);
-                imageFileRepository.save(imageFile);
-                
+                // 물리 사진 파일 삭제
+                fileService.deleteImageFile(uploadPath + user.getImageFile().getUrl());
+                user.getImageFile().setType(imageFile.getType());
+                user.getImageFile().setUrl(imageFile.getUrl());
+                user.getImageFile().setName(imageFile.getName());
+                user.getImageFile().setSize(imageFile.getSize());
+                user.getImageFile().setRegDt(LocalDateTime.now());
             } else {
-                // 이미지 Entity 생성
-                ImageFile imageFile = ImageFile.builder()
-                        .name(uploadImage.getOriginalFilename())
-                        .size(uploadImage.getSize())
-                        .type(type)
-                        .url(url)
+                ImageFile newImageFile = ImageFile.builder()
+                        .name(imageFile.getName())
+                        .size(imageFile.getSize())
+                        .url(imageFile.getUrl())
+                        .type(imageFile.getType())
                         .build();
-                imageFileRepository.save(imageFile);
-                user.setImageFileSeq(imageFile.getImageFileSeq());
+                imageFileRepository.save(newImageFile);
+                user.setUserImageFileSeq(newImageFile.getImageFileSeq());
             }
-
-            // 이미지 저장
-            File saveFile = new File(url);
-            uploadImage.transferTo(saveFile);
-
         }
-
+        user.modifyUser( userInfo.getNickname(), userInfo.getPhone());
         userRepository.save(user);
-
     }
 
     @Transactional
-    public void modifyPassword(int userSeq, String password){
+    public void modifyPassword(int userSeq, String password, String newPassword){
         User user = userRepository.findByUserSeq(userSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        // 비밀번호 암호화
-        String passwordEncode = passwordEncoder.encode(password);
-        if (passwordEncoder.matches(password, passwordEncode)) System.out.println(true);
 
+        if (!passwordEncoder.matches(password, user.getPassword())){
+            throw new NotFoundException(ResponseCode.UNAUTHORIZED);
+        }
+        // 비밀번호 암호화
+        String passwordEncode = passwordEncoder.encode(newPassword);
         user.modifyPassword(passwordEncode);
         userRepository.save(user);
-
     }
 
 }
