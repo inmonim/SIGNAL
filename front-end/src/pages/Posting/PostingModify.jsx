@@ -80,7 +80,8 @@ const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
-
+const hunjae = new Date()
+const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const PostingModify = () => {
   const dispatch = useDispatch()
   const location = useLocation()
@@ -89,14 +90,14 @@ const PostingModify = () => {
   //   console.log(postingSeq)
 
   const [posting, setPosting] = useState({
-    userSeq: 1,
+    userSeq: '',
     subject: '',
     localCode: '',
     fieldCode: '',
     isContact: '',
     term: 1,
     content: '',
-    postingEndDt: '2023-01-01 11:00:00.000',
+    postingEndDt: humjaetime,
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
     postingSkillList: [],
@@ -108,7 +109,7 @@ const PostingModify = () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       const post = res.data.body
-      console.log(post.subject)
+      console.log(post)
       setPosting({
         ...posting,
         userSeq: sessionStorage.getItem('userSeq'),
@@ -126,6 +127,7 @@ const PostingModify = () => {
         postingQuestionList: post.postingQuestionList,
       })
       const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+      console.log(post.postingMeetingList, 22)
       const resultPosition = post.postingPositionList.map((e) => ({
         code: e.positionCode,
         name: e.code.name,
@@ -165,7 +167,7 @@ const PostingModify = () => {
   // end >> Fetch
   const [deSkill, setDeSkill] = useState([])
   // start >> Data filter
-  const [Date, setDate] = useState('')
+  const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
   // end >> Data filter
 
@@ -321,7 +323,9 @@ const PostingModify = () => {
             onClick={() => {
               console.log(posting)
             }}
-          ></button>
+          >
+            dd
+          </button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
@@ -355,6 +359,7 @@ const PostingModify = () => {
                       setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
+                    minDate={hunjae}
                   />
                 </LocalizationProvider>
               </div>
@@ -485,14 +490,14 @@ const PostingModify = () => {
               </div>
               <div style={{ width: '70%' }}>
                 <Box>
-                  <DateSelect setDate={setDate} />
+                  <DateSelect setDate={setDaily} />
                   <button
                     className="post-button-modi"
                     style={{ height: '10%' }}
                     onClick={() => {
-                      if (!DateList.includes(Date)) {
+                      if (!DateList.includes(Daily) && Daily) {
                         const copy = [...DateList]
-                        copy.push(Date)
+                        copy.push(Daily)
                         setDateList(copy)
                       }
                     }}
@@ -552,7 +557,6 @@ const PostingModify = () => {
                       alt="plusButton"
                       className="plus-button"
                       onClick={() => {
-                        console.log(posi)
                         dispatch(add(posi))
                       }}
                     />
@@ -576,7 +580,6 @@ const PostingModify = () => {
               <div style={{ width: '70%', display: 'flex' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={posting.level}
@@ -655,8 +658,8 @@ const PostingModify = () => {
 }
 const FilterSelect = styled.select`
   width: 100%;
-  max-width: 378px;
-  height: 42px;
+  height: 60px;
+
   padding: 0 14px;
   border: 1px solid #d7e2eb;
   border-radius: 4px;
@@ -671,6 +674,11 @@ const FilterSelect = styled.select`
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+  &.active-warning {
+    margin-bottom: 4px;
+    border: 1px solid #f44336;
+    box-shadow: inset 0 0 0 1px #ff77774d;
   }
 `
 export default PostingModify

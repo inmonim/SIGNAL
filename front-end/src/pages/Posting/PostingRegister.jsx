@@ -15,7 +15,7 @@ import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 // import { ko } from 'date-fns/esm/locale'
 // import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
@@ -70,20 +70,20 @@ const inputStyle = {
   width: 1,
 }
 
-const textAreaStyle = {
-  backgroundColor: '#f3f5f7',
-}
 const hunjae = new Date()
 const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
-
+const a = ['2']
+console.log(a === [])
 const PostingRegister = () => {
   const dispatch = useDispatch()
   // start >> useState
   // console.log(JSON.stringify(Skilldata))
+  // const today = dateNow.toISOString().slice(0, 10)
+  const navigate = useNavigate()
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
@@ -92,23 +92,14 @@ const PostingRegister = () => {
     localCode: '11',
     fieldCode: 'FI100',
     isContact: true,
-    term: 10,
-    content: '공고 등록 테스트 본문',
-    postingEndDt: '2023-01-01 11:00:00.000',
-    level: 5,
-    postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
-    postingSkillList: ['WE100', 'WE101'],
+    term: 3,
+    content: '',
+    postingEndDt: humjaetime,
+    level: 1,
+    postingMeetingList: [],
+    postingSkillList: [],
     postingPositionList: [],
-    postingQuestionList: [
-      {
-        num: 1,
-        content: '질문 1',
-      },
-      {
-        num: 2,
-        content: '질문 2',
-      },
-    ],
+    postingQuestionList: [],
   })
   // const [profile, setProfile] = useState([])
 
@@ -130,8 +121,9 @@ const PostingRegister = () => {
   // end >> Fetch
 
   // start >> Data filter
-  const [Date, setDate] = useState('')
+  const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
+  const [errorBox, setErrorBox] = useState(false)
   // end >> Data filter
 
   // start >> handle position
@@ -214,7 +206,14 @@ const PostingRegister = () => {
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    try {
+    if (
+      posting.subject !== '' &&
+      posting.content !== '' &&
+      posting.postingMeetingList.length !== 0 &&
+      posting.postingSkillList.length !== 0 &&
+      posting.postingPositionList.length !== 0 &&
+      posting.postingQuestionList !== 0
+    ) {
       const config = { 'Content-Type': 'application/json' }
 
       await api
@@ -228,10 +227,11 @@ const PostingRegister = () => {
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
-
+      navigate('/posting')
       // console.log('공고 post')
-    } catch (error) {
-      // console.log('에러')
+    } else {
+      setErrorBox(true)
+      window.scrollTo(0, 0)
     }
   }
   const handlePositon = () => {
@@ -261,6 +261,13 @@ const PostingRegister = () => {
       <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
+          <button
+            onClick={() => {
+              console.log(posting)
+            }}
+          >
+            dd
+          </button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
@@ -271,6 +278,7 @@ const PostingRegister = () => {
               </div>
               <div style={{ width: '80%' }}>
                 <TextField
+                  error={errorBox && !posting.subject}
                   sx={inputStyle}
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -296,6 +304,7 @@ const PostingRegister = () => {
                       setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
+                    minDate={hunjae}
                   />
                 </LocalizationProvider>
               </div>
@@ -418,13 +427,13 @@ const PostingRegister = () => {
               </div>
               <div style={{ width: '70%' }}>
                 <Box>
-                  <DateSelect setDate={setDate} />
+                  <DateSelect setDate={setDaily} />
                   <button
                     className="post-button-modi"
                     onClick={() => {
-                      if (!DateList.includes(Date)) {
+                      if (!DateList.includes(Daily) && Daily) {
                         const copy = [...DateList]
-                        copy.push(Date)
+                        copy.push(Daily)
                         setDateList(copy)
                       }
                     }}
@@ -466,6 +475,7 @@ const PostingRegister = () => {
               </div>
               <div style={{ width: '80%', display: 'flex' }}>
                 <FilterSelect
+                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
@@ -540,7 +550,7 @@ const PostingRegister = () => {
             <Label className="label">프로젝트 소개</Label>
             <div>
               <TextField
-                style={textAreaStyle}
+                error={errorBox && !posting.content}
                 fullWidth={true}
                 multiline={true}
                 minRows="5"
@@ -569,6 +579,7 @@ const PostingRegister = () => {
                 >
                   <div style={{ marginBottom: '2em' }}>
                     <FilterInput
+                      className={errorBox && posting.postingQuestionList.length === 0 ? 'active-warning' : ''}
                       placeholder="질문을 입력하세요 "
                       type="text"
                       value={todolist.text}
@@ -586,11 +597,9 @@ const PostingRegister = () => {
         </div>
 
         <div className="submit-button">
-          <Link to="/posting">
-            <button className="apply-button" onClick={handleApplySubmit}>
-              공고 등록
-            </button>
-          </Link>
+          <button className="apply-button" onClick={handleApplySubmit}>
+            공고 등록
+          </button>
         </div>
       </div>
     </Container>
@@ -613,6 +622,11 @@ const FilterSelect = styled.select`
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+  &.active-warning {
+    margin-bottom: 4px;
+    border: 1px solid #f44336;
+    box-shadow: inset 0 0 0 1px #ff77774d;
   }
 `
 export default PostingRegister
