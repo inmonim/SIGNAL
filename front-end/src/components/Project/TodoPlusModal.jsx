@@ -8,7 +8,7 @@ import AlertModal from 'components/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
-function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq }) {
+function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq, projectSeq }) {
   const [todo, setTodo] = useState('')
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -28,7 +28,6 @@ function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq }) {
   }
 
   const handleToAdd = async () => {
-    const projectSeq = 721
     try {
       const todoReq = {
         content: todo.content,

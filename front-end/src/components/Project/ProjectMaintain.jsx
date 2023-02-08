@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
+import Localdata from 'data/Localdata'
 import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
@@ -25,7 +26,7 @@ function ProjectMaintain({ data, projectSeq }) {
   const handleProjectModify = async () => {
     const req = {
       subject,
-      localCode: local,
+      localCode: Localdata[local.localCode].name,
       contact,
       term,
       content,
@@ -34,7 +35,7 @@ function ProjectMaintain({ data, projectSeq }) {
     console.log(req)
 
     try {
-      await api.put(process.env.REACT_APP_API_URL + '/project/setting/' + projectSeq, {
+      await api.post(process.env.REACT_APP_API_URL + '/project/setting/' + projectSeq, {
         data: JSON.stringify(req),
       })
     } catch (error) {
