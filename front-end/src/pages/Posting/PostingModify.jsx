@@ -85,39 +85,33 @@ const PostingModify = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const postingSeq = location.state.postingSeq
+
   //   console.log(postingSeq)
 
   const [posting, setPosting] = useState({
     userSeq: 1,
-    subject: '테스트',
-    localCode: '11',
-    fieldCode: 'FI100',
-    isContact: true,
-    term: 10,
-    content: '공고 등록 테스트 본문',
+    subject: '',
+    localCode: '',
+    fieldCode: '',
+    isContact: '',
+    term: 1,
+    content: '',
     postingEndDt: '2023-01-01 11:00:00.000',
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
-    postingSkillList: ['WE100', 'WE101'],
+    postingSkillList: [],
     postingPositionList: [],
-    postingQuestionList: [
-      {
-        num: 1,
-        content: '질문 1',
-      },
-      {
-        num: 2,
-        content: '질문 2',
-      },
-    ],
+    postingQuestionList: [],
   })
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     try {
       const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       const post = res.data.body
+      console.log(post.subject)
       setPosting({
         ...posting,
+        userSeq: sessionStorage.getItem('userSeq'),
         subject: post.subject,
         localCode: post.localCode,
         fieldCode: post.fieldCode,
@@ -323,6 +317,11 @@ const PostingModify = () => {
       <div>
         <div>
           <Title>공고 수정</Title>
+          <button
+            onClick={() => {
+              console.log(posting)
+            }}
+          ></button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
