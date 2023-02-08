@@ -26,8 +26,8 @@ function ApplyDetail() {
   // 2. import { Link, useLocation } from 'react-router-dom'
 
   const location = useLocation()
-  const userSeq = location.state.userSeq
-  const applySeq = location.state.applySeq
+  const userSeq = parseInt(location.state.userSeq)
+  const applySeq = parseInt(location.state.applySeq)
 
   const navigate = useNavigate()
 

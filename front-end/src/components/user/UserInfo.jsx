@@ -87,9 +87,9 @@ function UserInfo() {
       <div className="my-user-btn">
         <SignalBtn
           className="my-user-btn-modify"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           onClick={handleToModify}
         >
@@ -98,9 +98,9 @@ function UserInfo() {
         <UserModifyModal open={userModifyOpen} onClose={handleModifyClose}></UserModifyModal>
         <SignalBtn
           className="my-user-btn-pwd"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           sx={userModifyStyle}
           onClick={handleToPwd}
@@ -110,9 +110,9 @@ function UserInfo() {
         <UserPwdModal open={userPwdOpen} onClose={handleToClose}></UserPwdModal>
         <SignalBtn
           className="my-user-btn-delete"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           sx={userDeleteStyle}
           onClick={handleToOut}

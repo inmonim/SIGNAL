@@ -13,21 +13,29 @@ function PostingApply() {
   const navigate = useNavigate()
   const userSeq = sessionStorage.getItem('userSeq')
   // const [data, setData] = useState([])
-  const [rows, setRows] = useState([])
+  // const [rows, setRows] = useState([])
 
+  const [size] = useState(6)
+  const [applyPage, setApplyPage] = useState(1)
+  const [postingPage, setPostingPage] = useState(1)
+  const [applyCount, setApplyCount] = useState(0)
+  const [postingCount, setPostingCount] = useState(0)
+
+  const [rowsApplyForm, setRowsApplyForm] = useState([])
+  const [rowsPostingForm, setRowsPostingForm] = useState([])
   const applyListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/apply/applyer/count/' + userSeq).then((res) => {
-        setCount(res.data.body.count)
+        setApplyCount(res.data.body.count)
       })
       await api
-        .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + page + '&size=' + size)
+        .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + applyPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
           console.log('applyListFetch', res.data.body)
-          rowsApplyForm(res.data.body)
+          setRowsApplyForm(res.data.body)
         })
-      console.log('apply', count)
+      console.log('apply', applyCount)
     } catch (error) {
       console.log(error)
     }
@@ -36,76 +44,70 @@ function PostingApply() {
   const postingListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/posting/post/count/' + userSeq).then((res) => {
-        setCount(res.data.body.count)
-        console.log('posting', count)
+        setPostingCount(res.data.body.count)
+        console.log('posting', postingCount)
       })
       await api
-        .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + page + '&size=' + size)
+        .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + postingPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
           console.log('postingListFetch', res.data.body)
-          rowsPostingForm(res.data.body.postingList)
+          setRowsPostingForm(res.data.body.postingList)
         })
     } catch (error) {
       console.log(error)
     }
   }
 
-  const [size] = useState(6)
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(0)
-
-  const handlePageChange = (page) => {
-    setPage(page)
+  const handleApplyPageChange = (page) => {
+    setApplyPage(page)
+  }
+  const handlePostingPageChange = (page) => {
+    setPostingPage(page)
   }
 
-  const rowsApplyForm = (data) => {
-    const rowsArr = []
-    Array.from(data).forEach((item) => {
-      rowsArr.push({
-        // state: item.stateCode.name,
-        applySeq: item.applySeq,
-        state: item.stateCode.name,
-        subject: item.subject,
-        meetingDt: item.meetingDt.split(' ', 1),
-      })
+  const applyRows = []
+  Array.from(rowsApplyForm).forEach((item) => {
+    applyRows.push({
+      // state: item.stateCode.name,
+      userSeq: item.userSeq,
+      applySeq: item.applySeq,
+      state: item.stateCode.name,
+      subject: item.subject,
+      meetingDt: item.meetingDt.split(' ', 1),
     })
-    const rowLen = rowsArr.length
-    console.log(rowLen)
+  })
+  const applyRowLen = applyRows.length
+  console.log(applyRowLen)
 
-    if (rowLen !== size && rowLen !== 0) {
-      for (let i = 0; i < size - rowLen; i++)
-        rowsArr.push({
-          applySeq: '',
-          state: ' ',
-          subject: ' ',
-          meetingDt: ' ',
-        })
-    }
-    console.log(rowsArr)
-    setRows(rowsArr)
+  if (applyRowLen !== size && applyRowLen !== 0) {
+    for (let i = 0; i < size - applyRowLen; i++)
+      applyRows.push({
+        applySeq: '',
+        state: ' ',
+        subject: ' ',
+        meetingDt: ' ',
+      })
   }
+  console.log(applyRows)
 
-  const rowsPostingForm = (data) => {
-    const rowsArr = []
-    Array.from(data).forEach((item) => {
-      rowsArr.push({
-        // state: item.stateCode.name,
-        postingSeq: item.postingSeq,
-        state: item.postingCode.name,
-        subject: item.subject,
-      })
+  const postingRows = []
+  Array.from(rowsPostingForm).forEach((item) => {
+    postingRows.push({
+      // state: item.stateCode.name,
+      postingSeq: item.postingSeq,
+      state: item.postingCode.name,
+      subject: item.subject,
     })
-    const rowLen = rowsArr.length
-    if (rowLen !== size && rowLen !== 0) {
-      for (let i = 0; i < size - rowLen; i++)
-        rowsArr.push({
-          postingSeq: '',
-          state: ' ',
-          subject: ' ',
-        })
-    }
-    setRows(rowsArr)
+  })
+  const postingRowLen = postingRows.length
+  if (postingRowLen !== size && postingRowLen !== 0) {
+    for (let i = 0; i < size - postingRowLen; i++)
+      postingRows.push({
+        postingSeq: '',
+        state: ' ',
+        subject: ' ',
+      })
   }
 
   const handleProjectAccept = async (applySeq) => {
@@ -153,13 +155,12 @@ function PostingApply() {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
-    if (tab === 0) {
-      applyListFetch()
-      console.log('count', count)
-    } else {
-      postingListFetch()
-    }
-  }, [page, tab])
+    applyListFetch()
+  }, [applyPage, tab])
+
+  useEffect(() => {
+    postingListFetch()
+  }, [postingPage, tab])
 
   return (
     <div className="my-posting-apply">
@@ -168,7 +169,6 @@ function PostingApply() {
           className={`my-profile-tab ${tab === 0 ? 'active' : ''}`}
           onClick={() => {
             setTab(0)
-            setPage(1)
           }}
         >
           지원한 공고
@@ -177,7 +177,6 @@ function PostingApply() {
           className={`my-profile-tab ${tab === 1 ? 'active' : ''}`}
           onClick={() => {
             setTab(1)
-            setPage(1)
           }}
         >
           작성한 공고
@@ -185,108 +184,116 @@ function PostingApply() {
       </div>
       <div className="my-profile-table">
         {tab === 0 ? (
-          <>
-            <TableContainer>
-              <Table>
-                <TableHead className="my-profile-table-head">
-                  <TableRow>
-                    <TableCell align="center">상태</TableCell>
-                    <TableCell align="center">지원한 공고</TableCell>
-                    <TableCell align="center">사전미팅참가</TableCell>
-                    <TableCell align="center">사전미팅시간</TableCell>
-                    <TableCell align="center">확정</TableCell>
-                    <TableCell align="center">삭제</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row, index) => (
-                    <TableRow key={index} className="my-profile-table">
-                      <TableCell align="center">{row.state}</TableCell>
-                      <TableCell align="left">{row.subject}</TableCell>
-                      <TableCell align="center">
-                        {row.subject !== ' ' ? (
-                          <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
-                        ) : (
-                          ' '
-                        )}
-                      </TableCell>
-                      <TableCell align="center">{row.meetingDt}</TableCell>
-                      <TableCell align="center">
-                        {row.state === '합격' ? (
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-evenly',
-                            }}
-                          >
-                            <SignalBtn
-                              startIcon={<TaskAltIcon />}
-                              onClick={() => {
-                                handleProjectAccept(row.applySeq)
-                              }}
-                            >
-                              수락
-                            </SignalBtn>
-                            <SignalBtn
-                              startIcon={<HighlightOffIcon />}
-                              onClick={() => {
-                                handleProjectRefuse(row.applySeq)
-                              }}
-                            >
-                              거절
-                            </SignalBtn>
-                          </div>
-                        ) : (
-                          ' '
-                        )}
-                      </TableCell>
-                      <TableCell align="center">
-                        {row.subject !== ' ' ? (
-                          <SignalBtn
-                            onClick={() => {
-                              const swalWithBootstrapButtons = Swal.mixin({
-                                customClass: {
-                                  cancelButton: 'btn btn-danger',
-                                  confirmButton: 'btn btn-success',
-                                },
-                                buttonsStyling: true,
-                              })
-
-                              swalWithBootstrapButtons
-                                .fire({
-                                  title: '지원서을 취소하겠습니까?',
-                                  text: '삭제한 지원서는 다시 되돌릴 수 없습니다',
-                                  icon: 'warning',
-                                  showCancelButton: true,
-                                  confirmButtonText: '예',
-                                  cancelButtonText: '아니요',
-                                })
-                                .then((result) => {
-                                  if (result.isConfirmed) {
-                                    swalWithBootstrapButtons.fire('삭제', '지원이 취소되었습니다', 'success')
-                                    handleApplyDelete(row.applySeq)
-                                  }
-                                })
-                            }}
-                          >
-                            삭제
-                          </SignalBtn>
-                        ) : (
-                          ' '
-                        )}
-                      </TableCell>
+          applyRowLen === 0 ? (
+            <div className="my-profile-no-table-container">
+              <div className="my-profile-no-table">지원한 공고가 없습니다.</div>
+            </div>
+          ) : (
+            <>
+              <TableContainer>
+                <Table>
+                  <TableHead className="my-profile-table-head">
+                    <TableRow>
+                      <TableCell align="center">상태</TableCell>
+                      <TableCell align="center">지원한 공고</TableCell>
+                      <TableCell align="center">사전미팅참가</TableCell>
+                      <TableCell align="center">사전미팅시간</TableCell>
+                      <TableCell align="center">확정</TableCell>
+                      <TableCell align="center">삭제</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Paging page={page} count={count} setPage={handlePageChange} size={size} />
-          </>
+                  </TableHead>
+                  <TableBody>
+                    {applyRows.map((row, index) => (
+                      <TableRow key={index} className="my-profile-table">
+                        <TableCell align="center">{row.state}</TableCell>
+                        <TableCell align="left">{row.subject}</TableCell>
+                        <TableCell align="center">
+                          {row.subject !== ' ' ? (
+                            <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
+                          ) : (
+                            ' '
+                          )}
+                        </TableCell>
+                        <TableCell align="center">{row.meetingDt}</TableCell>
+                        <TableCell align="center">
+                          {row.state === '합격' ? (
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-evenly',
+                              }}
+                            >
+                              <SignalBtn
+                                startIcon={<TaskAltIcon />}
+                                onClick={() => {
+                                  handleProjectAccept(row.applySeq)
+                                }}
+                              >
+                                수락
+                              </SignalBtn>
+                              <SignalBtn
+                                startIcon={<HighlightOffIcon />}
+                                onClick={() => {
+                                  handleProjectRefuse(row.applySeq)
+                                }}
+                              >
+                                거절
+                              </SignalBtn>
+                            </div>
+                          ) : (
+                            ' '
+                          )}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.subject !== ' ' ? (
+                            <SignalBtn
+                              onClick={() => {
+                                const swalWithBootstrapButtons = Swal.mixin({
+                                  customClass: {
+                                    cancelButton: 'btn btn-danger',
+                                    confirmButton: 'btn btn-success',
+                                  },
+                                  buttonsStyling: true,
+                                })
+
+                                swalWithBootstrapButtons
+                                  .fire({
+                                    title: '지원서을 취소하겠습니까?',
+                                    text: '삭제한 지원서는 다시 되돌릴 수 없습니다',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: '예',
+                                    cancelButtonText: '아니요',
+                                  })
+                                  .then((result) => {
+                                    if (result.isConfirmed) {
+                                      swalWithBootstrapButtons.fire('삭제', '지원이 취소되었습니다', 'success')
+                                      handleApplyDelete(row.applySeq)
+                                    }
+                                  })
+                              }}
+                            >
+                              삭제
+                            </SignalBtn>
+                          ) : (
+                            ' '
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Paging page={applyPage} count={applyCount} setPage={handleApplyPageChange} size={size} />
+            </>
+          )
+        ) : postingRowLen === 0 ? (
+          <div className="my-profile-no-table">지원한 공고가 없습니다.</div>
         ) : (
           <>
             <TableContainer>
               <Table>
-                <TableHead className="qna-table-head">
+                <TableHead className="my-profile-table-head">
                   <TableRow>
                     <TableCell align="center">상태</TableCell>
                     <TableCell align="center">작성한 공고</TableCell>
@@ -296,7 +303,7 @@ function PostingApply() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row, index) => (
+                  {postingRows.map((row, index) => (
                     <TableRow key={index} className="my-profile-table">
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
@@ -366,7 +373,7 @@ function PostingApply() {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Paging page={page} count={count} setPage={handlePageChange} size={size} />
+            <Paging page={postingPage} count={postingCount} setPage={handlePostingPageChange} size={size} />
           </>
         )}
       </div>
