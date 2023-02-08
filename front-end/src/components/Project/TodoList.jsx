@@ -14,7 +14,7 @@ import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
 
-function TodoList() {
+function TodoList({ projectSeq }) {
   const today = moment(new Date()).format('YYYY-MM-DD')
   const [dateValue, setDateValue] = useState(today)
 
@@ -70,7 +70,6 @@ function TodoList() {
 
   const [tab, setTab] = useState(sessionStorage.getItem('userSeq'))
   const [userSeq, setUserSeq] = useState(sessionStorage.getItem('userSeq'))
-  const projectSeq = 721
   const regDt = dateValue
 
   const [data, setData] = useState('')
@@ -203,6 +202,7 @@ function TodoList() {
             )}
             <TodoPlusModal
               userSeq={userSeq}
+              projectSeq={projectSeq}
               open={openTodoPlus}
               onClose={handleToClose}
               handleFlag={handleFlag}
