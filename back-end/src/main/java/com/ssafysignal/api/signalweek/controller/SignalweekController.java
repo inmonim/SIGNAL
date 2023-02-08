@@ -40,11 +40,11 @@ public class SignalweekController {
     @Operation(summary = "시그널 위크 등록", description = "프로젝트를 시그널 위크에 등록한다")
     @PostMapping("")
     private ResponseEntity<BasicResponse> registSignalweek(
-                                                            @Parameter(name = "projectSeq", required = true) @RequestPart Integer projectSeq,
-                                                            @Parameter(name = "title", required = true) @RequestPart String title,
-                                                            @Parameter(name = "uccUrl", required = true) @RequestPart String uccUrl,
-                                                            @Parameter(name = "deployUrl", required = true) @RequestPart String deployUrl,
-                                                            @Parameter(name = "content", required = true) @RequestPart String content,
+                                                            @Parameter(name = "projectSeq", required = true) @RequestParam Integer projectSeq,
+                                                            @Parameter(name = "title", required = true) @RequestParam String title,
+                                                            @Parameter(name = "uccUrl", required = true) @RequestParam String uccUrl,
+                                                            @Parameter(name = "deployUrl", required = true) @RequestParam String deployUrl,
+                                                            @Parameter(name = "content", required = true) @RequestParam String content,
                                                             @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
                                                             @RequestPart(value = "readmeFile", required = false) MultipartFile readmeFile) {
         log.info("registSignalweek - Call");

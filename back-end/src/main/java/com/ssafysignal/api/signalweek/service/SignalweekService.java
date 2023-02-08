@@ -223,18 +223,7 @@ public class SignalweekService {
         Integer nowQuarter = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc().get(0).getSignalweekScheduleSeq();
 
         List<List<Integer>> voteCntList = signalweekRankRepository.findByRank(nowQuarter);
-        System.out.println(voteCntList);
 
-//        List<Signalweek> nowQuarterSignalweekList = signalweekRepository.findBySignalweekScheduleSeq(nowQuarter);
-//
-//        List<List<Integer>> voteCntList = new ArrayList<>();
-//        for (Signalweek nowQarterSignalweek:nowQuarterSignalweekList) {
-//            List<Integer> voteCnt = new ArrayList<>(Arrays.asList(nowQarterSignalweek.getSignalweekSeq(), signalweekVoteRepository.countBySignalweekSeq(nowQarterSignalweek.getSignalweekSeq()).intValue()));
-//            voteCntList.add(voteCnt);
-//        }
-//
-//        Collections.sort(voteCntList, (i1, i2) -> i2.get(1) - i1.get(1));
-//
         for (List<Integer> voteCnt:voteCntList.subList(0, 3)) {
             SignalweekRank signalweekRank = null;
             if (signalweekRepository.findBySignalweekSeq(voteCnt.get(0)).isPresent()) {

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
