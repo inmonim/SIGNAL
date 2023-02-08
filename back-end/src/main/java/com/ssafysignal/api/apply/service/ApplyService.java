@@ -1,5 +1,7 @@
 package com.ssafysignal.api.apply.service;
 
+import com.ssafysignal.api.admin.Entity.BlackUser;
+import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
@@ -14,6 +16,8 @@ import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.posting.entity.PostingPosition;
 import com.ssafysignal.api.posting.repository.PostingMeetingRepository;
 import com.ssafysignal.api.posting.repository.PostingPositionRepository;
+import com.ssafysignal.api.project.entity.Project;
+import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,16 +44,34 @@ public class ApplyService {
     private final CommonCodeRepository commonCodeRepository;
     private final PostingPositionRepository postingPositionRepository;
     private final UserRepository userRepository;
+    private final BlackUserRepository blackUserRepository;
+    private final ProjectRepository projectRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
 
-        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
-                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
-        int userHeartCnt = user.getHeartCnt();
-        if (userHeartCnt < 100) {
-            RuntimeException e;
-        }
+//        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
+//                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+
+        // 블랙리스트 확인
+//        Project project = projectRepository.findByPostingSeq(postingSeq).orElseThrow(
+//                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+//
+//        if (blackUserRepository.findByUserSeqAndProjectSeq(user.getUserSeq(), project.getProjectSeq()).isPresent()) {
+//            throw new NotFoundException(ResponseCode.REGIST_BLACK);
+//        }
+
+        // 중복 지원서 확인
+
+
+
+
+
+        // 잔여 하트 충분한지 확인
+//        int userHeartCnt = user.getHeartCnt();
+//        if (userHeartCnt < 100) {
+//            throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
+//        }
 
         // 지원서 등록
         Apply apply = Apply.builder()
