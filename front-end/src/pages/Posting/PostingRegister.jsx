@@ -34,7 +34,8 @@ const Container = styled.section`
 `
 const skillStyle = {
   width: '100%',
-  height: '60px',
+  maxwidth: '378px',
+  height: '42px',
   padding: '0 14px',
   border: '1px solid #d7e2eb',
   borderradius: '4px',
@@ -61,7 +62,6 @@ const Label = styled.h1`
   margin-right: 20px;
   display: flex;
   align-items: center;
-  color: #574b9f;
 `
 
 const inputStyle = {
@@ -89,6 +89,7 @@ const PostingRegister = () => {
   const [posting, setPosting] = useState({
     userSeq: sessionStorage.getItem('userSeq'),
     subject,
+    leaderPosition: 'PO100',
     localCode: '11',
     fieldCode: 'FI100',
     isContact: true,
@@ -135,6 +136,7 @@ const PostingRegister = () => {
   // end >> Data filter
 
   // start >> handle position
+  const [leaderPosi, setLeaderPosi] = useState({ code: 'PO100', name: 'frontend' })
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
@@ -217,6 +219,9 @@ const PostingRegister = () => {
     try {
       const config = { 'Content-Type': 'application/json' }
 
+      posting.leaderPosision = leaderPosi.code
+      console.log(posting)
+
       await api
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
         .then((res) => {
@@ -234,6 +239,10 @@ const PostingRegister = () => {
       // console.log('에러')
     }
   }
+  const handleLeaderPositon = () => {
+    const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
+    setLeaderPosi({ ...posting, postingPositionList: copy })
+  }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
     setPosting({ ...posting, postingPositionList: copy })
@@ -246,6 +255,7 @@ const PostingRegister = () => {
     // postingFetch()
     // profileFetch()
     handlePositon()
+    handleLeaderPositon()
 
     // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
@@ -346,7 +356,7 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}>
-                <Label>진행 유형 </Label>
+                <Label>진행 유형</Label>
               </div>
               <div style={{ width: '80%' }}>
                 <FilterSelect
@@ -389,87 +399,18 @@ const PostingRegister = () => {
               </div>
             </div>
           </div>
+          {/* 팀장 포지션, 난이도 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}>
-                <Label>사용 기술 </Label>
+                <Label>팀장 포지션</Label>
               </div>
               <div style={{ width: '80%' }}>
-                <Autocomplete
-                  multiple
-                  limitTags={5}
-                  size="small"
-                  id="multiple-limit-tags"
-                  options={Skilldata}
-                  getOptionLabel={(option) => option.name}
-                  onChange={(event, newValue) => {
-                    // console.log(newValue)
-                    // console.log(event.target)
-                    handleChangeSkill(newValue)
-                  }}
-                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                  sx={{ skillStyle, backgroundColor: '#fbfbfd' }}
-                />
-              </div>
-            </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>화상미팅 예약</Label>
-              </div>
-              <div style={{ width: '70%' }}>
-                <Box>
-                  <DateSelect setDate={setDate} />
-                  <button
-                    className="post-button-modi"
-                    onClick={() => {
-                      if (!DateList.includes(Date)) {
-                        const copy = [...DateList]
-                        copy.push(Date)
-                        setDateList(copy)
-                      }
-                    }}
-                  >
-                    시간 선택
-                  </button>
-                </Box>
-              </div>
-            </div>
-          </div>
-          {/* 여기는 사용기술 , 시간선택 */}
-          <div style={{ display: 'flex', marginLeft: '5em' }}>
-            <div className="phone-section">
-              <div style={{ width: '20%' }}></div>
-              <div style={{ width: '80%' }}></div>
-            </div>
-            <div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '6 00px' }}>
-                {DateList.map((ele, i) => (
-                  <Chip
-                    key={i}
-                    label={ele.slice(5, 16)}
-                    onDelete={() => {
-                      handleDelete(ele)
-                    }}
-                  />
-                ))}
-              </Stack>
-              <div className="email-section" style={{ marginLeft: '3em' }}>
-                <div style={{ width: '30%' }}></div>
-                <div style={{ width: '70%' }}></div>
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
-            <div className="phone-section">
-              <div style={{ width: '20%' }}>
-                <Label>포지션 인원</Label>
-              </div>
-              <div style={{ width: '80%', display: 'flex' }}>
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
-                    setPosi({ code: position.code, name: position.name })
+                    setLeaderPosi({ code: position.code, name: position.name })
                   }}
                 >
                   {positionData.map((ele, i) => (
@@ -478,18 +419,9 @@ const PostingRegister = () => {
                     </option>
                   ))}
                 </FilterSelect>
-                <img
-                  style={{ marginTop: '7px', marginBottom: '7px' }}
-                  src={plusButton}
-                  alt="plusButton"
-                  className="plus-button"
-                  onClick={() => {
-                    dispatch(add(posi))
-                  }}
-                />
               </div>
             </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
+            <div className="email-section " style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>
                 <Label>난이도</Label>
               </div>
@@ -509,16 +441,102 @@ const PostingRegister = () => {
               </div>
             </div>
           </div>
-          {/* 여기는 포지션인원 , 예상난이도 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
-            <div className="phone-section1">
+
+          {/* 여기는 사용기술 , 시간선택 */}
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+            <div className="phone-section">
+              <div style={{ width: '20%' }}>
+                <Label>사용 기술</Label>
+              </div>
+              <div style={{ width: '80%' }}>
+                <Autocomplete
+                  multiple
+                  limitTags={5}
+                  size="small"
+                  id="multiple-limit-tags"
+                  options={Skilldata}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    // console.log(newValue)
+                    // console.log(event.target)
+                    handleChangeSkill(newValue)
+                  }}
+                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                  sx={{ skillStyle, mb: 0, backgroundColor: '#fbfbfd' }}
+                />
+              </div>
+            </div>
+            <div className="email-section " style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>화상 미팅 예약</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <div>
+                  <Box style={{ display: 'inline-flex' }}>
+                    <DateSelect setDate={setDate} style={{ width: '50%' }} />
+                    <button
+                      onClick={() => {
+                        if (!DateList.includes(Date)) {
+                          const copy = [...DateList]
+                          copy.push(Date)
+                          setDateList(copy)
+                        }
+                      }}
+                      style={{ width: '50%', marginLeft: '1em' }}
+                    >
+                      시간 선택
+                    </button>
+                  </Box>
+                </div>
+                <div style={{ width: '100%', marginTop: '0.5em' }}>
+                  <Stack direction="row" spacing={1} style={{ overflowX: 'scroll' }}>
+                    {DateList.map((ele, i) => (
+                      <Chip
+                        key={i}
+                        label={ele.slice(5, 16)}
+                        onDelete={() => {
+                          handleDelete(ele)
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 여기는 포지션인원 */}
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+            <div className="phone-section1" style={{ width: '93%' }}>
               <div>
                 <div>
                   <div className="career-label">
-                    <div style={{ width: '20%' }}></div>
-                    <div style={{ width: '80%', display: 'flex' }}></div>
+                    <Label style={{ width: '10%' }}>포지션 인원</Label>
+                    <FilterSelect
+                      onChange={(e) => {
+                        // console.log(e.target.value)
+                        const position = JSON.parse(e.target.value)
+                        setPosi({ code: position.code, name: position.name })
+                      }}
+                      style={{ width: '90%' }}
+                    >
+                      {positionData.map((ele, i) => (
+                        <option key={i} value={JSON.stringify(ele)}>
+                          {ele.name}
+                        </option>
+                      ))}
+                    </FilterSelect>
+                    <img
+                      style={{ marginTop: '7px', marginBottom: '7px' }}
+                      src={plusButton}
+                      alt="plusButton"
+                      className="plus-button"
+                      onClick={() => {
+                        dispatch(add(posi))
+                      }}
+                    />
                   </div>
-                  <hr></hr>
+                  <hr style={{ marginBottom: '2em' }}></hr>
                   <PositionTodo />
                 </div>
                 <CareerList
@@ -528,10 +546,6 @@ const PostingRegister = () => {
                   key={careerList[0]}
                 ></CareerList>
               </div>
-            </div>
-            <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}></div>
-              <div style={{ width: '70%' }}></div>
             </div>
           </div>
 
