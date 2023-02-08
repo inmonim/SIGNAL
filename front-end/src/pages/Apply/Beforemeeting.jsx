@@ -4,8 +4,6 @@ import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
 
-console.log('바깥')
-
 let myStream
 
 let myName

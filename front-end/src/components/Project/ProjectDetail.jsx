@@ -30,7 +30,6 @@ function ProjectDetail() {
       method: 'GET',
       params: {
         projectSeq,
-        // userSeq: sessionStorage.getItem('userSeq'),
         userSeq,
       },
     })
