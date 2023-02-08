@@ -167,17 +167,4 @@ public class ProjectSettingService {
             }
         } else throw new NotFoundException(ResponseCode.REGIST_ALREADY);
     }
-
-    @Scheduled(cron = "0 10 0 * * *")
-    public void endingEvaluation(){
-        List<Project> projectList = projectRepository.findByProjectCode("PS101");
-
-        LocalDate now = LocalDate.now();
-        for (Project project:projectList) {
-            if (now.isBefore(project.getEvaluationDt())) {
-                Integer term = project.getTerm();
-
-            }
-        }
-    }
 }

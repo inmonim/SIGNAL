@@ -205,7 +205,7 @@ public class ProfileService {
         UserHeartLog userHeartLog = UserHeartLog.builder()
                 .userSeq(userSeq)
                 .heartCnt(addHeart)
-                .content("일단 테스트용")
+                .content("하트 충전")
                 .build();
 
         // UserHeartLog에 저장
