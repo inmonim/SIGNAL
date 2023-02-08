@@ -106,46 +106,42 @@ const PostingModify = () => {
   })
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
-    try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      const post = res.data.body
-      console.log(post)
-      setPosting({
-        ...posting,
-        userSeq: sessionStorage.getItem('userSeq'),
-        subject: post.subject,
-        localCode: post.localCode,
-        fieldCode: post.fieldCode,
-        isContact: post.isContact,
-        term: post.term,
-        content: post.content,
-        postingEndDt: post.postingEndDt,
-        level: post.level,
-        postingMeetingList: post.MeetingList,
-        postingSkillList: post.postingSkillList,
-        postingPositionList: post.postingPositionList,
-        postingQuestionList: post.postingQuestionList,
-      })
-      const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
-      console.log(post.postingMeetingList, 22)
-      const resultPosition = post.postingPositionList.map((e) => ({
-        code: e.positionCode,
-        name: e.code.name,
-        count: e.positionCnt,
-      }))
-      const resultSkill = post.postingSkillList.map((e) => e.skillCode)
-      const resultQuestion = post.postingQuestionList.map((e) => ({
-        id: e.num,
-        text: e.content,
-      }))
-      setDateList(resultMeeting)
-      resultPosition.forEach((e) => dispatch(add(e)))
-      // dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
-      resultQuestion.forEach((e) => dispatch(addQnaF(e)))
-      setPosting({ ...posting, postingSkillList: resultSkill })
-    } catch (error) {
-      console.log(error)
-    }
+    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+    const post = res.data.body
+    console.log(post)
+
+    const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+    const resultPosition = post.postingPositionList.map((e) => ({
+      code: e.positionCode,
+      name: e.code.name,
+      count: e.positionCnt,
+    }))
+    const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+    const resultQuestion = post.postingQuestionList.map((e) => ({
+      id: e.num,
+      text: e.content,
+    }))
+
+    resultPosition.forEach((e) => dispatch(add(e)))
+    resultQuestion.forEach((e) => dispatch(addQnaF(e)))
+    setDateList(resultMeeting)
+
+    setPosting({
+      ...posting,
+      userSeq: sessionStorage.getItem('userSeq'),
+      subject: post.subject,
+      localCode: post.localCode,
+      fieldCode: post.fieldCode,
+      isContact: post.isContact,
+      term: post.term,
+      content: post.content,
+      postingEndDt: post.postingEndDt,
+      level: post.level,
+      postingMeetingList: post.MeetingList,
+      postingSkillList: resultSkill,
+      postingPositionList: post.postingPositionList,
+      postingQuestionList: post.postingQuestionList,
+    })
   }
   // const [profile, setProfile] = useState([])
 
