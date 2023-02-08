@@ -553,12 +553,12 @@ const PostingRegister = () => {
               <div style={{ width: '70%' }}>
                 <div>
                   <Box style={{ display: 'inline-flex' }}>
-                    <DateSelect setDate={setDate} style={{ width: '50%' }} />
+                    <DateSelect setDate={setDaily} style={{ width: '50%' }} />
                     <button
                       onClick={() => {
-                        if (!DateList.includes(Date)) {
+                        if (!DateList.includes(Daily)) {
                           const copy = [...DateList]
-                          copy.push(Date)
+                          copy.push(Daily)
                           setDateList(copy)
                         }
                       }}
