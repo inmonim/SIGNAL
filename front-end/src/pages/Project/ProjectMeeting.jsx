@@ -9,6 +9,7 @@ import { css } from '@emotion/react'
 import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
 import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
+import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 
 let myStream
@@ -448,61 +449,60 @@ function ProjectMeeting() {
   return (
     <div className="project-meeting-container">
       <div className="project-meeting-main">
-        {mode === 0 ? (
-          <div className="project-meeting-video-list">
-            {personList.map((item, index) => (
-              <VideoBox key={index} className="project-meeting-person" size={personList.length}>
-                <video className="project-meeting-video" alt="나" style={{ width: '100%', height: '100%' }} />
-                <div className="project-meeting-person-name">{item}</div>
-              </VideoBox>
-            ))}
-          </div>
-        ) : mode === 1 ? (
-          <div className="project-meeting-video-code-edit">
-            <video style={{ width: '100%', height: '100%' }}> 코드편집</video>
-          </div>
-        ) : (
-          <div className="project-meeting-video-share-section">
-            <div className="project-meeting-video-share-palette">
-              <div className="project-meeting-video-share-palette2">
-                <div style={{ margin: '30px auto' }}>
-                  <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
-                </div>
-                <div style={{ textAlign: 'center', margin: '30px' }}>
-                  <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <SignalBtn>모두지우기</SignalBtn>
-                </div>
+        <VideoListSection className="project-meeting-video-list" mode={mode}>
+          {personList.map((item, index) => (
+            <VideoBox key={index} className="project-meeting-person" size={personList.length}>
+              <video className="project-meeting-video" alt="나" style={{ width: '100%', height: '100%' }} />
+              <div className="project-meeting-person-name">{item}</div>
+            </VideoBox>
+          ))}
+        </VideoListSection>
+
+        <CodeEditSection className="project-meeting-video-code-edit" mode={mode}>
+          <video style={{ width: '100%', height: '100%' }}> 코드편집</video>
+        </CodeEditSection>
+
+        <ShareSection className="project-meeting-video-share-section" mode={mode}>
+          <div className="project-meeting-video-share-palette">
+            <div className="project-meeting-video-share-palette2">
+              <div style={{ margin: '30px auto' }}>
+                <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
               </div>
-            </div>
-            {paletteOpen ? (
-              <div className="project-meeting-video-share-color-palette">
-                <Color onClick={() => setColor('black')} color={'black'}></Color>
-                <Color onClick={() => setColor('white')} color={'white'}></Color>
-                <Color onClick={() => setColor('red')} color={'red'}></Color>
-                <Color onClick={() => setColor('blue')} color={'blue'}></Color>
+              <div style={{ textAlign: 'center', margin: '30px' }}>
+                <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
               </div>
-            ) : (
-              ''
-            )}
-            <div className="project-meeting-video-share">
-              <video style={{ width: '100%', height: '100%', borderRadius: '25px' }}> 비디오</video>
-            </div>
-            <div className="project-meeting-video-sare-painht" style={{ border: '1px solid' }}>
-              <div
-                style={{
-                  backgroundColor: 'rgba(87, 75, 159, 0.3)',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '25px',
-                }}
-              >
-                그림판
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <SignalBtn>모두지우기</SignalBtn>
               </div>
             </div>
           </div>
-        )}
+          {paletteOpen ? (
+            <div className="project-meeting-video-share-color-palette">
+              <Color onClick={() => setColor('black')} color={'black'}></Color>
+              <Color onClick={() => setColor('white')} color={'white'}></Color>
+              <Color onClick={() => setColor('red')} color={'red'}></Color>
+              <Color onClick={() => setColor('blue')} color={'blue'}></Color>
+            </div>
+          ) : (
+            ''
+          )}
+          <div className="project-meeting-video-share">
+            <video style={{ width: '100%', height: '100%', borderRadius: '25px' }}> 비디오</video>
+          </div>
+          <div className="project-meeting-video-sare-painht" style={{ border: '1px solid' }}>
+            <div
+              style={{
+                backgroundColor: 'rgba(87, 75, 159, 0.3)',
+                width: '100%',
+                height: '100%',
+                borderRadius: '25px',
+              }}
+            >
+              그림판
+            </div>
+          </div>
+        </ShareSection>
+
         {chatOpen ? <Chatting key={100000}></Chatting> : ''}
       </div>
 
@@ -628,4 +628,15 @@ const selectedColor = (props) => {
 
 const SelectedColor = styled.div`
   ${selectedColor}
+`
+
+const VideoListSection = styled.div`
+  ${videoList}
+`
+const CodeEditSection = styled.div`
+  ${codeEidt}
+`
+
+const ShareSection = styled.div`
+  ${share}
 `

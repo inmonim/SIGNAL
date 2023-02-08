@@ -4,7 +4,7 @@ import plusBtn from 'assets/image/plusButton.png'
 import InputUrlModal from './InputUrlModal'
 import Notion from './Notion'
 
-function ProjectDocs() {
+function ProjectDocs({ projectSeq }) {
   const [inputOpen1, setInputOpen1] = useState(false)
   const [inputOpen2, setInputOpen2] = useState(false)
   const [inputOpen3, setInputOpen3] = useState(false)
