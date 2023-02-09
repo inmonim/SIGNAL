@@ -235,10 +235,18 @@ public class PostingService {
                     // 작성자 기준 '확정'상태로 변경
                     apply.setApplyCode("AS101");
 
-                    // 차감될 하트가 충분한지 확인
-                    if (apply.getUser().getHeartCnt() < 100) {
-                        throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
-                    };
+                    // 하트 차감 및 하트 로그 작성
+                    User applyUser = apply.getUser();
+                    applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
+                    userRepository.save(applyUser);
+
+                    UserHeartLog userHeartLog = UserHeartLog.builder()
+                            .userSeq(applyUser.getUserSeq())
+                            .heartCnt(-100)
+                            .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
+                            .build();
+                    userHeartLogRepository.save(userHeartLog);
+
                 } else {
                     // 지원자 기준 '지원취소'상태로 변경
                     apply.setStateCode("PAS104");
