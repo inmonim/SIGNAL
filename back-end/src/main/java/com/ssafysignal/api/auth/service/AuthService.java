@@ -21,11 +21,10 @@ import com.ssafysignal.api.global.redis.RefreshTokenRedisRepository;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,13 +60,32 @@ public class AuthService {
         // 이메일 인증 여부 검증
         Auth auth = authRepository.findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(user.getUserSeq(),"AU101")
                 .orElseThrow(() -> new NotFoundException(ResponseCode.UNAUTHORIZED));
-
         if (!auth.isAuth()) throw new NotFoundException(ResponseCode.UNAUTHORIZED);
+
+
+        // 중복 로그인 여부 검증
+        // 이미 로그인된 정보가 있으면 해당 accessToken 꺼내서 로그아웃 토큰으로 등록시킴 (중복 로그인 방지)
+        if (refreshTokenRedisRepository.findById(email).isPresent()){
+            try {
+                RefreshToken redisRefreshToken = refreshTokenRedisRepository.findById(email).get();
+                String accessToken = redisRefreshToken.getAccessToken();
+                long remainMilliSeconds = jwtTokenUtil.getRemainMilliSeconds(accessToken);
+                logoutAccessTokenRedisRepository.save(LogoutAccessToken.of(accessToken, email, remainMilliSeconds));
+            } catch (ExpiredJwtException e) {
+                e.printStackTrace();
+            } finally {
+                refreshTokenRedisRepository.deleteById(email);
+            }
+        }
 
         // 토큰 발급 시작
         String accessToken = jwtTokenUtil.generateAccessToken(user.getEmail());
-        RefreshToken refreshToken = refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(user.getEmail(),
-                jwtTokenUtil.generateRefreshToken(user.getEmail()), JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
+        RefreshToken refreshToken = refreshTokenRedisRepository.save(
+                RefreshToken.createRefreshToken(user.getEmail(),
+                accessToken,
+                jwtTokenUtil.generateRefreshToken(user.getEmail()),
+                JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
+
         return LoginResponse.builder()
                 .userSeq(user.getUserSeq())
                 .name(user.getName())
@@ -92,14 +110,15 @@ public class AuthService {
 
         // 레디스의 리프레시 토큰와 일치하면
         if (refreshToken.equals(redisRefreshToken.getRefreshToken())){
+            // 엑세스 토큰 발급
             String accessToken = jwtTokenUtil.generateAccessToken(email);
+            // 리프레시 토큰이 만료되었으면
+//            if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) <= 0) {
+//                refreshToken = jwtTokenUtil.generateRefreshToken(email);
+//            }
+            redisRefreshToken.setAccessToken(accessToken);
+            refreshTokenRedisRepository.save(redisRefreshToken);
 
-            // 만료 기간까지 남은 시간이 없으면
-            if (jwtTokenUtil.getRemainMilliSeconds(refreshToken) <= 0) {
-                // 엑세스 토큰 발급
-                refreshToken = jwtTokenUtil.generateRefreshToken(email);
-                refreshTokenRedisRepository.save(RefreshToken.createRefreshToken(email, refreshToken, JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
-            }
             return LoginResponse.builder()
                     .userSeq(user.getUserSeq())
                     .name(user.getName())

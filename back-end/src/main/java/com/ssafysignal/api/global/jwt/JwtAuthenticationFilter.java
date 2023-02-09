@@ -1,9 +1,6 @@
 package com.ssafysignal.api.global.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
-import com.ssafysignal.api.global.response.BasicResponse;
-import com.ssafysignal.api.global.response.ResponseCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +34,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = getToken((HttpServletRequest) request);
 
         // accessToken 이 있고 redis 에 accessToken 이 존재하지 않을 때 = 로그아웃 상태
-        if (accessToken != null && !logoutAccessTokenRedisRepository.existsById(accessToken)) {
+        if (accessToken != null) {
             try {
+                if (logoutAccessTokenRedisRepository.existsById(accessToken)){
+                    throw new JwtException("중복 로그인");
+                }
+                
                 // 토큰의 정보를 이용해 사용자 정보 생성
                 String username = jwtTokenUtil.getUsername(accessToken);
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
