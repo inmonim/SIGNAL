@@ -221,10 +221,8 @@ public class ProfileService {
 
     // 하트 로그 조회
     @Transactional
-    public HeartLogAllResponse findAllUserHeartLog(Integer page,
-                                                   Integer size,
-                                                   Integer userSeq) {
-        Page<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.ASC, "userHeartLogSeq"));
+    public HeartLogAllResponse findAllUserHeartLog(Integer userSeq) {
+        List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, Sort.by(Sort.Order.desc("ranking")));
         return HeartLogAllResponse.fromEntity(userHeartLogList);
     }
 }

@@ -84,6 +84,10 @@ public class AuthService {
                 jwtTokenUtil.generateRefreshToken(user.getEmail()),
                 JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME.getValue()));
 
+        // 역할
+        UserAuth userAuth = userAuthRepository.findByUser(user)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
         return LoginResponse.builder()
                 .userSeq(user.getUserSeq())
                 .name(user.getName())
@@ -91,6 +95,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
+                .isAdmin(userAuth.getRole().equals("ADMIN") ? true : false)
                 .build();
     }
 

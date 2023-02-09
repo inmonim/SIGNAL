@@ -87,6 +87,8 @@ public class ProjectSettingService {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
+        System.out.println("projectSettingModifyRequest.toString() = " + projectSettingModifyRequest.toString());
+
         if (uploadImage != null){
             // 사진올리고
             ImageFile imageFile = fileService.registImageFile(uploadImage, projectUploadPath);
@@ -107,6 +109,11 @@ public class ProjectSettingService {
                 imageFileRepository.save(newImageFile);
                 project.setProjectImageFileSeq(newImageFile.getImageFileSeq());
             }
+        }
+
+        if (projectSettingModifyRequest.getIsDelete()){
+            fileService.deleteImageFile(uploadPath + project.getImageFile().getUrl());
+            project.setProjectImageFileSeq(1);
         }
         /*
             프로젝트 설정 데이터 처리
