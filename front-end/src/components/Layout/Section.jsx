@@ -8,7 +8,6 @@ const Container = styled.div`
   height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
-  overflow: hidden;
   display: flex;
   justify-content: space-around;
   align-items: center;
