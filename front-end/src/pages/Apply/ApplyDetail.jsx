@@ -3,7 +3,6 @@ import '../../assets/styles/applyDetail.css'
 import '../../assets/styles/skill.css'
 import { getPositionName } from 'data/Positiondata'
 import ApplyDelete from '../../components/Apply/ApplyDelete'
-import skillImage from '../../assets/image/Skilltest/React.png'
 import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
@@ -26,7 +25,6 @@ function ApplyDetail() {
   // 2. import { Link, useLocation } from 'react-router-dom'
 
   const location = useLocation()
-  const userSeq = parseInt(location.state.userSeq)
   const applySeq = parseInt(location.state.applySeq)
 
   const navigate = useNavigate()
@@ -37,7 +35,7 @@ function ApplyDetail() {
   const currentUserSeq = sessionStorage.getItem('userSeq')
   const showButton = (
     <div>
-      <Link to={'/applymodify'} state={{ applySeq }}>
+      <Link to={'/applymodify'} state={{ applySeq: location.state.applySeq }}>
         <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
           지원 수정
         </ApplyModify>
@@ -46,25 +44,25 @@ function ApplyDetail() {
     </div>
   )
 
-  // const postingSeq = 458
-  const [posting, setPosting] = useState('458')
+  const [posting, setPosting] = useState(0)
 
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
+  const [userSeq, setUserSeq] = useState(0)
 
   const dataFetch = async () => {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
-      // postingFetch(res.data.body.postingSeq)
+      setUserSeq(res.data.body.userSeq + '')
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
         setPosting(res.data.body)
       })
 
-      await api.get(process.env.REACT_APP_API_URL + '/user/' + userSeq).then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + '/user/' + res.data.body.userSeq).then((res) => {
         setUser(res.data.body)
       })
     } catch (error) {
@@ -131,8 +129,12 @@ function ApplyDetail() {
                             justifyContent: 'space-between',
                           }}
                         >
-                          <img src={skillImage} alt="skillImage" className="apply-detail-skill-image" />
-                          <span>{skill.name}</span>
+                          <img
+                            src={process.env.REACT_APP_API_URL + skill.url}
+                            alt="skillImage"
+                            className="apply-detail-skill-image"
+                          />
+                          {/* <span>{skill.name}</span> */}
                         </div>
                       </div>
                     </div>

@@ -185,9 +185,9 @@ function ApplyRegister() {
 
   const newTag = (tag) => {
     console.log(tag)
-    const set = new Set(arrayOfTags.concat(tag))
-    setNumberOfTags(set.size)
-    const uniqueTags = Array.from(set)
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
     addTag(uniqueTags)
   }
 
@@ -308,9 +308,6 @@ function ApplyRegister() {
 
   const handleApplySubmit = async () => {
     try {
-      /**********************************************
-       * 수정사항 : 블랙리스트 검거 ^_^ ㅎㅎㅎㅎㅎ
-       **********************************************/
       // 지원서 req
       const applyReq = {
         applyAnswerList: answerList,

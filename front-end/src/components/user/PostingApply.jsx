@@ -23,6 +23,9 @@ function PostingApply() {
 
   const [rowsApplyForm, setRowsApplyForm] = useState([])
   const [rowsPostingForm, setRowsPostingForm] = useState([])
+
+  const [change, setChange] = useState(false)
+
   const applyListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/apply/applyer/count/' + userSeq).then((res) => {
@@ -117,6 +120,7 @@ function PostingApply() {
         select: true,
       })
       console.log('지원서 확정')
+      setChange(!change)
     } catch (error) {
       console.log(error)
     }
@@ -129,19 +133,20 @@ function PostingApply() {
         select: true,
       })
       console.log('지원서 거절')
+      setChange(!change)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleApplyDelete = async (applySeq) => {
-    try {
-      await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      console.log('지원 취소')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const handleApplyDelete = async (applySeq) => {
+  //   try {
+  //     await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+  //     console.log('지원 취소')
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const handlePostingDelete = async (postingSeq) => {
     try {
@@ -199,7 +204,7 @@ function PostingApply() {
                       <TableCell align="center">사전미팅참가</TableCell>
                       <TableCell align="center">사전미팅시간</TableCell>
                       <TableCell align="center">확정</TableCell>
-                      <TableCell align="center">삭제</TableCell>
+                      <TableCell align="center">지원서</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -248,32 +253,10 @@ function PostingApply() {
                           {row.subject !== ' ' ? (
                             <SignalBtn
                               onClick={() => {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                  customClass: {
-                                    cancelButton: 'btn btn-danger',
-                                    confirmButton: 'btn btn-success',
-                                  },
-                                  buttonsStyling: true,
-                                })
-
-                                swalWithBootstrapButtons
-                                  .fire({
-                                    title: '지원서을 취소하겠습니까?',
-                                    text: '삭제한 지원서는 다시 되돌릴 수 없습니다',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: '예',
-                                    cancelButtonText: '아니요',
-                                  })
-                                  .then((result) => {
-                                    if (result.isConfirmed) {
-                                      swalWithBootstrapButtons.fire('삭제', '지원이 취소되었습니다', 'success')
-                                      handleApplyDelete(row.applySeq)
-                                    }
-                                  })
+                                navigate('/applydetail', { state: { applySeq: row.applySeq } })
                               }}
                             >
-                              삭제
+                              조회
                             </SignalBtn>
                           ) : (
                             ' '
