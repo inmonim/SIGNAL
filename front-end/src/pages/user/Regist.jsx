@@ -64,8 +64,13 @@ function Regist() {
   }
 
   const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordCheck, setShowPasswordCheck] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show)
   const handleMouseDownPassword = (event) => {
+    event.preventDefault()
+  }
+  const handleClickShowPasswordCheck = () => setShowPasswordCheck((show) => !show)
+  const handleMouseDownPasswordCheck = (event) => {
     event.preventDefault()
   }
   async function emailDupCheck() {
@@ -214,17 +219,17 @@ function Regist() {
                 <RegistInput
                   id="filled-multiline-flexible"
                   name="passwordCheck"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPasswordCheck ? 'text' : 'password'}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
                           aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
+                          onClick={handleClickShowPasswordCheck}
+                          onMouseDown={handleMouseDownPasswordCheck}
                           edge="end"
                         >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                          {showPasswordCheck ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
                     ),
