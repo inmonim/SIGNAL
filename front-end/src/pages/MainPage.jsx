@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Section from 'components/Layout/Section'
 import 'assets/font/font.css'
 import 'pages/Main.css'
 import logo from 'assets/image/Mainlogo.png'
+// import logo from 'assets/image/Signal.gif'
 import projectimg from 'assets/image/Projectpic.png'
 import signalweek from 'assets/image/Signalweek.png'
 import SignalBtn from 'components/common/SignalBtn'
 import { FullPage, Slide } from 'react-full-page'
 
 function MainPage() {
-  useEffect(() => {
-    document.body.style.cssText = `
-      overflow-y:hidden`
-  }, [])
   return (
     <div className="MainPage">
       <FullPage controls controlsProps={{ className: 'slide-navigation' }}>

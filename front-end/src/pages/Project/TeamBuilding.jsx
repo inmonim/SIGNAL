@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import '../../assets/styles/teamBuilding.css'
 import MemoModal from '../../components/Memo/MemoModal'
-import MeetingConfirmModal from 'components/Meeting/MeetingConfirmModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
 import moment from 'moment'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
@@ -23,6 +22,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 import cancleButton from '../../assets/image/x.png'
 import Swal from 'sweetalert2'
 import api from 'api/Api.js'
+import LaptopIcon from '@mui/icons-material/Laptop'
+import AlertModal from 'components/AlertModal'
 
 const ImageButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -44,6 +45,16 @@ const ComfirmButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#574B9F',
     color: theme.vars.palette.common.white,
     borderColor: theme.vars.palette.common.white,
+  },
+}))
+
+const MeetingButton = styled(Button)(({ theme }) => ({
+  backgroundColor: '#FF4242',
+  color: theme.vars.palette.common.white,
+  height: 30,
+  '&:hover': {
+    backgroundColor: theme.vars.palette.common.white,
+    color: '#FF4242',
   },
 }))
 
@@ -78,6 +89,15 @@ function TeamSelect() {
 
   const handlePageChange = (page) => {
     setPage(page)
+  }
+
+  const [alertOpen, setAlertOpen] = useState(false)
+  const handleAlertOpen = () => {
+    setAlertOpen(true)
+  }
+  const handleToMeeting = () => {
+    setAlertOpen(false)
+    window.open('/beforemeeting', '_blank')
   }
 
   const applyListFetch = async (param) => {
@@ -196,7 +216,10 @@ function TeamSelect() {
                       >
                         <TableCell align="center">{apply.nickname}</TableCell>
                         <TableCell align="center">
-                          <MeetingConfirmModal></MeetingConfirmModal>
+                          <MeetingButton onClick={handleAlertOpen} startIcon={<LaptopIcon />}>
+                            사전미팅
+                          </MeetingButton>
+                          <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
                         </TableCell>
                         <TableCell align="center">{moment(apply.meetingDt).format('MM/DD HH:00')}</TableCell>
                         <TableCell align="center">{apply.positionCode.name}</TableCell>
@@ -233,7 +256,13 @@ function TeamSelect() {
           </div>
 
           <div className="team-building-submit-button">
-            <SignalBtn sigwidth="250px" onClick={handleConfirmOpen}>
+            <SignalBtn
+              sigwidth="200px"
+              sigheight="60px"
+              sigfontsize="24px"
+              sigborderradius={15}
+              onClick={handleConfirmOpen}
+            >
               프로젝트 시작
             </SignalBtn>
             <Dialog

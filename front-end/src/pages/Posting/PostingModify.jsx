@@ -80,76 +80,68 @@ const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
-
+const hunjae = new Date()
+const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const PostingModify = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const postingSeq = location.state.postingSeq
+
   //   console.log(postingSeq)
 
   const [posting, setPosting] = useState({
-    userSeq: 1,
-    subject: '테스트',
-    localCode: '11',
-    fieldCode: 'FI100',
-    isContact: true,
-    term: 10,
-    content: '공고 등록 테스트 본문',
-    postingEndDt: '2023-01-01 11:00:00.000',
+    userSeq: '',
+    subject: '',
+    localCode: '',
+    fieldCode: '',
+    isContact: '',
+    term: 1,
+    content: '',
+    postingEndDt: humjaetime,
     level: 5,
     postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
-    postingSkillList: ['WE100', 'WE101'],
+    postingSkillList: [],
     postingPositionList: [],
-    postingQuestionList: [
-      {
-        num: 1,
-        content: '질문 1',
-      },
-      {
-        num: 2,
-        content: '질문 2',
-      },
-    ],
+    postingQuestionList: [],
   })
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
-    try {
-      const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      const post = res.data.body
-      setPosting({
-        ...posting,
-        subject: post.subject,
-        localCode: post.localCode,
-        fieldCode: post.fieldCode,
-        isContact: post.isContact,
-        term: post.term,
-        content: post.content,
-        postingEndDt: post.postingEndDt,
-        level: post.level,
-        postingMeetingList: post.MeetingList,
-        postingSkillList: post.postingSkillList,
-        postingPositionList: post.postingPositionList,
-        postingQuestionList: post.postingQuestionList,
-      })
-      const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
-      const resultPosition = post.postingPositionList.map((e) => ({
-        code: e.positionCode,
-        name: e.code.name,
-        count: e.positionCnt,
-      }))
-      const resultSkill = post.postingSkillList.map((e) => e.skillCode)
-      const resultQuestion = post.postingQuestionList.map((e) => ({
-        id: e.num,
-        text: e.content,
-      }))
-      setDateList(resultMeeting)
-      resultPosition.forEach((e) => dispatch(add(e)))
-      // dispatch(add({ code: 'PO100', name: 'backend', count: 2 }))
-      resultQuestion.forEach((e) => dispatch(addQnaF(e)))
-      setPosting({ ...posting, postingSkillList: resultSkill })
-    } catch (error) {
-      console.log(error)
-    }
+    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+    const post = res.data.body
+    console.log(post)
+
+    const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+    const resultPosition = post.postingPositionList.map((e) => ({
+      code: e.positionCode,
+      name: e.code.name,
+      count: e.positionCnt,
+    }))
+    const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+    const resultQuestion = post.postingQuestionList.map((e) => ({
+      id: e.num,
+      text: e.content,
+    }))
+
+    resultPosition.forEach((e) => dispatch(add(e)))
+    resultQuestion.forEach((e) => dispatch(addQnaF(e)))
+    setDateList(resultMeeting)
+
+    setPosting({
+      ...posting,
+      userSeq: sessionStorage.getItem('userSeq'),
+      subject: post.subject,
+      localCode: post.localCode,
+      fieldCode: post.fieldCode,
+      isContact: post.isContact,
+      term: post.term,
+      content: post.content,
+      postingEndDt: post.postingEndDt,
+      level: post.level,
+      postingMeetingList: post.MeetingList,
+      postingSkillList: resultSkill,
+      postingPositionList: post.postingPositionList,
+      postingQuestionList: post.postingQuestionList,
+    })
   }
   // const [profile, setProfile] = useState([])
 
@@ -171,7 +163,7 @@ const PostingModify = () => {
   // end >> Fetch
   const [deSkill, setDeSkill] = useState([])
   // start >> Data filter
-  const [Date, setDate] = useState('')
+  const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
   // end >> Data filter
 
@@ -323,6 +315,13 @@ const PostingModify = () => {
       <div>
         <div>
           <Title>공고 수정</Title>
+          <button
+            onClick={() => {
+              console.log(posting)
+            }}
+          >
+            dd
+          </button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
@@ -356,6 +355,7 @@ const PostingModify = () => {
                       setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
+                    minDate={hunjae}
                   />
                 </LocalizationProvider>
               </div>
@@ -486,14 +486,14 @@ const PostingModify = () => {
               </div>
               <div style={{ width: '70%' }}>
                 <Box>
-                  <DateSelect setDate={setDate} />
+                  <DateSelect setDate={setDaily} />
                   <button
                     className="post-button-modi"
                     style={{ height: '10%' }}
                     onClick={() => {
-                      if (!DateList.includes(Date)) {
+                      if (!DateList.includes(Daily) && Daily) {
                         const copy = [...DateList]
-                        copy.push(Date)
+                        copy.push(Daily)
                         setDateList(copy)
                       }
                     }}
@@ -553,7 +553,6 @@ const PostingModify = () => {
                       alt="plusButton"
                       className="plus-button"
                       onClick={() => {
-                        console.log(posi)
                         dispatch(add(posi))
                       }}
                     />
@@ -577,7 +576,6 @@ const PostingModify = () => {
               <div style={{ width: '70%', display: 'flex' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={posting.level}
@@ -656,8 +654,8 @@ const PostingModify = () => {
 }
 const FilterSelect = styled.select`
   width: 100%;
-  max-width: 378px;
-  height: 42px;
+  height: 60px;
+
   padding: 0 14px;
   border: 1px solid #d7e2eb;
   border-radius: 4px;
@@ -672,6 +670,11 @@ const FilterSelect = styled.select`
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+  &.active-warning {
+    margin-bottom: 4px;
+    border: 1px solid #f44336;
+    box-shadow: inset 0 0 0 1px #ff77774d;
   }
 `
 export default PostingModify

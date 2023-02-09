@@ -97,12 +97,12 @@
   justify-content: center;
 }
 
-.project-meeting-video-list {
+/* .project-meeting-video-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .project-meeting-person-vide-box {
   width: 300px;
@@ -137,13 +137,13 @@
   width: 30px;
 }
 
-.project-meeting-video-code-edit {
+/* .project-meeting-video-code-edit {
   border: 1px solid black;
   border-radius: 25px;
   height: 95%;
   width: 90%;
   margin: auto;
-}
+} */
 
 .project-meeting-video-share {
   position: absolute;
@@ -180,10 +180,10 @@
   font-size: 14px;
 }
 
-.project-meeting-video-share-section {
+/* .project-meeting-video-share-section {
   display: flex;
   align-items: center;
-}
+} */
 
 .project-meeting-video-share-eraser {
   background-color: white;
