@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import 'assets/styles/regist.css'
-import { TextField } from '@mui/material'
+import { Checkbox, FormControlLabel, TextField } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -23,6 +23,13 @@ function Regist() {
     phone: '',
     birth: '',
   })
+
+  const text = `<div style="font-size:34px; text-align: center;">- 이용약관 -</div><br>
+  1. Signal의 모든 서비스는 회원가입과 로그인이 정상적으로 이루어진 사용자에게만 제공됩니다.  <br>
+2. 회원가입 시 입력된 개인정보 및 암호화된 비밀번호는 사이트가 보관합니다.<br>
+3. 제공된 모든 개인정보는 서비스 제공 목적 이외의 어떠한 목적으로도 사용되지 않습니다.<br>
+4. 회원탈퇴 시 결제 내역을 포함한 모든 정보는 삭제됩니다.`
+
   const [value, setValue] = useState(null)
   const [alertOpen, setAlertOpen] = useState(false)
 
@@ -30,6 +37,7 @@ function Regist() {
   const [msg2, setMsg2] = useState('')
   const [msg3, setMsg3] = useState('')
   const [msg4, setMsg4] = useState('')
+  const [msg5, setMsg5] = useState('')
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -143,6 +151,7 @@ function Regist() {
     setMsg2('')
     setMsg3('')
     setMsg4('')
+    setMsg5('')
   }
 
   const handleAlertOpen = () => {
@@ -165,11 +174,25 @@ function Regist() {
     } else {
       setMsg3('')
     }
+
+    if (!check) {
+      setMsg5('개인정보 이용 동의 필요!')
+      return
+    } else {
+      setMsg5('')
+    }
     regist().then((checkPass) => {
       if (checkPass) {
         setAlertOpen(true)
       }
     })
+  }
+
+  const [check, setCheck] = useState(false)
+  const handleToCheck = () => {
+    const nextCheck = check
+    setCheck(!nextCheck)
+    console.log(check)
   }
 
   const navigate = useNavigate()
@@ -269,6 +292,17 @@ function Regist() {
                 </LocalizationProvider>
               </div>
             </div>
+            <div className="regist-terms-container">
+              <div className="regist-terms" dangerouslySetInnerHTML={{ __html: text }}></div>
+            </div>
+            <FormControlLabel
+              className="regist-terms-agree"
+              onChange={handleToCheck}
+              style={{ color: '#574b9f' }}
+              label={<span style={{ fontSize: 20 }}>개인정보 수집/이용에 동의합니다.</span>}
+              control={<Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 30 } }} />}
+            />
+            <div className="regist-terms-agree-msg">{msg5}</div>
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
               <SignalBtn
                 sigwidth="173px"
