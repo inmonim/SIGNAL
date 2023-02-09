@@ -1,5 +1,5 @@
 .regist-back {
-  min-height: 1200px;
+  min-height: 1400px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -43,4 +43,37 @@
 .regist-input-label {
   font-size: 24px;
   margin-right: 20px;
+}
+
+.regist-terms-container {
+  margin-top: 40px;
+  width: 700px;
+  height: 150px;
+  border: 1px solid black;
+  overflow-y: scroll;
+}
+
+.regist-terms-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.regist-terms-container::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.regist-terms {
+  font-size: 22px;
+}
+
+.regist-terms-agree {
+  margin-top: 10px;
+}
+
+.regist-terms-agree-msg{
+  text-align: center;
+  font-size: 27px;
+  color: red;
 }
