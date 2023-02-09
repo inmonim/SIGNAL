@@ -27,7 +27,7 @@ public class QnaService {
 
     @Transactional(readOnly = true)
     public Page<Qna> findAllQna(Integer page, Integer size) {
-        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.ASC, "qnaSeq"));
+        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "qnaSeq"));
         return QnaList;
     }
 

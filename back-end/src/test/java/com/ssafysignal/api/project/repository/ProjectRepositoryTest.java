@@ -34,6 +34,7 @@ class ProjectRepositoryTest {
     }
 
     @Test
+    @Transactional
     void findSearch() {
 
         Map<String, Object> searchWord = new HashMap<>();
@@ -44,12 +45,18 @@ class ProjectRepositoryTest {
         String fieldCode = "FI100";
         List<String> postingSkillList = new ArrayList<>();
         postingSkillList.add("WE100");
+        postingSkillList.add("WE200");
 
-        searchWord.put("subject", subject);
-        searchWord.put("localCode", localCode);
-        searchWord.put("fieldCode", fieldCode);
+//        searchWord.put("subject", subject);
+//        searchWord.put("localCode", localCode);
+//        searchWord.put("fieldCode", fieldCode);
         searchWord.put("postingSkillList", postingSkillList);
         Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchWord), PageRequest.of(page - 1, size, Sort.Direction.ASC, "projectSeq"));
+
+
+        for (Project p : projectList) {
+            System.out.println(p);
+        }
 
         assertTrue(projectList.getSize() == 1);
     }

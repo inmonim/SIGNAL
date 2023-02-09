@@ -3,9 +3,9 @@ package com.ssafysignal.api.project.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
-import com.ssafysignal.api.project.dto.request.ProjectRegistRequest;
 import com.ssafysignal.api.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,16 +35,20 @@ public class ProjectController {
             @ApiResponse(responseCode = "400", description = "프로젝트 생성 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
-    @PostMapping("")
-    private ResponseEntity<BasicResponse> registProject(@Parameter(description = "프로젝트 생성을 위한 정보") @RequestBody ProjectRegistRequest projectRegistRequest) {
+    @PostMapping("/{postingSeq}")
+    private ResponseEntity<BasicResponse> registProject(@Parameter(description = "프로젝트 생성을 위한 프로젝트 Seq") @PathVariable("postingSeq") Integer postingSeq) {
         log.info("registProject - Call");
 
+        System.out.println("postingSeq = " + postingSeq);
+
         try {
-            projectService.registProject(projectRegistRequest);
+            projectService.registProject(postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
@@ -105,4 +111,5 @@ public class ProjectController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
 }

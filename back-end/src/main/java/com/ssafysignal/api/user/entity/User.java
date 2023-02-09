@@ -1,14 +1,10 @@
 package com.ssafysignal.api.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.common.entity.ImageFile;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,13 +12,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
-@ToString
-@Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @DynamicInsert
 @DynamicUpdate
+@Builder
 @Table(name = "user")
 public class User {
     @Id
@@ -45,8 +41,11 @@ public class User {
     private LocalDateTime regDt;
     @Column(name = "heart_cnt")
     private int heartCnt;
+    @Column(name = "user_image_file_seq")
+    private Integer userImageFileSeq;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_image_file_seq")
+    @JoinColumn(name = "user_image_file_seq", insertable = false, updatable = false)
     private ImageFile imageFile;
 
     @Builder
@@ -62,18 +61,21 @@ public class User {
         this.heartCnt = heartCnt;
         this.imageFile = imageFile;
     }
-
-    public void modifyUser(String name, String nickname,String phone, String birth) {
-        this.name = name;
+    
+    public void modifyUser( String nickname,String phone) {
         this.nickname = nickname;
         this.phone = phone;
-        this.birth = birth;
     }
+    
     public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
     public void modifyPassword(String password){
         this.password = password;
     }
 
+    public void setImageFileSeq(int imageFileSeq){this.userImageFileSeq=imageFileSeq;}
+
+
+    // Security 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<UserAuth> authorities = new ArrayList<>();
