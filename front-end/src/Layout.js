@@ -4,6 +4,7 @@ import React from 'react'
 import Header from 'components/Layout/Header'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
+import Regist from 'pages/user/Regist'
 import PostingRegister from 'pages/Posting/PostingRegister'
 import Notice from 'pages/Notice/Notice'
 import NoticeDetail from 'pages/Notice/NoticeDetail'
@@ -53,6 +54,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/regist" element={<Regist />} />
           <Route path="/posting" element={<Posting />} />
           <Route path="/postingregister" element={<PostingRegister />} />
           <Route path="/posting/:id" element={<PostingDetail />} />
