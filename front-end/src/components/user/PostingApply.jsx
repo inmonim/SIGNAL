@@ -218,7 +218,20 @@ function PostingApply() {
                         <TableCell align="left">{row.subject}</TableCell>
                         <TableCell align="center">
                           {row.state === '심사중' ? (
-                            <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
+                            // 필요한 파라미터 : nickname, 팀장인지 아닌지(owner[팀장 true, 팀원 false]), applySeq
+                            // 프로필에서 입장은 지원자
+                            <SignalBtn
+                              onClick={() =>
+                                window.open(
+                                  `/beforemeeting?nickname=${sessionStorage.getItem(
+                                    'nickname'
+                                  )}&owner=${false}&appluSeq=${row.applySeq}`,
+                                  '_blank'
+                                )
+                              }
+                            >
+                              참가
+                            </SignalBtn>
                           ) : (
                             ' '
                           )}
