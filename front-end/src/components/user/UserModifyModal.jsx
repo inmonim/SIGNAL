@@ -100,7 +100,7 @@ function UserModifyModal({ open, onClose }) {
           <div className="user-modify-main">
             <div className="user-modify-title">회원정보 수정</div>
             <div className="user-modify-img-container">
-              <img className="my-user-img" src={imageUrl} alt="" />
+              <img className="user-modify-img" src={imageUrl} alt="" />
               <div className="user-modify-img-hover" onClick={handleButtonClick}>
                 이미지 선택
               </div>

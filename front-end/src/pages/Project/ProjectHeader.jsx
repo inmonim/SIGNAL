@@ -4,6 +4,7 @@ import 'assets/styles/projectDetail.css'
 import ProjectMaintainPage from './ProjectMaintainPage'
 import ProjectProgress from './ProjectProgress'
 
+import { useLocation } from 'react-router-dom'
 import settings from 'assets/image/settings.png'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
 import proejctBackground2 from 'assets/image/projectBackground2.png'
@@ -11,9 +12,10 @@ import heart from 'assets/image/heart.png'
 import noProfile from 'assets/image/noProfileImg.png'
 
 function ProjectHeader() {
+  const location = useLocation()
   const [mode, setMode] = useState(0)
-  const userSeq = 2
-  const projectSeq = 721
+  const userSeq = sessionStorage.getItem('userSeq')
+  const projectSeq = parseInt(location.state.projectSeq)
 
   const [project, setProject] = useState([])
 
@@ -112,9 +114,9 @@ function ProjectHeader() {
             </div>
           </div>
         ) : mode === 1 ? (
-          <ProjectMaintainPage></ProjectMaintainPage>
+          <ProjectMaintainPage projectSeq={projectSeq}></ProjectMaintainPage>
         ) : (
-          <ProjectProgress></ProjectProgress>
+          <ProjectProgress projectSeq={projectSeq}></ProjectProgress>
         )}
       </div>
     </div>

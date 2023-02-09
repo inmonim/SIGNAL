@@ -51,7 +51,6 @@ function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) 
     }
     setDeleteOpen(false)
     onClose(onClose(true))
-    handleFlag(!flag)
   }
   const handleToClose = () => {
     setModifyOpen(false)
@@ -59,6 +58,7 @@ function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) 
     onClose(true)
     handleFlag(flag)
   }
+
   return (
     <>
       <Modal open={open} onClose={onClose}>

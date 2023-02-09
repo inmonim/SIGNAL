@@ -20,9 +20,11 @@ const stateCode = (props) => {
   return css`
     display: ${props.children === '미선택' ? 'none' : ''};
     background-color: ${props.children === '대기중'
-      ? 'rgb(87, 75, 159, 0.4)'
+      ? 'rgba(164, 164, 164, 0.4)'
       : props.children === '지원취소'
-      ? 'rgb(255, 66, 66, 0.4)'
+      ? 'rgba(255, 0, 0, 0.4)'
+      : props.children === '확정'
+      ? 'rgba(70, 60, 127, 0.7)'
       : ''};
     border-radius: 15px;
     color: white;
