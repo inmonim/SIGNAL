@@ -36,6 +36,7 @@ import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
 import Openprofile from 'pages/Openprofile/Openprofile'
+import Footer from 'components/Layout/Footer'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -86,6 +87,7 @@ function App() {
 
           <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
         </Routes>
+        <Footer></Footer>
       </BrowserRouter>
     </div>
   )
