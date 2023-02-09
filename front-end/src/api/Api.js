@@ -39,8 +39,11 @@ api.interceptors.response.use(async function (response) {
         return axios(originalRequest)
       })
       .catch((error) => {
-        if (error.response.data.header.code === '802' && sessionStorage.getItem('accessToken')) {
-          alert('재 로그인이 필요합니다.')
+        if (
+          (error.response.data.header.code === '802' || error.response.data.header.code === '803') &&
+          sessionStorage.getItem('accessToken')
+        ) {
+          alert('로그인이 필요합니다.')
           sessionStorage.removeItem('accessToken')
           sessionStorage.removeItem('refreshToken')
           sessionStorage.removeItem('userEmail')
