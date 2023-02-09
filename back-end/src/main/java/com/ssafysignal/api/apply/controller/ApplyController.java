@@ -5,6 +5,7 @@ import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
+import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.service.ApplyService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -178,8 +179,8 @@ public class ApplyController {
         log.info("findAllApplyApplyer - Call");
 
         try {
-            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyApplyer(userSeq, page, size);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
+            List<Apply> applyList = applyService.findAllApplyApplyer(userSeq, page, size);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ApplyApplyerFindResponse.toList(applyList)));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }

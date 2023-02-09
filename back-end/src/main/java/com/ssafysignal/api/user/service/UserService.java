@@ -42,8 +42,6 @@ public class UserService {
 
     @Value("${server.host}")
     private String host;
-    @Value("${server.port}")
-    private Integer port;
     @Value("${app.fileUpload.uploadPath.userImage}")
     private String imageUploadPath;
     @Value("${app.fileUpload.uploadPath}")
@@ -92,8 +90,7 @@ public class UserService {
                         .content("아래 버튼을 클릭하여 이메일을 인증해주세요.")
                         .text("이메일 인증")
                         .host(host)
-                        .port(port)
-                        .url(String.format("/auth/emailauth/%s", authCode))
+                        .url(String.format("/api/auth/emailauth/%s", authCode))
                         .build());
     }
     
