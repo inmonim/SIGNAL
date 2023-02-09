@@ -26,6 +26,7 @@ function ApplyDetail() {
 
   const location = useLocation()
   const applySeq = parseInt(location.state.applySeq)
+  const stateCode = location.state.stateCode
 
   const navigate = useNavigate()
 
@@ -55,6 +56,7 @@ function ApplyDetail() {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
+      console.log('detail', res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
       setUserSeq(res.data.body.userSeq + '')
 
@@ -83,7 +85,9 @@ function ApplyDetail() {
               <div className="apply-detail-project-name-label">프로젝트 이름</div>
               <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
             </div>
-            <div className="apply-detail-cancle-section">{userSeq === currentUserSeq ? showButton : ''}</div>
+            <div className="apply-detail-cancle-section">
+              {userSeq === currentUserSeq && stateCode === '심사중' ? showButton : ''}
+            </div>
           </div>
           <hr className="apply-detail-hr" />
           <div className="apply-detail-application-section">
