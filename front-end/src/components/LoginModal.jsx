@@ -71,6 +71,7 @@ function LoginModal({ open, onClose }) {
         })
       )
       .then((response) => {
+        console.log(response.data.body)
         // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
         if (isAutoLogin) {
           localStorage.setItem('refreshToken', response.data.body.refreshToken)
@@ -81,6 +82,7 @@ function LoginModal({ open, onClose }) {
         sessionStorage.setItem('username', response.data.body.name)
         sessionStorage.setItem('nickname', response.data.body.nickname)
         sessionStorage.setItem('userSeq', response.data.body.userSeq)
+        sessionStorage.setItem('admin', response.data.body.admin)
         onClose(onClose(true))
       })
       .catch((e) => {
