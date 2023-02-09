@@ -17,7 +17,7 @@ class PostingPositionRepositoryTest {
 
     @Test
     void find() {
-        List<PostingPosition> postingPositionList = postingPositionRepository.findPostingPositiosnByPostingSeq(1).get();
+        List<PostingPosition> postingPositionList = postingPositionRepository.findPostingPositiosnByPostingSeq(1);
 
         assertEquals(postingPositionList.get(0).getPositionCode(), "PO100");
         assertEquals(postingPositionList.get(1).getPositionCode(), "PO101");

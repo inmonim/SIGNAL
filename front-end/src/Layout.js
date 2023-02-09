@@ -37,6 +37,7 @@ import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
 import Openprofile from 'pages/Openprofile/Openprofile'
+import Footer from 'components/Layout/Footer'
 
 import Fourzerofour from 'pages/fourzerofour'
 
@@ -90,6 +91,7 @@ function App() {
 
           <Route path="*" element={<Fourzerofour />} />
         </Routes>
+        <Footer></Footer>
       </BrowserRouter>
     </div>
   )

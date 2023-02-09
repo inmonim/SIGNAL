@@ -5,15 +5,10 @@ import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
 import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
-import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
-import com.ssafysignal.api.apply.entity.Apply;
-import com.ssafysignal.api.apply.entity.ApplyAnswer;
 import com.ssafysignal.api.apply.service.ApplyService;
-import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.posting.entity.PostingQuestion;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,13 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +29,6 @@ import java.util.Map;
 @Tag(name = "지원", description = "지원서 API")
 @RestController
 @RequestMapping("/apply")
-
 public class ApplyController {
 
     private final ApplyService applyService;
@@ -56,8 +47,8 @@ public class ApplyController {
         try {
             applyService.registApply(applyRegistRequest, postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
-        } catch (DuplicateKeyException e){
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
@@ -145,9 +136,9 @@ public class ApplyController {
                                                              @Parameter(description = "페이지", required = true) Integer page,
                                                              @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findALlApplyToWriter - Call");
-        System.out.println("이거 안씁니다 쓰면 이상한거");
+
         try {
-            List<ApplyWriterFindResponse> resList = applyService.findAllApplyWriter(postingSeq, page, size);
+            Map<String, Object> resList = applyService.findAllApplyWriter(postingSeq, page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, resList));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -187,19 +178,7 @@ public class ApplyController {
         log.info("findAllApplyApplyer - Call");
 
         try {
-            // dummy
-            List<ApplyApplyerFindResponse> applyList = new ArrayList<>();
-
-            for (int i = 0; i < size; i++){
-                applyList.add(ApplyApplyerFindResponse.builder()
-                        .applySeq(i)
-                        .subject("작성자 지원서 목록 조회 더미 " + i)
-                        .statusCode(CommonCode.builder().code("PAS103").groupCode("PAS").name("심사중").groupName("지원한 공고 상태구분").build())
-                        .meetingDt(LocalDateTime.now())
-                        .build());
-            }
-
-//            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyWriter(postingSeq);
+            List<ApplyApplyerFindResponse> applyList = applyService.findAllApplyApplyer(userSeq, page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, applyList));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -214,7 +193,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/applyer/count/{userSeq}")
-    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> countApplyApplyer(@Parameter(name = "userSeq", description = "지원자 Seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllApplyApplyer - Call");
 
         try {
@@ -270,5 +249,4 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
-
 }
