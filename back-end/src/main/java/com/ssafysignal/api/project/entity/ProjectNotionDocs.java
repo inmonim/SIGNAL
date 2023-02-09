@@ -1,5 +1,6 @@
 package com.ssafysignal.api.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,10 +29,11 @@ public class ProjectNotionDocs {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "subject")
-    private String subject;
+    @Column(name = "num")
+    private Integer num;
 
     @Column(name = "reg_dt")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
 
 }

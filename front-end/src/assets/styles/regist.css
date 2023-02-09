@@ -1,0 +1,17 @@
+.modal-desc{
+  text-align: center;
+  overflow-y: scroll;
+  height: 525px;
+  padding: 10px;
+}
+
+.modal-desc::-webkit-scrollbar{
+  width: 10px;
+}
+
+.modal-desc::-webkit-scrollbar-thumb{
+  background-color: #9A93C5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
