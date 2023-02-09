@@ -90,7 +90,7 @@ function UserInfo() {
         <img className="my-user-heart-img" src={heart} alt="" />
         <div className="my-user-heart-cnt">{userInfo.heartCnt}</div>
       </div>
-      <HeartModal open={heartOpen} onClose={handleToClose}></HeartModal>
+      <HeartModal open={heartOpen} onClose={handleToClose} cnt={userInfo.heartCnt}></HeartModal>
       <div className="my-user-btn">
         <SignalBtn
           className="my-user-btn-modify"
