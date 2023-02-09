@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-// import Autocomplete from '@mui/material/Autocomplete'
+import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
@@ -30,29 +30,28 @@ import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
-import ReactSelect from 'react-select'
-import { changeSelectForm } from 'utils/changeForm'
+
 const Container = styled.section`
   padding: 130px 10em;
 `
-// const skillStyle = {
-//   width: '100%',
-//   maxwidth: '378px',
-//   height: '42px',
-//   padding: '0 14px',
-//   border: '1px solid #d7e2eb',
-//   borderradius: '4px',
-//   boxsizing: 'border-box',
-//   backgroundcolor: '#fbfbfd',
-//   fontsize: '16px',
-//   fontweight: '500',
-//   lineheight: '1.6',
-//   color: '#263747',
-//   '& : hover': {
-//     border: '1px solid #3396f4',
-//     boxshadow: 'inset 0 0 0 1px#3396f4',
-//   },
-// }
+const skillStyle = {
+  width: '100%',
+  maxwidth: '378px',
+  height: '42px',
+  padding: '0 14px',
+  border: '1px solid #d7e2eb',
+  borderradius: '4px',
+  boxsizing: 'border-box',
+  backgroundcolor: '#fbfbfd',
+  fontsize: '16px',
+  fontweight: '500',
+  lineheight: '1.6',
+  color: '#263747',
+  '& : hover': {
+    border: '1px solid #3396f4',
+    boxshadow: 'inset 0 0 0 1px#3396f4',
+  },
+}
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -120,7 +119,6 @@ const PostingModify = () => {
       count: e.positionCnt,
     }))
     const resultSkill = post.postingSkillList.map((e) => e.skillCode)
-    const resultSkillde = post.postingSkillList.map((e) => ({ label: e.code.name, value: e.code.code }))
     const resultQuestion = post.postingQuestionList.map((e) => ({
       id: e.num,
       text: e.content,
@@ -129,8 +127,7 @@ const PostingModify = () => {
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
     setDateList(resultMeeting)
-    setDeSkill(resultSkillde)
-    addTag(resultSkillde)
+    setDeSkill(getMatchingValues(resultSkill, Skilldata))
     setPosting({
       ...posting,
       userSeq: sessionStorage.getItem('userSeq'),
@@ -143,7 +140,7 @@ const PostingModify = () => {
       content: post.content,
       postingEndDt: post.postingEndDt,
       level: post.level,
-      postingMeetingList: post.postingMeetingList,
+      postingMeetingList: post.MeetingList,
       postingSkillList: resultSkill,
       postingPositionList: post.postingPositionList,
       postingQuestionList: post.postingQuestionList,
@@ -182,48 +179,12 @@ const PostingModify = () => {
 
   // end >> skill filter
   // end >> handle skill
-  const [numberOfTags, setNumberOfTags] = useState(0)
-  const [arrayOfTags, addTag] = useState([])
-  const handleSkillInput = (e) => {
-    console.log(e)
-    if (e === null) return
-    newTag({
-      label: e.label,
-      value: e.value,
-    })
-  }
-  const newTag = (tag) => {
-    // const set = new Set(arrayOfTags.concat(tag))
-    // setNumberOfTags(set.size)
-    // const uniqueTags = Array.from(set)
-    // addTag(uniqueTags)
-    const set = arrayOfTags.concat(tag)
-    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
-    setNumberOfTags(uniqueTags.length)
-    addTag(uniqueTags)
-    console.log(arrayOfTags)
-    console.log(numberOfTags)
-  }
-  const tags = arrayOfTags.map((h, index) => (
-    <Chip
-      label={h.label}
-      value={h.value}
-      variant="outlined"
-      sx={{ fontSize: '20px', margin: '5px' }}
-      key={index}
-      onDelete={() => handleDelete(h)}
-    />
-  ))
-  const skillPostFilter = (list) => {
-    const skillArr = []
-    list.map((item) => skillArr.push(item.value))
-    setPosting({ ...posting, postingSkillList: skillArr })
-  }
+
   // start >> handle career
-  // const handleChangeSkill = (value) => {
-  //   const copy = value.map((ele) => ele.code)
-  //   setPosting({ ...posting, postingSkillList: copy })
-  // }
+  const handleChangeSkill = (value) => {
+    const copy = value.map((ele) => ele.code)
+    setPosting({ ...posting, postingSkillList: copy })
+  }
   // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
@@ -282,23 +243,23 @@ const PostingModify = () => {
     setTodolist({ text: '' })
   }
   // start >> handle qna
-  // function getMatchingValues(postingSkillList, Skilldata) {
-  //   console.log('실행')
-  //   console.log(postingSkillList)
-  //   console.log(Skilldata)
-  //   const result = []
-  //   for (let i = 0; i < postingSkillList.length; i++) {
-  //     for (let j = 0; j < Skilldata.length; j++) {
-  //       console.log(postingSkillList[i])
-  //       console.log(Skilldata[j].code)
-  //       if (postingSkillList[i] === Skilldata[j].code) {
-  //         result.push(Skilldata[j])
-  //         break
-  //       }
-  //     }
-  //   }
-  //   return result
-  // }
+  function getMatchingValues(postingSkillList, Skilldata) {
+    console.log('실행')
+    console.log(postingSkillList)
+    console.log(Skilldata)
+    const result = []
+    for (let i = 0; i < postingSkillList.length; i++) {
+      for (let j = 0; j < Skilldata.length; j++) {
+        console.log(postingSkillList[i])
+        console.log(Skilldata[j].code)
+        if (postingSkillList[i] === Skilldata[j].code) {
+          result.push(Skilldata[j])
+          break
+        }
+      }
+    }
+    return result
+  }
   // const handleQnAChange = (value, key) => {
   //   const qnaArr = [...qnaList]
   //   qnaArr.splice(key, 1, value)
@@ -368,9 +329,7 @@ const PostingModify = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
   }, [DateList])
-  useEffect(() => {
-    skillPostFilter(arrayOfTags)
-  }, [arrayOfTags])
+  useEffect(() => {})
   return (
     <Container>
       <div>
@@ -380,9 +339,6 @@ const PostingModify = () => {
             onClick={() => {
               console.log(posting)
               console.log(deSkill, 'dd')
-              console.log(posting)
-              console.log(arrayOfTags)
-              console.log(tags)
             }}
           >
             dd
@@ -525,13 +481,26 @@ const PostingModify = () => {
                 <Label>사용 기술 </Label>
               </div>
               <div style={{ width: '80%' }}>
-                <ReactSelect
-                  placeholder=""
-                  isClearable
-                  onChange={handleSkillInput}
-                  isSearchable={true}
-                  options={changeSelectForm(Skilldata)}
-                />
+                {deSkill && (
+                  <Autocomplete
+                    multiple
+                    limitTags={5}
+                    size="small"
+                    id="multiple-limit-tags"
+                    options={Skilldata}
+                    getOptionLabel={(option) => option.name}
+                    defaultValue={deSkill.map((e) => {
+                      return e.name
+                    })}
+                    onChange={(event, newValue) => {
+                      // console.log(newValue)
+                      // console.log(event.target)
+                      handleChangeSkill(newValue)
+                    }}
+                    renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
+                    sx={{ skillStyle, backgroundColor: '#fbfbfd' }}
+                  />
+                )}
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
@@ -561,7 +530,7 @@ const PostingModify = () => {
           <div style={{ display: 'flex', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}></div>
-              <div style={{ width: '80%', margin: 0 }}>{tags && tags}</div>
+              <div style={{ width: '80%' }}></div>
             </div>
             <div>
               <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '600px' }}>
@@ -662,14 +631,14 @@ const PostingModify = () => {
                   style={{ marginRight: '0px' }}
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
-                    // console.log(position.code)
-                    console.log(e.target.value)
-                    setPosting({ ...posting, leaderPosition: e.target.value })
+                    const position = JSON.parse(e.target.value)
+                    console.log(position.code)
+                    setPosting({ ...posting, leaderPosition: position.code })
                   }}
                   value={posting.leaderPosition && posting.leaderPosition}
                 >
                   {positionData.map((ele, i) => (
-                    <option key={i} value={ele.code}>
+                    <option key={i} value={JSON.stringify(ele)}>
                       {ele.name}
                     </option>
                   ))}
