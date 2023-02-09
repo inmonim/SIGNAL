@@ -6,6 +6,9 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,4 +26,26 @@ class ApplyRepositoryTest {
 
         assertEquals(apply.getMemo(), "testMemo1");
     }
+
+    @Test
+    @Transactional
+    void regist() {
+        for (int i = 1; i <= 100; i++) {
+            applyRepository.save(Apply.builder()
+                    .userSeq(i % 4 + 1)
+                    .postingSeq(458)
+                    .postingMeetingSeq(316)
+                    .content("페이지 네이션 테스트 " + i)
+                    .positionCode("PO100")
+                    .memo("test" + i)
+                    .build());
+        }
+    }
+
+    @Test
+    void findAll() {
+        List<Apply> applyList = applyRepository.findByPostingSeqAndApplyCodeNot(785, "AS100");
+        System.out.println("applyList.toString() = " + applyList.toString());
+    }
+
 }

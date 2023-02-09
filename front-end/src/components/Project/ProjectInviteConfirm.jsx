@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
-import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -37,6 +37,7 @@ const TeamSelectBtn = styled(Button)(({ theme, state, valid }) => ({
 
 function ProjectTeamSelectConfirmModal(props) {
   const [open, setOpen] = useState(false)
+  console.log(props)
 
   const handleOpen = (e) => {
     setOpen(true)
@@ -61,7 +62,6 @@ function ProjectTeamSelectConfirmModal(props) {
 
         console.log('팀원선택 put')
         console.log(props.postingSeq)
-        console.log(props.subject)
 
         const letterContent = `<div>팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요 (ง˙∇˙)ว</div>
 <br>
@@ -99,10 +99,12 @@ function ProjectTeamSelectConfirmModal(props) {
         confirmButtonText: '돌아가기',
       })
     }
+    location.reload()
   }
 
   return (
-    <CssVarsProvider>
+    // <CssVarsProvider>
+    <>
       <TeamSelectBtn state={props.apply.applyCode.name} valid={props.valid} onClick={handleOpen}>
         팀원 선택
       </TeamSelectBtn>
@@ -123,7 +125,8 @@ function ProjectTeamSelectConfirmModal(props) {
           </DialogActions>
         </div>
       </Dialog>
-    </CssVarsProvider>
+    </>
+    // </CssVarsProvider>
   )
 }
 export default ProjectTeamSelectConfirmModal

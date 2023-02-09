@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer>, JpaSpecificationExecutor<Project> {
     Optional<Project> findByPostingSeq(Integer postingSeq);
+
+    List<Project> findByProjectCode(String projectCode);
 }
