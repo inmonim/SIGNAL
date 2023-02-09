@@ -48,8 +48,8 @@ let drawingSize
 let mx, my, isPainting
 
 const projectMeetingSetting = () => {
-  // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
   pcConfig = {
