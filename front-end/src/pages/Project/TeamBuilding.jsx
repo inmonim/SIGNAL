@@ -76,7 +76,6 @@ function TeamSelect() {
 
   const [valid, setValid] = useState('true')
   const [confirmOpen, setConfirmOpen] = useState(false)
-
   const navigate = useNavigate()
 
   const handleConfirmOpen = () => {
