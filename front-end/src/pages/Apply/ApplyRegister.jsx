@@ -309,24 +309,13 @@ function ApplyRegister() {
   const handleApplySubmit = async () => {
     try {
       // 지원서 req
-      // const applyReq = {
-      //   applyAnswerList: answerList,
-      //   applyCareerList: careerPostFilter(careerList),
-      //   applyExpList: expPostFilter(expList),
-      //   applySkillList: skillPostFilter(arrayOfTags),
-      //   content,
-      //   postingMeetingSeq: parseInt(meetingSeq),
-      //   positionCode: getPositionCode(position),
-      //   userSeq,
-      // }
-
       const applyReq = {
         applyAnswerList: answerList,
         applyCareerList: careerPostFilter(careerList),
         applyExpList: expPostFilter(expList),
         applySkillList: skillPostFilter(arrayOfTags),
         content,
-        postingMeetingSeq: null,
+        postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
         userSeq,
       }
@@ -348,10 +337,6 @@ function ApplyRegister() {
       await api
         .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, applyReq)
         .then((res) => {
-          console.log('res.response.status')
-          console.log(res.response.status)
-          console.log('postingSeq')
-
           console.log('지원서 post')
           navigate('/signal')
         })
