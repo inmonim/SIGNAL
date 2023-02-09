@@ -11,6 +11,9 @@ public enum ResponseCode {
     REGIST_NOT_FOUNT("401", "등록하기 위한 조회 실패"),
     REGIST_ALREADY("402", "이미 등록된 정보"),
     REGIST_FAIL("403", "등록 실패"),
+    REGIST_BLACK("405", "블랙리스트에 등록된 유저"),
+    REGIST_DUPLICATE("406", "중복된 지원 등록"),
+    REGIST_LACK_HEART("407", "지원에 필요한 하트 부족"),
 
     MODIFY_NOT_FOUND("501", "수정하기 위한 정보 조회 실패"),
     MODIFY_FAIL("502", "수정 실패"),

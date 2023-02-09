@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
+import com.ssafysignal.api.project.entity.ProjectUserHeartLog;
+import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
 import com.ssafysignal.api.project.service.ProjectSettingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,6 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/project")
 public class ProjectSettingController {
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
     private final ProjectSettingService projectSettingService;
 
@@ -125,6 +129,27 @@ public class ProjectSettingController {
     }
 
     @Tag(name = "프로젝트")
+    @Operation(summary = "팀원 평가 항목 조회", description = "팀원 평가 항목을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팀원 평가 항목 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "팀원 평가 항목 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/evaluation/{projectSeq}")
+    private ResponseEntity<BasicResponse> findAllEvalution(@Parameter(name = "projectSeq", description = "프로젝트 Seq") @PathVariable(name = "projectSeq") Integer projectSeq) {
+        log.info("findAllEvalution - Call");
+
+        try {
+            FindEvaluationResponse findEvaluationResponse = projectSettingService.findAllEvalution(projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findEvaluationResponse));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "프로젝트")
     @Operation(summary = "프로젝트 평가 등록", description = "프로젝트 평가를 등록한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "프로젝트 평가 등록 완료"),
@@ -165,6 +190,21 @@ public class ProjectSettingController {
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+
+
+    @Tag(name = "프로젝트")
+    @Operation(summary = "프로젝트 유저 하트 로그 목록 조회", description = "프로젝트에 참여햔 유저의 하트 로그 목록을 조회한다")
+    @GetMapping("/heart/{projectUserSeq}")
+    private ResponseEntity<BasicResponse> findAllProjectUserHeartLog(@Parameter(name = "projectUserSeq", description = "하트 로그 목록 조회") @PathVariable(name = "projectUserSeq") Integer projectUserSeq) {
+        log.info("findAllProjectUserHeartLog - Call");
+
+        try {
+            List<ProjectUserHeartLog> projectUserHeartLogList = projectUserHeartLogRepository.findAllByProjectUserSeq(projectUserSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectUserHeartLogList));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 }
