@@ -137,13 +137,13 @@
   width: 30px;
 }
 
-/* .project-meeting-video-code-edit {
+.project-meeting-video-code-edit {
   border: 1px solid black;
   border-radius: 25px;
   height: 95%;
   width: 90%;
   margin: auto;
-} */
+} 
 
 .project-meeting-video-share {
   position: absolute;
@@ -154,7 +154,7 @@
   margin-left: 300px;
 }
 
-.project-meeting-video-sare-painht {
+.project-meeting-video-share-paint {
   position: absolute;
   border: 1px solid black;
   border-radius: 25px;

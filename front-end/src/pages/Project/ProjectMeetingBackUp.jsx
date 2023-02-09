@@ -1,3 +1,5 @@
+/*
+
 import React, { useState, useEffect } from 'react'
 import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
@@ -11,6 +13,12 @@ import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
+// import AceEditor from 'react-ace'
+
+// import { Ace, Range } from 'ace-builds'
+
+let ace
+let Range
 
 let myStream
 
@@ -47,9 +55,22 @@ let drawingSize
 
 let mx, my, isPainting
 
-const projectMeetingSetting = () => {
-  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+// ==================================================
+
+let filename // 서버에 저장되는 파일이름
+
+let fileExt
+
+let version // 수정 버전
+let content // 코드 내용
+let loaded
+
+let cursors
+let editor
+
+const initMeeting = () => {
+  // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
   pcConfig = {
@@ -99,7 +120,7 @@ const projectMeetingSetting = () => {
   })
 }
 
-function startPaint() {
+function initPainting() {
   canvas = document.querySelector('.canvas')
   ctx = canvas.getContext('2d')
   ctx.globalAlpha = 1
@@ -122,9 +143,101 @@ function startPaint() {
   isPainting = false
 }
 
+function initEditor() {
+  filename = roomId + '.txt'
+
+  if (typeof window !== 'undefined') {
+    ace = require('brace')
+  }
+  Range = ace.acequire('ace/range').Range
+  require(`brace/mode/text`)
+  require(`brace/theme/idle_fingers`)
+  editor = ace.edit('ace-editor')
+  editor.getSession().setMode(`ace/mode/text`)
+  editor.setTheme(`ace/theme/idle_fingers`)
+  editor.setFontSize(40)
+  // editor.getSession().setTabSize(4)
+  editor.setShowInvisibles(false)
+  editor.renderer.setShowPrintMargin(true)
+
+  loaded = false
+  cursors = {}
+  filename = roomId + '.txt'
+
+  function successCb(data) {
+    if (!data.success) {
+      console.error('Operation dropped')
+    } else {
+      version = data.version
+    }
+  }
+
+  function translatePosition(pos) {
+    let p = 0
+    for (let i = 0; i < pos.row; i++) p += editor.getSession().getLine(i).length + 1
+    p += pos.column
+    return p
+  }
+
+  editor.getSession().on('change', function (e) {
+    console.log(e.data.action)
+    let l = 0
+    let t = ''
+    switch (e.data.action) {
+      case 'insertText':
+        console.log(e.data.text)
+        socket.emit(
+          'post',
+          { version: version++, position: translatePosition(e.data.range.start), insert: e.data.text },
+          successCb
+        )
+        break
+
+      case 'removeText':
+        socket.emit(
+          'post',
+          { version: version++, position: translatePosition(e.data.range.start), remove: e.data.text.length },
+          successCb
+        )
+        break
+
+      case 'insertLines':
+        for (let i = 0; i < e.data.lines.length; i++) t += e.data.lines[i] + '\n'
+        socket.emit(
+          'post',
+          { version: version++, position: translatePosition(e.data.range.start), insert: t },
+          successCb
+        )
+        break
+
+      case 'removeLines':
+        for (let i = 0; i < e.data.lines.length; i++) l += e.data.lines[i].length + 1
+        socket.emit(
+          'post',
+          { version: version++, position: translatePosition(e.data.range.start), remove: l },
+          successCb
+        )
+        break
+    }
+  })
+
+  socket.emit('open', {
+    filename,
+    roomId,
+    userName: myName,
+  })
+  socket.emit('cursor', editor.selection.getCursor())
+  editor.getSession().addMarker(new Range(0, 0, 0, 0), 'ace_highlight', 'fullLine')
+  editor.getSession().selection.on('changeCursor', function (e) {
+    // console.log('changeCursor', editor.selection.getCursor()) // {row:0, column:0}
+    if (!loaded || typeof filename === 'undefined') return
+    socket.emit('cursor', editor.selection.getCursor())
+  })
+}
+
 function ProjectMeeting() {
   if (socket == null) {
-    projectMeetingSetting()
+    initMeeting()
 
     // 기존 방의 유저수와 방장이름 얻어옴
     socket.on('room_info', (data) => {
@@ -252,6 +365,73 @@ function ProjectMeeting() {
     // 다른사람이 전체를 지움
     socket.on('clear', function () {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
+    })
+
+    // ============================================================================================
+    socket.on('open', function (data) {
+      loaded = false
+      version = data.version
+      content = data.content
+      console.log('기존 내용 받아와서 세팅함')
+      editor.getSession().setValue(content, 2)
+
+      const ext = fileExt
+      if (typeof ext !== 'undefined' && typeof ext !== 'undefined') {
+        editor.getSession().setMode('ace/mode/' + ext)
+      } else {
+        editor.getSession().setMode('ace/mode/text')
+      }
+      console.log('Editor started for file ' + filename + ' with document version ' + version)
+      loaded = true
+    })
+
+    // 다른 유저의 커서가 변경시
+    socket.on('cursor', function (data) {
+      // console.log("cursor on", data.user)
+      if (typeof cursors[data.user] !== 'undefined') {
+        editor.getSession().removeMarker(cursors[data.user])
+      }
+
+      cursors[data.user] = editor
+        .getSession()
+        .addMarker(
+          new Range(data.cursor.row, data.cursor.column, data.cursor.row, data.cursor.column + 1),
+          'ace_cursor',
+          data.user
+        )
+    })
+
+    // 상대가 나가면 커서지움
+    socket.on('cursorremove', function (user) {
+      if (typeof cursors[user] === 'undefined') return
+      editor.getSession().removeMarker(cursors[user])
+      delete cursors[user]
+    })
+
+    // 이 코드는 안씀
+    socket.on('disconnect', function () {
+      for (const otheruser in cursors) {
+        // if (!cursors.hasOwnProperty(otheruser)) continue
+        editor.getSession().removeMarker(cursors[otheruser])
+        delete cursors[otheruser]
+      }
+    })
+
+    // 다른 유저가 코드편집
+    socket.on('operation', function (operation) {
+      applyOperation(operation)
+    })
+
+    // 코드에 문제생기면 롤백
+    socket.on('rollback', function (data) {
+      console.log('페이지 롤백함!')
+      loaded = false
+      version = data.version
+      content = data.content
+      editor.getSession().setValue(content, 1) // 코드 롤백
+      editor.moveCursorTo(data.cursor.row, data.cursor.column) // 커서 롤백
+      loaded = true
+      console.log('커서', data.cursor.row, data.cursor.column, '로 롤백함')
     })
   }
 
@@ -603,7 +783,7 @@ function ProjectMeeting() {
     shareVideo.srcObject = stream
   }
 
-  // 페인트보드===================================================================================
+  // ===================== 페인트 보드 ========================================================
   function stopPainting() {
     if (!isPainting) return
     console.log('그리기 종료')
@@ -668,6 +848,32 @@ function ProjectMeeting() {
     drawingColor = selectedColor
     ctx.strokeStyle = selectedColor
   }
+  // ======================================== 에디터 ===========================================================
+
+  function translatePositionBack(pos) {
+    const p = { row: 0, column: 0 }
+    for (let i = 0; editor.getSession().getLine(i).length < pos; i++) {
+      p.row++
+      pos -= editor.getSession().getLine(i).length + 1
+    }
+    p.column = pos
+    return p
+  }
+
+  // 다른사람의 편집
+  function applyOperation(operation) {
+    loaded = false
+    console.log('operation:', operation)
+    if (typeof operation.insert !== 'undefined') {
+      editor.getSession().insert(translatePositionBack(operation.position), operation.insert)
+    } else if (typeof operation.remove !== 'undefined') {
+      const start = translatePositionBack(operation.position)
+      const end = translatePositionBack(operation.position + operation.remove)
+      editor.getSession().remove(new Range(start.row, start.column, end.row, end.column))
+    }
+    version = operation.version + 1
+    loaded = true
+  }
 
   // =============================================================================================
   function setUserVideo() {
@@ -710,13 +916,15 @@ function ProjectMeeting() {
   }, [streams])
 
   useEffect(() => {
-    startPaint()
+    initPainting()
     canvas.addEventListener('mousemove', onMouseMove)
     canvas.addEventListener('mousedown', startPainting)
     canvas.addEventListener('mouseup', stopPainting)
     canvas.addEventListener('mouseleave', stopPainting)
     canvas.addEventListener('contextmenu', handleCM)
     // canvas.addEventListener('click', handleCanvasClick)
+
+    initEditor()
   }, [])
 
   useEffect(() => {
@@ -724,6 +932,8 @@ function ProjectMeeting() {
     drawingColor = color
     ctx.strokeStyle = color
   }, [color])
+  // const Ace = require('react-ace').default
+  // require('brace/mode/javascript')
 
   return (
     <div className="project-meeting-container">
@@ -744,187 +954,191 @@ function ProjectMeeting() {
         </VideoListSection>
 
         <CodeEditSection className="project-meeting-video-code-edit" mode={mode}>
-          <div style={{ width: '100%', height: '100%' }}> 코드편집</div>
-        </CodeEditSection>
-
-        <ShareSection className="project-meeting-video-share-section" mode={mode}>
-          <div className="project-meeting-video-share-palette">
-            <div className="project-meeting-video-share-palette2">
-              <div style={{ margin: '30px auto' }}>
-                <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
+          <div id="ace-editor" style={{ width: '1400px', height: '1400px' }}>
+            {}
+            </div>
+            </CodeEditSection>
+    
+            <ShareSection className="project-meeting-video-share-section" mode={mode}>
+              <div className="project-meeting-video-share-palette">
+                <div className="project-meeting-video-share-palette2">
+                  <div style={{ margin: '30px auto' }}>
+                    <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
+                  </div>
+                  <div style={{ textAlign: 'center', margin: '30px' }}>
+                    <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
+                  </div>
+                  <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
+                  <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
+                </div>
               </div>
-              <div style={{ textAlign: 'center', margin: '30px' }}>
-                <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
+              {paletteOpen ? (
+                <div className="project-meeting-video-share-color-palette">
+                  <Color onClick={() => changeColor('black')} color={'black'}></Color>
+                  <Color onClick={() => changeColor('white')} color={'white'}></Color>
+                  <Color onClick={() => changeColor('red')} color={'red'}></Color>
+                  <Color onClick={() => changeColor('blue')} color={'blue'}></Color>
+                </div>
+              ) : (
+                ''
+              )}
+              <div className="project-meeting-video-share">
+                <video style={{ width: '100%', height: '100%', borderRadius: '25px' }} autoPlay playsInline>
+                  비디오
+                </video>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
+              <div className="project-meeting-video-share-paint" style={{ border: '0.5px solid' }}>
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '25px',
+                  }}
+                >
+                  <canvas className="canvas"></canvas>
+                </div>
               </div>
-              <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
-              <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
+            </ShareSection>
+    
+            {chatOpen ? <Chatting key={100000}></Chatting> : ''}
+          </div>
+    
+          <div className="project-meeting-footer">
+            <div className="project-meeting-time">
+              <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
+            </div>
+            <div className="project-meeting-btn">
+              <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
+                <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
+                <div className="project-meeting-btn-meeting">회의실</div>
+              </div>
+              <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(1)}>
+                <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
+                <div className="project-meeting-btn-code-edit">코드 편집</div>
+                {}
+              </div>
+              <div className="project-meeting-btn-share-container" onClick={() => setMode(2)}>
+                <img src={Share} alt="" className="project-meeting-btn-share-icon" />
+                <div className="project-meeting-btn-share">화면 공유</div>
+                {}
+              </div>
+              <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
+                <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
+                <div className="project-meeting-btn-close">종료</div>
+              </div>
+            </div>
+    
+            <div className="project-meeting-footer-right">
+              {voice === false ? (
+                <div className="project-meeting-footer-right-novoice" onClick={handleToVoice}></div>
+              ) : (
+                <div className="project-meeting-footer-right-voice" onClick={handleToVoice}></div>
+              )}
+              {video === false ? (
+                <div className="project-meeting-footer-right-novideo" onClick={handleToVideo}></div>
+              ) : (
+                <div className="project-meeting-footer-right-video" onClick={handleToVideo}></div>
+              )}
+              <div className="project-meeting-footer-right-chat" onClick={() => setChatOpen(!chatOpen)}></div>
             </div>
           </div>
-          {paletteOpen ? (
-            <div className="project-meeting-video-share-color-palette">
-              <Color onClick={() => changeColor('black')} color={'black'}></Color>
-              <Color onClick={() => changeColor('white')} color={'white'}></Color>
-              <Color onClick={() => changeColor('red')} color={'red'}></Color>
-              <Color onClick={() => changeColor('blue')} color={'blue'}></Color>
-            </div>
-          ) : (
-            ''
-          )}
-          <div className="project-meeting-video-share">
-            <video style={{ width: '100%', height: '100%', borderRadius: '25px' }} autoPlay playsInline>
-              비디오
-            </video>
-          </div>
-          <div className="project-meeting-video-share-paint" style={{ border: '0.5px solid' }}>
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '25px',
-              }}
-            >
-              <canvas className="canvas"></canvas>
-            </div>
-          </div>
-        </ShareSection>
-
-        {chatOpen ? <Chatting key={100000}></Chatting> : ''}
-      </div>
-
-      <div className="project-meeting-footer">
-        <div className="project-meeting-time">
-          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
         </div>
-        <div className="project-meeting-btn">
-          <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
-            <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
-            <div className="project-meeting-btn-meeting">회의실</div>
-          </div>
-          <div className="project-meeting-btn-code-edit-container" onClick={() => setMode(1)}>
-            <img src={CodeEditIcon} alt="" className="project-meeting-btn-code-edit-icon" />
-            <div className="project-meeting-btn-code-edit">코드 편집</div>
-            {/* 고정 아니여도 됨 */}
-          </div>
-          <div className="project-meeting-btn-share-container" onClick={() => setMode(2)}>
-            <img src={Share} alt="" className="project-meeting-btn-share-icon" />
-            <div className="project-meeting-btn-share">화면 공유</div>
-            {/* 고정이여야함  absolute */}
-          </div>
-          <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
-            <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
-            <div className="project-meeting-btn-close">종료</div>
-          </div>
-        </div>
-
-        <div className="project-meeting-footer-right">
-          {voice === false ? (
-            <div className="project-meeting-footer-right-novoice" onClick={handleToVoice}></div>
-          ) : (
-            <div className="project-meeting-footer-right-voice" onClick={handleToVoice}></div>
-          )}
-          {video === false ? (
-            <div className="project-meeting-footer-right-novideo" onClick={handleToVideo}></div>
-          ) : (
-            <div className="project-meeting-footer-right-video" onClick={handleToVideo}></div>
-          )}
-          <div className="project-meeting-footer-right-chat" onClick={() => setChatOpen(!chatOpen)}></div>
-        </div>
-      </div>
-    </div>
-  )
-}
-export default ProjectMeeting
-
-const videobox = (props) => {
-  if (props.size === 1) {
-    return css`
-      margin: 15px 15px;
-      border: 1px solid black;
-      width: 1200px;
-      height: 650px;
-      border-radius: 25px;
-    `
-  } else if (props.size === 2) {
-    return css`
-      margin: auto;
-      border: 1px solid black;
-      width: 700px;
-      height: 650px;
-      border-radius: 25px;
-    `
-  } else if (props.size === 3) {
-    return css`
-      margin: 100px 50px 50px 50px;
-      border: 1px solid black;
-      width: 550px;
-      height: 500px;
-      border-radius: 25px;
-    `
-  } else {
-    return css`
-      margin: 15px 15px;
-      border: 1px solid black;
-      width: 500px;
-      height: 330px;
-      border-radius: 25px;
-    `
-  }
-}
-
-const VideoBox = styled.div`
-  ${videobox};
-`
-
-const colorBox = (props) => {
-  const color = props.color
-  return css`
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: ${color === 'white' ? '1px solid black' : ''};
-    margin: 15px 0px;
-    background-color: ${color === 'black'
-      ? '#000'
-      : color === 'white'
-      ? '#fff'
-      : color === 'red'
-      ? '#FF3333'
-      : '#0075FF'};
-    :hover {
-      cursor: pointer;
+      )
     }
-  `
-}
-const Color = styled.div`
-  ${colorBox}
-`
-
-const selectedColor = (props) => {
-  const color = props.color
-  return css`
-    border-radius: 20px;
-    background-color: ${color};
-    width: 80px;
-    height: 80px;
-    margin: auto;
-    cursor: pointer;
-  `
-}
-
-const SelectedColor = styled.div`
-  ${selectedColor}
-`
-
-const VideoListSection = styled.div`
-  ${videoList}
-`
-const CodeEditSection = styled.div`
-  ${codeEidt}
-`
-
-const ShareSection = styled.div`
-  ${share}
-`
+    export default ProjectMeeting
+    
+    const videobox = (props) => {
+      if (props.size === 1) {
+        return css`
+          margin: 15px 15px;
+          border: 1px solid black;
+          width: 1200px;
+          height: 650px;
+          border-radius: 25px;
+        `
+      } else if (props.size === 2) {
+        return css`
+          margin: auto;
+          border: 1px solid black;
+          width: 700px;
+          height: 650px;
+          border-radius: 25px;
+        `
+      } else if (props.size === 3) {
+        return css`
+          margin: 100px 50px 50px 50px;
+          border: 1px solid black;
+          width: 550px;
+          height: 500px;
+          border-radius: 25px;
+        `
+      } else {
+        return css`
+          margin: 15px 15px;
+          border: 1px solid black;
+          width: 500px;
+          height: 330px;
+          border-radius: 25px;
+        `
+      }
+    }
+    
+    const VideoBox = styled.div`
+      ${videobox};
+    `
+    
+    const colorBox = (props) => {
+      const color = props.color
+      return css`
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: ${color === 'white' ? '1px solid black' : ''};
+        margin: 15px 0px;
+        background-color: ${color === 'black'
+          ? '#000'
+          : color === 'white'
+          ? '#fff'
+          : color === 'red'
+          ? '#FF3333'
+          : '#0075FF'};
+        :hover {
+          cursor: pointer;
+        }
+      `
+    }
+    const Color = styled.div`
+      ${colorBox}
+    `
+    
+    const selectedColor = (props) => {
+      const color = props.color
+      return css`
+        border-radius: 20px;
+        background-color: ${color};
+        width: 80px;
+        height: 80px;
+        margin: auto;
+        cursor: pointer;
+      `
+    }
+    
+    const SelectedColor = styled.div`
+      ${selectedColor}
+    `
+    
+    const VideoListSection = styled.div`
+      ${videoList}
+    `
+    const CodeEditSection = styled.div`
+      ${codeEidt}
+    `
+    
+    const ShareSection = styled.div`
+      ${share}
+    `
+    
+*/
