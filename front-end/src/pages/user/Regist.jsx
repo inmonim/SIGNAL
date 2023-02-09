@@ -13,7 +13,6 @@ import SignalBtn from 'components/common/SignalBtn'
 import AlertModal from 'components/AlertModal'
 import api from 'api/Api'
 import { useNavigate } from 'react-router'
-import LoginModal from 'components/LoginModal'
 
 function Regist() {
   const [inputs, setInputs] = useState({
@@ -169,7 +168,6 @@ function Regist() {
   }
 
   const navigate = useNavigate()
-  const [loginOpen, setLoginOpen] = useState(false)
   const handleToLogin = () => {
     setAlertOpen(false)
     navigate('/')
