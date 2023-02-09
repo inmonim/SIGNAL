@@ -26,6 +26,8 @@ function signalDetail() {
   const [data, setData] = useState([])
   const [likes, setLikes] = useState(1)
   const [liked, setLiked] = useState(false)
+  const [ucc, setUcc] = useState()
+  // const aaaa = 'https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL'
   const handleClick = async () => {
     if (!liked) {
       try {
@@ -57,11 +59,21 @@ function signalDetail() {
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`).then((res) => {
       setData(res.data.body)
+      setUcc(res.data.body.uccUrl)
+      console.log(JSON.stringify(res.data.body))
     })
   }, [])
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
+        <button
+          onClick={() => {
+            setUcc('https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL')
+            console.log(ucc)
+          }}
+        >
+          d
+        </button>
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right' }}>
@@ -74,16 +86,13 @@ function signalDetail() {
         <div className="player-wrapper">
           <ReactPlayer
             className="react-player"
-            url={
-              'https://www.youtube.com/watch?v=qfVuRQX0ydQ&ab_channel=1theK%28%EC%9B%90%EB%8D%94%EC%BC%80%EC%9D%B4%29'
-            } // 플레이어 url
+            url={ucc} // 플레이어 url
             playing={true} // 자동 재생 on
             width="100%"
             muted={true} // 자동 재생 on
             controls={true} // 플레이어 컨트롤 노출 여부
             light={false} // 플레이어 모드
             pip={true} // pip 모드 설정 여부
-            poster={'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'} // 플레이어 초기 포스터 사진
           />
         </div>
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
