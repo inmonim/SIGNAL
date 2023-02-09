@@ -297,7 +297,7 @@ function PostingApply() {
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.state === '모집 중' ? (
                           <SignalBtn
                             onClick={() => {
                               navigate('/teambuilding', { state: { postingSeq: row.postingSeq } })
@@ -310,7 +310,7 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.state === '모집 중' ? (
                           <SignalBtn
                             onClick={() => {
                               navigate('/postingModify', { state: { postingSeq: row.postingSeq } })
@@ -323,7 +323,9 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.subject === ' ' || row.state === '모집 취소' ? (
+                          ''
+                        ) : (
                           <SignalBtn
                             onClick={() => {
                               const swalWithBootstrapButtons = Swal.mixin({
@@ -353,8 +355,6 @@ function PostingApply() {
                           >
                             삭제
                           </SignalBtn>
-                        ) : (
-                          ' '
                         )}
                       </TableCell>
                     </TableRow>
