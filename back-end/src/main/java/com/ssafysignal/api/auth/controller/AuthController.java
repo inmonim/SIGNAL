@@ -5,6 +5,7 @@ import com.ssafysignal.api.auth.dto.request.UserLoginRequest;
 import com.ssafysignal.api.auth.dto.response.LoginResponse;
 import com.ssafysignal.api.auth.service.AuthService;
 import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.exception.UnAuthException;
 import com.ssafysignal.api.global.jwt.JwtTokenUtil;
 import com.ssafysignal.api.global.jwt.TokenInfo;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -14,9 +15,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,13 +29,16 @@ import java.util.Map;
     @RestController
     @RequestMapping("/auth")
     public class AuthController {
-        private final AuthService authService;
-        private final JwtTokenUtil jwtTokenUtil;
+    private final AuthService authService;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    @Value("${server.host}")
+    private String host;
 
     @Tag(name = "인증")
     @Operation(summary = "로그인", description = "이메일 비밀번호를 통해 로그인한다.")
     @PostMapping("/login")
-    private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true)@RequestBody UserLoginRequest userLoginRequest) {
+    private ResponseEntity<BasicResponse> login(@Parameter(description = "로그인 정보", required = true) @RequestBody UserLoginRequest userLoginRequest) {
         log.info("login - Call");
 
         try {
@@ -41,43 +47,53 @@ import java.util.Map;
             LoginResponse loginResponse = authService.login(email, password);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
     
     @Tag(name = "인증")
     @Operation(summary = "재인증", description = "리프레시 토큰을 이용해 엑세스 토큰을 재발급한다.")
-    @PostMapping("/login/{refreshToken}")
-    private ResponseEntity<BasicResponse> reissue(@Parameter(description = "리프레시 토큰", required = true) @PathVariable("refreshToken") String refreshToken) {
+    @PostMapping("/refresh")
+    private ResponseEntity<BasicResponse> reissue(@RequestHeader(value = "RefreshToken",required = false) String refreshToken) {
         log.info("reissue - Call");
 
         try {
-            TokenInfo tokenInfo = authService.reissue(refreshToken);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, tokenInfo));
+            LoginResponse loginResponse = authService.reissue(refreshToken);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
+        } catch (UnAuthException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
 
-
-
     @Tag(name = "인증")
     @Operation(summary = "로그아웃", description = "사용자 Seq를 이용해 로그아웃한다.")
     @PostMapping("/logout")
-    private ResponseEntity<BasicResponse> logout(@RequestHeader("Authorization") String accessToken,
-                                                 @RequestHeader("RefreshToken") String refreshToken) {
+    private ResponseEntity<BasicResponse> logout(@RequestHeader(value = "Authorization", required = false) String accessToken,
+                                                 @RequestHeader(value = "RefreshToken", required = false) String refreshToken) {
         log.info("logout - Call");
         try {
-            String email = jwtTokenUtil.getUsername(accessToken.substring(7));
+            String email = jwtTokenUtil.getUsername(refreshToken.substring(7));
             authService.logout(TokenInfo.of(accessToken, refreshToken), email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+        } catch (UnAuthException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
@@ -93,8 +109,10 @@ import java.util.Map;
             authService.checkEmail(email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
-        }        
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, false));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
     }
 
     @Tag(name = "인증")
@@ -107,7 +125,9 @@ import java.util.Map;
             authService.checkNickname(nickname);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, false));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 
@@ -128,31 +148,34 @@ import java.util.Map;
     @Tag(name = "인증")
     @Operation(summary = "이메일 인증", description = "회원가입 사용자 이메일 인증 처리한다.")
     @GetMapping("/emailauth/{authCode}")
-    private ResponseEntity<BasicResponse> emailAuth(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode) {
+    private ResponseEntity<BasicResponse> emailAuth(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode,
+                                                    HttpServletResponse response) {
         log.info("emailAuth - Call");
 
         try {
             authService.emailAuth(authCode);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+            response.sendRedirect(host);
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
+        } finally {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         }
-
-        //이메일 인증 후 리다이렉트 해주기??
     }
 
     @Tag(name = "인증")
-    @Operation(summary = "비밀번호 찾기", description = "이메일로 비밀번호를 변경할 수 있는 링크를 전송한다.")
+    @Operation(summary = "비밀번호 찾기", description = "비밀번호 변경을 위한 이메일을 인증한다.")
     @PostMapping ("/password")
-    private ResponseEntity<BasicResponse> findPassword(@Parameter(description = "이메일", required = true) @RequestBody Map<String,Object> param) {
+    private ResponseEntity<BasicResponse> findPassword(@Parameter(description = "이메일", required = true) @RequestBody Map<String, Object> param,
+                                                       HttpServletResponse response) {
         log.info("findPassword - Call");
-        String email =(String) param.get("email");
+
         try {
+            String email = String.valueOf(param.get("email"));
             authService.findPassword(email);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, email));
+            response.sendRedirect(host);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (Exception e) {
@@ -161,23 +184,19 @@ import java.util.Map;
     }
 
     @Tag(name = "인증")
-    @Operation(summary = "임시 비밀번호 받기", description = "authCode 대조후 유효하면 임시 비밀번호 쏴주기")
+    @Operation(summary = "임시 비밀번호 받기", description = "authCode를 확인하고 해당되는 이메일로 임시비밀번호 생성해서 전송한다.")
     @GetMapping("/password/{authCode}")
-    private ResponseEntity<BasicResponse> getTempPassword(@Parameter(description = "인증 코드", required = true) @PathVariable String authCode) {
-        log.info("emailAuth - Call");
+    private ResponseEntity<BasicResponse> getPasswordByEmail(@Parameter(description = "인증 코드", required = true) @PathVariable("authCode") String authCode) {
+        log.info("getPasswordByEmail - Call");
 
         try {
-            authService.getTempPassword(authCode);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+            authService.getPasswordByEmail(authCode);
         } catch (NotFoundException e) {
-            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
+        } finally {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         }
-    }
-
-    // 토큰 추출
-    private String resolveToken(String token) {
-        return token.substring(7);
     }
 }

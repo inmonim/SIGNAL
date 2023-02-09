@@ -17,6 +17,7 @@ function Profile(profile) {
   const [options, setOptions] = useState([])
 
   const data = profile.profile
+  console.log(data)
 
   const handleToClose = () => {
     setOpenInputPositionModal(false)
@@ -98,7 +99,7 @@ function Profile(profile) {
               data.userSkillList.map((item, index) => (
                 <Avatar
                   className="my-profile-top-skill-list-item"
-                  src={process.env.REACT_APP_API_URL + item.ImgUrl}
+                  src={process.env.REACT_APP_API_URL + item.code.url}
                   key={index}
                 ></Avatar>
               ))}

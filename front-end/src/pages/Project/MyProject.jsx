@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import 'assets/styles/myproject.css'
 import Paging from 'components/Paging'
 import api from 'api/Api'
+import { Link } from 'react-router-dom'
 
 const Container = styled.section`
   padding: 80px 220px;
@@ -40,12 +41,20 @@ function MyProject() {
         <div className="project-list-container">
           {ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {
             return (
-              <div className="project-list-ing" key={i}>
-                <div className="project-list-img">
-                  <img src={noImage} alt="signal" />
-                </div>
-                <div className="project-list-subject">{v.subject}</div>
-              </div>
+              <>
+                <Link to="/project" state={{ projectSeq: v.projectSeq }}>
+                  <div className="project-list-ing" key={i}>
+                    <div className="project-list-img">
+                      <img
+                        className="project-list-img-item"
+                        src={process.env.REACT_APP_API_URL + v.projectImageUrl}
+                        alt="signal"
+                      />
+                    </div>
+                    <div className="project-list-subject">{v.subject}</div>
+                  </div>
+                </Link>
+              </>
             )
           })}
         </div>

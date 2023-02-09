@@ -3,21 +3,28 @@ package com.ssafysignal.api.profile.service;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.profile.dto.request.ProfilePositionRegistRequest;
+import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
 import com.ssafysignal.api.profile.dto.response.HeartLogResponse;
 import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
 import com.ssafysignal.api.profile.entity.*;
 import com.ssafysignal.api.profile.repository.*;
+import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.engine.jdbc.Size;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +45,7 @@ public class ProfileService {
                 .userCareerList(userCareerRepository.findByUserSeq(userSeq))
                 .userExpList(userExpRepository.findByUserSeq(userSeq))
                 .userPositionList(userPositionRepository.findByUserSeq(userSeq))
-                .userSkillList(userSkillRepository.findByUserSeq(userSeq))
+                .userSkillList(userSkillRepository.findByUserSeq(userSeq).stream().map(UserSkill::fromEntity).collect(Collectors.toList()))
                 .build();
     }
 
@@ -105,7 +112,7 @@ public class ProfileService {
     @Transactional
     public ProfileBasicResponse findAllSkill(Integer userSeq) throws RuntimeException {
         return ProfileBasicResponse.builder()
-                .userSkillList(userSkillRepository.findByUserSeq(userSeq))
+                .userSkillList(userSkillRepository.findByUserSeq(userSeq).stream().map(UserSkill::fromEntity).collect(Collectors.toList()))
                 .build();
 
     }
@@ -195,7 +202,7 @@ public class ProfileService {
         
         // param으로 들어온 수를 Integer 형태로 변환 후 값을 적용한다.
         Integer addHeart = Integer.valueOf(param.get("heartCnt").toString());
-        user.chargeHeart(userHeartCnt+addHeart);
+        user.setHeartCnt(userHeartCnt +addHeart);
         
         // userRep에 저장
         userRepository.save(user);
@@ -204,7 +211,7 @@ public class ProfileService {
         UserHeartLog userHeartLog = UserHeartLog.builder()
                 .userSeq(userSeq)
                 .heartCnt(addHeart)
-                .content("일단 테스트용")
+                .content("하트 충전")
                 .build();
 
         // UserHeartLog에 저장
@@ -214,9 +221,10 @@ public class ProfileService {
 
     // 하트 로그 조회
     @Transactional
-    public List<UserHeartLog> findAllUserHeartLog(Integer userSeq) {
-        List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq);
-        System.out.println(userHeartLogList);
-        return userHeartLogList;
+    public HeartLogAllResponse findAllUserHeartLog(Integer page,
+                                                   Integer size,
+                                                   Integer userSeq) {
+        Page<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.ASC, "userHeartLogSeq"));
+        return HeartLogAllResponse.fromEntity(userHeartLogList);
     }
 }

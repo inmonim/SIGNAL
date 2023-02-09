@@ -2,19 +2,23 @@
 th.MuiTableCell-root {
   font-size: 24px;
 }
-  
+
 /* 테이블 바디 */
 td.MuiTableCell-root {
   font-size: 20px;
   text-align: -webkit-center;
 }
 
-td.MuiTableCell-root.my-profile-table{
+th.MuiTableCell-root.my-profile-table-head {
+  font-size: 27px;
+}
+
+td.MuiTableCell-root.my-profile-table {
   height: 60px;
 }
 
-tr.MuiTableRow-root{
-  border-bottom: 1px solid #DDDBEC;
+tr.MuiTableRow-root {
+  border-bottom: 1px solid #dddbec;
   height: 62px;
 }
 

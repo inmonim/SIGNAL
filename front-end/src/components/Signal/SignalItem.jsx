@@ -13,8 +13,7 @@ export default function SignalItem({ signal }) {
       }}
       sx={{
         minWidth: 275,
-        mb: 2,
-        mr: 2,
+        m: 2,
         '&:hover': {
           boxShadow: '0 0 0 2px #bcb7d9',
           cursor: 'pointer',

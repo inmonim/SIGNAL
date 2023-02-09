@@ -3,9 +3,8 @@ import 'assets/styles/eval.css'
 import api from 'api/Api'
 import EvalQna from 'components/Project/EvalQna'
 
-function TeamEval() {
+function TeamEval({ projectSeq }) {
   const [member, setMember] = useState([])
-  const projectSeq = 721
 
   const [toUserSeq, setToUserSeq] = useState('')
   // location 에서 받아오기

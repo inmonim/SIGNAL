@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -300,12 +301,14 @@ public class ProfileController {
     @Tag(name = "마이프로필")
     @Operation(summary = "하트 로그 목록 조회", description = "하트 충전 및 사용 내력을 조회한다")
     @GetMapping("heart/{userSeq}")
-    private ResponseEntity<BasicResponse> findAllHeartLog(@Parameter(name="userSeq", description = "사용자의 seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+    private ResponseEntity<BasicResponse> findAllHeartLog(@Parameter(name="size", required = true) Integer size,
+                                                          @Parameter(name="page", required = true) Integer page,
+                                                          @Parameter(name="userSeq", description = "사용자의 seq", required = true) @PathVariable("userSeq") Integer userSeq) {
         log.info("findAllHeartLog - Call");
 
         try {
-            List<UserHeartLog> userHeartLogList = profileService.findAllUserHeartLog(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, HeartLogAllResponse.fromEntity(userHeartLogList)));
+            HeartLogAllResponse userHeartLogList = profileService.findAllUserHeartLog(page, size, userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, userHeartLogList));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

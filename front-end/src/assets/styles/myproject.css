@@ -63,6 +63,13 @@ hr {
   justify-content: center;
 }
 
+.project-list-img-item {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 5px;
+}
+
 .project-list-subject {
   width: 252px;
   height: 56px;

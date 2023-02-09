@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { remove, addCount, minusCount } from 'store/redux'
 import { Typography, Button } from '@mui/material'
-
+import SignalBtn from 'components/common/SignalBtn'
 function positionTodo(props) {
   const todolist = useSelector((state) => state.positionTodo)
   const dispatch = useDispatch()
@@ -11,8 +11,11 @@ function positionTodo(props) {
   return (
     <Box>
       {todolist.map((ele, idx) => (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }} key={idx}>
-          <Typography variant="h4"> {ele.text}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1em' }} key={idx}>
+          <Typography style={{ width: '30%' }} variant="h4">
+            {' '}
+            {ele.text}
+          </Typography>
           <Button
             onClick={() => {
               dispatch(minusCount(ele.id))
@@ -28,13 +31,13 @@ function positionTodo(props) {
           >
             +
           </Button>
-          <button
+          <SignalBtn
             onClick={() => {
               dispatch(remove(todolist[idx].id))
             }}
           >
             삭제
-          </button>
+          </SignalBtn>
         </Box>
       ))}
     </Box>

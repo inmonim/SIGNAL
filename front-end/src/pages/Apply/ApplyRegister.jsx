@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
+import { TextField, MenuItem, InputLabel, FormControl, Select, Chip } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
 // import { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-// import { Skilldata, getSkillCode } from 'data/Skilldata'
-import { Skilldata, getSkillCode } from 'data/Skilldata'
+import { Skilldata } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
 import QnAList from 'components/Apply/QnaList'
-import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
 import SignalBtn from 'components/common/SignalBtn'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -17,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import api from 'api/Api.js'
+import Swal from 'sweetalert2'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -32,11 +31,6 @@ const textAreaStyle = {
 function ApplyRegister() {
   // start >> parameter
 
-  // 1. 아래 default postingSeq 지우기
-  // 2. const postingSeq = location.state.postingSeq
-  // 3. import { useNavigate, useLocation } from 'react-router-dom'
-
-  // const postingSeq = location.state.postingSeq
   const location = useLocation()
   const userSeq = sessionStorage.getItem('userSeq')
   const postingSeq = location.state.postingSeq
@@ -55,14 +49,16 @@ function ApplyRegister() {
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
-  const [skillList, setSkillList] = useState([])
-  const [content, setContent] = useState([])
+  const [content, setContent] = useState('')
   const [questionList, setQuestionList] = useState([])
   const [answerList, setAnswerList] = useState([])
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
+  const [numberOfTags, setNumberOfTags] = useState(0)
+  const [arrayOfTags, addTag] = useState([])
+  // const [tag, setTag] = useState('')
 
   // ene >> useState
 
@@ -165,7 +161,7 @@ function ApplyRegister() {
 
   const skillPostFilter = (list) => {
     const skillArr = []
-    list.map((item) => skillArr.push(getSkillCode(item)))
+    list.map((item) => skillArr.push(item.value))
     return skillArr
   }
 
@@ -178,32 +174,37 @@ function ApplyRegister() {
 
   // start >> handle skill
 
-  const handleSkillInput = (value) => {
-    console.log(value)
-    // const skillArr = [...skillList, value]
-    // console.log(skillArr)
-    // const set = new Set(skillArr)
-    // const uniqueArr = Array.from(set)
-    // setSkillList(uniqueArr)
+  const handleSkillInput = (e) => {
+    console.log(e)
+    if (e === null) return
+    newTag({
+      label: e.label,
+      value: e.value,
+    })
   }
 
-  const handleSkillRemove = (id) => {
-    setSkillList(
-      skillList.filter((skill) => {
-        return skill !== id
-      })
-    )
+  const newTag = (tag) => {
+    console.log(tag)
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
+    addTag(uniqueTags)
   }
 
-  // start >> skill filter
-  // const skillSearchFilter = createFilterOptions({
-  //   matchFrom: 'start',
-  //   stringify: (option) => option.label,
-  // })
+  const tags = arrayOfTags.map((h, index) => (
+    <Chip
+      label={h.label}
+      value={h.value}
+      variant="outlined"
+      sx={{ fontSize: '20px', margin: '5px' }}
+      key={index}
+      onDelete={() => handleDelete(h)}
+    />
+  ))
 
-  // end >> skill filter
-
-  // end >> handle skill
+  const handleDelete = (h) => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
+  }
 
   // start >> handle career
 
@@ -306,35 +307,48 @@ function ApplyRegister() {
   // start >> post
 
   const handleApplySubmit = async () => {
-    const userSeq = 1
-    const postingSeq = location.state.postingSeq
     try {
-      const req = {
+      // 지원서 req
+      const applyReq = {
         applyAnswerList: answerList,
         applyCareerList: careerPostFilter(careerList),
         applyExpList: expPostFilter(expList),
-        applySkillList: skillPostFilter(skillList),
+        applySkillList: skillPostFilter(arrayOfTags),
         content,
         postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
         userSeq,
       }
-      console.log(JSON.stringify(req))
+
+      // 포지션 선택 X
+      if (applyReq.positionCode === 'error') {
+        Swal.fire('지원서가 완성되지 않았습니다', '포지션을 골라주세요', 'error')
+        throw new Error('포지션 선택안함')
+      }
+
+      // // 미팅 시간 선택X
+      // if (isNaN(applyReq.postingMeetingSeq)) {
+      //   Swal.fire('지원서가 완성되지 않았습니다', '사전미팅시간을 골라주세요', 'error')
+      //   throw new Error('미팅시간 선택안함')
+      // }
+
+      console.log(JSON.stringify(applyReq))
 
       await api
-        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, req)
+        .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, applyReq)
         .then((res) => {
           console.log(res)
         })
         .catch((err) => {
           console.log(err)
         })
+      console.log('postingSeq')
 
       console.log('지원서 post')
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
-    navigate('/')
   }
 
   // end >> post
@@ -412,36 +426,21 @@ function ApplyRegister() {
             </div>
           </div>
           <div className="apply-register-skill-section">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
               <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
                 <span className="apply-register-label">사용기술</span>
               </div>
-              <div>
-                <ReactSelect onChange={handleSkillInput} options={changeSelectForm(Skilldata)} isMulti />
-                {/* <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  sx={{ width: 300 }}
-                  options={Skilldata}
-                  getOptionLabel={(option) => option.label}
-                  filterOptions={skillSearchFilter}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      onKeyUp={(e) => {
-                        if (e.key === 'Enter') {
-                          handleSkillInput(e.target.value)
-                        }
-                      }}
-                      sx={inputStyle}
-                    />
-                  )} 
-                /> */}
+              <div className="apply-register-skill-select">
+                <ReactSelect
+                  placeholder=""
+                  isClearable
+                  onChange={handleSkillInput}
+                  isSearchable={true}
+                  options={changeSelectForm(Skilldata)}
+                />
               </div>
             </div>
-            <div style={{ display: 'inline-block', marginRight: '7px' }}>
-              <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
-            </div>
+            <div>{numberOfTags > 0 ? tags : ''}</div>
           </div>
           <div className="apply-register-career-exp-section">
             <div style={{ width: '50%' }}>

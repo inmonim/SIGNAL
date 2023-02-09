@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import heart from 'assets/image/heart.png'
+import HeartModal from './heartModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
@@ -32,6 +33,12 @@ function UserInfo() {
   const handleToClose = () => {
     setAlertOpen(false)
     setUserPwdOpen(false)
+    setHeartOpen(false)
+  }
+
+  const [heartOpen, setHeartOpen] = useState(false)
+  const handleToHeart = () => {
+    setHeartOpen(true)
   }
 
   const handleToMain = async () => {
@@ -79,16 +86,17 @@ function UserInfo() {
         <div className="my-user-nickname">{userInfo.nickname}</div>
         <div className="my-user-email">{userInfo.email}</div>
       </div>
-      <div className="my-user-heart">
+      <div className="my-user-heart" onClick={handleToHeart}>
         <img className="my-user-heart-img" src={heart} alt="" />
         <div className="my-user-heart-cnt">{userInfo.heartCnt}</div>
       </div>
+      <HeartModal open={heartOpen} onClose={handleToClose}></HeartModal>
       <div className="my-user-btn">
         <SignalBtn
           className="my-user-btn-modify"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           onClick={handleToModify}
         >
@@ -97,9 +105,9 @@ function UserInfo() {
         <UserModifyModal open={userModifyOpen} onClose={handleModifyClose}></UserModifyModal>
         <SignalBtn
           className="my-user-btn-pwd"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           sx={userModifyStyle}
           onClick={handleToPwd}
@@ -109,9 +117,9 @@ function UserInfo() {
         <UserPwdModal open={userPwdOpen} onClose={handleToClose}></UserPwdModal>
         <SignalBtn
           className="my-user-btn-delete"
-          sigwidth="100px"
-          sigheight="28px"
-          sigfontsize="15px"
+          sigwidth="120px"
+          sigheight="38px"
+          sigfontsize="19px"
           sigborderradius={24}
           sx={userDeleteStyle}
           onClick={handleToOut}

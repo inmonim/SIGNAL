@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import 'assets/font/font.css'
 import SignalBtn from './common/SignalBtn'
-import RegistModal from './RegistModal'
 import FindModal from './FindEmailPwdModal'
 import AlertModal from './AlertModal'
 
@@ -15,6 +14,7 @@ import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import api from 'api/Api'
+import { Link } from 'react-router-dom'
 
 const style = {
   width: 727,
@@ -47,16 +47,9 @@ const inputStyle = {
 }
 
 function LoginModal({ open, onClose }) {
-  const [regOpen, setRegOpen] = useState(false)
   const [findOpen, setFindOpen] = useState(false)
-  const handleRegOpen = () => {
-    setRegOpen(true)
-  }
   const handleFindOpen = () => {
     setFindOpen(true)
-  }
-  const handleRegClose = () => {
-    setRegOpen(false)
   }
   const handleFindClose = () => {
     setFindOpen(false)
@@ -78,7 +71,6 @@ function LoginModal({ open, onClose }) {
         })
       )
       .then((response) => {
-        console.log('로그인 성공')
         // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
         if (isAutoLogin) {
           localStorage.setItem('refreshToken', response.data.body.refreshToken)
@@ -92,9 +84,9 @@ function LoginModal({ open, onClose }) {
         onClose(onClose(true))
       })
       .catch((e) => {
-        setMsg('로그인 다시 시도!')
+        console.log(e)
+        setMsg('"이메일 인증" 또는 "계정"을 확인해주세요!')
         setAlertOpen(true)
-
         return e.message
       })
   }
@@ -206,18 +198,19 @@ function LoginModal({ open, onClose }) {
               <div className="login-under2">
                 <div style={{ fontSize: '22px', display: 'inline-block' }}>
                   계정이 없으신가요?
-                  <div
-                    style={{
-                      display: 'inline-block',
-                      margin: '0px 30px',
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                    onClick={handleRegOpen}
-                  >
-                    회원가입
-                  </div>
-                  <RegistModal open={regOpen} onClose={handleRegClose}></RegistModal>
+                  <Link to="/regist">
+                    <div
+                      style={{
+                        display: 'inline-block',
+                        margin: '0px 30px',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => onClose(true)}
+                    >
+                      회원가입
+                    </div>
+                  </Link>
                 </div>
               </div>
               <div className="login-btn">

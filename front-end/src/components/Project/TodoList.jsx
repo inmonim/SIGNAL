@@ -14,7 +14,7 @@ import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
 
-function TodoList() {
+function TodoList({ projectSeq }) {
   const today = moment(new Date()).format('YYYY-MM-DD')
   const [dateValue, setDateValue] = useState(today)
 
@@ -68,9 +68,7 @@ function TodoList() {
     MemberFetch()
   }, [])
 
-  const [tab, setTab] = useState(sessionStorage.getItem('userSeq'))
   const [userSeq, setUserSeq] = useState(sessionStorage.getItem('userSeq'))
-  const projectSeq = 721
   const regDt = dateValue
 
   const [data, setData] = useState('')
@@ -93,7 +91,6 @@ function TodoList() {
     }).then((res) => {
       console.log(res.data.body)
       console.log('userSeq:', userSeq)
-      console.log('tab:', tab)
       setData(res.data.body)
     })
   }, [flag, userSeq])
@@ -117,6 +114,11 @@ function TodoList() {
     })
   }
   AddArray()
+
+  // const [complAlertOpen, setComplAlertOpen] = useState(false)
+  // const handleToComplete = () => {
+  //   setComplAlertOpen(true)
+  // }
 
   const handleCompleteTodo = async (e) => {
     if (e.target.checked === true) {
@@ -157,19 +159,25 @@ function TodoList() {
     <>
       <div className="todo-person-tab-container">
         <div className="todo-person-tab-list">
-          {memberList.map((mem, index) => (
-            <div
-              key={mem.userSeq}
-              id={index}
-              className={`todo-person-tab ${userSeq === mem.userSeq ? 'active' : ''}`}
-              onClick={() => {
-                setTab(mem.userSeq)
-                setUserSeq(mem.userSeq)
-              }}
-            >
-              {mem.nickname}
-            </div>
-          ))}
+          {memberList.map((mem, index) => {
+            // if (index === 0) setUserSeq(mem.userSeq)
+            return (
+              <div
+                key={mem.userSeq}
+                id={index}
+                className={`todo-person-tab ${
+                  userSeq === mem.userSeq || (index === 0 && userSeq === sessionStorage.getItem('userSeq'))
+                    ? 'active'
+                    : ''
+                }`}
+                onClick={() => {
+                  setUserSeq(mem.userSeq)
+                }}
+              >
+                {mem.nickname}
+              </div>
+            )
+          })}
           <div className="todo-date">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
@@ -203,6 +211,7 @@ function TodoList() {
             )}
             <TodoPlusModal
               userSeq={userSeq}
+              projectSeq={projectSeq}
               open={openTodoPlus}
               onClose={handleToClose}
               handleFlag={handleFlag}
@@ -265,7 +274,6 @@ function TodoList() {
               <>
                 <div className="todo-completed-list-item" key={todo.todoSeq} id={todo.todoSeq}>
                   <FormControlLabel
-                    onChange={handleCompleteTodo}
                     control={
                       <Checkbox
                         id={todo.todoSeq}

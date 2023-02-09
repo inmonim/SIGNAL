@@ -6,11 +6,22 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { useLocation } from 'react-router-dom'
 import 'assets/styles/signaldetail.css'
 import api from 'api/Api.js'
+import { Document, Page } from 'react-pdf'
 
 function signalDetail() {
   const location = useLocation()
   const signalSeq = parseInt(location.state)
   console.log(signalSeq)
+  const [numPages, setNumPages] = useState(null)
+  const [pageNumber, setPageNumber] = useState(1)
+  const [pdfDocument] = useState(
+    process.env.REACT_APP_API_URL + '/static/ppt/c478da35-e08b-4335-b077-3426484ca8c9.pptx'
+  )
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages)
+  }
+
   // const signaldetailSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
   const [likes, setLikes] = useState(1)
@@ -87,6 +98,17 @@ function signalDetail() {
             {data.deployUrl}
           </div>
         </div>
+        <Document file={pdfDocument} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page pageNumber={pageNumber} />
+        </Document>
+        <p>
+          <span onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</span>
+          <span>
+            Page {pageNumber} of {numPages}
+          </span>
+
+          <span onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</span>
+        </p>
         <div className="apply-detail-content-section">
           <label>README</label>
           <div className="apply-detail-content">

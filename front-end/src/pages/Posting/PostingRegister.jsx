@@ -9,13 +9,13 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import Autocomplete from '@mui/material/Autocomplete'
+// import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 // import { ko } from 'date-fns/esm/locale'
 // import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
@@ -28,28 +28,30 @@ import { positionData } from 'data/Positiondata'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
+import Swal from 'sweetalert2'
+import ReactSelect from 'react-select'
+import { changeSelectForm } from 'utils/changeForm'
 
 const Container = styled.section`
   padding: 100px 10em;
 `
-const skillStyle = {
-  width: '100%',
-  maxwidth: '378px',
-  height: '42px',
-  padding: '0 14px',
-  border: '1px solid #d7e2eb',
-  borderradius: '4px',
-  boxsizing: 'border-box',
-  backgroundcolor: '#fbfbfd',
-  fontsize: '16px',
-  fontweight: '500',
-  lineheight: '1.6',
-  color: '#263747',
-  '& : hover': {
-    border: '1px solid #3396f4',
-    boxshadow: 'inset 0 0 0 1px#3396f4',
-  },
-}
+// const skillStyle = {
+//   width: '100%',
+//   height: '60px',
+//   padding: '0 14px',
+//   border: '1px solid #d7e2eb',
+//   borderradius: '4px',
+//   boxsizing: 'border-box',
+//   backgroundcolor: '#fbfbfd',
+//   fontsize: '16px',
+//   fontweight: '500',
+//   lineheight: '1.6',
+//   color: '#263747',
+//   '& : hover': {
+//     border: '1px solid #3396f4',
+//     boxshadow: 'inset 0 0 0 1px#3396f4',
+//   },
+// }
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -62,6 +64,7 @@ const Label = styled.h1`
   margin-right: 20px;
   display: flex;
   align-items: center;
+  color: #574b9f;
 `
 
 const inputStyle = {
@@ -70,46 +73,37 @@ const inputStyle = {
   width: 1,
 }
 
-const textAreaStyle = {
-  backgroundColor: '#f3f5f7',
-}
 const hunjae = new Date()
 const humjaetime = moment(hunjae).format('YYYY-MM-DD HH:mm:ss.SSS')
 const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
-
+const a = ['2']
+console.log(a === [])
 const PostingRegister = () => {
   const dispatch = useDispatch()
   // start >> useState
   // console.log(JSON.stringify(Skilldata))
+  // const today = dateNow.toISOString().slice(0, 10)
+  const navigate = useNavigate()
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
     userSeq: sessionStorage.getItem('userSeq'),
     subject,
-    leaderPosition: 'PO100',
     localCode: '11',
+    leaderPosition: 'PO100',
     fieldCode: 'FI100',
     isContact: true,
-    term: 10,
-    content: '공고 등록 테스트 본문',
-    postingEndDt: '2023-01-01 11:00:00.000',
-    level: 5,
-    postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
-    postingSkillList: ['WE100', 'WE101'],
+    term: 3,
+    content: '',
+    postingEndDt: humjaetime,
+    level: 1,
+    postingMeetingList: [],
+    postingSkillList: [],
     postingPositionList: [],
-    postingQuestionList: [
-      {
-        num: 1,
-        content: '질문 1',
-      },
-      {
-        num: 2,
-        content: '질문 2',
-      },
-    ],
+    postingQuestionList: [],
   })
   // const [profile, setProfile] = useState([])
 
@@ -127,16 +121,47 @@ const PostingRegister = () => {
   //     console.log(error)
   //   }
   // }
-
+  const [numberOfTags, setNumberOfTags] = useState(0)
+  const [arrayOfTags, addTag] = useState([])
+  const handleSkillInput = (e) => {
+    console.log(e)
+    if (e === null) return
+    newTag({
+      label: e.label,
+      value: e.value,
+    })
+  }
+  const newTag = (tag) => {
+    console.log(tag)
+    const set = new Set(arrayOfTags.concat(tag))
+    setNumberOfTags(set.size)
+    const uniqueTags = Array.from(set)
+    addTag(uniqueTags)
+  }
+  const tags = arrayOfTags.map((h, index) => (
+    <Chip
+      label={h.label}
+      value={h.value}
+      variant="outlined"
+      sx={{ fontSize: '20px', margin: '5px' }}
+      key={index}
+      onDelete={() => handleDelete(h)}
+    />
+  ))
+  const skillPostFilter = (list) => {
+    const skillArr = []
+    list.map((item) => skillArr.push(item.value))
+    setPosting({ ...posting, postingSkillList: skillArr })
+  }
   // end >> Fetch
 
   // start >> Data filter
-  const [Date, setDate] = useState('')
+  const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
+  const [errorBox, setErrorBox] = useState(false)
   // end >> Data filter
 
   // start >> handle position
-  const [leaderPosi, setLeaderPosi] = useState({ code: 'PO100', name: 'frontend' })
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
@@ -146,10 +171,10 @@ const PostingRegister = () => {
   // end >> handle skill
 
   // start >> handle career
-  const handleChangeSkill = (value) => {
-    const copy = value.map((ele) => ele.code)
-    setPosting({ ...posting, postingSkillList: copy })
-  }
+  // const handleChangeSkill = (value) => {
+  //   const copy = value.map((ele) => ele.code)
+  //   setPosting({ ...posting, postingSkillList: copy })
+  // }
   // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
@@ -216,11 +241,15 @@ const PostingRegister = () => {
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    try {
+    if (
+      posting.subject !== '' &&
+      posting.content !== '' &&
+      posting.postingMeetingList.length !== 0 &&
+      posting.postingSkillList.length !== 0 &&
+      posting.postingPositionList.length !== 0 &&
+      posting.postingQuestionList !== 0
+    ) {
       const config = { 'Content-Type': 'application/json' }
-
-      posting.leaderPosision = leaderPosi.code
-      console.log(posting)
 
       await api
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
@@ -233,15 +262,18 @@ const PostingRegister = () => {
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
-
+      navigate('/posting')
       // console.log('공고 post')
-    } catch (error) {
-      // console.log('에러')
+    } else {
+      setErrorBox(true)
+      window.scrollTo(0, 0)
+      Swal.fire({
+        title: '등록 실패',
+        text: '선택하지 않은 값이 있습니다.',
+        icon: 'error',
+        button: '예',
+      })
     }
-  }
-  const handleLeaderPositon = () => {
-    const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
-    setLeaderPosi({ ...posting, postingPositionList: copy })
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
@@ -255,7 +287,6 @@ const PostingRegister = () => {
     // postingFetch()
     // profileFetch()
     handlePositon()
-    handleLeaderPositon()
 
     // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
@@ -265,6 +296,11 @@ const PostingRegister = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
   }, [DateList])
+
+  useEffect(() => {
+    setPosting({ ...posting, postingMeetingList: DateList })
+    skillPostFilter(arrayOfTags)
+  }, [arrayOfTags])
 
   return (
     <Container>
@@ -281,6 +317,7 @@ const PostingRegister = () => {
               </div>
               <div style={{ width: '80%' }}>
                 <TextField
+                  error={errorBox && !posting.subject}
                   sx={inputStyle}
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -306,6 +343,7 @@ const PostingRegister = () => {
                       setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
+                    minDate={hunjae}
                   />
                 </LocalizationProvider>
               </div>
@@ -356,7 +394,7 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}>
-                <Label>진행 유형</Label>
+                <Label>진행 유형 </Label>
               </div>
               <div style={{ width: '80%' }}>
                 <FilterSelect
@@ -399,18 +437,80 @@ const PostingRegister = () => {
               </div>
             </div>
           </div>
-          {/* 팀장 포지션, 난이도 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}>
-                <Label>팀장 포지션</Label>
+                <Label>사용 기술 </Label>
               </div>
               <div style={{ width: '80%' }}>
+                <ReactSelect
+                  placeholder=""
+                  isClearable
+                  onChange={handleSkillInput}
+                  isSearchable={true}
+                  options={changeSelectForm(Skilldata)}
+                />
+              </div>
+            </div>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>화상미팅 예약</Label>
+              </div>
+              <div style={{ width: '70%' }}>
+                <Box>
+                  <DateSelect setDate={setDaily} />
+                  <button
+                    className="post-button-modi"
+                    onClick={() => {
+                      if (!DateList.includes(Daily) && Daily) {
+                        const copy = [...DateList]
+                        copy.push(Daily)
+                        setDateList(copy)
+                      }
+                    }}
+                  >
+                    시간 선택
+                  </button>
+                </Box>
+              </div>
+            </div>
+          </div>
+          {/* 여기는 사용기술 , 시간선택 */}
+          <div style={{ display: 'flex', marginLeft: '5em' }}>
+            <div className="phone-section" style={{ alignContent: 'flex-start' }}>
+              <div style={{ width: '20%' }}></div>
+              <div style={{ width: '80%', margin: 0 }}>{numberOfTags > 0 ? tags : ''}</div>
+            </div>
+            <div>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '6 00px' }}>
+                {DateList.map((ele, i) => (
+                  <Chip
+                    key={i}
+                    label={ele.slice(5, 16)}
+                    onDelete={() => {
+                      handleDelete(ele)
+                    }}
+                  />
+                ))}
+              </Stack>
+              <div className="email-section" style={{ marginLeft: '3em' }}>
+                <div style={{ width: '30%' }}></div>
+                <div style={{ width: '70%' }}></div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+            <div className="phone-section">
+              <div style={{ width: '20%' }}>
+                <Label>포지션 인원</Label>
+              </div>
+              <div style={{ width: '80%', display: 'flex' }}>
                 <FilterSelect
+                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
-                    setLeaderPosi({ code: position.code, name: position.name })
+                    setPosi({ code: position.code, name: position.name })
                   }}
                 >
                   {positionData.map((ele, i) => (
@@ -419,9 +519,18 @@ const PostingRegister = () => {
                     </option>
                   ))}
                 </FilterSelect>
+                <img
+                  style={{ marginTop: '7px', marginBottom: '7px' }}
+                  src={plusButton}
+                  alt="plusButton"
+                  className="plus-button"
+                  onClick={() => {
+                    dispatch(add(posi))
+                  }}
+                />
               </div>
             </div>
-            <div className="email-section " style={{ marginLeft: '3em' }}>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>
                 <Label>난이도</Label>
               </div>
@@ -441,110 +550,45 @@ const PostingRegister = () => {
               </div>
             </div>
           </div>
-
-          {/* 여기는 사용기술 , 시간선택 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
-            <div className="phone-section">
-              <div style={{ width: '20%' }}>
-                <Label>사용 기술</Label>
-              </div>
-              <div style={{ width: '80%' }}>
-                <Autocomplete
-                  multiple
-                  limitTags={5}
-                  size="small"
-                  id="multiple-limit-tags"
-                  options={Skilldata}
-                  getOptionLabel={(option) => option.name}
-                  onChange={(event, newValue) => {
-                    // console.log(newValue)
-                    // console.log(event.target)
-                    handleChangeSkill(newValue)
-                  }}
-                  renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                  sx={{ skillStyle, mb: 0, backgroundColor: '#fbfbfd' }}
-                />
-              </div>
-            </div>
-            <div className="email-section " style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>화상 미팅 예약</Label>
-              </div>
-              <div style={{ width: '70%' }}>
-                <div>
-                  <Box style={{ display: 'inline-flex' }}>
-                    <DateSelect setDate={setDate} style={{ width: '50%' }} />
-                    <button
-                      onClick={() => {
-                        if (!DateList.includes(Date)) {
-                          const copy = [...DateList]
-                          copy.push(Date)
-                          setDateList(copy)
-                        }
-                      }}
-                      style={{ width: '50%', marginLeft: '1em' }}
-                    >
-                      시간 선택
-                    </button>
-                  </Box>
-                </div>
-                <div style={{ width: '100%', marginTop: '0.5em' }}>
-                  <Stack direction="row" spacing={1} style={{ overflowX: 'scroll' }}>
-                    {DateList.map((ele, i) => (
-                      <Chip
-                        key={i}
-                        label={ele.slice(5, 16)}
-                        onDelete={() => {
-                          handleDelete(ele)
-                        }}
-                      />
-                    ))}
-                  </Stack>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 여기는 포지션인원 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
-            <div className="phone-section1" style={{ width: '93%' }}>
+          {/* 여기는 포지션인원 , 예상난이도 */}
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
+            <Box sx={{ width: '4.5%' }}></Box>
+            <div className="phone-section1">
               <div>
-                <div>
-                  <div className="career-label">
-                    <Label style={{ width: '10%' }}>포지션 인원</Label>
-                    <FilterSelect
-                      onChange={(e) => {
-                        // console.log(e.target.value)
-                        const position = JSON.parse(e.target.value)
-                        setPosi({ code: position.code, name: position.name })
-                      }}
-                      style={{ width: '90%' }}
-                    >
-                      {positionData.map((ele, i) => (
-                        <option key={i} value={JSON.stringify(ele)}>
-                          {ele.name}
-                        </option>
-                      ))}
-                    </FilterSelect>
-                    <img
-                      style={{ marginTop: '7px', marginBottom: '7px' }}
-                      src={plusButton}
-                      alt="plusButton"
-                      className="plus-button"
-                      onClick={() => {
-                        dispatch(add(posi))
-                      }}
-                    />
-                  </div>
-                  <hr style={{ marginBottom: '2em' }}></hr>
-                  <PositionTodo />
+                <div className="career-label">
+                  <div style={{ width: '20%' }}></div>
                 </div>
-                <CareerList
-                  careerList={careerList}
-                  onRemove={handleCareerRemove}
-                  onChange={handleCareerChange}
-                  key={careerList[0]}
-                ></CareerList>
+                <hr></hr>
+                <PositionTodo />
+                <div style={{ width: '80%', display: 'flex' }}></div>
+              </div>
+              <CareerList
+                careerList={careerList}
+                onRemove={handleCareerRemove}
+                onChange={handleCareerChange}
+                key={careerList[0]}
+              ></CareerList>
+            </div>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>팀장 포지션</Label>
+              </div>
+              <div style={{ width: '70%', display: 'flex' }}>
+                <FilterSelect
+                  style={{ marginRight: '0px' }}
+                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  onChange={(e) => {
+                    const position = JSON.parse(e.target.value)
+                    console.log(position.code)
+                    setPosting({ ...posting, leaderPosition: position.code })
+                  }}
+                >
+                  {positionData.map((ele, i) => (
+                    <option key={i} value={JSON.stringify(ele)}>
+                      {ele.name}
+                    </option>
+                  ))}
+                </FilterSelect>
               </div>
             </div>
           </div>
@@ -554,7 +598,7 @@ const PostingRegister = () => {
             <Label className="label">프로젝트 소개</Label>
             <div>
               <TextField
-                style={textAreaStyle}
+                error={errorBox && !posting.content}
                 fullWidth={true}
                 multiline={true}
                 minRows="5"
@@ -583,6 +627,7 @@ const PostingRegister = () => {
                 >
                   <div style={{ marginBottom: '2em' }}>
                     <FilterInput
+                      className={errorBox && posting.postingQuestionList.length === 0 ? 'active-warning' : ''}
                       placeholder="질문을 입력하세요 "
                       type="text"
                       value={todolist.text}
@@ -600,11 +645,9 @@ const PostingRegister = () => {
         </div>
 
         <div className="submit-button">
-          <Link to="/posting">
-            <button className="apply-button" onClick={handleApplySubmit}>
-              공고 등록
-            </button>
-          </Link>
+          <button className="apply-button" onClick={handleApplySubmit}>
+            공고 등록
+          </button>
         </div>
       </div>
     </Container>
@@ -627,6 +670,11 @@ const FilterSelect = styled.select`
   &:hover {
     border: 1px solid #848484;
     box-shadow: inset 0 0 0 1px#bcb7d9;
+  }
+  &.active-warning {
+    margin-bottom: 4px;
+    border: 1px solid #f44336;
+    box-shadow: inset 0 0 0 1px #ff77774d;
   }
 `
 export default PostingRegister

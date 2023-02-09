@@ -186,7 +186,7 @@ function Header() {
               <li style={{ display: 'flex', alignItems: 'center' }}>
                 <D.DropdownContainer>
                   <D.NavBtn onClick={nameHandler} ref={nameRef}>
-                    {sessionStorage.getItem('username')}님
+                    {sessionStorage.getItem('nickname')}님
                   </D.NavBtn>
                   <D.Down isDropped={nameIsOpen}>
                     <D.Ul>

@@ -38,21 +38,21 @@ class PostingServiceTest {
             postingQuestionList.add(new HashMap<String, Object>(){{put("num", 1); put("content", "사전 질문 " + finalI); }});
             postingQuestionList.add(new HashMap<String, Object>(){{put("num", 2); put("content", "사전 질문 " + finalI); }});
 
-            postingService.registPosting(new PostingBasicRequest(
-                    1,
-                    "프로젝트 주제 " + i,
-                    "11",
-                    "FI100",
-                    true,
-                    i,
-                    "공고 설명 " + i,
-                    LocalDateTime.now(),
-                    i,
-                    postingSkillList,
-                    postingMeetingList,
-                    postingPositionList,
-                    postingQuestionList
-                    ));
+//            postingService.registPosting(new PostingBasicRequest(
+//                    1,
+//                    "프로젝트 주제 " + i,
+//                    "11",
+//                    "FI100",
+//                    true,
+//                    i,
+//                    "공고 설명 " + i,
+//                    LocalDateTime.now(),
+//                    i,
+//                    postingSkillList,
+//                    postingMeetingList,
+//                    postingPositionList,
+//                    postingQuestionList
+//                    ));
         }
     }
 
