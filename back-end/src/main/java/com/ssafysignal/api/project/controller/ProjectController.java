@@ -3,6 +3,7 @@ package com.ssafysignal.api.project.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
 import com.ssafysignal.api.project.service.ProjectService;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -108,4 +111,5 @@ public class ProjectController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
 }

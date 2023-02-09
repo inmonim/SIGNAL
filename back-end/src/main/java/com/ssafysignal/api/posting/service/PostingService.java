@@ -12,10 +12,15 @@ import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
 import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.posting.repository.*;
+import com.ssafysignal.api.profile.entity.UserHeartLog;
+import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectSpecification;
+import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
+import com.ssafysignal.api.user.entity.User;
+import com.ssafysignal.api.user.repository.UserRepository;
 import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,9 +39,12 @@ import java.util.stream.Collectors;
 public class PostingService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;
     private final PostingSkillRepository postingSkillRepository;
     private final ApplyRepository applyRepository;
+    private final UserRepository userRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
 
     @Transactional
     public Integer countPosting() {
@@ -100,6 +108,14 @@ public class PostingService {
                 .term(10)
                 .build();
         projectRepository.save(project);
+
+        // 팀장 포지션 등록
+        projectUserRepository.save(ProjectUser.builder()
+                        .userSeq(postingRegistRequest.getUserSeq())
+                        .projectSeq(project.getProjectSeq())
+                        .isLeader(true)
+                        .positionCode(postingRegistRequest.getLeaderPosition())
+                        .build());
     }
 
     @Transactional(readOnly = true)
@@ -223,20 +239,31 @@ public class PostingService {
         Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        if (applySelectConfirmRequest.isSelect()) {
-            // 지원자 기준 '합격'상태로 변경
-            apply.setStateCode("PAS101");
-            // 작성자 기준 '확정'상태로 변경
-            apply.setApplyCode("AS101");
-        }
-        else {
-            // 지원자 기준 '지원취소'상태로 변경
-            apply.setStateCode("PAS104");
-            // 작성자 기준 '거절'상태로 변경
-            apply.setApplyCode("AS102");
-        }
-            
-    }
+                if (applySelectConfirmRequest.isSelect()) {
+                    // 지원자 기준 '합격'상태로 변경
+                    apply.setStateCode("PAS101");
+                    // 작성자 기준 '확정'상태로 변경
+                    apply.setApplyCode("AS101");
+
+                    // 하트 차감 및 하트 로그 작성
+                    User applyUser = apply.getUser();
+                    applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
+                    userRepository.save(applyUser);
+
+                    UserHeartLog userHeartLog = UserHeartLog.builder()
+                            .userSeq(applyUser.getUserSeq())
+                            .heartCnt(-100)
+                            .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
+                            .build();
+                    userHeartLogRepository.save(userHeartLog);
+
+                } else {
+                    // 지원자 기준 '지원취소'상태로 변경
+                    apply.setStateCode("PAS104");
+                    // 작성자 기준 '거절'상태로 변경
+                    apply.setApplyCode("AS102");
+                }
+            }
 
     @Transactional(readOnly = true)
     public List<PostingFindAllByUserSeq> findAllApplyPosting(Integer userSeq){

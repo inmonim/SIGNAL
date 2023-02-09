@@ -26,6 +26,8 @@ public class ProjectSpecification {
             query.distinct(true);
 
             Predicate projectList = criteriaBuilder.conjunction();
+            Join<Project, Posting> postingJoin = root.join("posting");
+            projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(postingJoin.get("postingCode"), "PPS102"));
             if (searchKey.containsKey("subject")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.like(root.get("subject"), "%" + searchKey.get("subject") + "%"));
             if (searchKey.containsKey("localCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("localCode"),(String)searchKey.get("localCode")));
             if (searchKey.containsKey("fieldCode")) projectList = criteriaBuilder.and(projectList, criteriaBuilder.equal(root.get("fieldCode"), (String)searchKey.get("fieldCode")));
