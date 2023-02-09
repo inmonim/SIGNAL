@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/board/qna/**","/board/qna").permitAll()
                 .antMatchers("/board/qna/**","/board/qna").hasAnyAuthority("USER","ADMIN")*/
 
-                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+//                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .anyRequest().permitAll()
 
                 .and()

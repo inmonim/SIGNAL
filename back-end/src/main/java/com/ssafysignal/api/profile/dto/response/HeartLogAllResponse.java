@@ -21,18 +21,9 @@ public class HeartLogAllResponse {
     private HeartLogAllResponse(final List<HeartLogResponse> heartLogList) {
         this.heartLogList = heartLogList;
     }
-    private Integer heartLogAllPage;
-    private Long heartLogTotalElements;
 
 
-    public static HeartLogAllResponse fromEntity(final Page<UserHeartLog> findHeartLogList) {
-        List<HeartLogResponse> heartLogList = findHeartLogList.stream()
-                .map(HeartLogResponse::fromEntity)
-                .collect(Collectors.toList());
-        HeartLogAllResponse heartLogAllResponse = new HeartLogAllResponse(heartLogList);
-        heartLogAllResponse.heartLogTotalElements = findHeartLogList.getTotalElements();
-        heartLogAllResponse.heartLogAllPage = findHeartLogList.getTotalPages();
-
-        return heartLogAllResponse;
+    public static HeartLogAllResponse fromEntity(final List<UserHeartLog> findHeartLogList) {
+        return new HeartLogAllResponse(findHeartLogList.stream().map(HeartLogResponse::fromEntity).collect(Collectors.toList()));
     }
 }
