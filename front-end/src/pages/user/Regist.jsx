@@ -25,10 +25,10 @@ function Regist() {
   })
 
   const text = `<div style="font-size:34px; text-align: center;">- 이용약관 -</div><br>
-  1. Signal의 모든 서비스는 회원가입과 로그인이 정상적으로 이루어진 사용자에게만 제공됩니다.  <br>
+<div style="line-height:30px">1. Signal의 모든 서비스는 회원가입과 로그인이 정상적으로 이루어진 사용자에게만 제공됩니다.  <br>
 2. 회원가입 시 입력된 개인정보 및 암호화된 비밀번호는 사이트가 보관합니다.<br>
 3. 제공된 모든 개인정보는 서비스 제공 목적 이외의 어떠한 목적으로도 사용되지 않습니다.<br>
-4. 회원탈퇴 시 결제 내역을 포함한 모든 정보는 삭제됩니다.`
+4. 회원탈퇴 시 결제 내역을 포함한 모든 정보는 삭제됩니다.</div>`
 
   const [value, setValue] = useState(null)
   const [alertOpen, setAlertOpen] = useState(false)
@@ -323,23 +323,6 @@ function Regist() {
     </div>
   )
 }
-
-// const inputStyle = {
-//   backgroundColor: '#DDDBEC',
-//   width: '549px',
-//   margin: '18px 0px',
-//   '& .MuiInput-underline:after': {
-//     borderBottomColor: 'green',
-//   },
-//   '& label.Mui-focused': {
-//     color: '#574b9f',
-//   },
-//   '& .MuiOutlinedInput-root': {
-//     '&.Mui-focused fieldset': {
-//       // borderColor: '#574b9f',
-//     },
-//   },
-// }
 
 const RegistInput = styled(TextField)({
   width: '549px',
