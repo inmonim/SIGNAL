@@ -320,8 +320,8 @@ public class ApplyService {
     }
 
     @Transactional(readOnly = true)
-    public List<ApplyApplyerFindResponse> findAllApplyApplyer(int userSeq, int page, int size){
+    public List<Apply> findAllApplyApplyer(int userSeq, int page, int size){
         List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
-        return ApplyApplyerFindResponse.toList(applyList);
+        return applyList;
     }
 }

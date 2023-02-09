@@ -37,7 +37,7 @@ public class ApplyApplyerFindResponse {
         return ApplyApplyerFindResponse.builder()
                 .applySeq(apply.getApplySeq())
                 .subject(apply.getPosting().getProject().getSubject())
-                .meetingDt(apply.getPostingMeeting().getMeetingDt())
+                .meetingDt(apply.getPostingMeeting() != null ? apply.getPostingMeeting().getMeetingDt() : null)
                 .stateCode(apply.getState())
                 .build();
     }
