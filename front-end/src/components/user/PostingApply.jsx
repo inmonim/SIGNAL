@@ -35,10 +35,10 @@ function PostingApply() {
         .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + applyPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log('applyListFetch', res.data.body)
+          // console.log('applyListFetch', res.data.body)
           setRowsApplyForm(res.data.body)
         })
-      console.log('apply', applyCount)
+      // console.log('apply', applyCount)
     } catch (error) {
       console.log(error)
     }
@@ -48,13 +48,13 @@ function PostingApply() {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/posting/post/count/' + userSeq).then((res) => {
         setPostingCount(res.data.body.count)
-        console.log('posting', postingCount)
+        // console.log('posting', postingCount)
       })
       await api
         .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + postingPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log('postingListFetch', res.data.body)
+          // console.log('postingListFetch', res.data.body)
           setRowsPostingForm(res.data.body.postingList)
         })
     } catch (error) {
@@ -81,7 +81,7 @@ function PostingApply() {
     })
   })
   const applyRowLen = applyRows.length
-  console.log(applyRowLen)
+  // console.log(applyRowLen)
 
   if (applyRowLen !== size && applyRowLen !== 0) {
     for (let i = 0; i < size - applyRowLen; i++)
@@ -92,7 +92,6 @@ function PostingApply() {
         meetingDt: ' ',
       })
   }
-  console.log(applyRows)
 
   const postingRows = []
   Array.from(rowsPostingForm).forEach((item) => {
@@ -114,6 +113,7 @@ function PostingApply() {
   }
 
   const handleProjectAccept = async (applySeq) => {
+    console.log(applySeq)
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
@@ -121,19 +121,23 @@ function PostingApply() {
       })
       console.log('지원서 확정')
       setChange(!change)
+      location.reload()
     } catch (error) {
       console.log(error)
     }
   }
 
   const handleProjectRefuse = async (applySeq) => {
+    console.log(applySeq)
+
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
-        select: true,
+        select: false,
       })
       console.log('지원서 거절')
       setChange(!change)
+      location.reload()
     } catch (error) {
       console.log(error)
     }
@@ -151,7 +155,7 @@ function PostingApply() {
   const handlePostingDelete = async (postingSeq) => {
     try {
       await api.delete(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      console.log('공고 취소')
+      // console.log('공고 취소')
     } catch (error) {
       console.log(error)
     }
@@ -213,7 +217,7 @@ function PostingApply() {
                         <TableCell align="center">{row.state}</TableCell>
                         <TableCell align="left">{row.subject}</TableCell>
                         <TableCell align="center">
-                          {row.subject !== ' ' ? (
+                          {row.state === '심사중' ? (
                             <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
                           ) : (
                             ' '
@@ -221,7 +225,7 @@ function PostingApply() {
                         </TableCell>
                         <TableCell align="center">{row.meetingDt}</TableCell>
                         <TableCell align="center">
-                          {row.state === '합격' ? (
+                          {row.state === '선발' ? (
                             <div
                               style={{
                                 display: 'flex',
@@ -253,7 +257,7 @@ function PostingApply() {
                           {row.subject !== ' ' ? (
                             <SignalBtn
                               onClick={() => {
-                                navigate('/applydetail', { state: { applySeq: row.applySeq } })
+                                navigate('/applydetail', { state: { applySeq: row.applySeq, stateCode: row.state } })
                               }}
                             >
                               조회
