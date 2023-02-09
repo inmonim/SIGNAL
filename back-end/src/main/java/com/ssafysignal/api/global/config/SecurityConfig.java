@@ -2,6 +2,7 @@ package com.ssafysignal.api.global.config;
 
 import com.ssafysignal.api.global.jwt.*;
 import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
+import com.ssafysignal.api.global.redis.RefreshTokenRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ public class SecurityConfig {
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailService customUserDetailService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final JwtExceptionFilter jwtExceptionFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -81,7 +83,7 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable();
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService, logoutAccessTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil, customUserDetailService, logoutAccessTokenRedisRepository, refreshTokenRedisRepository), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();

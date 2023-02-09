@@ -1,6 +1,7 @@
 package com.ssafysignal.api.global.jwt;
 
 import com.ssafysignal.api.global.redis.LogoutAccessTokenRedisRepository;
+import com.ssafysignal.api.global.redis.RefreshTokenRedisRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailService customUserDetailService;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
+    private final RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -36,13 +38,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // accessToken 이 있고 redis 에 accessToken 이 존재하지 않을 때 = 로그아웃 상태
         if (accessToken != null) {
             try {
-                if (logoutAccessTokenRedisRepository.existsById(accessToken)){
-                    throw new JwtException("중복 로그인");
-                }
-                
                 // 토큰의 정보를 이용해 사용자 정보 생성
                 String username = jwtTokenUtil.getUsername(accessToken);
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
+
+                if (logoutAccessTokenRedisRepository.existsById(accessToken) || !refreshTokenRedisRepository.existsById(username)){
+                    throw new JwtException("중복 로그인 또는 토큰은 유효하지만 접근을 허용하지 않음");
+                }
 
                 // 사용자 정보와 토큰을 이용해 토큰 검증
                 if (jwtTokenUtil.validateToken(accessToken, userDetails)) {
