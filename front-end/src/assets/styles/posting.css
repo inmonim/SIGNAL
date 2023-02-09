@@ -1,0 +1,40 @@
+.post-button {
+  color: white;
+  background-color: #574b9f;
+  border: 1px solid white;
+  padding: 10px 10px;
+  border-radius: 8px;
+  width: 10%;
+  transition-duration: 0.5s;
+  text-align: center;
+  font-size: 17px;
+}
+.post-button:hover {
+  color: #574b9f;
+  background-color: white;
+  border: 1px solid #574b9f;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.submit-button {
+  text-align: center;
+}
+.css-13xfq8m-MuiTabPanel-root {
+  padding: 0px;
+}
+.post-button-modi {
+  color: white;
+  background-color: #574b9f;
+  border: 1px solid white;
+  border-radius: 8px;
+  transition-duration: 0.5s;
+  text-align: center;
+  font-size: 17px;
+}
+.post-button-modi:hover {
+  color: #574b9f;
+  background-color: white;
+  border: 1px solid #574b9f;
+  border-radius: 8px;
+  cursor: pointer;
+}

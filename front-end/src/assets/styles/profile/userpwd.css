@@ -1,0 +1,26 @@
+.user-pwd-main{
+  text-align: center;
+}
+
+.user-pwd-title{
+  text-align: center;
+  font-size: 47px;
+  font-weight: bold;
+  padding: 50px 0px;
+}
+
+.user-pwd-input-container{
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.user-pwd-input{
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.user-pwd-input-label{
+  margin-right: 10px;
+}

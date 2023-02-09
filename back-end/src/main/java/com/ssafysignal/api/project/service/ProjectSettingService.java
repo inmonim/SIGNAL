@@ -9,6 +9,7 @@ import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
@@ -18,14 +19,13 @@ import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +40,14 @@ public class ProjectSettingService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ProjectEvaluationRepository projectEvaluationRepository;
+    private final ProjectEvaluationQuestionRepository projectEvaluationQuestionRepository;
     private final ProjectPositionRepository projectPositionRepository;
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
+
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
+
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
 
@@ -128,7 +131,7 @@ public class ProjectSettingService {
                         .userSeq(projectUser.getUserSeq())
                         .projectSeq(projectUser.getProjectSeq())
                         .build());
-        
+
         // 현재 프로젝트 인원에서 제거
         projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
                 .projectUserSeq(projectUserSeq)
@@ -136,6 +139,7 @@ public class ProjectSettingService {
                 .content("팀 퇴출로 인한 보증금 몰수")
                 .build());
 
+        // 현재 프로젝트 인원에서 제거
         projectUserRepository.deleteById(projectUserSeq);
         
         // 포지션 인원 맞춤 (제거된 인원 포지션 -1)
@@ -166,5 +170,16 @@ public class ProjectSettingService {
                         .build());
             }
         } else throw new NotFoundException(ResponseCode.REGIST_ALREADY);
+    }
+
+    @Transactional(readOnly = true)
+    public FindEvaluationResponse findAllEvalution(Integer projectSeq) {
+
+        Project project = projectRepository.findById(projectSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        List<ProjectEvaluationQuestion> projectEvaluationQuestionList = projectEvaluationQuestionRepository.findAll();
+
+        return FindEvaluationResponse.fromEntity(project.getWeekCnt(), projectEvaluationQuestionList);
     }
 }

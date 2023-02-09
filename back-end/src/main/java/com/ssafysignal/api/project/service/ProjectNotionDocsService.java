@@ -6,6 +6,7 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.entity.ProjectNotionDocs;
 import com.ssafysignal.api.project.repository.ProjectNotionDocsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,14 @@ public class ProjectNotionDocsService {
     private final ProjectNotionDocsRepository projectNotionDocsRepository;
 
     @Transactional
-    public void registNotionDocs(int projectSeq, String url, String subject){
+    public void registNotionDocs(int projectSeq, String url, Integer num){
+        if (projectNotionDocsRepository.findByProjectSeqAndNum(projectSeq, num) != null) {
+            projectNotionDocsRepository.deleteByProjectSeqAndNum(projectSeq, num);
+        }
         ProjectNotionDocs projectNotionDocs = ProjectNotionDocs.builder()
                 .projectSeq(projectSeq)
                 .url(url)
-                .subject(subject)
+                .num(num)
                 .build();
         projectNotionDocsRepository.save(projectNotionDocs);
     }
@@ -42,8 +46,8 @@ public class ProjectNotionDocsService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProjectNotionDocs> FindAllNotiondocs(int projectSeq){
-        List<ProjectNotionDocs> projectNotionDocsList = projectNotionDocsRepository.findByProjectSeq(projectSeq);
+    public ProjectNotionDocs findNotiondocs(int projectSeq, int num){
+        ProjectNotionDocs projectNotionDocsList = projectNotionDocsRepository.findByProjectSeqAndNum(projectSeq, num);
         return projectNotionDocsList;
     }
 }

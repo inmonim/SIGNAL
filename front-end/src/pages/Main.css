@@ -1,0 +1,67 @@
+.MainPage {
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  padding-top: 150px;
+}
+
+.right {
+  display: flex;
+  padding-top: 150px;
+}
+
+.img-wrap {
+  padding-bottom: 140px;
+}
+
+.text-item {
+  font-size: 4.948vw;
+  text-align: center;
+  letter-spacing: 10px;
+  padding: 17px 0px;
+}
+
+.btn-item {
+  text-align: center;
+  padding: 97.11px 0px;
+  display: flex;
+  justify-content: center;
+}
+
+.slide-navigation button:nth-child(1) {
+  display: none;
+}
+
+.slide-navigation button:nth-last-child(1) {
+  display: none;
+}
+
+.slide-navigation button {
+  cursor: pointer;
+  width: 40px; /* 사이즈 */
+  height: 40px; /* 사이즈 */
+  border-top: 5px solid #000; /* 선 두께 */
+  border-right: 5px solid #000; /* 선 두께 */
+  border-bottom: 0px;
+  border-left: 0px;
+  transform: rotate(135deg); /* 각도 */
+  background-color: rgba(0, 0, 0, 0.0);
+  font-size: 0px;
+  opacity: 70%;
+}
+
+.slide-navigation {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  bottom: 50px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slide-navigation button:disabled {
+  border-top: 5px solid #796FB2; /* 선 두께 */
+  border-right: 5px solid #796FB2; /* 선 두께 */
+}
