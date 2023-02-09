@@ -163,7 +163,7 @@ public class ProjectSettingService {
                 ProjectSpecification.byFromUserSeqAndToUserSeq(
                         projectEvaluationRegistRequest.getFromUserSeq(),
                         projectEvaluationRegistRequest.getToUserSeq(),
-                        projectEvaluationRegistRequest.getTerm())).isEmpty()){
+                        projectEvaluationRegistRequest.getWeekCnt())).isEmpty()){
 
             for (Map<String, Integer> score : projectEvaluationRegistRequest.getScoreList()){
 
@@ -171,7 +171,7 @@ public class ProjectSettingService {
                         .projectSeq(projectEvaluationRegistRequest.getProjectSeq())
                         .fromUserSeq(projectEvaluationRegistRequest.getFromUserSeq())
                         .toUserSeq(projectEvaluationRegistRequest.getToUserSeq())
-                        .termCnt(projectEvaluationRegistRequest.getTerm())
+                        .weekCnt(projectEvaluationRegistRequest.getWeekCnt())
                         .num(score.get("num"))
                         .score(score.get("score"))
                         .build());
@@ -187,6 +187,6 @@ public class ProjectSettingService {
 
         List<ProjectEvaluationQuestion> projectEvaluationQuestionList = projectEvaluationQuestionRepository.findAll();
 
-        return FindEvaluationResponse.fromEntity(project.getWeekCnt(), projectEvaluationQuestionList);
+        return FindEvaluationResponse.fromEntity(project, projectEvaluationQuestionList);
     }
 }
