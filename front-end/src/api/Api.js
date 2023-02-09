@@ -20,7 +20,6 @@ api.interceptors.request.use(
 )
 
 api.interceptors.response.use(async function (response) {
-  console.log(response)
   const { config, data } = response
   if (data.header.code === '801') {
     const originalRequest = config
@@ -53,6 +52,7 @@ api.interceptors.response.use(async function (response) {
         }
       })
   }
+  return response
 })
 
 export default api

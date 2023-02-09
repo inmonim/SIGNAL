@@ -71,7 +71,6 @@ function LoginModal({ open, onClose }) {
         })
       )
       .then((response) => {
-        console.log('로그인 성공')
         // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
         if (isAutoLogin) {
           localStorage.setItem('refreshToken', response.data.body.refreshToken)
@@ -85,9 +84,9 @@ function LoginModal({ open, onClose }) {
         onClose(onClose(true))
       })
       .catch((e) => {
+        console.log(e)
         setMsg('"이메일 인증" 또는 "계정"을 확인해주세요!')
         setAlertOpen(true)
-
         return e.message
       })
   }
