@@ -345,7 +345,7 @@ function ApplyRegister() {
       console.log('postingSeq')
 
       console.log('지원서 post')
-      navigate('/')
+      navigate('/signal')
     } catch (error) {
       console.log(error)
     }
