@@ -808,7 +808,9 @@ function ProjectMeeting() {
           </div>
         </ShareSection>
 
-        {chatOpen ? <Chatting key={100000} sendMessage={sendMessage} ref={chatting}></Chatting> : ''}
+        <ChatSection chatOpen={chatOpen}>
+          <Chatting key={100000} sendMessage={sendMessage} ref={chatting}></Chatting>
+        </ChatSection>
       </div>
 
       <div className="project-meeting-footer">
@@ -944,4 +946,12 @@ const CodeEditSection = styled.div`
 
 const ShareSection = styled.div`
   ${share}
+`
+const chat = (props) => {
+  return css`
+    display: ${props.chatOpen ? 'block' : 'none'};
+  `
+}
+const ChatSection = styled.div`
+  ${chat}
 `

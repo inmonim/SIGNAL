@@ -13,7 +13,7 @@ const Chatting = forwardRef((props, ref) => {
       const chattArr = [...chatList]
       chattArr.push({
         flag: false,
-        message: data.message,
+        message: '[' + data.userName + '] : ' + data.message,
       })
       setChatList(chattArr)
     },
@@ -22,9 +22,7 @@ const Chatting = forwardRef((props, ref) => {
   const [chatList, setChatList] = useState([])
 
   const [message, setMessage] = useState('')
-  useEffect(() => {
-    console.log('메시지 초기화됨')
-  }, [])
+  useEffect(() => {}, [])
 
   // 메시지 입력
   const handleMessageSend = () => {
