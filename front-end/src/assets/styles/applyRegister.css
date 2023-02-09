@@ -203,6 +203,11 @@
   justify-content: center;
 }
 
+.apply-modify-skill-select {
+  width: 300px;
+}
+
+
 /* ----register---- */
 .apply-register-container {
   width: 900px;

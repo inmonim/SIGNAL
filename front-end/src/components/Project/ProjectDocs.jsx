@@ -3,6 +3,7 @@ import 'assets/styles/project/projectdocs.css'
 import plusBtn from 'assets/image/plusButton.png'
 import InputUrlModal from './InputUrlModal'
 import Notion from './Notion'
+import api from 'api/Api'
 
 function ProjectDocs({ projectSeq }) {
   const [inputOpen1, setInputOpen1] = useState(false)
@@ -69,23 +70,35 @@ function ProjectDocs({ projectSeq }) {
   const [visible4, setVisible4] = useState(false)
   const [visible5, setVisible5] = useState(false)
   const [visible6, setVisible6] = useState(false)
-  const handleDisplayNone1 = () => {
+  const handleDisplayNone1 = async () => {
+    await getNotionDoc(1, setValue1)
     setVisible1(!visible1)
   }
-  const handleDisplayNone2 = () => {
+  const handleDisplayNone2 = async () => {
+    await getNotionDoc(2, setValue2)
     setVisible2(!visible2)
   }
-  const handleDisplayNone3 = () => {
+  const handleDisplayNone3 = async () => {
+    await getNotionDoc(3, setValue3)
     setVisible3(!visible3)
   }
-  const handleDisplayNone4 = () => {
+  const handleDisplayNone4 = async () => {
+    await getNotionDoc(4, setValue4)
     setVisible4(!visible4)
   }
-  const handleDisplayNone5 = () => {
+  const handleDisplayNone5 = async () => {
+    await getNotionDoc(5, setValue5)
     setVisible5(!visible5)
   }
-  const handleDisplayNone6 = () => {
+  const handleDisplayNone6 = async () => {
+    await getNotionDoc(6, setValue6)
     setVisible6(!visible6)
+  }
+
+  const getNotionDoc = async (num, setValue) => {
+    await api.get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`).then((res) => {
+      setValue(res.data.body.url)
+    })
   }
 
   return (
@@ -104,6 +117,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Git Convention"
             handleSetValue={handleSetValue1}
+            index={1}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible1 && <Notion className="docs-notion" value={value1}></Notion>}
@@ -118,6 +133,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Naming Convention"
             handleSetValue={handleSetValue2}
+            index={2}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible2 && <Notion className="docs-notion" value={value2}></Notion>}
@@ -132,6 +149,8 @@ function ProjectDocs({ projectSeq }) {
             onClose={handleToClose}
             inputTitle="Branch Rule"
             handleSetValue={handleSetValue3}
+            index={3}
+            projectSeq={projectSeq}
           ></InputUrlModal>
         </div>
         {visible3 && <Notion className="docs-notion" value={value3}></Notion>}
@@ -146,7 +165,9 @@ function ProjectDocs({ projectSeq }) {
           open={inputOpen4}
           onClose={handleToClose}
           inputTitle="요구 사항 명세서"
+          index={4}
           handleSetValue={handleSetValue4}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible4 && <Notion className="docs-notion" value={value4}></Notion>}
@@ -161,6 +182,8 @@ function ProjectDocs({ projectSeq }) {
           onClose={handleToClose}
           inputTitle="기능 명세서"
           handleSetValue={handleSetValue5}
+          index={5}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible5 && <Notion className="docs-notion" value={value5}></Notion>}
@@ -175,6 +198,8 @@ function ProjectDocs({ projectSeq }) {
           onClose={handleToClose}
           inputTitle="와이어 프레임"
           handleSetValue={handleSetValue6}
+          index={6}
+          projectSeq={projectSeq}
         ></InputUrlModal>
       </div>
       {visible6 && <Notion className="docs-notion" value={value6}></Notion>}

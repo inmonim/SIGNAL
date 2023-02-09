@@ -4,6 +4,7 @@ import React from 'react'
 import Header from 'components/Layout/Header'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainPage from 'pages/MainPage'
+import Regist from 'pages/user/Regist'
 import PostingRegister from 'pages/Posting/PostingRegister'
 import Notice from 'pages/Notice/Notice'
 import NoticeDetail from 'pages/Notice/NoticeDetail'
@@ -37,6 +38,8 @@ import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
 import Openprofile from 'pages/Openprofile/Openprofile'
 
+import Fourzerofour from 'pages/fourzerofour'
+
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
 // const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
@@ -53,6 +56,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/regist" element={<Regist />} />
           <Route path="/posting" element={<Posting />} />
           <Route path="/postingregister" element={<PostingRegister />} />
           <Route path="/posting/:id" element={<PostingDetail />} />
@@ -84,7 +88,7 @@ function App() {
 
           <Route path="/projectmeeting" element={<ProjectMeeting />} />
 
-          <Route path="*" element={<div style={{ fontSize: '300px' }}>주소 똑바로 쳐라 ^^7</div>} />
+          <Route path="*" element={<Fourzerofour />} />
         </Routes>
       </BrowserRouter>
     </div>
