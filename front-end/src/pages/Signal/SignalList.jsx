@@ -6,6 +6,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/signal.css'
 import SignalItem from 'components/Signal/SignalItem'
 import api from 'api/Api.js'
+import { Box } from '@mui/material'
 
 function SignalList() {
   // const [data, setData] = useState([])
@@ -35,29 +36,31 @@ function SignalList() {
   return (
     <div className="signal-page-container">
       <div className="signal-container">
+        <Box sx={{ width: '100%', height: '60px' }}></Box>
+        <div className="signal-header-title">시그널위크 프로젝트</div>
+        <SignalBtn
+          sigwidth="84px"
+          sigheight="45px"
+          sigfontsize="24px"
+          sigborderradius={14}
+          sigmargin="0px 0px 5px 0px"
+          variant="contained"
+          onClick={() => navigate(`/signalregister`)}
+          style={{ float: 'right' }}
+        >
+          등록
+        </SignalBtn>
         <div className="signal-header">
-          <div className="signal-header-title">시그널위크 프로젝트</div>
-          <hr style={{ marginBottom: '30px' }} />
-          <div className="signal-header-regist">
-            <SignalBtn
-              sigwidth="84px"
-              sigheight="45px"
-              sigfontsize="24px"
-              sigborderradius={14}
-              sigmargin="0px 0px 5px 0px"
-              variant="contained"
-              onClick={() => navigate(`/signalregister`)}
-            >
-              등록
-            </SignalBtn>
-          </div>
+          <div className="signal-header-regist"></div>
         </div>
         <div className="signal-table">
+          <Box sx={{ width: '10%', height: '40px' }}></Box>
           <Signal>
             {signalList.map((signal, i) => (
               <SignalItem key={i} signal={signal} />
             ))}
           </Signal>
+          <hr style={{ marginBottom: '30px  ' }} />
           <Paging page={page} count={count} setPage={handlePageChange} size={size} />
         </div>
       </div>
