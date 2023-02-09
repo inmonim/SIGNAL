@@ -1,6 +1,9 @@
 package com.ssafysignal.api.apply.service;
 
+import com.ssafysignal.api.admin.Entity.BlackUser;
+import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
 import com.ssafysignal.api.apply.entity.*;
@@ -10,7 +13,11 @@ import com.ssafysignal.api.common.repository.CommonCodeRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
+import com.ssafysignal.api.posting.entity.PostingPosition;
 import com.ssafysignal.api.posting.repository.PostingMeetingRepository;
+import com.ssafysignal.api.posting.repository.PostingPositionRepository;
+import com.ssafysignal.api.project.entity.Project;
+import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +26,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static java.util.stream.Collectors.reducing;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
 
 
 @Service
@@ -37,10 +42,39 @@ public class ApplyService {
     private final ApplyAnswerRepository applyAnswerRepository;
     private final PostingMeetingRepository postingMeetingRepository;
     private final CommonCodeRepository commonCodeRepository;
+    private final PostingPositionRepository postingPositionRepository;
     private final UserRepository userRepository;
+    private final BlackUserRepository blackUserRepository;
+    private final ProjectRepository projectRepository;
 
     @Transactional
     public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
+
+        User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
+                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+
+        // 블랙리스트 확인
+        Project project = projectRepository.findByPostingSeq(postingSeq).orElseThrow(
+                () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+
+        if (blackUserRepository.findByUserSeqAndProjectSeq(user.getUserSeq(), project.getProjectSeq()).isPresent()) {
+            throw new NotFoundException(ResponseCode.REGIST_BLACK);
+        }
+
+        // 중복 지원서 확인
+
+        if (applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).isPresent()) {
+            Apply apply = applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).get();
+            if (!(apply.getApplyCode().equals("AS103") & apply.getStateCode().equals("PAS102"))) {
+                throw new NotFoundException(ResponseCode.REGIST_DUPLICATE);
+            }
+        }
+        
+        // 잔여 하트 충분한지 확인
+        int userHeartCnt = user.getHeartCnt();
+        if (userHeartCnt < 100) {
+            throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
+        }
 
         // 지원서 등록
         Apply apply = Apply.builder()
@@ -144,14 +178,6 @@ public class ApplyService {
         return res;
     }
 
-//    @Transactional(readOnly = true)
-//    public Apply findWriterApply(Integer postingSeq, Integer applySeq) {
-//        Posting posting = postingRepository.findById(postingSeq).get();
-//        Apply apply = applyRepository.findByApplySeq(applySeq).get();
-//        Integer posting posting.getPostingSeq()
-//    }
-
-
     @Transactional
     public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
         System.out.println("asdf"+applySeq);
@@ -252,8 +278,8 @@ public class ApplyService {
         	postingMeeting.setPostingMeetingCode("PM102");
         	postingMeetingRepository.save(postingMeeting);
         }
-        
-        apply.setApplyCode("PAS104");
+        apply.setApplyCode("AS104");
+        apply.setStateCode("PAS104");
         applyRepository.save(apply);
     }
 
@@ -280,42 +306,25 @@ public class ApplyService {
         return ret;
     }
 
-    @Transactional
-    public List<ApplyWriterFindResponse> findAllApplyWriter(int postingSeq, int page, int size){
-        PageRequest pagenation = PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq");
-        List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq,pagenation);
-        List<ApplyWriterFindResponse> resList = new ArrayList<>();
-        for(Apply apply : applyList){
-            int applySeq = apply.getApplySeq();
-            int userSeq = apply.getUserSeq();
-            User user = userRepository.findByUserSeq(userSeq).get();
-            String nickname =user.getNickname();
-            CommonCode positionCode = commonCodeRepository.findById(apply.getPositionCode()).get();
-            String memo = apply.getMemo();
-            CommonCode applyCode = apply.getCode();
-            int postingMeetingSeq = apply.getPostingMeetingSeq();
-            PostingMeeting postingMeeting = postingMeetingRepository.findById(postingMeetingSeq).get();
-            CommonCode postingMeetingCode = postingMeeting.getCode();
-            LocalDateTime meetingDateTime = postingMeeting.getMeetingDt();
-            String meetingDt = meetingDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            ApplyWriterFindResponse res =ApplyWriterFindResponse.builder()
-                    .applySeq(applySeq)
-                    .userSeq(userSeq)
-                    .nickname(nickname)
-                    .positionCode(positionCode)
-                    .memo(memo)
-                    .applyCode(applyCode)
-                    .postingMeetingSeq(postingMeetingSeq)
-                    .postingMeetingCode(postingMeetingCode)
-                    .meetingDt(meetingDt)
-                    .build();
-            resList.add(res);
-            System.out.println("res:"+res);
-        }
-        return resList;
+    @Transactional(readOnly = true)
+    public Map<String, Object> findAllApplyWriter(int postingSeq, int page, int size){
 
+        List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
+        Integer totalCnt = postingPositionRepository.findPostingPositiosnByPostingSeq(postingSeq).stream().map(PostingPosition::getPositionCnt).collect(reducing(Integer::sum)).get();
+        Integer selectCnt = applyRepository.countByPostingSeqAndApplyCode(postingSeq, "AS101");     // 확정인 사람들만 카운트
+        Integer waitCnt = applyRepository.countByPostingSeqAndApplyCode(postingSeq, "AS100");       // 대기중인 사람들만 카운트
+
+        Map<String, Object> resList = new HashMap<>();
+        resList.put("applyList", ApplyWriterFindResponse.toList(applyList));
+        resList.put("totalCnt", totalCnt);
+        resList.put("selectCnt",selectCnt);
+        resList.put("waitCnt", waitCnt);
+        return resList;
     }
 
-
-
+    @Transactional(readOnly = true)
+    public List<ApplyApplyerFindResponse> findAllApplyApplyer(int userSeq, int page, int size){
+        List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
+        return ApplyApplyerFindResponse.toList(applyList);
+    }
 }

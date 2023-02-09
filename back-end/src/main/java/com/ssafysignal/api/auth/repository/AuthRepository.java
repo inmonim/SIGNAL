@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface AuthRepository extends JpaRepository<Auth, Integer> {
     Optional<Auth> findByCodeAndIsAuth(String code, boolean isAuth);
+    Optional<Auth> findByUserSeq(Integer userSeq);
+    Optional<Auth> findTop1ByUserSeqAndAuthCodeOrderByRegDtDesc(Integer userSeq, String authCode);
 }
