@@ -249,13 +249,14 @@ public class PostingService {
                     User applyUser = apply.getUser();
                     applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
                     userRepository.save(applyUser);
-        
+
                     UserHeartLog userHeartLog = UserHeartLog.builder()
                             .userSeq(applyUser.getUserSeq())
                             .heartCnt(-100)
                             .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
                             .build();
                     userHeartLogRepository.save(userHeartLog);
+
                 } else {
                     // 지원자 기준 '지원취소'상태로 변경
                     apply.setStateCode("PAS104");
