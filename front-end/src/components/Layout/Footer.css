@@ -1,8 +1,6 @@
-@import 'index.css';
-@import 'assets/font/font.css';
-
 .footer-container {
-  position: static;
+  /* position: sticky; */
+  width: 100%;
   height: 130px;
   margin-top: 4rem;
   background-color: #dde0ea;
