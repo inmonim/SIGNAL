@@ -40,11 +40,15 @@ let selfStream
 
 let numOfUsers
 let socket
+let isOwner
 
 const prevMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('사전 미팅 소켓 통신 시작!')
+  const params = new URLSearchParams(location.search)
+
+  // console.log(params.get('userSeq'))
 
   pcConfig = {
     iceServers: [
@@ -58,17 +62,14 @@ const prevMeetingSetting = () => {
       },
     ],
   }
-  roomId = '123'
-  myName = sessionStorage.getItem('username')
+  roomId = 'prev' + params.get('applySeq')
+  myName = sessionStorage.getItem('nickname')
+  isOwner = params.get('owner')
+  console.log(isOwner, params.get('applySeq'))
 
-  if (myName === null) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    myName = '익명' + result
+  if (myName !== params.get('nickname')) {
+    alert('권한이 없습니다. 다시 로그인하세요')
+    window.close()
   }
 
   userNames = {} // userNames[socketId]="이름"
