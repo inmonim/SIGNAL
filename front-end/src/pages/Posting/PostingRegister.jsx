@@ -481,8 +481,8 @@ const PostingRegister = () => {
               <div style={{ width: '20%' }}></div>
               <div style={{ width: '80%', margin: 0 }}>{numberOfTags > 0 ? tags : ''}</div>
             </div>
-            <div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '6 00px' }}>
+            <div style={{ width: '50%' }}>
+              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll' }}>
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
