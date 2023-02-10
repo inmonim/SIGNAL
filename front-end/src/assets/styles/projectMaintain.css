@@ -41,6 +41,8 @@
   border-radius: 100%;
   border: 3px solid #574b9f;
   width: 66px;
+  height: 66px;
+  object-fit: contain;
 }
 
 .team-maintain-profile-image {

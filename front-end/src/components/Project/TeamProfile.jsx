@@ -39,7 +39,7 @@ function ProjectProfile({ Data }) {
   const nickname = Data.nickname
   // const imageUrl = Data.profileImageUrl
 
-  const [imageUrl, setimageUrl] = useState(Data.profileImageUrl)
+  const [imageUrl, setimageUrl] = useState(process.env.REACT_APP_API_URL + Data.profileImageUrl)
   const [kickAble, setkickAble] = useState(false)
 
   const checkUser = () => {
@@ -80,7 +80,7 @@ function ProjectProfile({ Data }) {
     <div className="team-maintain-profile">
       <div className="team-maintain-profile-section">
         <div className="team-maintain-profile-image">
-          <img src={noProfile} alt="" />
+          <img src={imageUrl} alt="" />
         </div>
         <div className="team-maintain-profile-text">
           <div className="team-maintain-profile-nickname">{nickname}</div>
