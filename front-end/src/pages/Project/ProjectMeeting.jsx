@@ -73,8 +73,9 @@ const projectMeetingSetting = () => {
   myName = sessionStorage.getItem('nickname')
   console.log(roomId, myName)
   if (myName !== nickname) {
-    alert('권한이 없습니다. 다시 로그인하세요')
-    window.close()
+    if (!alert('권한이 없습니다. 다시 로그인하세요')) {
+      window.close()
+    }
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -726,6 +727,13 @@ function ProjectMeeting() {
   }, [voice])
 
   useEffect(() => {
+    for (let i = 0; i < personList.length; i++) {
+      if (personList[i] === myName) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+      }
+    }
     setPersonList((personList) => [...personList, myName])
     startPaint()
     canvas.addEventListener('mousemove', onMouseMove)

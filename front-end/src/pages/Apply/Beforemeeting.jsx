@@ -51,8 +51,9 @@ const prevMeetingSetting = () => {
   console.log(isOwner, params.get('applySeq'))
 
   if (myName !== params.get('nickname')) {
-    alert('권한이 없습니다. 다시 로그인하세요')
-    window.close()
+    if (!alert('권한이 없습니다. 다시 로그인하세요')) {
+      window.close()
+    }
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -221,6 +222,7 @@ function Beforemeeting() {
         console.error(error)
         if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
           // window.location = '..'
+          window.close()
         }
       })
   }
