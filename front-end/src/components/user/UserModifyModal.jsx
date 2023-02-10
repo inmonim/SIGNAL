@@ -29,7 +29,10 @@ function UserModifyModal({ open, onClose }) {
     formData.append('profileImageFile ', fileImage)
     formData.append('nickname ', inputs.nickname)
     formData.append('phone ', inputs.phone)
-
+    console.log(formData)
+    console.log(JSON.stringify(formData))
+    console.log(fileImage)
+    console.log(JSON.stringify(fileImage))
     api
       .post(process.env.REACT_APP_API_URL + '/user/' + data.userSeq, formData, {
         headers: {
