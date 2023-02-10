@@ -815,7 +815,7 @@ function ProjectMeeting() {
 
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
-          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
+          <MeetingPresentTime key={10000} personNum={personList}></MeetingPresentTime>
         </div>
         <div className="project-meeting-btn">
           <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
@@ -832,7 +832,7 @@ function ProjectMeeting() {
             <div className="project-meeting-btn-share">화면 공유</div>
             {/* 고정이여야함  absolute */}
           </div>
-          <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
+          <div className="project-meeting-btn-close-container" onClick={() => window.close()}>
             <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
             <div className="project-meeting-btn-close">종료</div>
           </div>
