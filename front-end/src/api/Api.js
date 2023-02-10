@@ -49,6 +49,7 @@ api.interceptors.response.use(async function (response) {
           sessionStorage.removeItem('userEmail')
           sessionStorage.removeItem('username')
           sessionStorage.removeItem('nickname')
+          sessionStorage.removeItem('isAdmin')
           sessionStorage.removeItem('userSeq')
           localStorage.removeItem('refreshToken')
           window.location.href = '/'
