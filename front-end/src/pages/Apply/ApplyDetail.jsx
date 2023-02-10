@@ -62,6 +62,7 @@ function ApplyDetail() {
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
         setPosting(res.data.body)
+        console.log(posting)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/user/' + res.data.body.userSeq).then((res) => {
@@ -83,7 +84,7 @@ function ApplyDetail() {
           <div className="apply-detail-project-name-section">
             <div>
               <div className="apply-detail-project-name-label">프로젝트 이름</div>
-              <div className="apply-detail-project-title">싸피 프로젝트 모집</div>
+              <div className="apply-detail-project-title">{posting.subject}</div>
             </div>
             <div className="apply-detail-cancle-section">
               {userSeq === currentUserSeq && stateCode === '심사중' ? showButton : ''}
