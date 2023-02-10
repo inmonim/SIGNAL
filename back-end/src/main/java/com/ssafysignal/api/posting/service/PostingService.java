@@ -52,6 +52,13 @@ public class PostingService {
     @Transactional
     public void registPosting(PostingBasicRequest postingRegistRequest) throws RuntimeException {
 
+        User user = userRepository.findByUserSeq(postingRegistRequest.getUserSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+
+        if (user.getHeartCnt() < 100) {
+            throw new NotFoundException(ResponseCode.REGIST_LACK_HEART);
+        }
+
         // 공고 등록
         Posting posting = Posting.builder()
                 .userSeq(postingRegistRequest.getUserSeq())
