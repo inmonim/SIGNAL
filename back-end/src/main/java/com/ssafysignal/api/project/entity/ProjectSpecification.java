@@ -55,19 +55,19 @@ public class ProjectSpecification {
         });
     }
 
-    public static Specification<ProjectEvaluation> byFromUserSeq(Integer projectUserSeq, Integer termCnt){
+    public static Specification<ProjectEvaluation> byFromUserSeq(Integer projectUserSeq, Integer weekCnt){
         return ((root, query, criteriaBuilder) -> {
             Predicate projectUserList = criteriaBuilder.conjunction();
-            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("termCnt"), termCnt));
+            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("weekCnt"), weekCnt));
             projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("fromUserSeq"), projectUserSeq));
             return projectUserList;
         });
     }
 
-    public static Specification<ProjectEvaluation> byFromUserSeqAndToUserSeq(Integer projectUserSeq, Integer toProjectUserSeq, Integer termCnt){
+    public static Specification<ProjectEvaluation> byFromUserSeqAndToUserSeq(Integer projectUserSeq, Integer toProjectUserSeq, Integer weekCnt){
         return ((root, query, criteriaBuilder) -> {
             Predicate projectUserList = criteriaBuilder.conjunction();
-            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("termCnt"), termCnt));
+            projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("weekCnt"), weekCnt));
             projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("fromUserSeq"), projectUserSeq));
             projectUserList = criteriaBuilder.and(projectUserList, criteriaBuilder.equal(root.get("toUserSeq"), toProjectUserSeq));
 

@@ -71,11 +71,11 @@ public class ProjectSettingService {
     }
 
     @Transactional(readOnly = true)
-    public List<Integer> findProjectUserEvaluation(Integer projectUserSeq, Integer termCnt) {
+    public List<Integer> findProjectUserEvaluation(Integer projectUserSeq, Integer weekCnt) {
         projectUserRepository.findById(projectUserSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        List<ProjectEvaluation> projectEvaluationList = projectEvaluationRepository.findAll(ProjectSpecification.byFromUserSeq(projectUserSeq, termCnt));
+        List<ProjectEvaluation> projectEvaluationList = projectEvaluationRepository.findAll(ProjectSpecification.byFromUserSeq(projectUserSeq, weekCnt));
         return projectEvaluationList.stream()
                 .map(ProjectEvaluation::getToUserSeq)
                 .distinct()
@@ -86,6 +86,8 @@ public class ProjectSettingService {
     public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ProjectSettingModifyRequest projectSettingModifyRequest) throws RuntimeException, IOException {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+
+        System.out.println("projectSettingModifyRequest.toString() = " + projectSettingModifyRequest.toString());
 
         if (uploadImage != null){
             // 사진올리고
@@ -107,6 +109,11 @@ public class ProjectSettingService {
                 imageFileRepository.save(newImageFile);
                 project.setProjectImageFileSeq(newImageFile.getImageFileSeq());
             }
+        }
+
+        if (projectSettingModifyRequest.getIsDelete()){
+            fileService.deleteImageFile(uploadPath + project.getImageFile().getUrl());
+            project.setProjectImageFileSeq(1);
         }
         /*
             프로젝트 설정 데이터 처리
@@ -156,7 +163,7 @@ public class ProjectSettingService {
                 ProjectSpecification.byFromUserSeqAndToUserSeq(
                         projectEvaluationRegistRequest.getFromUserSeq(),
                         projectEvaluationRegistRequest.getToUserSeq(),
-                        projectEvaluationRegistRequest.getTerm())).isEmpty()){
+                        projectEvaluationRegistRequest.getWeekCnt())).isEmpty()){
 
             for (Map<String, Integer> score : projectEvaluationRegistRequest.getScoreList()){
 
@@ -164,7 +171,7 @@ public class ProjectSettingService {
                         .projectSeq(projectEvaluationRegistRequest.getProjectSeq())
                         .fromUserSeq(projectEvaluationRegistRequest.getFromUserSeq())
                         .toUserSeq(projectEvaluationRegistRequest.getToUserSeq())
-                        .termCnt(projectEvaluationRegistRequest.getTerm())
+                        .weekCnt(projectEvaluationRegistRequest.getWeekCnt())
                         .num(score.get("num"))
                         .score(score.get("score"))
                         .build());
@@ -180,6 +187,6 @@ public class ProjectSettingService {
 
         List<ProjectEvaluationQuestion> projectEvaluationQuestionList = projectEvaluationQuestionRepository.findAll();
 
-        return FindEvaluationResponse.fromEntity(project.getWeekCnt(), projectEvaluationQuestionList);
+        return FindEvaluationResponse.fromEntity(project, projectEvaluationQuestionList);
     }
 }

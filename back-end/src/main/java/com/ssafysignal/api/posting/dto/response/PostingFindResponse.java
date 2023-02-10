@@ -13,6 +13,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -71,7 +72,7 @@ public class PostingFindResponse {
                 .content(project.getPosting().getContent())
                 .postingEndDt(project.getPosting().getPostingEndDt())
                 .level(project.getPosting().getLevel())
-                .postingMeetingList(project.getPosting().getPostingMeetingList())
+                .postingMeetingList(project.getPosting().getPostingMeetingList().stream().filter((pm) -> pm.getApplySeq() == null).collect(Collectors.toList()))        // 빈 애들만 반환하도록함
                 .postingPositionList(project.getPosting().getPostingPositionList())
                 .postingQuestionList(project.getPosting().getPostingQuestionList())
                 .postingSkillList(project.getPosting().getPostingSkillList())
