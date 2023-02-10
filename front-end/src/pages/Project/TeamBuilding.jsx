@@ -60,24 +60,28 @@ const MeetingButton = styled(Button)(({ theme }) => ({
 
 function TeamSelect() {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const postingSeq = location.state.postingSeq
   const [applyList, setApplyList] = useState([])
-  const [teamTotalCnt, setTeamTotalCnt] = useState(0)
-  // const [teamCnt, setTeamCnt] = useState(0)
 
+  // 시그널 보낸 인원이 자신이 공고에 올린 팀원 수를 벗어나지 않도로 하기 위해 가져오는 값
+  const [teamTotalCnt, setTeamTotalCnt] = useState(0)
   const [selectCnt, setSelectCnt] = useState(1)
   const [waitCnt, setWaitCnt] = useState(2)
+  const [valid, setValid] = useState('true')
 
-  const [applySeqList, setapplySeqList] = useState([])
+  // 페이지네이션 위한 변수
   const [size] = useState(8)
   const [page, setPage] = useState(1)
   const [count, setCount] = useState(0)
 
-  const [valid, setValid] = useState('true')
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const handlePageChange = (page) => {
+    setPage(page)
+  }
 
-  const navigate = useNavigate()
+  // 팀원선택 alert open
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   const handleConfirmOpen = () => {
     setConfirmOpen(true)
@@ -87,17 +91,50 @@ function TeamSelect() {
     setConfirmOpen(false)
   }
 
-  const handlePageChange = (page) => {
-    setPage(page)
+  // 미팅입장 alert open
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [meetingApplySeq, setMeetingApplySeq] = useState('')
+
+  const handleAlertOpen = (applySeq) => {
+    setAlertOpen(true)
+    console.log(applySeq)
+    setMeetingApplySeq(applySeq)
   }
 
-  const [alertOpen, setAlertOpen] = useState(false)
-  const handleAlertOpen = () => {
-    setAlertOpen(true)
+  const rows = []
+  Array.from(applyList).forEach((item) => {
+    rows.push({
+      applySeq: item.applySeq,
+      nickname: item.nickname,
+      meetingDt: item.meetingDt,
+      positionCode: item.positionCode,
+      userSeq: item.userSeq,
+      applyCode: item.applyCode,
+    })
+  })
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
+      rows.push({
+        applySeq: '',
+        nickname: '',
+        meetingDt: '',
+        positionCode: '',
+        userSeq: '',
+        applyCode: '',
+      })
   }
-  const handleToMeeting = () => {
+
+  // 미팅입장 시 alert close
+  // 필요한 파라미터 : nickname, 팀장인지 아닌지(owner[팀장 true, 팀원 false]), applySeq
+  const handleToMeeting = (e) => {
     setAlertOpen(false)
-    window.open('/beforemeeting', '_blank')
+    // 팀빌딩 입장은 팀장
+    console.log(meetingApplySeq)
+    window.open(
+      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${meetingApplySeq}`,
+      '_blank'
+    )
   }
 
   const applyListFetch = async (param) => {
@@ -111,7 +148,6 @@ function TeamSelect() {
         })
         .then((res) => {
           setApplyList(res.data.body.applyList)
-          console.log('1번 api', res.data.body)
 
           setSelectCnt(res.data.body.selectCnt)
           setWaitCnt(res.data.body.waitCnt)
@@ -119,7 +155,6 @@ function TeamSelect() {
 
       await api.get(process.env.REACT_APP_API_URL + '/apply/writer/count/' + postingSeq).then((res) => {
         setCount(res.data.body.count)
-        console.log('2번 api', res.data.body)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
@@ -128,7 +163,6 @@ function TeamSelect() {
             return sum + value.positionCnt
           }, 0)
         )
-        console.log('3번 api', res.data.body)
       })
       // 공고에서 올린 모집인원 계산위해 >> apply/writer에서 주기로 수정했음.
     } catch (error) {
@@ -170,8 +204,6 @@ function TeamSelect() {
     applyListFetch(page)
   }, [page])
 
-  useEffect(() => {}, [applySeqList])
-
   useEffect(() => {
     checkButtonValid()
   }, [selectCnt, waitCnt])
@@ -180,16 +212,16 @@ function TeamSelect() {
 
   return (
     <CssVarsProviderm>
-      <div className="team-building-container">
-        <div className="team-building-banner">
-          <div>팀 빌딩</div>
-        </div>
-        <div className="team-selct-width">
+      <div className="team-building-page-container">
+        <div className="team-building-container">
+          <div className="team-building-header">
+            <div className="team-building-title">팀 빌딩</div>
+          </div>
           <div className="team-selct-table">
             <TableContainer>
               <Table>
-                <TableHead className="team-building-table-header">
-                  <TableRow sx={[{ backgroundColor: 'rgba(244, 246, 249, 0.5)' }]}>
+                <TableHead className="team-building-table-head">
+                  <TableRow>
                     <TableCell align="center"> 닉네임 </TableCell>
                     <TableCell align="center"> 사전미팅참가 </TableCell>
                     <TableCell align="center"> 미팅 예약 시간</TableCell>
@@ -203,58 +235,73 @@ function TeamSelect() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {applyList &&
-                    applyList.map((apply, index) => (
-                      <TableRow
-                        key={index}
-                        value={apply.applySeq}
-                        sx={[
-                          {
-                            '&:hover': { backgroundColor: 'rgba(221, 219, 236, 0.5)', transition: '0.3s' },
-                          },
-                        ]}
-                      >
-                        <TableCell align="center">{apply.nickname}</TableCell>
-                        <TableCell align="center">
-                          <MeetingButton onClick={handleAlertOpen} startIcon={<LaptopIcon />}>
+                  {rows.map((row, index) => (
+                    <TableRow
+                      key={index}
+                      value={row.applySeq}
+                      sx={[
+                        {
+                          '&:hover': { backgroundColor: 'rgba(221, 219, 236, 0.5)', transition: '0.3s' },
+                        },
+                      ]}
+                    >
+                      <TableCell align="center">{row.nickname}</TableCell>
+                      <TableCell align="center">
+                        {row.applyCode.name !== '미선택' ? (
+                          ''
+                        ) : (
+                          <MeetingButton onClick={() => handleAlertOpen(row.applySeq)} startIcon={<LaptopIcon />}>
                             사전미팅
                           </MeetingButton>
-                          <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
-                        </TableCell>
-                        <TableCell align="center">{moment(apply.meetingDt).format('MM/DD HH:00')}</TableCell>
-                        <TableCell align="center">{apply.positionCode.name}</TableCell>
-                        <TableCell align="center">
-                          <MemoModal applySeq={apply.applySeq}></MemoModal>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Link to={'/applydetail'} state={{ applySeq: apply.applySeq, userSeq: apply.userSeq }}>
+                        )}
+
+                        <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? '' : moment(row.meetingDt).format('MM/DD HH:00')}
+                      </TableCell>
+                      <TableCell align="center">{row.applySeq === '' ? '' : row.positionCode.name}</TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? '' : <MemoModal applySeq={row.applySeq} />}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
+                          <Link to={'/applydetail'} state={{ applySeq: row.applySeq, userSeq: row.userSeq }}>
                             <ImageButton startIcon={<AccountBoxIcon />}>지원서보기</ImageButton>
                           </Link>
-                        </TableCell>
-                        <TableCell align="center">
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
                           <ProjectInviteConfirm
-                            apply={apply}
-                            applySeqList={applySeqList}
-                            setapplySeqList={setapplySeqList}
+                            apply={row}
                             postingSeq={postingSeq}
                             valid={valid}
                           ></ProjectInviteConfirm>
-                        </TableCell>
-                        <TableCell align="center">
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
                           <StateCode
-                            color={stateCodeColor(apply.applyCode)}
+                            color={() => stateCodeColor(row.applyCode)}
                             className="team-project-building-state-code"
                           >
-                            {apply.applyCode.name}
+                            {row.applyCode.name}
                           </StateCode>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </div>
-
           <div className="team-building-submit-button">
             <SignalBtn
               sigwidth="200px"

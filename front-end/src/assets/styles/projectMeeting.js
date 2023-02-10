@@ -17,6 +17,7 @@ export const codeEidt = (props) => {
     height: 95%;
     width: 90%;
     margin: auto;
+    font-family: 'D2coding' !important;
   `
 }
 

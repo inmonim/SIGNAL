@@ -118,7 +118,7 @@ export const positionTodo = createSlice({
   initialState: [],
   reducers: {
     add: (state, action) => {
-      console.log(action)
+      // console.log(action)
       const dic = {
         id: action.payload.code,
         text: action.payload.name,
@@ -134,7 +134,7 @@ export const positionTodo = createSlice({
         return ele.id === action.payload
       })
       const sum = state.reduce((acc, cur) => acc + cur.count, 0)
-      console.log(sum)
+      // console.log(sum)
       if (sum < 8) {
         state[idex].count++
       }
@@ -164,7 +164,7 @@ export const qnaTodo = createSlice({
       })
     },
     addQnaF: (state, action) => {
-      console.log(action)
+      // console.log(action)
       const dic = {
         id: action.payload.id,
         text: action.payload.text,

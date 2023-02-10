@@ -23,6 +23,9 @@ function PostingApply() {
 
   const [rowsApplyForm, setRowsApplyForm] = useState([])
   const [rowsPostingForm, setRowsPostingForm] = useState([])
+
+  const [change, setChange] = useState(false)
+
   const applyListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/apply/applyer/count/' + userSeq).then((res) => {
@@ -32,10 +35,10 @@ function PostingApply() {
         .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + applyPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log('applyListFetch', res.data.body)
+          // console.log('applyListFetch', res.data.body)
           setRowsApplyForm(res.data.body)
         })
-      console.log('apply', applyCount)
+      // console.log('apply', applyCount)
     } catch (error) {
       console.log(error)
     }
@@ -45,13 +48,13 @@ function PostingApply() {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/posting/post/count/' + userSeq).then((res) => {
         setPostingCount(res.data.body.count)
-        console.log('posting', postingCount)
+        // console.log('posting', postingCount)
       })
       await api
         .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + postingPage + '&size=' + size)
         .then((res) => {
           // setData(res.data.body)
-          console.log('postingListFetch', res.data.body)
+          // console.log('postingListFetch', res.data.body)
           setRowsPostingForm(res.data.body.postingList)
         })
     } catch (error) {
@@ -78,7 +81,7 @@ function PostingApply() {
     })
   })
   const applyRowLen = applyRows.length
-  console.log(applyRowLen)
+  // console.log(applyRowLen)
 
   if (applyRowLen !== size && applyRowLen !== 0) {
     for (let i = 0; i < size - applyRowLen; i++)
@@ -89,7 +92,6 @@ function PostingApply() {
         meetingDt: ' ',
       })
   }
-  console.log(applyRows)
 
   const postingRows = []
   Array.from(rowsPostingForm).forEach((item) => {
@@ -111,42 +113,49 @@ function PostingApply() {
   }
 
   const handleProjectAccept = async (applySeq) => {
+    console.log(applySeq)
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
         select: true,
       })
       console.log('지원서 확정')
+      setChange(!change)
+      location.reload()
     } catch (error) {
       console.log(error)
     }
   }
 
   const handleProjectRefuse = async (applySeq) => {
+    console.log(applySeq)
+
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
-        select: true,
+        select: false,
       })
       console.log('지원서 거절')
+      setChange(!change)
+      location.reload()
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleApplyDelete = async (applySeq) => {
-    try {
-      await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      console.log('지원 취소')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const handleApplyDelete = async (applySeq) => {
+  //   try {
+  //     await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
+  //     console.log('지원 취소')
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   const handlePostingDelete = async (postingSeq) => {
     try {
       await api.delete(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      console.log('공고 취소')
+      // console.log('공고 취소')
     } catch (error) {
       console.log(error)
     }
@@ -199,7 +208,7 @@ function PostingApply() {
                       <TableCell align="center">사전미팅참가</TableCell>
                       <TableCell align="center">사전미팅시간</TableCell>
                       <TableCell align="center">확정</TableCell>
-                      <TableCell align="center">삭제</TableCell>
+                      <TableCell align="center">지원서</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -208,15 +217,28 @@ function PostingApply() {
                         <TableCell align="center">{row.state}</TableCell>
                         <TableCell align="left">{row.subject}</TableCell>
                         <TableCell align="center">
-                          {row.subject !== ' ' ? (
-                            <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>참가</SignalBtn>
+                          {row.state === '심사중' ? (
+                            // 필요한 파라미터 : nickname, 팀장인지 아닌지(owner[팀장 true, 팀원 false]), applySeq
+                            // 프로필에서 입장은 지원자
+                            <SignalBtn
+                              onClick={() =>
+                                window.open(
+                                  `/beforemeeting?nickname=${sessionStorage.getItem(
+                                    'nickname'
+                                  )}&owner=${false}&applySeq=${row.applySeq}`,
+                                  '_blank'
+                                )
+                              }
+                            >
+                              참가
+                            </SignalBtn>
                           ) : (
                             ' '
                           )}
                         </TableCell>
                         <TableCell align="center">{row.meetingDt}</TableCell>
                         <TableCell align="center">
-                          {row.state === '합격' ? (
+                          {row.state === '선발' ? (
                             <div
                               style={{
                                 display: 'flex',
@@ -248,32 +270,10 @@ function PostingApply() {
                           {row.subject !== ' ' ? (
                             <SignalBtn
                               onClick={() => {
-                                const swalWithBootstrapButtons = Swal.mixin({
-                                  customClass: {
-                                    cancelButton: 'btn btn-danger',
-                                    confirmButton: 'btn btn-success',
-                                  },
-                                  buttonsStyling: true,
-                                })
-
-                                swalWithBootstrapButtons
-                                  .fire({
-                                    title: '지원서을 취소하겠습니까?',
-                                    text: '삭제한 지원서는 다시 되돌릴 수 없습니다',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: '예',
-                                    cancelButtonText: '아니요',
-                                  })
-                                  .then((result) => {
-                                    if (result.isConfirmed) {
-                                      swalWithBootstrapButtons.fire('삭제', '지원이 취소되었습니다', 'success')
-                                      handleApplyDelete(row.applySeq)
-                                    }
-                                  })
+                                navigate('/applydetail', { state: { applySeq: row.applySeq, stateCode: row.state } })
                               }}
                             >
-                              삭제
+                              조회
                             </SignalBtn>
                           ) : (
                             ' '
@@ -310,7 +310,7 @@ function PostingApply() {
                       <TableCell align="center">{row.state}</TableCell>
                       <TableCell align="left">{row.subject}</TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.state === '모집 중' ? (
                           <SignalBtn
                             onClick={() => {
                               navigate('/teambuilding', { state: { postingSeq: row.postingSeq } })
@@ -323,7 +323,7 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.state === '모집 중' ? (
                           <SignalBtn
                             onClick={() => {
                               navigate('/postingModify', { state: { postingSeq: row.postingSeq } })
@@ -336,7 +336,9 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject !== ' ' ? (
+                        {row.subject === ' ' || row.state === '모집 취소' ? (
+                          ''
+                        ) : (
                           <SignalBtn
                             onClick={() => {
                               const swalWithBootstrapButtons = Swal.mixin({
@@ -366,8 +368,6 @@ function PostingApply() {
                           >
                             삭제
                           </SignalBtn>
-                        ) : (
-                          ' '
                         )}
                       </TableCell>
                     </TableRow>

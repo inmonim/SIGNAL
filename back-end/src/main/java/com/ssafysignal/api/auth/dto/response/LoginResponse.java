@@ -9,7 +9,7 @@ public class LoginResponse {
     private Integer userSeq;
     private String email;
     private String name;
-
+    private String nickname;
     private String accessToken;
     private String refreshToken;
 }

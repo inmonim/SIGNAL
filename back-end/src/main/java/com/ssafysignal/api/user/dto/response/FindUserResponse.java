@@ -7,9 +7,10 @@ import lombok.Getter;
 @Data
 @Builder
 public class FindUserResponse {
-    String nickname;
-    String phone;
-    String email;
-    Integer heartCnt;
-    String userImageUrl;
+    private Integer userSeq;
+    private String nickname;
+    private String phone;
+    private String email;
+    private Integer heartCnt;
+    private String userImageUrl;
 }

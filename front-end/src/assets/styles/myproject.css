@@ -1,5 +1,6 @@
 .my-project-container {
   margin: 108px 0px;
+  min-height: 100vh;
 }
 
 .hr-sect {

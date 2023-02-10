@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { TextField, MenuItem, InputLabel, FormControl, Select } from '@mui/material'
+import { TextField, MenuItem, InputLabel, FormControl, Select, Chip } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
-import { Skilldata, getSkillCode } from 'data/Skilldata'
+import { Skilldata } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
-import SkillList from 'components/Apply/SkillList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import SignalBtn from 'components/common/SignalBtn'
 import moment from 'moment/moment'
 import QnaList from 'components/Apply/QnaList'
-// import { useNavigate, useLocation } from 'react-router-dom'
+import ReactSelect from 'react-select'
+import { changeSelectForm } from 'utils/changeForm'
+
 import api from 'api/Api.js'
 
 const inputStyle = {
@@ -27,13 +27,11 @@ const textAreaStyle = {
   margin: '10px 0px',
 }
 
-function ApplyRegister() {
-  // const location = useLocation()
-  // const applySeq = location.state.applySeq
+function ApplyModify() {
+  const location = useLocation()
 
-  const userSeq = 82
-  const postingSeq = 458
-  const applySeq = 1
+  const userSeq = sessionStorage.getItem('userSeq')
+  const applySeq = location.state.applySeq
 
   const navigate = useNavigate()
 
@@ -41,19 +39,19 @@ function ApplyRegister() {
 
   const [user, setUser] = useState([])
   const [posting, setPosting] = useState([{}])
-  // const [apply, setApply] = useState([{}])
   const [position, setPosition] = useState('')
   const [careerList, setCareerList] = useState([])
   const [expList, setExpList] = useState([])
-  const [skillList, setSkillList] = useState([])
   const [content, setContent] = useState([])
   const [qnaList, setQnaList] = useState()
   const [careerSeq, setCareerSeq] = useState(0)
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  const [meetingDafault, setMeetingDafault] = useState('')
+  const [meetingDafault, setMeetingDefault] = useState('')
   const [meetingValid, setMeetingValid] = useState(true)
+  const [numberOfTags, setNumberOfTags] = useState(0)
+  const [arrayOfTags, addTag] = useState([])
   // ene >> useState
 
   // start >> Fetch
@@ -63,30 +61,20 @@ function ApplyRegister() {
         setUser(res.data.body)
       })
 
-      await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
-        setPosting(res.data.body)
-        const answerArr = []
-        res.data.body.postingQuestionList.map((item) =>
-          answerArr.push({
-            postingQuestionSeq: item.postingQuestionSeq,
-            content: '',
-            applyAnswerSeq: '',
-          })
-        )
-        meetingFetchFilter(res.data.body.postingMeetingList)
-      })
-
       const applyRes = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-      const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+      const postingRes = await api.get(process.env.REACT_APP_API_URL + '/posting/' + applyRes.data.body.postingSeq)
 
-      // setApply(applyRes.data.body)
       careerFetchFilter(applyRes.data.body.careerList)
       expFetchFilter(applyRes.data.body.expList)
-      skillFetchFilter(applyRes.data.body.skillList)
       setPosition(applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
       qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
+      meetingFetchFilter(postingRes.data.body.postingMeetingList)
+      setMeetingDefault(applyRes.data.body.postingMeeting.meetingDt)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
+      setPosting(postingRes.data.body)
+      addTag(changeSelectForm(applyRes.data.body.skillList))
+      setNumberOfTags(changeSelectForm(applyRes.data.body.skillList).length)
     } catch (error) {
       console.log(error)
     }
@@ -124,7 +112,6 @@ function ApplyRegister() {
     const meetingDtArr = []
     list.forEach((item) => {
       if (item.postingMeetingCode === 'PM102' || item.postingMeetingSeq === meetingSeq) {
-        setMeetingDafault(item.meetingDt)
         meetingDtArr.push({
           postingMeetingSeq: item.postingMeetingSeq,
           meetingDt: item.meetingDt,
@@ -133,15 +120,6 @@ function ApplyRegister() {
     })
 
     setMeetingList(meetingDtArr)
-  }
-
-  const skillFetchFilter = (list) => {
-    const skillArr = []
-    list.forEach((item) => {
-      skillArr.push(item.name)
-    })
-
-    setSkillList(skillArr)
   }
 
   const careerPostFilter = (list) => {
@@ -158,12 +136,11 @@ function ApplyRegister() {
 
   const skillPostFilter = (list) => {
     const skillArr = []
-    list.map((item) => skillArr.push(getSkillCode(item)))
+    list.map((item) => skillArr.push(item.value))
     return skillArr
   }
 
   const answerPostFilter = (list) => {
-    console.log('listdf', list)
     const answerArr = []
     list.map((item) =>
       answerArr.push({
@@ -199,29 +176,36 @@ function ApplyRegister() {
 
   // start >> handle skill
 
-  const handleSkillInput = (value) => {
-    const skillArr = [...skillList, value]
-    const set = new Set(skillArr)
-    const uniqueArr = Array.from(set)
-    setSkillList(uniqueArr)
+  const handleSkillInput = (e) => {
+    if (e === null) return
+    newTag({
+      label: e.label,
+      value: e.value,
+    })
   }
 
-  const handleSkillRemove = (id) => {
-    setSkillList(
-      skillList.filter((skill) => {
-        return skill !== id
-      })
-    )
+  const newTag = (tag) => {
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
+    addTag(uniqueTags)
+    console.log(arrayOfTags)
   }
 
-  // start >> skill filter
-  const skillSearchFilter = createFilterOptions({
-    matchFrom: 'start',
-    stringify: (option) => option.name,
-  })
+  const tags = arrayOfTags.map((h, index) => (
+    <Chip
+      label={h.label}
+      value={h.value}
+      variant="outlined"
+      sx={{ fontSize: '20px', margin: '5px' }}
+      key={index}
+      onDelete={() => handleDelete(h)}
+    />
+  ))
 
-  // end >> skill filter
-
+  const handleDelete = (h) => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
+  }
   // end >> handle skill
 
   // start >> handle career
@@ -320,8 +304,9 @@ function ApplyRegister() {
   // end >> handle qna
 
   // start >> handle meetingDt
-
+  console.log(meetingDafault)
   const handleMeetingDtChange = (key) => {
+    console.log('meetingChagne')
     setMeetingSeq(key)
     setMeetingValid(false)
   }
@@ -336,7 +321,7 @@ function ApplyRegister() {
         applyAnswerList: answerPostFilter(qnaList),
         applyCareerList: careerPostFilter(careerList),
         applyExpList: expPostFilter(expList),
-        applySkillList: skillPostFilter(skillList),
+        applySkillList: skillPostFilter(arrayOfTags),
         content,
         postingMeetingSeq: parseInt(meetingSeq),
         positionCode: getPositionCode(position),
@@ -363,6 +348,8 @@ function ApplyRegister() {
   useEffect(() => {
     dataFetch()
   }, [])
+
+  useEffect(() => {}, [arrayOfTags])
 
   return (
     <div className="apply-modify-container">
@@ -424,11 +411,7 @@ function ApplyRegister() {
                     meetingSeq={meetingSeq}
                   ></MeetingDtSelect>
                   {meetingValid ? (
-                    meetingDafault !== '' ? (
-                      <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD HH:MM')}</div>
-                    ) : (
-                      ''
-                    )
+                    <div style={{ textAlign: 'center' }}>{moment(meetingDafault).format('YYYY-MM-DD HH')}시</div>
                   ) : (
                     ''
                   )}
@@ -437,33 +420,27 @@ function ApplyRegister() {
             </div>
           </div>
           <div className="apply-modify-skill-section">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '20px',
+              }}
+            >
               <div style={{ minWidth: '12.5%', alignItems: 'center' }}>
                 <span className="apply-modify-label">사용기술</span>
               </div>
-              <Autocomplete
-                disablePortal
-                id="combo-box-demo"
-                sx={{ width: 300 }}
-                options={Skilldata}
-                getOptionLabel={(option) => option.name}
-                filterOptions={skillSearchFilter}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    onKeyUp={(e) => {
-                      if (e.key === 'Enter') {
-                        handleSkillInput(e.target.value)
-                      }
-                    }}
-                    sx={inputStyle}
-                  />
-                )}
-              />
+              <div className="apply-modify-skill-select">
+                <ReactSelect
+                  placeholder=""
+                  isClearable
+                  onChange={handleSkillInput}
+                  isSearchable={true}
+                  options={changeSelectForm(Skilldata)}
+                />
+              </div>
             </div>
-          </div>
-          <div style={{ display: 'inline-block', marginRight: '7px' }}>
-            <SkillList skillList={skillList} onRemove={handleSkillRemove}></SkillList>
+            <div>{numberOfTags > 0 ? tags : ''}</div>
           </div>
           <div className="apply-modify-career-exp-section">
             <div style={{ width: '50%' }}>
@@ -539,4 +516,4 @@ function ApplyRegister() {
   )
 }
 
-export default ApplyRegister
+export default ApplyModify
