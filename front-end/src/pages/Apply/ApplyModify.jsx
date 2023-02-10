@@ -329,7 +329,21 @@ function ApplyModify() {
         positionCode: getPositionCode(position),
         userSeq,
       }
+
+      // 포지션 선택 X
+      if (req.positionCode === 'error') {
+        Swal.fire('지원서가 완성되지 않았습니다', '포지션을 골라주세요', 'error')
+        throw new Error('포지션 선택안함')
+      }
+
+      // 미팅 시간 선택X
+      if (isNaN(req.postingMeetingSeq)) {
+        Swal.fire('지원서가 완성되지 않았습니다', '사전미팅시간을 골라주세요', 'error')
+        throw new Error('미팅시간 선택안함')
+      }
+
       console.log(JSON.stringify(req))
+
       await api
         .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req)
         .then((res) => {
