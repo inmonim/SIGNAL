@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom'
 import 'assets/styles/signaldetail.css'
 import api from 'api/Api.js'
 import { Document, Page } from 'react-pdf'
-import SignalBtn from 'components/common/SignalBtn'
 
 function signalDetail() {
   const location = useLocation()
@@ -15,7 +14,9 @@ function signalDetail() {
   console.log(signalSeq)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  // const [pdfDocument] = useState()
+  const [pdfDocument] = useState(
+    process.env.REACT_APP_API_URL + '/static/ppt/c478da35-e08b-4335-b077-3426484ca8c9.pptx'
+  )
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages)
@@ -106,18 +107,16 @@ function signalDetail() {
             {data.deployUrl}
           </div>
         </div>
-        <div style={{ width: '1280px  ', height: '720px', overflow: 'hidden' }}>
-          <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page width={1280} height={720} pageNumber={pageNumber} />
-          </Document>
-        </div>
+        <Document file={pdfDocument} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page pageNumber={pageNumber} />
+        </Document>
         <p>
-          <SignalBtn onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</SignalBtn>
+          <span onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</span>
           <span>
             Page {pageNumber} of {numPages}
           </span>
 
-          <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</SignalBtn>
+          <span onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</span>
         </p>
         <div className="apply-detail-content-section">
           <label>README</label>

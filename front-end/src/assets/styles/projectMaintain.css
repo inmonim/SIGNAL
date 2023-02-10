@@ -41,6 +41,8 @@
   border-radius: 100%;
   border: 3px solid #574b9f;
   width: 66px;
+  height: 66px;
+  object-fit: contain;
 }
 
 .team-maintain-profile-image {
@@ -100,41 +102,40 @@
   border: 1px solid #463c7f;
 }
 
-
-.project-maintain-container{
- margin: auto;
- width: 80%;
+.project-maintain-container {
+  margin: auto;
+  width: 80%;
 }
 
-.poject-maintain-width{
+.poject-maintain-width {
   margin: 35px 0px;
 }
 
-.project-maintain-title-section{
+.project-maintain-title-section {
   font-size: 44px;
   margin: 0px 20px;
-  display: flex;  
+  display: flex;
   justify-content: space-between;
 }
 
-.project-maintain-body{
+.project-maintain-body {
   width: 88%;
   margin: auto;
 }
 
-.project-maintain-label{
+.project-maintain-label {
   font-size: 27px;
   margin-bottom: 13px;
 }
 
-.project-maintain-text{
+.project-maintain-text {
   padding: 15px 15px;
   font-size: 24px;
   background-color: white;
   border-radius: 10px;
 }
 
-.project-maintain-text-area{
+.project-maintain-text-area {
   padding: 15px 15px;
   font-size: 24px;
   background-color: white;
@@ -150,11 +151,11 @@
 .project-maintain-local-section,
 .project-maintain-contatct-section,
 .project-maintain-term-section,
-.project-maintain-poition-section{
+.project-maintain-poition-section {
   margin: 25px 0px;
 }
 
-.project-maintain-term-field-local-contact-position-section{
+.project-maintain-term-field-local-contact-position-section {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -164,23 +165,30 @@
 .project-maintain-term-section,
 .project-maintain-field-seciton,
 .project-maintain-local-section,
-.project-maintain-contatct-section{
+.project-maintain-contatct-section {
   width: 200px;
-  margin:auto;
+  margin: auto;
 }
 
-.project-maintain-imageUrl{
+.project-maintain-imageUrl {
   width: 300px;
   height: 300px;
   background-color: white;
   border-radius: 50px;
 }
+.project-maintain-img {
+  border-radius: 50px;
+  margin: 5px;
+  width: 290px;
+  height: 290px;
+  object-fit: contain;
+}
 
-.project-maintain-imgUrl-section{
+.project-maintain-imgUrl-section {
   margin: 20px auto;
 }
 
-.project-maintain-position-item{
+.project-maintain-position-item {
   padding: 10px 25px;
   font-size: 24px;
   background-color: white;
@@ -191,11 +199,11 @@
   margin-right: 10px;
 }
 
-.project-maintain-poition-list{
+.project-maintain-poition-list {
   display: flex;
 }
 
-.project-maintain-position-cnt{
+.project-maintain-position-cnt {
   background-color: #dddbec;
   width: 35px;
   height: 35px;
@@ -206,11 +214,11 @@
   color: black;
 }
 
-.project-maintain-position-name{
+.project-maintain-position-name {
   margin: auto;
 }
 
-.project-maintain-imgUrl-modify{
+.project-maintain-imgUrl-modify {
   display: flex;
   justify-content: space-evenly;
   margin-top: 10px;

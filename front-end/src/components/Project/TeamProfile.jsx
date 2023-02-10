@@ -39,7 +39,7 @@ function ProjectProfile({ Data }) {
   const nickname = Data.nickname
   const url = Data.profileImageUrl
 
-  const [imageUrl, setimageUrl] = useState(Data.profileImageUrl)
+  const [imageUrl, setimageUrl] = useState(process.env.REACT_APP_API_URL + Data.profileImageUrl)
   const [kickAble, setkickAble] = useState(false)
 
   const checkUser = () => {

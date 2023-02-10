@@ -1,19 +1,40 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Section from 'components/Layout/Section'
 import 'assets/font/font.css'
 import 'pages/Main.css'
 import logo from 'assets/image/Mainlogo.png'
-// import logo from 'assets/image/Signal.gif'
+// import logo from 'assets/image/Signal.gif'npm i react-lottie
 import projectimg from 'assets/image/Projectpic.png'
 import signalweek from 'assets/image/Signalweek.png'
 import SignalBtn from 'components/common/SignalBtn'
 import { FullPage, Slide } from 'react-full-page'
+import Lottie from 'react-lottie'
+import fanfare from 'assets/lottie/fanfare.json'
 
 function MainPage() {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: fanfare,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
+  const [show, setShow] = useState(false)
+  const fullPageRef = useRef()
+  const handleChange = ({ from, to }) => {
+    if ((from === 0 && to === 1) || (from === 2 && to === 1)) {
+      setShow(true)
+      console.log(show)
+    } else {
+      setShow(false)
+    }
+  }
+
   return (
     <div className="MainPage">
-      <FullPage controls controlsProps={{ className: 'slide-navigation' }}>
-        <Slide>
+      <FullPage ref={fullPageRef} afterChange={handleChange} controls controlsProps={{ className: 'slide-navigation' }}>
+        <Slide initialSlide={0}>
           <Section isBg={true}>
             <div className="left">
               <div className="text-wrap">
@@ -33,12 +54,19 @@ function MainPage() {
             </div>
           </Section>
         </Slide>
-        <Slide>
+        <Slide initialSlide={1}>
           <Section>
             <div className="left">
               <div className="img-wrap">
                 <div className="img-item">
-                  <img style={{ width: '654px', height: '540px' }} src={projectimg} alt="projectimg" />
+                  {show ? (
+                    <div className="fanfare-img">
+                      <Lottie options={defaultOptions} height={600} width={600} isClickToPauseDisabled={true} />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  <img className="main-2-img" src={projectimg} alt="projectimg" />
                 </div>
               </div>
             </div>
@@ -55,7 +83,7 @@ function MainPage() {
             </div>
           </Section>
         </Slide>
-        <Slide>
+        <Slide initialSlide={2}>
           <Section isBg={true}>
             <div className="left">
               <div className="text-wrap">

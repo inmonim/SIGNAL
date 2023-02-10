@@ -1,3 +1,8 @@
+.posting-container {
+  width: 900px;
+  margin: 158px auto;
+}
+
 .apply-button {
   color: white;
   background-color: #574b9f;
@@ -64,19 +69,60 @@
   font-weight: bold;
 }
 
+.posting-label-name {
+  font-size: 18px;
+}
+
 .phone-section,
 .email-section {
   width: 45%;
   display: flex;
   align-items: center;
   font-weight: bold;
+
+  justify-content: center;
+}
+
+.skill-scroll {
+  /* width: 45%; */
+  display: flex;
+  overflow: scroll;
+}
+
+.skill-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.skill-scroll::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .career-label,
 .exp-label {
-  font-weight: bold;
+  font-size: 24px;
+  /* font-weight: bold; */
   display: flex;
   justify-content: space-between;
+}
+
+.meeting-time-scroll {
+  margin-left: 3em;
+  overflow-x: auto;
+  max-width: 400px;
+}
+
+.meeting-time-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.meeting-time-scroll::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .submit-button {
@@ -89,9 +135,19 @@
   font-weight: bold;
 }
 
+.plus-button {
+  width: 30px;
+  height: 30px;
+}
+
 .plus-button:hover,
 .minus-button:hover {
   cursor: pointer;
+}
+
+.posting-position-plus {
+  border-top: 2px solid #574b9f;
+  padding-top: 20px;
 }
 
 .career-div,
@@ -206,7 +262,6 @@
 .apply-modify-skill-select {
   width: 300px;
 }
-
 
 /* ----register---- */
 .apply-register-container {

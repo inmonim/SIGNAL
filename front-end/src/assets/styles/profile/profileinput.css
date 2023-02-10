@@ -34,6 +34,7 @@
 .user-profile-input-chip-item {
   display: flex;
   align-items: center;
+  font-size: 22px;
 }
 
 .user-profile-input-chip-minus-img {
