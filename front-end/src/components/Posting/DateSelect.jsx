@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import 'assets/styles/postingRegister.css'
 import { ko } from 'date-fns/esm/locale'
 import moment from 'moment/moment'
 
@@ -21,6 +22,7 @@ function DateSelect(props) {
       timeIntervals={60}
       timeCaption="time"
       dateFormat="Pp"
+      wrapperClassName="datepicker"
     />
   )
 }

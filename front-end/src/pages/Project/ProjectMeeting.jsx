@@ -73,8 +73,9 @@ const projectMeetingSetting = () => {
   myName = sessionStorage.getItem('nickname')
   console.log(roomId, myName)
   if (myName !== nickname) {
-    alert('권한이 없습니다. 다시 로그인하세요')
-    window.close()
+    if (!alert('권한이 없습니다. 다시 로그인하세요')) {
+      window.close()
+    }
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -130,8 +131,15 @@ function ProjectMeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 접속해있음')
+
+      if (data.isDup === true) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+        return
+      }
+      meetingStart()
     })
-    meetingStart()
 
     // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
     socket.on('user_enter', async (data) => {

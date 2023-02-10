@@ -4,7 +4,7 @@ import moment from 'moment'
 
 function MeetingPresentTime(props) {
   const [time, setTime] = useState(new Date())
-  console.log(props, props.personNum.length)
+  // console.log(props, props.personNum.length)
   const setNewDate = () => {
     setTime(new Date())
   }
