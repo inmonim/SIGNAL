@@ -86,6 +86,14 @@ function Beforemeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 이미 접속해있음')
+
+      if (data.isDup === true) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+        return
+      }
+
       if (numOfUsers > 2) {
         if (!alert('정원 초과입니다.')) {
           // window.location = '..'

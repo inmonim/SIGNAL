@@ -131,8 +131,15 @@ function ProjectMeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 접속해있음')
+
+      if (data.isDup === true) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+        return
+      }
+      meetingStart()
     })
-    meetingStart()
 
     // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
     socket.on('user_enter', async (data) => {
@@ -727,13 +734,6 @@ function ProjectMeeting() {
   }, [voice])
 
   useEffect(() => {
-    for (let i = 0; i < personList.length; i++) {
-      if (personList[i] === myName) {
-        if (!alert('중복접속입니다.!!')) {
-          window.close()
-        }
-      }
-    }
     setPersonList((personList) => [...personList, myName])
     startPaint()
     canvas.addEventListener('mousemove', onMouseMove)
