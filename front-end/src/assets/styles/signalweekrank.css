@@ -1,0 +1,21 @@
+.signal-rank-page-container{
+  margin: 108px 0px;
+  min-height: 100vh;
+}
+
+.signal-rank-container{
+  width: 1125px;
+  margin: auto;
+}
+
+.signal-rank-header{
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.signal-rank-header-title{
+  font-size: 44px;
+  display: flex;
+  justify-content: center;
+}
