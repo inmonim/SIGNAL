@@ -94,31 +94,35 @@ function signalDetail() {
             pip={true} // pip 모드 설정 여부
           />
         </div>
-        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
+        {/* <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>Git 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            {data.deployUrl}
+            <a href={data.deployUrl}>{data.deployUrl}</a>
           </div>
-        </div>
+        </div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>배포 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            {data.deployUrl}
+            <a href={data.deployUrl}>{data.deployUrl}</a>
           </div>
         </div>
-        <div style={{ width: '1280px  ', height: '720px', overflow: 'hidden' }}>
-          <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page width={1280} height={720} pageNumber={pageNumber} />
-          </Document>
+        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
+          <label>PDF 파일</label>
+          <div style={{ width: '1126px  ', height: '620px', overflow: 'hidden', marginTop: '1em' }}>
+            <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page width={1126} height={720} pageNumber={pageNumber} />
+            </Document>
+          </div>
+          <p style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}>
+            <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
+              &lt;
+            </SignalBtn>
+            <h2 style={{ margin: '1em' }}>
+              Page {pageNumber} of {numPages}
+            </h2>
+            <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</SignalBtn>
+          </p>
         </div>
-        <p>
-          <SignalBtn onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</SignalBtn>
-          <span>
-            Page {pageNumber} of {numPages}
-          </span>
-
-          <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</SignalBtn>
-        </p>
         <div className="apply-detail-content-section">
           <label>README</label>
           <div className="apply-detail-content">
