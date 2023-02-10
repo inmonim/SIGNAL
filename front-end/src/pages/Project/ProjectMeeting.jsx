@@ -23,12 +23,10 @@ console.log('location.search >>> ', location.search)
 const params = new URLSearchParams(location.search)
 
 const nickname = params.get('nickname')
-const owner = params.get('owner')
-const applySeq = params.get('applySeq')
+const projectSeq = params.get('projectSeq')
 
 console.log("params.get('nickname') >>> ", nickname)
-console.log("params.get('owner') >>> ", owner)
-console.log("params.get('applySeq') >>> ", applySeq)
+console.log("params.get('projectSeq') >>> ", projectSeq)
 
 // ============================================
 let myStream
