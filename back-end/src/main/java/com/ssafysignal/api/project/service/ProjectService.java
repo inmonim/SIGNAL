@@ -5,7 +5,6 @@ import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
-import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
@@ -19,10 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +29,6 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ApplyRepository applyRepository;
-    private final UserHeartLogRepository userHeartLogRepository;
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
     private final UserRepository userRepository;
 
@@ -63,10 +59,10 @@ public class ProjectService {
             applyRepository.save(apply);
         }
 
-        
         // 합격자들 합격 처리해서 프로젝트 유저로 이동 (AS101 = 합격)
         List<Apply> pickList = applyRepository.findByPostingSeqAndApplyCode(postingSeq, "AS101");
-        project.getProjectUserList().addAll(pickList.stream().map(ProjectUser::fromEntity).collect(Collectors.toList()));
+        List<Integer> oldUserList = project.getProjectUserList().stream().map(ProjectUser::getUserSeq).collect(Collectors.toList());
+        project.getProjectUserList().addAll(pickList.stream().filter((pick) -> !oldUserList.contains(pick.getUserSeq())).map(ProjectUser::fromEntity).collect(Collectors.toList()));
 
         // 프로젝트 포지션 별 인원 수 계산
         Map<String, Integer> positionCount = new HashMap<>();
@@ -91,19 +87,16 @@ public class ProjectService {
         project.setProjectCode("PS100");
         // 공고 "모집 마감" PPS101
         project.getPosting().setPostingCode("PPS101");
+        // 프로젝트 다음 평가일 지정
+        project.setEvaluationDt(LocalDate.now().plusDays(7));
         projectRepository.save(project);
 
-        List<ProjectUser> projectUserList = projectRepository.findByPostingSeq(postingSeq).get().getProjectUserList();
-
-        for (ProjectUser projectUser:projectUserList) {
-            projectUser.setHeartCnt(projectUser.getHeartCnt() + 100);
-            ProjectUserHeartLog projectUserHeartLog = ProjectUserHeartLog.builder()
+        for (ProjectUser projectUser : project.getProjectUserList()) {
+            projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
                     .projectUserSeq(projectUser.getProjectUserSeq())
                     .heartCnt(100)
                     .content("프로젝트 시작")
-                    .build();
-
-            projectUserHeartLogRepository.save(projectUserHeartLog);
+                    .build());
         }
 
 

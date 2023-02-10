@@ -7,7 +7,6 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
