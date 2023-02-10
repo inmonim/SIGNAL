@@ -225,7 +225,7 @@ function PostingApply() {
                                 window.open(
                                   `/beforemeeting?nickname=${sessionStorage.getItem(
                                     'nickname'
-                                  )}&owner=${false}&appluSeq=${row.applySeq}`,
+                                  )}&owner=${false}&applySeq=${row.applySeq}`,
                                   '_blank'
                                 )
                               }
