@@ -91,7 +91,12 @@ function ProjectProgress({ projectSeq }) {
       ) : mode === 1 ? (
         <ProjectDocs projectSeq={projectSeq} />
       ) : mode === 2 ? (
-        <AlertModal open={meetingOpen} onClick={handleMeetingEnter} msg={'화상회의에 입장하시겠습니까?'} />
+        <AlertModal
+          open={meetingOpen}
+          onClick={handleMeetingEnter}
+          msg={'화상회의에 입장하시겠습니까?'}
+          onClose={() => setMeetingOpen(false)}
+        />
       ) : (
         <TeamEval projectSeq={projectSeq} />
       )}
