@@ -29,7 +29,7 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("text", emailDto.getText());
         context.setVariable("content", emailDto.getContent());
-        context.setVariable("url", String.format("%s:%s%s", emailDto.getHost(), emailDto.getPort(), emailDto.getUrl()));
+        context.setVariable("url", String.format("%s%s", emailDto.getHost(), emailDto.getUrl()));
 
         String html = templateEngine.process(templateName, context);
 

@@ -31,4 +31,6 @@ public class ProjectSettingModifyRequest {
     private String content;
     @Schema(description = "프로젝트 Git Url")
     private String gitUrl;
+    @Schema(description = "이미지 삭제")
+    private Boolean isDelete;
 }
