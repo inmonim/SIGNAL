@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
@@ -6,58 +6,68 @@ import { FormControlLabel } from '@mui/material'
 import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
-// import api from 'api/Api'
+import api from 'api/Api'
 
-function EvalQna(toUserSeq, projectSeq) {
-  const userSeq = sessionStorage.getItem('userSeq')
-  const [score, setScore] = useState([0, 0, 0, 0, 0])
+function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
+  const [score, setScore] = useState([])
+  const [weekCnt, setWeekCnt] = useState(1)
+  const [evaluationStartDt, setEvaluationStartDt] = useState('')
+  const [evaluationEndDt, setEvaluationEndDt] = useState('')
+  const [question, setQuestion] = useState([])
 
   const handleScoreChange = (e, index) => {
-    console.log(e.target.name)
     const scoreArr = [...score]
     scoreArr.splice(e.target.name, 1, e.target.value)
     setScore(scoreArr)
-    console.log(scoreArr)
   }
-  const question = [
-    '의사소통에 적극적으로 참여했나요?',
-    '약속 시간을 잘 지켰나요?',
-    '얼마나 프로젝트에 성실히 임했나요?',
-    '얼마나 목표를 이행하였나요?',
-    '얼마나 프로젝트에 기여했나요?',
-  ]
 
   const evaluationSubmit = async () => {
     try {
-      // await api.post(process.env.REACT_APP_API_URL + '/project/evaluation', {
-      //   fromUserSeq: userSeq,
-      //   projectSeq,
-      //   scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-      //   // term: ???/
-      //   toUserSeq,
-      // })
-      console.log({
-        fromUserSeq: userSeq,
-        projectSeq,
-        scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-        // term: ???/
-        toUserSeq,
-      })
+      await api
+        .post(process.env.REACT_APP_API_URL + '/project/evaluation', {
+          fromUserSeq,
+          projectSeq,
+          scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
+          weekCnt,
+          toUserSeq,
+        })
+        .then(() => setFlag(true))
     } catch (error) {
-      console.log(error)
+      alert('이미 평가한 팀원 입니다.')
     }
   }
+
+  const evaluationFetch = async () => {
+    await api
+      .get(process.env.REACT_APP_API_URL + `/project/evaluation/` + projectSeq)
+      .then((response) => {
+        setQuestion(response.data.body.questionList)
+        setWeekCnt(response.data.body.weekCnt)
+        setEvaluationStartDt(response.data.body.evaluationStartDt)
+        setEvaluationEndDt(response.data.body.evaluationEndDt)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
+  useEffect(() => {
+    evaluationFetch()
+  }, [toUserSeq])
+
   return (
     <div className="eval-body">
-      <div className="eval-date">3회차 2022.00.00 ~ 2022.00.00</div>
+      <div className="eval-date">
+        {weekCnt}회차 {evaluationStartDt} ~ {evaluationEndDt}
+      </div>
       {question.map((item, index) => (
         <div key={index} className="eval-question-body">
           <div className="eval-question">
             <img src={QuestionIcon} alt="" style={{ width: '30px' }} />
-            {item}
+            {item.content}
           </div>
           <div className="eval-radio-btn">
-            <RadioGroup name={index} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
+            <RadioGroup name={`${index}`} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
               <FormControlLabel
                 value="10"
                 control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
