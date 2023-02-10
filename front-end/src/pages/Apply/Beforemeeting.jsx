@@ -51,8 +51,9 @@ const prevMeetingSetting = () => {
   console.log(isOwner, params.get('applySeq'))
 
   if (myName !== params.get('nickname')) {
-    alert('권한이 없습니다. 다시 로그인하세요')
-    window.close()
+    if (!alert('권한이 없습니다. 다시 로그인하세요')) {
+      window.close()
+    }
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -85,6 +86,14 @@ function Beforemeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 이미 접속해있음')
+
+      if (data.isDup === true) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+        return
+      }
+
       if (numOfUsers > 2) {
         if (!alert('정원 초과입니다.')) {
           // window.location = '..'
@@ -221,6 +230,7 @@ function Beforemeeting() {
         console.error(error)
         if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
           // window.location = '..'
+          window.close()
         }
       })
   }
