@@ -30,8 +30,8 @@ public class ProjectEvaluation {
     private Integer num;
     @Column(name = "score")
     private Integer score;
-    @Column(name = "term_cnt")
-    private Integer termCnt;
+    @Column(name = "week_cnt")
+    private Integer weekCnt;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,14 +39,14 @@ public class ProjectEvaluation {
     private ProjectEvaluationQuestion projectEvaluationQuestion;
 
     @Builder
-    public ProjectEvaluation(Integer projectEvaluationSeq, Integer projectSeq, Integer fromUserSeq, Integer toUserSeq, Integer num, Integer score, Integer termCnt, LocalDateTime regDt, ProjectEvaluationQuestion projectEvaluationQuestion) {
+    public ProjectEvaluation(Integer projectEvaluationSeq, Integer projectSeq, Integer fromUserSeq, Integer toUserSeq, Integer num, Integer score, Integer weekCnt, LocalDateTime regDt, ProjectEvaluationQuestion projectEvaluationQuestion) {
         ProjectEvaluationSeq = projectEvaluationSeq;
         this.projectSeq = projectSeq;
         this.fromUserSeq = fromUserSeq;
         this.toUserSeq = toUserSeq;
         this.num = num;
         this.score = score;
-        this.termCnt = termCnt;
+        this.weekCnt = weekCnt;
         this.regDt = regDt;
         this.projectEvaluationQuestion = projectEvaluationQuestion;
     }
