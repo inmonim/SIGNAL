@@ -103,14 +103,13 @@ function App() {
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
 
-            <Route path="/projectmeeting" element={<ProjectMeeting />} />
-
             <Route path="*" element={<Fourzerofour />} />
           </Route>
 
           <Route element={<FooterLayout />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/beforemeeting" element={<Beforemeeting />} />
+            <Route path="/projectmeeting" element={<ProjectMeeting />} />
           </Route>
         </Routes>
       </BrowserRouter>
