@@ -94,7 +94,6 @@ function App() {
             <Route path="/qnaRegist" element={<QnaRegist />} />
             <Route path="/qnaModify" element={<QnaModify />} />
             <Route path="/myprofile" element={<MyProfile />} />
-            <Route path="/beforemeeting" element={<Beforemeeting />} />
             <Route path="/signal" element={<SignalList />} />
             <Route path="/signalregister" element={<Signalregister />} />
             <Route path="/signaldetail" element={<SignalDetail />} />
@@ -111,6 +110,7 @@ function App() {
 
           <Route element={<FooterLayout />}>
             <Route path="/" element={<MainPage />} />
+            <Route path="/beforemeeting" element={<Beforemeeting />} />
           </Route>
         </Routes>
       </BrowserRouter>
