@@ -4,24 +4,6 @@ import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
 
-// =================== url 파라미터 들고오기  =========================
-// 닉네임 : nickname
-// owner : false (지원자) , true (작성자)
-// applySeq : 지원서seq
-
-console.log('location >>> ', location)
-console.log('location.search >>> ', location.search)
-
-const params = new URLSearchParams(location.search)
-
-const nickname = params.get('nickname')
-const owner = params.get('owner')
-const applySeq = params.get('applySeq')
-
-console.log("params.get('nickname') >>> ", nickname)
-console.log("params.get('owner') >>> ", owner)
-console.log("params.get('applySeq') >>> ", applySeq)
-
 // ============================================
 let myStream
 
@@ -45,7 +27,6 @@ const prevMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('사전 미팅 소켓 통신 시작!')
-  const params = new URLSearchParams(location.search)
 
   // console.log(params.get('userSeq'))
 
@@ -61,6 +42,8 @@ const prevMeetingSetting = () => {
       },
     ],
   }
+
+  const params = new URLSearchParams(location.search)
   roomId = 'prev' + params.get('applySeq')
   myName = sessionStorage.getItem('nickname')
   isOwner = params.get('owner')
