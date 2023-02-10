@@ -4,6 +4,25 @@ import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
 
+// =================== url 파라미터 들고오기  =========================
+// 닉네임 : nickname
+// owner : false (지원자) , true (작성자)
+// applySeq : 지원서seq
+
+console.log('location >>> ', location)
+console.log('location.search >>> ', location.search)
+
+const params = new URLSearchParams(location.search)
+
+const nickname = params.get('nickname')
+const owner = params.get('owner')
+const applySeq = params.get('applySeq')
+
+console.log("params.get('nickname') >>> ", nickname)
+console.log("params.get('owner') >>> ", owner)
+console.log("params.get('applySeq') >>> ", applySeq)
+
+// ============================================
 let myStream
 
 let myName
