@@ -55,6 +55,7 @@ public class ProjectUser {
         return ProjectUser.builder()
                 .userSeq(apply.getUserSeq())
                 .projectSeq(apply.getPosting().getProject().getProjectSeq())
+                .heartCnt(100)
                 .positionCode(apply.getPositionCode())
                 .build();
     }
