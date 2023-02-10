@@ -93,9 +93,12 @@ function TeamSelect() {
 
   // 미팅입장 alert open
   const [alertOpen, setAlertOpen] = useState(false)
+  const [meetingApplySeq, setMeetingApplySeq] = useState('')
 
-  const handleAlertOpen = () => {
+  const handleAlertOpen = (applySeq) => {
     setAlertOpen(true)
+    console.log(applySeq)
+    setMeetingApplySeq(applySeq)
   }
 
   const rows = []
@@ -124,11 +127,12 @@ function TeamSelect() {
 
   // 미팅입장 시 alert close
   // 필요한 파라미터 : nickname, 팀장인지 아닌지(owner[팀장 true, 팀원 false]), applySeq
-  const handleToMeeting = (applySeq) => {
+  const handleToMeeting = (e) => {
     setAlertOpen(false)
     // 팀빌딩 입장은 팀장
+    console.log(meetingApplySeq)
     window.open(
-      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${applySeq}`,
+      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${meetingApplySeq}`,
       '_blank'
     )
   }
