@@ -48,7 +48,7 @@ function ApplyModify() {
   const [expSeq, setExpSeq] = useState(0)
   const [meetingList, setMeetingList] = useState([])
   const [meetingSeq, setMeetingSeq] = useState('')
-  const [meetingDafault, setMeetingDafault] = useState('')
+  const [meetingDafault, setMeetingDefault] = useState('')
   const [meetingValid, setMeetingValid] = useState(true)
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
@@ -70,6 +70,7 @@ function ApplyModify() {
       setContent(applyRes.data.body.content)
       qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
       meetingFetchFilter(postingRes.data.body.postingMeetingList)
+      setMeetingDefault(applyRes.data.body.postingMeeting.meetingDt)
       setMeetingSeq(applyRes.data.body.postingMeeting.postingMeetingSeq)
       setPosting(postingRes.data.body)
       addTag(changeSelectForm(applyRes.data.body.skillList))
@@ -111,7 +112,6 @@ function ApplyModify() {
     const meetingDtArr = []
     list.forEach((item) => {
       if (item.postingMeetingCode === 'PM102' || item.postingMeetingSeq === meetingSeq) {
-        setMeetingDafault(item.meetingDt)
         meetingDtArr.push({
           postingMeetingSeq: item.postingMeetingSeq,
           meetingDt: item.meetingDt,
@@ -304,8 +304,9 @@ function ApplyModify() {
   // end >> handle qna
 
   // start >> handle meetingDt
-
+  console.log(meetingDafault)
   const handleMeetingDtChange = (key) => {
+    console.log('meetingChagne')
     setMeetingSeq(key)
     setMeetingValid(false)
   }

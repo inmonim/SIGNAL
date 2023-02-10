@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import Autocomplete from '@mui/material/Autocomplete'
+// import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
@@ -29,28 +29,30 @@ import { positionData } from 'data/Positiondata'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
-
+import Swal from 'sweetalert2'
+import ReactSelect from 'react-select'
+import { changeSelectForm } from 'utils/changeForm'
 const Container = styled.section`
   padding: 130px 10em;
 `
-const skillStyle = {
-  width: '100%',
-  maxwidth: '378px',
-  height: '42px',
-  padding: '0 14px',
-  border: '1px solid #d7e2eb',
-  borderradius: '4px',
-  boxsizing: 'border-box',
-  backgroundcolor: '#fbfbfd',
-  fontsize: '16px',
-  fontweight: '500',
-  lineheight: '1.6',
-  color: '#263747',
-  '& : hover': {
-    border: '1px solid #3396f4',
-    boxshadow: 'inset 0 0 0 1px#3396f4',
-  },
-}
+// const skillStyle = {
+//   width: '100%',
+//   maxwidth: '378px',
+//   height: '42px',
+//   padding: '0 14px',
+//   border: '1px solid #d7e2eb',
+//   borderradius: '4px',
+//   boxsizing: 'border-box',
+//   backgroundcolor: '#fbfbfd',
+//   fontsize: '16px',
+//   fontweight: '500',
+//   lineheight: '1.6',
+//   color: '#263747',
+//   '& : hover': {
+//     border: '1px solid #3396f4',
+//     boxshadow: 'inset 0 0 0 1px#3396f4',
+//   },
+// }
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -94,6 +96,7 @@ const PostingModify = () => {
     subject: '',
     localCode: '',
     fieldCode: '',
+    leaderPosition: 'PO100',
     isContact: '',
     term: 1,
     content: '',
@@ -117,6 +120,7 @@ const PostingModify = () => {
       count: e.positionCnt,
     }))
     const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+    const resultSkillde = post.postingSkillList.map((e) => ({ label: e.code.name, value: e.code.code }))
     const resultQuestion = post.postingQuestionList.map((e) => ({
       id: e.num,
       text: e.content,
@@ -125,19 +129,21 @@ const PostingModify = () => {
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
     setDateList(resultMeeting)
-
+    setDeSkill(resultSkillde)
+    addTag(resultSkillde)
     setPosting({
       ...posting,
       userSeq: sessionStorage.getItem('userSeq'),
       subject: post.subject,
       localCode: post.localCode,
+      leaderPosition: post.leaderPosition,
       fieldCode: post.fieldCode,
       isContact: post.isContact,
       term: post.term,
       content: post.content,
       postingEndDt: post.postingEndDt,
       level: post.level,
-      postingMeetingList: post.MeetingList,
+      postingMeetingList: post.postingMeetingList,
       postingSkillList: resultSkill,
       postingPositionList: post.postingPositionList,
       postingQuestionList: post.postingQuestionList,
@@ -146,7 +152,7 @@ const PostingModify = () => {
   // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
-
+  const navigate = useNavigate()
   // const profileFetch = async () => {
   //   try {
   //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
@@ -165,6 +171,7 @@ const PostingModify = () => {
   // start >> Data filter
   const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
+  const [errorBox, setErrorBox] = useState(false)
   // end >> Data filter
 
   // start >> handle position
@@ -175,12 +182,48 @@ const PostingModify = () => {
 
   // end >> skill filter
   // end >> handle skill
-
-  // start >> handle career
-  const handleChangeSkill = (value) => {
-    const copy = value.map((ele) => ele.code)
-    setPosting({ ...posting, postingSkillList: copy })
+  const [numberOfTags, setNumberOfTags] = useState(0)
+  const [arrayOfTags, addTag] = useState([])
+  const handleSkillInput = (e) => {
+    console.log(e)
+    if (e === null) return
+    newTag({
+      label: e.label,
+      value: e.value,
+    })
   }
+  const newTag = (tag) => {
+    // const set = new Set(arrayOfTags.concat(tag))
+    // setNumberOfTags(set.size)
+    // const uniqueTags = Array.from(set)
+    // addTag(uniqueTags)
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
+    addTag(uniqueTags)
+    console.log(arrayOfTags)
+    console.log(numberOfTags)
+  }
+  const tags = arrayOfTags.map((h, index) => (
+    <Chip
+      label={h.label}
+      value={h.value}
+      variant="outlined"
+      sx={{ fontSize: '20px', margin: '5px' }}
+      key={index}
+      onDelete={() => handleDelete(h)}
+    />
+  ))
+  const skillPostFilter = (list) => {
+    const skillArr = []
+    list.map((item) => skillArr.push(item.value))
+    setPosting({ ...posting, postingSkillList: skillArr })
+  }
+  // start >> handle career
+  // const handleChangeSkill = (value) => {
+  //   const copy = value.map((ele) => ele.code)
+  //   setPosting({ ...posting, postingSkillList: copy })
+  // }
   // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
@@ -239,20 +282,23 @@ const PostingModify = () => {
     setTodolist({ text: '' })
   }
   // start >> handle qna
-  function getMatchingValues(postingSkillList, Skilldata) {
-    const result = []
-    for (let i = 0; i < postingSkillList.length; i++) {
-      for (let j = 0; j < Skilldata.length; j++) {
-        // console.log(postingSkillList[i].skillCode)
-        // console.log(Skilldata[j].code)
-        if (postingSkillList[i].skillCode === Skilldata[j].code) {
-          result.push(Skilldata[j])
-          break
-        }
-      }
-    }
-    return result
-  }
+  // function getMatchingValues(postingSkillList, Skilldata) {
+  //   console.log('실행')
+  //   console.log(postingSkillList)
+  //   console.log(Skilldata)
+  //   const result = []
+  //   for (let i = 0; i < postingSkillList.length; i++) {
+  //     for (let j = 0; j < Skilldata.length; j++) {
+  //       console.log(postingSkillList[i])
+  //       console.log(Skilldata[j].code)
+  //       if (postingSkillList[i] === Skilldata[j].code) {
+  //         result.push(Skilldata[j])
+  //         break
+  //       }
+  //     }
+  //   }
+  //   return result
+  // }
   // const handleQnAChange = (value, key) => {
   //   const qnaArr = [...qnaList]
   //   qnaArr.splice(key, 1, value)
@@ -263,26 +309,40 @@ const PostingModify = () => {
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
-    try {
+    if (
+      posting.subject !== '' &&
+      posting.content !== '' &&
+      posting.postingMeetingList.length !== 0 &&
+      posting.postingSkillList.length !== 0 &&
+      posting.postingPositionList.length !== 0 &&
+      posting.postingQuestionList !== 0
+    ) {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
           console.log(res)
-          console.log(JSON.stringify(posting))
+          // console.log(JSON.stringify(posting))
         })
         .catch((err) => {
           console.log(err)
-          console.log(JSON.stringify(posting))
+          // console.log(JSON.stringify(posting))
           // console.log(posting)
           // console.log(JSON.stringify(posting))
         })
-
-      // console.log('공고 post')
-    } catch (error) {
-      // console.log('에러')
+      navigate('/posting')
+    } else {
+      setErrorBox(true)
+      window.scrollTo(0, 0)
+      Swal.fire({
+        title: '등록 실패',
+        text: '선택하지 않은 값이 있습니다.',
+        icon: 'error',
+        button: '예',
+      })
     }
+    // console.log('공고 post')
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
@@ -294,7 +354,6 @@ const PostingModify = () => {
   }
   useEffect(() => {
     postPutFetch()
-    setDeSkill(getMatchingValues(posting.postingSkillList, Skilldata))
   }, [])
   useEffect(() => {
     // postingFetch()
@@ -309,7 +368,9 @@ const PostingModify = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
   }, [DateList])
-  useEffect(() => {})
+  useEffect(() => {
+    skillPostFilter(arrayOfTags)
+  }, [arrayOfTags])
   return (
     <Container>
       <div>
@@ -318,6 +379,10 @@ const PostingModify = () => {
           <button
             onClick={() => {
               console.log(posting)
+              console.log(deSkill, 'dd')
+              console.log(posting)
+              console.log(arrayOfTags)
+              console.log(tags)
             }}
           >
             dd
@@ -460,24 +525,13 @@ const PostingModify = () => {
                 <Label>사용 기술 </Label>
               </div>
               <div style={{ width: '80%' }}>
-                {deSkill && (
-                  <Autocomplete
-                    multiple
-                    limitTags={5}
-                    size="small"
-                    id="multiple-limit-tags"
-                    options={Skilldata}
-                    getOptionLabel={(option) => option.name}
-                    defaultValue={deSkill}
-                    onChange={(event, newValue) => {
-                      // console.log(newValue)
-                      // console.log(event.target)
-                      handleChangeSkill(newValue)
-                    }}
-                    renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-                    sx={{ skillStyle, backgroundColor: '#fbfbfd' }}
-                  />
-                )}
+                <ReactSelect
+                  placeholder=""
+                  isClearable
+                  onChange={handleSkillInput}
+                  isSearchable={true}
+                  options={changeSelectForm(Skilldata)}
+                />
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
@@ -507,7 +561,7 @@ const PostingModify = () => {
           <div style={{ display: 'flex', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '20%' }}></div>
-              <div style={{ width: '80%' }}></div>
+              <div style={{ width: '80%', margin: 0 }}>{tags && tags}</div>
             </div>
             <div>
               <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '600px' }}>
@@ -529,53 +583,44 @@ const PostingModify = () => {
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
-            <div className="phone-section1">
-              <div>
-                <div>
-                  <div className="career-label">
-                    <Label>포지션 인원</Label>
-                    <FilterSelect
-                      onChange={(e) => {
-                        // console.log(e.target.value)
-                        const position = JSON.parse(e.target.value)
-                        setPosi({ code: position.code, name: position.name })
-                      }}
-                    >
-                      {positionData.map((ele, i) => (
-                        <option key={i} value={JSON.stringify(ele)}>
-                          {ele.name}
-                        </option>
-                      ))}
-                    </FilterSelect>
-                    <img
-                      style={{ marginTop: '7px', marginBottom: '7px' }}
-                      src={plusButton}
-                      alt="plusButton"
-                      className="plus-button"
-                      onClick={() => {
-                        dispatch(add(posi))
-                      }}
-                    />
-                  </div>
-                  <hr></hr>
-                  <PositionTodo />
-                </div>
-                <CareerList
-                  careerList={careerList}
-                  onRemove={handleCareerRemove}
-                  onChange={handleCareerChange}
-                  key={careerList[0]}
-                ></CareerList>
+            <div className="phone-section">
+              <div style={{ width: '20%' }}>
+                <Label>포지션 인원</Label>
+              </div>
+              <div style={{ width: '80%', display: 'flex' }}>
+                <FilterSelect
+                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  onChange={(e) => {
+                    // console.log(e.target.value)
+                    const position = JSON.parse(e.target.value)
+                    setPosi({ code: position.code, name: position.name })
+                  }}
+                >
+                  {positionData.map((ele, i) => (
+                    <option key={i} value={JSON.stringify(ele)}>
+                      {ele.name}
+                    </option>
+                  ))}
+                </FilterSelect>
+                <img
+                  style={{ marginTop: '7px', marginBottom: '7px' }}
+                  src={plusButton}
+                  alt="plusButton"
+                  className="plus-button"
+                  onClick={() => {
+                    dispatch(add(posi))
+                  }}
+                />
               </div>
             </div>
-            <Box style={{ width: '5%' }}></Box>
-            <div className="phone-section" style={{ marginLeft: '3em' }}>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>
                 <Label>난이도</Label>
               </div>
-              <div style={{ width: '70%', display: 'flex' }}>
+              <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
+                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={posting.level}
@@ -583,6 +628,49 @@ const PostingModify = () => {
                   {[1, 2, 3, 4, 5].map((ele, i) => (
                     <option key={i} value={ele}>
                       LEVEL : {ele}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </div>
+            </div>
+          </div>
+          {/* 여기는 포지션인원 , 예상난이도 */}
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
+            <Box sx={{ width: '4.5%' }}></Box>
+            <div className="phone-section1">
+              <div>
+                <div className="career-label">
+                  <div style={{ width: '20%' }}></div>
+                </div>
+                <hr></hr>
+                <PositionTodo />
+                <div style={{ width: '80%', display: 'flex' }}></div>
+              </div>
+              <CareerList
+                careerList={careerList}
+                onRemove={handleCareerRemove}
+                onChange={handleCareerChange}
+                key={careerList[0]}
+              ></CareerList>
+            </div>
+            <div className="email-section" style={{ marginLeft: '3em' }}>
+              <div style={{ width: '30%' }}>
+                <Label>팀장 포지션</Label>
+              </div>
+              <div style={{ width: '70%', display: 'flex' }}>
+                <FilterSelect
+                  style={{ marginRight: '0px' }}
+                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  onChange={(e) => {
+                    // console.log(position.code)
+                    console.log(e.target.value)
+                    setPosting({ ...posting, leaderPosition: e.target.value })
+                  }}
+                  value={posting.leaderPosition && posting.leaderPosition}
+                >
+                  {positionData.map((ele, i) => (
+                    <option key={i} value={ele.code}>
+                      {ele.name}
                     </option>
                   ))}
                 </FilterSelect>

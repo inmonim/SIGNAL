@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
 import MeetingDoor from 'assets/image/meeting-door.png'
@@ -12,6 +12,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 
+// ============================================
 let myStream
 
 let myName
@@ -28,6 +29,24 @@ let selfStream
 
 let numOfUsers
 let socket
+// ======================================
+let canvas
+let ctx
+
+const INITIAL_COLOR = '#2c2c2c'
+let CANVAS_H
+let CANVAS_W
+
+const DRAWING = 0
+const ERASE = 1
+let MODE
+const ERASER_SIZE = 20
+
+let drawingXYs
+let drawingColor
+let drawingSize
+
+let mx, my, isPainting
 
 const projectMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
@@ -46,17 +65,16 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  roomId = 'project1234'
-  myName = sessionStorage.getItem('username')
+  const params = new URLSearchParams(location.search)
 
-  if (myName === null) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    myName = '익명' + result
+  const nickname = params.get('nickname')
+  const projectSeq = params.get('projectSeq')
+  roomId = 'project' + projectSeq
+  myName = sessionStorage.getItem('nickname')
+  console.log(roomId, myName)
+  if (myName !== nickname) {
+    alert('권한이 없습니다. 다시 로그인하세요')
+    window.close()
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -81,6 +99,29 @@ const projectMeetingSetting = () => {
   })
 }
 
+function startPaint() {
+  canvas = document.querySelector('.canvas')
+  ctx = canvas.getContext('2d')
+  ctx.globalAlpha = 1
+
+  const shareBox = document.querySelector('.project-meeting-video-share')
+  CANVAS_H = Number(window.getComputedStyle(shareBox).height.replace(/[^0-9]/g, ''))
+  CANVAS_W = Number(window.getComputedStyle(shareBox).width.replace(/[^0-9]/g, ''))
+  canvas.width = CANVAS_W
+  canvas.height = CANVAS_H
+
+  MODE = DRAWING
+
+  drawingXYs = []
+  drawingColor = INITIAL_COLOR
+  drawingSize = 2.5
+
+  ctx.strokeStyle = INITIAL_COLOR
+  ctx.lineWidth = drawingSize
+
+  isPainting = false
+}
+
 function ProjectMeeting() {
   if (socket == null) {
     projectMeetingSetting()
@@ -88,10 +129,9 @@ function ProjectMeeting() {
     // 기존 방의 유저수와 방장이름 얻어옴
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
-      console.log(numOfUsers, '명이 이미 접속해있음')
-
-      meetingStart()
+      console.log(numOfUsers, '명이 접속해있음')
     })
+    meetingStart()
 
     // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
     socket.on('user_enter', async (data) => {
@@ -102,6 +142,9 @@ function ProjectMeeting() {
     socket.on('all_users', (data) => {
       console.log('all_users : ', data.users)
       allUsersHandler(data) // 미리 접속한 유저들의 영상을 받기위한 pc, offer 생성
+
+      // 이미 해당 방이 화면 공유 중이면 화면 공유 받음
+      getShare()
     })
 
     // 클라이언트 입장에서 보내는 역할의 peerConnection 객체에서 수신한 answer 메시지(sender_offer의 응답받음)
@@ -153,13 +196,74 @@ function ProjectMeeting() {
     socket.on('user_exit', (data) => {
       exitUserHandler(data)
     })
+
+    // 화면 공유 가능하다는 허락받음
+    socket.on('share_ok', (data) => {
+      console.log('화면 공유 가능')
+      shareStart()
+    })
+
+    // 다른 유저가 화면공유를 시작함
+    socket.on('share_request', (data) => {
+      shareRequestHandler(data)
+      console.log('공유 request 받음!!', data)
+    })
+
+    // 다른 유저가 화면공유 중지함
+    socket.on('share_disconnect', (data) => {
+      const socketId = data.id
+      setShareUserName('')
+
+      receivePCs.share[socketId].close()
+      delete receivePCs.share[socketId]
+      removeShareVideo()
+    })
+
+    // 페인트보드 =========================================================================================
+    // 다른 사람이 그리거나 지움
+    socket.on('drawing', function (data) {
+      const xys = data.xys
+
+      if (data.mode === DRAWING) {
+        // 그리기
+        const size = data.size
+        const drawingColor = data.color
+        ctx.beginPath()
+        for (let i = 1; i < xys.length; i++) {
+          const [px, py] = xys[i - 1]
+          const [cx, cy] = xys[i]
+          ctx.moveTo(px, py)
+          ctx.lineTo(cx, cy) // (px,py) ->(cx,cy)로 긋기
+          ctx.strokeStyle = drawingColor
+          ctx.lineWidth = size
+          ctx.stroke()
+          ctx.beginPath()
+        }
+      } else {
+        // 지우개
+        for (let i = 0; i < xys.length; i++) {
+          const [cx, cy] = xys[i]
+          ctx.clearRect(cx - ERASER_SIZE / 2, cy - ERASER_SIZE / 2, ERASER_SIZE, ERASER_SIZE)
+        }
+      }
+    })
+
+    // 다른사람이 전체를 지움
+    socket.on('clear', function () {
+      ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
+    })
+
+    // 메시지받음
+    socket.on('get_message', (data) => {
+      getMessage(data)
+    })
   }
 
-  // ============================================================================
+  // =============================================================================================
 
   function meetingStart() {
     console.log('meetingStart 실행')
-    setPersonList((personList) => [...personList, myName])
+
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -174,7 +278,7 @@ function ProjectMeeting() {
           return streams2
         })
 
-        myStream.getVideoTracks().forEach((track) => (track.enabled = true)) // 초기에 mute
+        myStream.getVideoTracks().forEach((track) => (track.enabled = false)) // 초기에 mute
         myStream.getAudioTracks().forEach((track) => (track.enabled = false))
 
         // 내 영상 비디오에 띄우기
@@ -266,6 +370,8 @@ function ProjectMeeting() {
         // stream을 video에 넣어주기
         if (purpose === 'user') {
           userOntrackHandler(e.streams[0], userName, senderSocketId)
+        } else if (purpose === 'share') {
+          shareOntrackHandler(e.streams[0], userName, senderSocketId)
         }
         // console.log('한번만 나오는지')
       }
@@ -413,6 +519,182 @@ function ProjectMeeting() {
       console.error(e)
     }
   }
+  // ============================================================================
+
+  function shareCheck() {
+    console.log('shareCheck실행됨!!')
+    if (shareUserName !== '') return
+    socket.emit('share_check')
+  }
+
+  // 내가 화면 공유 시작
+  function shareStart() {
+    navigator.mediaDevices
+      .getDisplayMedia({
+        audio: true,
+        video: true,
+      })
+      .then(async function (stream) {
+        console.log('stream check:', stream.getAudioTracks().length) // 1이면 audio(o) 0이면 audio(x)
+        const isAudioTrue = stream.getAudioTracks().length
+
+        setShareUserName(myName)
+
+        // 내 화면 stream을 비디오에 넣기
+        const selfShareStream = new MediaStream()
+        selfShareStream.addTrack(stream.getVideoTracks()[0])
+        const shareVideo = document.querySelector('.project-meeting-video-share > video')
+        shareVideo.srcObject = selfShareStream
+
+        sendPC.share = createSenderPeerConnection(stream, 'share', isAudioTrue)
+        const offer = await createSenderOffer(sendPC.share)
+
+        await socket.emit('sender_offer', {
+          offer,
+          purpose: 'share',
+        })
+      })
+      .catch((error) => {
+        console.log('error display stream', error)
+      })
+  }
+
+  // 나의 화면 공유 중지
+  function shareStop() {
+    console.log('shareStop', myName, shareUserName)
+    if (shareUserName !== myName) {
+      return
+    }
+    setShareUserName('')
+
+    sendPC.share.close()
+    sendPC.share = {}
+    socket.emit('share_disconnect')
+    removeShareVideo()
+  }
+
+  // 다른사람의 화면공유 받는 요청 처리
+  async function shareRequestHandler(data) {
+    const pc = createReceiverPeerConnection(data.socketId, data.userName, 'share')
+    const offer = await createReceiverOffer(pc)
+
+    setShareUserName(data.userName)
+
+    await socket.emit('receiver_offer', {
+      offer,
+      receiverSocketId: socket.id,
+      senderSocketId: data.socketId,
+      purpose: 'share',
+    })
+  }
+
+  // 막 들어왔을때 현재 화면공유중이면 화면공유받음
+  function getShare() {
+    socket.emit('get_share')
+  }
+
+  // 화면 공유 video제거
+  function removeShareVideo() {
+    const shareVideo = document.querySelector('.project-meeting-video-share > video')
+    shareVideo.srcObject = null
+  }
+
+  // 화면 공유 stream을 video에 넣음
+  function shareOntrackHandler(stream, userName, senderSocketId) {
+    // ##################수정해서 쓰삼#######################
+    const shareVideo = document.querySelector('.project-meeting-video-share > video')
+    console.log('shareVideo:', shareVideo)
+    shareVideo.srcObject = stream
+  }
+
+  // 페인트보드===================================================================================
+  function stopPainting() {
+    if (!isPainting) return
+    console.log('그리기 종료')
+    socket.emit('drawing', {
+      size: drawingSize,
+      color: drawingColor,
+      mode: MODE,
+      xys: drawingXYs,
+    })
+
+    isPainting = false
+  }
+
+  function startPainting() {
+    isPainting = true
+    drawingXYs = [[mx, my]]
+    // console.log("색상:", drawingColor);
+    console.log('그리기 시작')
+  }
+
+  function onMouseMove(event) {
+    const x = event.offsetX
+    const y = event.offsetY
+    if (MODE === DRAWING) {
+      if (!isPainting) {
+        // ctx.beginPath();
+        // ctx.moveTo(x, y);
+        ;[mx, my] = [x, y]
+      } else {
+        ctx.beginPath()
+        ctx.moveTo(mx, my)
+        ctx.lineTo(x, y)
+        ctx.strokeStyle = drawingColor
+        ctx.lineWidth = drawingSize
+        ctx.stroke()
+        drawingXYs.push([x, y])
+        ;[mx, my] = [x, y]
+      }
+    } else if (MODE === ERASE) {
+      if (isPainting) {
+        drawingXYs.push([x, y])
+        ctx.clearRect(x - ERASER_SIZE / 2, y - ERASER_SIZE / 2, ERASER_SIZE, ERASER_SIZE)
+      }
+    }
+  }
+  function handleCM(event) {
+    event.preventDefault()
+  }
+
+  function clear() {
+    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
+    socket.emit('clear')
+  }
+
+  function erase() {
+    MODE = ERASE
+  }
+
+  function changeColor(selectedColor) {
+    MODE = DRAWING
+    setColor(selectedColor)
+    drawingColor = selectedColor
+    ctx.strokeStyle = selectedColor
+  }
+  function sendMessage(message) {
+    socket.emit('send_message', { userName: myName, message })
+  }
+
+  function getMessage(data) {
+    chatting.current.getMessage(data)
+  }
+
+  // =============================================================================================
+  function setUserVideo() {
+    const videos = document.querySelectorAll('.project-meeting-video')
+    // console.log('personList:', personList, 'streams:', streams)
+    for (let i = 0; i < personList.length; i++) {
+      const video = videos[i]
+      if (personList[i] === myName) {
+        if (selfStream !== undefined && selfStream !== null) video.srcObject = selfStream
+      } else {
+        if (streams[personList[i]] !== undefined && streams[personList[i]] !== null)
+          video.srcObject = streams[personList[i]]
+      }
+    }
+  }
+
   const [voice, setVoice] = useState(false)
   const [video, setVideo] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
@@ -420,31 +702,45 @@ function ProjectMeeting() {
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [personList, setPersonList] = useState([])
   const [streams, setStreams] = useState({})
+  const [shareUserName, setShareUserName] = useState('')
+  const chatting = useRef()
 
   const [mode, setMode] = useState(0)
 
-  useEffect(() => {
-    const videos = document.querySelectorAll('.project-meeting-video')
-    console.log('personList:', personList, 'streams:', streams)
-    for (let i = 0; i < personList.length; i++) {
-      const video = videos[i]
-      video.autoplay = true
-      video.playsinline = true
-      if (personList[i] === myName) {
-        videos[i].srcObject = selfStream
-      } else {
-        videos[i].srcObject = streams[personList[i]]
-      }
-    }
-  }, [streams])
-
   const handleToVoice = () => {
-    setVoice(!voice)
+    myStream.getAudioTracks().forEach((track) => (track.enabled = !voice))
+    setVoice((voice) => !voice)
   }
 
   const handleToVideo = () => {
-    setVideo(!video)
+    myStream.getVideoTracks().forEach((track) => (track.enabled = !video))
+    setVideo((video) => !video)
   }
+
+  useEffect(() => {
+    setUserVideo()
+  }, [streams])
+
+  useEffect(() => {
+    console.log(personList)
+  }, [voice])
+
+  useEffect(() => {
+    setPersonList((personList) => [...personList, myName])
+    startPaint()
+    canvas.addEventListener('mousemove', onMouseMove)
+    canvas.addEventListener('mousedown', startPainting)
+    canvas.addEventListener('mouseup', stopPainting)
+    canvas.addEventListener('mouseleave', stopPainting)
+    canvas.addEventListener('contextmenu', handleCM)
+    // canvas.addEventListener('click', handleCanvasClick)
+  }, [])
+
+  useEffect(() => {
+    MODE = DRAWING
+    drawingColor = color
+    ctx.strokeStyle = color
+  }, [color])
 
   return (
     <div className="project-meeting-container">
@@ -452,14 +748,20 @@ function ProjectMeeting() {
         <VideoListSection className="project-meeting-video-list" mode={mode}>
           {personList.map((item, index) => (
             <VideoBox key={index} className="project-meeting-person" size={personList.length}>
-              <video className="project-meeting-video" alt="나" style={{ width: '100%', height: '100%' }} />
+              <video
+                className="project-meeting-video"
+                alt="나"
+                style={{ width: '100%', height: '100%' }}
+                autoPlay
+                playsInline
+              />
               <div className="project-meeting-person-name">{item}</div>
             </VideoBox>
           ))}
         </VideoListSection>
 
         <CodeEditSection className="project-meeting-video-code-edit" mode={mode}>
-          <video style={{ width: '100%', height: '100%' }}> 코드편집</video>
+          <div style={{ width: '100%', height: '100%' }}> 코드편집</div>
         </CodeEditSection>
 
         <ShareSection className="project-meeting-video-share-section" mode={mode}>
@@ -469,46 +771,51 @@ function ProjectMeeting() {
                 <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
               </div>
               <div style={{ textAlign: 'center', margin: '30px' }}>
-                <img src={Eraser} alt="" className="project-meeting-video-share-eraser" />
+                <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
               </div>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <SignalBtn>모두지우기</SignalBtn>
+                <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
               </div>
+              <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
+              <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
             </div>
           </div>
           {paletteOpen ? (
             <div className="project-meeting-video-share-color-palette">
-              <Color onClick={() => setColor('black')} color={'black'}></Color>
-              <Color onClick={() => setColor('white')} color={'white'}></Color>
-              <Color onClick={() => setColor('red')} color={'red'}></Color>
-              <Color onClick={() => setColor('blue')} color={'blue'}></Color>
+              <Color onClick={() => changeColor('black')} color={'black'}></Color>
+              <Color onClick={() => changeColor('white')} color={'white'}></Color>
+              <Color onClick={() => changeColor('red')} color={'red'}></Color>
+              <Color onClick={() => changeColor('blue')} color={'blue'}></Color>
             </div>
           ) : (
             ''
           )}
           <div className="project-meeting-video-share">
-            <video style={{ width: '100%', height: '100%', borderRadius: '25px' }}> 비디오</video>
+            <video style={{ width: '100%', height: '100%', borderRadius: '25px' }} autoPlay playsInline>
+              비디오
+            </video>
           </div>
-          <div className="project-meeting-video-sare-painht" style={{ border: '1px solid' }}>
+          <div className="project-meeting-video-share-paint" style={{ border: '0.5px solid' }}>
             <div
               style={{
-                backgroundColor: 'rgba(87, 75, 159, 0.3)',
                 width: '100%',
                 height: '100%',
                 borderRadius: '25px',
               }}
             >
-              그림판
+              <canvas className="canvas"></canvas>
             </div>
           </div>
         </ShareSection>
 
-        {chatOpen ? <Chatting key={100000}></Chatting> : ''}
+        <ChatSection chatOpen={chatOpen}>
+          <Chatting key={100000} sendMessage={sendMessage} ref={chatting}></Chatting>
+        </ChatSection>
       </div>
 
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
-          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
+          <MeetingPresentTime key={10000} personNum={personList}></MeetingPresentTime>
         </div>
         <div className="project-meeting-btn">
           <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
@@ -525,7 +832,7 @@ function ProjectMeeting() {
             <div className="project-meeting-btn-share">화면 공유</div>
             {/* 고정이여야함  absolute */}
           </div>
-          <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
+          <div className="project-meeting-btn-close-container" onClick={() => window.close()}>
             <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
             <div className="project-meeting-btn-close">종료</div>
           </div>
@@ -639,4 +946,12 @@ const CodeEditSection = styled.div`
 
 const ShareSection = styled.div`
   ${share}
+`
+const chat = (props) => {
+  return css`
+    display: ${props.chatOpen ? 'block' : 'none'};
+  `
+}
+const ChatSection = styled.div`
+  ${chat}
 `

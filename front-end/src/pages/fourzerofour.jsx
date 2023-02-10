@@ -5,7 +5,7 @@ import useInterval from 'hooks/useInterval'
 function fourzerofour() {
   const odungUrl = 'odung.gif'
   const odungUrl2 = 'odung2.gif'
-  const [dung, setDung] = useState('')
+  const [dung, setDung] = useState(process.env.REACT_APP_API_URL + `/static/media/${odungUrl}`)
   const [flag, setFlag] = useState(false)
 
   useInterval(() => {
@@ -16,7 +16,7 @@ function fourzerofour() {
       setDung(process.env.REACT_APP_API_URL + `/static/media/${odungUrl2}`)
       setFlag(false)
     }
-  }, 2000)
+  }, 3000)
   return (
     <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
       <div
@@ -44,6 +44,7 @@ function fourzerofour() {
             fontSize: '100px',
             textShadow: '-2px 0 #574B9F, 0 2px #574B9F, 2px 0 #574B9F, 0 -2px #574B9F',
             bottom: '50px',
+            zIndex: '1',
           }}
         >
           응 돌아가 ~ :P

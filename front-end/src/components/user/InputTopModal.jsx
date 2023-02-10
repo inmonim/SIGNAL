@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import 'assets/styles/profile/profileinput.css'
@@ -6,9 +6,8 @@ import SignalBtn from 'components/common/SignalBtn'
 import closeBtn from 'assets/image/x.png'
 import Chip from '@mui/material/Chip'
 import Select from 'react-select'
-import { getSkillCode } from 'data/Skilldata'
-import { getPositionCode } from 'data/Positiondata'
 import api from 'api/Api'
+import { getPositionName } from 'data/Positiondata'
 
 function InputTopModal({ open, onClose, inputTopTitle, Options }) {
   const userSeq = sessionStorage.getItem('userSeq')
@@ -16,50 +15,117 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
 
-  const handleDelete = (h) => () => {
-    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag !== h))
+  const handleDelete = async (h) => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
+    setNumberOfTags(arrayOfTags.length)
+
+    if (inputTopTitle === '포지션') {
+      try {
+        await api.delete(process.env.REACT_APP_API_URL + `/profile/position/${h.chipseq}`)
+        console.log('포지션 삭제')
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      try {
+        await api.delete(process.env.REACT_APP_API_URL + `/profile/skill/${h.chipseq}`)
+        console.log('스킬 삭제')
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
-  const handleHashtagChange = (event) => {
-    setTag(event.label)
+
+  const handleHashtagChange = async (event) => {
+    setTag(event)
   }
-  const newTag = () => {
-    const set = new Set(arrayOfTags.concat(tag))
-    setNumberOfTags(set.size)
-    const uniqueTags = Array.from(set)
+
+  const dataFetch = async () => {
+    if (inputTopTitle === '포지션') {
+      try {
+        const res = await api.get(process.env.REACT_APP_API_URL + `/profile/position/${userSeq}`)
+        const form = []
+        res.data.body.userPositionList.map((item) =>
+          form.push({
+            value: item.positionCode,
+            label: getPositionName(item.positionCode),
+            chipseq: item.userPositionSeq,
+          })
+        )
+        addTag(form)
+        console.log(form)
+
+        setNumberOfTags(form.length)
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      try {
+        const res = await api.get(process.env.REACT_APP_API_URL + `/profile/skill/${userSeq}`)
+        const form = []
+        res.data.body.userSkillList.map((item) =>
+          form.push({
+            value: item.code.code,
+            label: item.code.name,
+            chipseq: item.userSkillSeq,
+          })
+        )
+        addTag(form)
+        setNumberOfTags(form.length)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  const newTag = async () => {
+    // const set = new Set(arrayOfTags.concat(tag))
+    // setNumberOfTags(set.size)
+    // const uniqueTags = Array.from(set)
+    // addTag(uniqueTags)
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
     addTag(uniqueTags)
+
+    if (inputTopTitle === '포지션') {
+      try {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/position/${userSeq}`, {
+          positionCode: tag.value,
+        })
+        console.log('포지션 등록')
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      try {
+        await api.post(process.env.REACT_APP_API_URL + `/profile/skill/${userSeq}`, {
+          skillCode: tag.value,
+        })
+        console.log('스킬 등록')
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   const tags = arrayOfTags.map((h, index) => (
     <Chip
-      label={h}
+      label={h.label}
+      value={h.value}
+      chipseq={h.chipseq}
       variant="outlined"
       sx={{ fontSize: '20px', margin: '5px' }}
       key={index}
-      onDelete={handleDelete(h)}
+      onDelete={() => handleDelete(h)}
     />
   ))
 
-  const handleToProfile = async () => {
-    if (inputTopTitle === '스킬') {
-      arrayOfTags.map(async (item) => {
-        await api.post(process.env.REACT_APP_API_URL + `/profile/skill/${userSeq}`, {
-          skillCode: getSkillCode(item),
-        })
-      })
+  useEffect(() => {
+    dataFetch()
+  }, [inputTopTitle])
 
-      console.log(arrayOfTags.map((item) => getSkillCode(item)))
-    } else {
-      arrayOfTags.map(async (item) => {
-        await api.post(process.env.REACT_APP_API_URL + `/profile/position/${userSeq}`, {
-          positionCode: getPositionCode(item),
-        })
-      })
-      console.log(arrayOfTags.map((item) => getPositionCode(item)))
-    }
-
-    onClose(onClose(true))
-  }
-
+  useEffect(() => {}, [arrayOfTags])
   return (
     <>
       <Modal open={open} onClose={onClose}>
@@ -137,7 +203,7 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
                 sigheight="40px"
                 sigfontsize="20px"
                 sigborderradius={15}
-                onClick={handleToProfile}
+                onClick={() => location.reload()}
               >
                 확인
               </SignalBtn>
