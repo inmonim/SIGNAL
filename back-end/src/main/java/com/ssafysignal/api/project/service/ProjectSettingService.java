@@ -71,11 +71,11 @@ public class ProjectSettingService {
     }
 
     @Transactional(readOnly = true)
-    public List<Integer> findProjectUserEvaluation(Integer projectUserSeq, Integer termCnt) {
+    public List<Integer> findProjectUserEvaluation(Integer projectUserSeq, Integer weekCnt) {
         projectUserRepository.findById(projectUserSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        List<ProjectEvaluation> projectEvaluationList = projectEvaluationRepository.findAll(ProjectSpecification.byFromUserSeq(projectUserSeq, termCnt));
+        List<ProjectEvaluation> projectEvaluationList = projectEvaluationRepository.findAll(ProjectSpecification.byFromUserSeq(projectUserSeq, weekCnt));
         return projectEvaluationList.stream()
                 .map(ProjectEvaluation::getToUserSeq)
                 .distinct()

@@ -96,6 +96,7 @@ public class ProjectService {
         List<ProjectUser> projectUserList = projectRepository.findByPostingSeq(postingSeq).get().getProjectUserList();
 
         for (ProjectUser projectUser:projectUserList) {
+            projectUser.setHeartCnt(projectUser.getHeartCnt() + 100);
             ProjectUserHeartLog projectUserHeartLog = ProjectUserHeartLog.builder()
                     .projectUserSeq(projectUser.getProjectUserSeq())
                     .heartCnt(100)
@@ -138,6 +139,7 @@ public class ProjectService {
         projectFindResponse.setProjectUserList(projectUserList.stream()
                 .map(user -> new HashMap<String, Object>() {{
                     put("userSeq", user.getUserSeq());
+                    put("projectUserSeq", user.getProjectUserSeq());
                     put("nickname", user.getUser().getNickname());
                     put("userImageUrl", user.getUser().getImageFile());
                 }})

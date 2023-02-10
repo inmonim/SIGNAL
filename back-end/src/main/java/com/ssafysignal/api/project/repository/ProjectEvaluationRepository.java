@@ -16,11 +16,11 @@ import java.util.Optional;
 @Repository
 public interface ProjectEvaluationRepository extends JpaRepository<ProjectEvaluation, Integer>, JpaSpecificationExecutor<ProjectEvaluation> {
 
-    List<ProjectEvaluation> findByProjectSeqAndTermCnt(Integer projectSeq, Integer TermCnt);
+    List<ProjectEvaluation> findByProjectSeqAndWeekCnt(Integer projectSeq, Integer weekCnt);
 
     @Query(value = "SELECT AVG(score) \n" +
             "FROM project_evaluation \n" +
-            "WHERE term_cnt = (:weekCnt) \n" +
+            "WHERE week_cnt = (:weekCnt) \n" +
             "AND to_user_seq = (:toUserSeq);", nativeQuery = true)
     Integer avgScore(@Param("weekCnt") Integer weekCnt, @Param("toUserSeq") Integer toUserSeq);
 }
