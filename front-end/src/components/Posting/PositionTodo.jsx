@@ -12,7 +12,7 @@ function positionTodo(props) {
     <Box>
       {todolist.map((ele, idx) => (
         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1em' }} key={idx}>
-          <Typography style={{ width: '30%' }} variant="h4">
+          <Typography style={{ width: '30%' }} variant="h5">
             {' '}
             {ele.text}
           </Typography>
@@ -23,7 +23,7 @@ function positionTodo(props) {
           >
             -
           </Button>
-          <Typography variant="h4">{ele.count}</Typography>
+          <Typography variant="h5">{ele.count}</Typography>
           <Button
             onClick={() => {
               dispatch(addCount(ele.id))
@@ -32,6 +32,8 @@ function positionTodo(props) {
             +
           </Button>
           <SignalBtn
+            sigfontsize="15px"
+            sigborderradius={15}
             onClick={() => {
               dispatch(remove(todolist[idx].id))
             }}
