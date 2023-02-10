@@ -2,15 +2,12 @@ package com.ssafysignal.api.project.service;
 
 import com.ssafysignal.api.admin.Entity.BlackUser;
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
-import com.ssafysignal.api.apply.entity.Apply;
-import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectApplyDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
@@ -19,18 +16,14 @@ import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,8 +79,6 @@ public class ProjectSettingService {
     public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ProjectSettingModifyRequest projectSettingModifyRequest) throws RuntimeException, IOException {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-
-        System.out.println("projectSettingModifyRequest.toString() = " + projectSettingModifyRequest.toString());
 
         if (uploadImage != null){
             // 사진올리고

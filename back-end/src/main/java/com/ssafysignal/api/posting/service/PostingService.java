@@ -17,11 +17,12 @@ import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectSpecification;
 import com.ssafysignal.api.project.entity.ProjectUser;
+import com.ssafysignal.api.project.entity.ProjectUserHeartLog;
 import com.ssafysignal.api.project.repository.ProjectRepository;
+import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
 import com.ssafysignal.api.project.repository.ProjectUserRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +45,7 @@ public class PostingService {
     private final ApplyRepository applyRepository;
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
+    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
     @Transactional
     public Integer countPosting() {
@@ -117,12 +118,34 @@ public class PostingService {
         projectRepository.save(project);
 
         // 팀장 포지션 등록
-        projectUserRepository.save(ProjectUser.builder()
-                        .userSeq(postingRegistRequest.getUserSeq())
-                        .projectSeq(project.getProjectSeq())
-                        .isLeader(true)
-                        .positionCode(postingRegistRequest.getLeaderPosition())
-                        .build());
+        ProjectUser projectUser = ProjectUser.builder()
+                .userSeq(postingRegistRequest.getUserSeq())
+                .projectSeq(project.getProjectSeq())
+                .heartCnt(100)
+                .isLeader(true)
+                .positionCode(postingRegistRequest.getLeaderPosition())
+                .build();
+        projectUserRepository.save(projectUser);
+
+        // 하트 차감 및 하트 로그 작성
+
+        user.setHeartCnt(user.getHeartCnt()-100);
+        userRepository.save(user);
+
+        UserHeartLog userHeartLog = UserHeartLog.builder()
+                .userSeq(user.getUserSeq())
+                .heartCnt(-100)
+                .content(project.getSubject()+"에 팀장으로 팀 등록 확정")
+                .build();
+        userHeartLogRepository.save(userHeartLog);
+
+
+        // 팀장 프로젝트 유저 테이블 로그 추가
+        projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                .projectUserSeq(projectUser.getProjectUserSeq())
+                .heartCnt(100)
+                .content("프로젝트 시작")
+                .build());
     }
 
     @Transactional(readOnly = true)
