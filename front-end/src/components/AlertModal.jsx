@@ -17,7 +17,7 @@ const ComfirmButton = styled(Button)(() => ({
 
 function AlertModal({ open, onClick, onClose, msg }) {
   return (
-    <Dialog open={open} className="cancle-section" hideBackdrop>
+    <Dialog open={open} className="cancle-section" hideBackdrop={false} onClose={onClose}>
       <DialogTitle className="cancle-title">{msg}</DialogTitle>
       <img src={cancelButton} alt="cancelButton" className="cancle-button" onClick={onClose} />
       <DialogActions className="delete-button">

@@ -12,22 +12,6 @@ import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 
-// =================== url 파라미터 들고오기  =========================
-// 닉네임 : nickname
-// owner : false (지원자) , true (작성자)
-// applySeq : 지원서seq
-
-console.log('location >>> ', location)
-console.log('location.search >>> ', location.search)
-
-const params = new URLSearchParams(location.search)
-
-const nickname = params.get('nickname')
-const projectSeq = params.get('projectSeq')
-
-console.log("params.get('nickname') >>> ", nickname)
-console.log("params.get('projectSeq') >>> ", projectSeq)
-
 // ============================================
 let myStream
 
@@ -81,17 +65,16 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  roomId = 'project1234'
-  myName = sessionStorage.getItem('username')
+  const params = new URLSearchParams(location.search)
 
-  if (myName === null) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    myName = '익명' + result
+  const nickname = params.get('nickname')
+  const projectSeq = params.get('projectSeq')
+  roomId = 'project' + projectSeq
+  myName = sessionStorage.getItem('nickname')
+  console.log(roomId, myName)
+  if (myName !== nickname) {
+    alert('권한이 없습니다. 다시 로그인하세요')
+    window.close()
   }
 
   userNames = {} // userNames[socketId]="이름"
