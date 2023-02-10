@@ -25,7 +25,7 @@ public class ProjectEvaluationRegistRequest {
     @Schema(description = "평가 대상")
     private Integer toUserSeq;
     @Schema(description = "평가 회차")
-    private Integer term;
+    private Integer weekCnt;
     @Schema(description = "평가 항목 별 점수")
     private List<Map<String, Integer>> scoreList;
 }

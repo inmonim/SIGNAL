@@ -182,11 +182,11 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/evaluation")
     private ResponseEntity<BasicResponse> findProjectUserEvaluation(@Parameter(name = "projectUserSeq", description = "평가하는 팀원") @RequestParam Integer projectUserSeq,
-                                                                    @Parameter(name = "termCnt", description = "평가 회차") @RequestParam Integer termCnt) {
+                                                                    @Parameter(name = "termCnt", description = "평가 회차") @RequestParam Integer weekCnt) {
         log.info("findProjectUserEvaluation - Call");
 
         try {
-            List<Integer> evaluationList = projectSettingService.findProjectUserEvaluation(projectUserSeq, termCnt);
+            List<Integer> evaluationList = projectSettingService.findProjectUserEvaluation(projectUserSeq, weekCnt);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("evaluationList", evaluationList); }}));
         }  catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
