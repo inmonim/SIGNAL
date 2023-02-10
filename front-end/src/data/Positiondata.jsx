@@ -1,13 +1,13 @@
 const positionData = [
   {
     code: 'PO100',
-    name: 'frontend',
+    name: 'FrontEnd',
     groupCode: 'PO',
     groupName: '포지션 구분',
   },
   {
     code: 'PO101',
-    name: 'backend',
+    name: 'BackEnd',
     groupCode: 'PO',
     groupName: '포지션 구분',
   },
@@ -19,13 +19,13 @@ const positionData = [
   },
   {
     code: 'PO103',
-    name: 'pm',
+    name: 'PM',
     groupCode: 'PO',
     groupName: '포지션 구분',
   },
   {
     code: 'PO104',
-    name: 'da',
+    name: 'DA',
     groupCode: 'PO',
     groupName: '포지션 구분',
   },
