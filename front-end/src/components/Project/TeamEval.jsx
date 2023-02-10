@@ -4,16 +4,21 @@ import api from 'api/Api'
 import EvalQna from 'components/Project/EvalQna'
 
 function TeamEval({ projectSeq }) {
+  const userSeq = sessionStorage.getItem('userSeq')
   const [member, setMember] = useState([])
-
+  const [fromUserSeq, setFromUserSeq] = useState('')
   const [toUserSeq, setToUserSeq] = useState('')
-  // location 에서 받아오기
+  const [flag, setFlag] = useState(false)
 
   const projectMemeberFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/project/member/' + projectSeq).then((res) => {
-        setMember(res.data.body.projectUserList)
-        console.log(res.data.body)
+        const memberList = res.data.body.projectUserList.filter((element) => element.userSeq !== parseInt(userSeq))
+        setMember(memberList)
+        setToUserSeq(memberList[0].projectUserSeq)
+        setFromUserSeq(
+          res.data.body.projectUserList.find((element) => element.userSeq === parseInt(userSeq)).projectUserSeq
+        )
       })
     } catch (error) {
       console.log(error)
@@ -21,8 +26,9 @@ function TeamEval({ projectSeq }) {
   }
 
   useEffect(() => {
+    setFlag(false)
     projectMemeberFetch()
-  }, [])
+  }, [flag])
 
   return (
     <div className="eval-container">
@@ -41,7 +47,7 @@ function TeamEval({ projectSeq }) {
           ))}
         </div>
         <div className="eval-qna-container">
-          <EvalQna toUserSeq={toUserSeq} projectSeq={projectSeq}></EvalQna>
+          <EvalQna fromUserSeq={fromUserSeq} toUserSeq={toUserSeq} projectSeq={projectSeq} setFlag={setFlag}></EvalQna>
         </div>
       </div>
     </div>
@@ -49,25 +55,3 @@ function TeamEval({ projectSeq }) {
 }
 
 export default TeamEval
-// ```
-// {
-//   "fromUserSeq": 31,
-//   "projectSeq": 448,
-//   "scoreList": [
-//     {
-//       "num": 1,
-//       "score": 10
-//     },
-//     {
-//       "num": 1,
-//       "score": 20
-//     },
-//     {
-//       "num": 1,
-//       "score": 30
-//     }
-//   ],
-//   "term": 1,
-//   "toUserSeq": 32
-// }
-// ```

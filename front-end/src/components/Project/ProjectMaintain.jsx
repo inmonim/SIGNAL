@@ -1,48 +1,59 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
-import Localdata from 'data/Localdata'
 import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
 
-function ProjectMaintain({ data, projectSeq }) {
+function ProjectMaintain({ projectSeq }) {
   const [mode, setMode] = useState(true)
 
-  const [subject, setSubject] = useState(data.subject)
-  const [content, setContent] = useState(data.content)
-  const [gitUrl, setGitUrl] = useState(data.gitUrl)
-  const [contact, setContact] = useState(data.contact)
-  const [local, setLocal] = useState(data.local.name)
-  const [term, setTearm] = useState(data.term)
-  const [field, setField] = useState(data.field.name)
-  const [projectImageUrl, setProjectImageUrl] = useState(data.projectImageUrl)
+  const [subject, setSubject] = useState('')
+  const [content, setContent] = useState('')
+  const [gitUrl, setGitUrl] = useState('')
+  const [contact, setContact] = useState(true)
+  const [local, setLocal] = useState('')
+  const [field, setField] = useState('')
+  const [term, setTearm] = useState(0)
+  const [position, setPosition] = useState([])
+  const [projectImageUrl, setProjectImageUrl] = useState('')
+  const [projectImageFile, setProjectImageFile] = useState('')
+  const [isDelete, setIsDelete] = useState(false)
+  const [localCode, setLocalCode] = useState({})
+  const [fieldCode, setFieldCode] = useState({})
 
-  const [fieldCode, setFieldCode] = useState('')
-  const [localCode, setLocalCode] = useState('')
+  const [fieldCodeList, setFieldCodeList] = useState([])
+  const [localCodeList, setLocalCodeList] = useState([])
   const termList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
   // 이미지 업로드 안함
   const handleProjectModify = async () => {
     const req = {
       subject,
-      localCode: Localdata[local.localCode].name,
+      localCode: local,
+      fieldCode: field,
       contact,
       term,
       content,
       gitUrl,
+      isDelete,
     }
-    console.log(req)
-
-    try {
-      await api.post(process.env.REACT_APP_API_URL + '/project/setting/' + projectSeq, {
-        data: JSON.stringify(req),
+    const formData = new FormData()
+    if (projectImageFile !== '') {
+      formData.append('uploadImage ', projectImageFile)
+    }
+    formData.append('modifyData', JSON.stringify(req))
+    api
+      .post(process.env.REACT_APP_API_URL + '/project/setting/' + projectSeq, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
-    } catch (error) {
-      console.log(error)
-    }
-
-    console.log(subject, content, gitUrl)
+      .then((res) => {
+        setIsDelete(false)
+        setProjectImageFile('')
+        projectDataFetch()
+      })
   }
 
   const getCommonCode = async () => {
@@ -54,7 +65,7 @@ function ProjectMaintain({ data, projectSeq }) {
           },
         })
         .then((res) => {
-          setLocalCode(res.data.body)
+          setLocalCodeList(res.data.body)
         })
 
       await api
@@ -64,7 +75,7 @@ function ProjectMaintain({ data, projectSeq }) {
           },
         })
         .then((res) => {
-          setFieldCode(res.data.body)
+          setFieldCodeList(res.data.body)
         })
     } catch (error) {
       console.log(error)
@@ -78,11 +89,37 @@ function ProjectMaintain({ data, projectSeq }) {
   }
 
   const handleChange = (e) => {
-    setProjectImageUrl('')
+    setProjectImageUrl(URL.createObjectURL(e.target.files[0]))
+    setProjectImageFile(e.target.files[0])
+    setIsDelete(false)
+  }
+  const handleFileDelete = () => {
+    setProjectImageUrl(process.env.REACT_APP_API_URL + '/static/projectImage/noProfileImg.png')
+    setProjectImageFile('')
+    setIsDelete(true)
+  }
+  const projectDataFetch = async () => {
+    await api({
+      url: process.env.REACT_APP_API_URL + `/project/setting/${projectSeq}`,
+      method: 'GET',
+    }).then((res) => {
+      setSubject(res.data.body.subject)
+      setContent(res.data.body.content)
+      setGitUrl(res.data.body.gitUrl)
+      setContact(res.data.body.contact)
+      setLocal(res.data.body.local.code)
+      setField(res.data.body.field.code)
+      setLocalCode(res.data.body.local)
+      setFieldCode(res.data.body.field)
+      setTearm(res.data.body.term)
+      setPosition(res.data.body.position)
+      setProjectImageUrl(process.env.REACT_APP_API_URL + res.data.body.projectImageUrl)
+    })
   }
 
   useEffect(() => {
     getCommonCode()
+    projectDataFetch()
   }, [mode])
 
   return (
@@ -120,9 +157,7 @@ function ProjectMaintain({ data, projectSeq }) {
             <div className="project-maintain-imgUrl-section">
               <div className="project-maintain-label">프로젝트 이미지</div>
               <div className="project-maintain-imageUrl">
-                <div>
-                  <img src={projectImageUrl} alt="이미지 없음" />
-                </div>
+                <img className="project-maintain-img" src={projectImageUrl} alt="이미지 없음" />
               </div>
               {mode ? (
                 ''
@@ -134,11 +169,13 @@ function ProjectMaintain({ data, projectSeq }) {
                   <input
                     type="file"
                     ref={fileInput}
-                    onChange={{ handleChange }}
+                    onChange={handleChange}
                     style={{ display: 'none' }}
                     accept="image/*"
                   />
-                  <SignalBtn variant="contained">파일 삭제</SignalBtn>
+                  <SignalBtn variant="contained" onClick={handleFileDelete}>
+                    파일 삭제
+                  </SignalBtn>
                 </div>
               )}
             </div>
@@ -146,11 +183,11 @@ function ProjectMaintain({ data, projectSeq }) {
               <div className="project-maintain-term-section">
                 <div className="project-maintain-label">프로젝트 기간</div>
                 {mode ? (
-                  <div className="project-maintain-text">{data.term} 주</div>
+                  <div className="project-maintain-text">{term} 주</div>
                 ) : (
                   <Select
                     sx={selectStyle}
-                    defaultValue={term}
+                    defaultValue={term || 3}
                     onChange={(e) => {
                       setTearm(e.target.value)
                     }}
@@ -168,18 +205,18 @@ function ProjectMaintain({ data, projectSeq }) {
                 <div className="project-maintain-label">분야</div>
                 <div className="project-maintain-text-box">
                   {mode ? (
-                    <div className="project-maintain-text">{data.field.name}</div>
+                    <div className="project-maintain-text">{fieldCode.name}</div>
                   ) : (
                     <Select
                       sx={selectStyle}
-                      defaultValue={field}
+                      defaultValue={fieldCode.code || ''}
                       onChange={(e) => {
                         setField(e.target.value)
                       }}
                     >
-                      {fieldCode &&
-                        fieldCode.map((item, index) => (
-                          <MenuItem value={item.name} key={index}>
+                      {fieldCodeList &&
+                        fieldCodeList.map((item, index) => (
+                          <MenuItem value={item.code} key={index}>
                             {item.name}
                           </MenuItem>
                         ))}
@@ -190,18 +227,18 @@ function ProjectMaintain({ data, projectSeq }) {
               <div className="project-maintain-local-section">
                 <div className="project-maintain-label">진행 지역</div>
                 {mode ? (
-                  <div className="project-maintain-text">{data.local.name}</div>
+                  <div className="project-maintain-text">{localCode.name}</div>
                 ) : (
                   <Select
                     sx={selectStyle}
-                    defaultValue={local}
+                    defaultValue={localCode.code || ''}
                     onChange={(e) => {
                       setLocal(e.target.value)
                     }}
                   >
-                    {localCode &&
-                      localCode.map((item, index) => (
-                        <MenuItem value={item.name} key={index}>
+                    {localCodeList &&
+                      localCodeList.map((item, index) => (
+                        <MenuItem value={item.code} key={index}>
                           {item.name}
                         </MenuItem>
                       ))}
@@ -211,7 +248,7 @@ function ProjectMaintain({ data, projectSeq }) {
               <div className="project-maintain-contatct-section">
                 <div className="project-maintain-label">진행 유형</div>
                 {mode ? (
-                  <div className="project-maintain-text">{data.contact === true ? '대면 ' : '비대면'}</div>
+                  <div className="project-maintain-text">{contact ? '대면 ' : '비대면'}</div>
                 ) : (
                   <Select
                     sx={selectStyle}
@@ -220,8 +257,8 @@ function ProjectMaintain({ data, projectSeq }) {
                       setContact(e.target.value)
                     }}
                   >
-                    <MenuItem value="true">대면</MenuItem>
-                    <MenuItem value="false">비대면</MenuItem>
+                    <MenuItem value={true}>대면</MenuItem>
+                    <MenuItem value={false}>비대면</MenuItem>
                   </Select>
                 )}
               </div>
@@ -230,27 +267,23 @@ function ProjectMaintain({ data, projectSeq }) {
           <div className="project-maintain-subject-section">
             <div className="project-maintain-label">프로젝트 주제</div>
             {mode ? (
-              <div className="project-maintain-text">{data.subject}</div>
+              <div className="project-maintain-text">{subject}</div>
             ) : (
-              <TextField
-                defaultValue={data.subject || ''}
-                sx={inputLargeStyle}
-                onChange={(e) => setSubject(e.target.value)}
-              />
+              <TextField defaultValue={subject} sx={inputLargeStyle} onChange={(e) => setSubject(e.target.value)} />
             )}
           </div>
           <div className="project-maintain-detail-section">
             <div className="project-maintain-label">프로젝트 설명</div>
             <div className="project-maintain-content">
               {mode ? (
-                <div className="project-maintain-text-area">{data.content}</div>
+                <div className="project-maintain-text-area">{content}</div>
               ) : (
                 <TextField
                   style={textAreaStyle}
                   fullWidth={true}
                   multiline={true}
                   minRows="5"
-                  defaultValue={data.content || ''}
+                  defaultValue={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
               )}
@@ -260,13 +293,9 @@ function ProjectMaintain({ data, projectSeq }) {
             <div className="project-maintain-label">git url 주소</div>
             <div className="project-maintain-gitUrl">
               {mode ? (
-                <div className="project-maintain-text">{data.gitUrl}</div>
+                <div className="project-maintain-text">{gitUrl}</div>
               ) : (
-                <TextField
-                  defaultValue={data.gitUrl || ''}
-                  sx={inputLargeStyle}
-                  onChange={(e) => setGitUrl(e.target.value)}
-                />
+                <TextField defaultValue={gitUrl} sx={inputLargeStyle} onChange={(e) => setGitUrl(e.target.value)} />
               )}
             </div>
           </div>
@@ -274,7 +303,7 @@ function ProjectMaintain({ data, projectSeq }) {
           <div className="project-maintain-poition-section">
             <div className="project-maintain-label">포지션 인원</div>
             <div className="project-maintain-poition-list">
-              {data.position.map((item, index) => (
+              {position.map((item, index) => (
                 <div key={index} className="project-maintain-position-item">
                   <div className="project-maintain-position-name">
                     <div>{item.position.name}</div>

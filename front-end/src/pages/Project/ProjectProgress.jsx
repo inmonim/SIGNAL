@@ -10,7 +10,6 @@ import api from 'api/Api.js'
 // import TeamProfile from 'components/Project/TeamProfile'
 
 function ProjectProgress({ projectSeq }) {
-  console.log(projectSeq)
   const userSeq = sessionStorage.getItem('userSeq')
   const [project, setProject] = useState([])
 
