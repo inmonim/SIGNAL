@@ -338,7 +338,7 @@ function ApplyRegister() {
         .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, applyReq)
         .then((res) => {
           console.log('지원서 post')
-          navigate('/signal')
+          navigate('/')
         })
         .catch((error) => {
           if (error.response) {
