@@ -24,7 +24,7 @@ function Regist() {
     birth: '',
   })
 
-  const text = `<div style="font-size:34px; text-align: center;">- 이용약관 -</div><br>
+  const text = `<div style="font-size:27px; text-align: center;">- 이용약관 -</div><br>
 <div style="line-height:30px">1. Signal의 모든 서비스는 회원가입과 로그인이 정상적으로 이루어진 사용자에게만 제공됩니다.  <br>
 2. 회원가입 시 입력된 개인정보 및 암호화된 비밀번호는 사이트가 보관합니다.<br>
 3. 제공된 모든 개인정보는 서비스 제공 목적 이외의 어떠한 목적으로도 사용되지 않습니다.<br>
