@@ -309,6 +309,13 @@ const PostingRegister = () => {
         <div>
           <Title>공고 등록</Title>
         </div>
+        <button
+          onClick={() => {
+            console.log(posting)
+          }}
+        >
+          dd
+        </button>
         <div>
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
