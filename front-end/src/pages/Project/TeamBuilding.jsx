@@ -71,8 +71,6 @@ function TeamSelect() {
   const [waitCnt, setWaitCnt] = useState(2)
   const [valid, setValid] = useState('true')
 
-  const [applySeqList, setapplySeqList] = useState([])
-
   // 페이지네이션 위한 변수
   const [size] = useState(8)
   const [page, setPage] = useState(1)
@@ -95,18 +93,46 @@ function TeamSelect() {
 
   // 미팅입장 alert open
   const [alertOpen, setAlertOpen] = useState(false)
+  const [meetingApplySeq, setMeetingApplySeq] = useState('')
 
-  const handleAlertOpen = () => {
+  const handleAlertOpen = (applySeq) => {
     setAlertOpen(true)
+    console.log(applySeq)
+    setMeetingApplySeq(applySeq)
+  }
+
+  const rows = []
+  Array.from(applyList).forEach((item) => {
+    rows.push({
+      applySeq: item.applySeq,
+      nickname: item.nickname,
+      meetingDt: item.meetingDt,
+      positionCode: item.positionCode,
+      userSeq: item.userSeq,
+      applyCode: item.applyCode,
+    })
+  })
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
+      rows.push({
+        applySeq: '',
+        nickname: '',
+        meetingDt: '',
+        positionCode: '',
+        userSeq: '',
+        applyCode: '',
+      })
   }
 
   // 미팅입장 시 alert close
   // 필요한 파라미터 : nickname, 팀장인지 아닌지(owner[팀장 true, 팀원 false]), applySeq
-  const handleToMeeting = (applySeq) => {
+  const handleToMeeting = (e) => {
     setAlertOpen(false)
     // 팀빌딩 입장은 팀장
+    console.log(meetingApplySeq)
     window.open(
-      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${applySeq}`,
+      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${meetingApplySeq}`,
       '_blank'
     )
   }
@@ -178,8 +204,6 @@ function TeamSelect() {
     applyListFetch(page)
   }, [page])
 
-  useEffect(() => {}, [applySeqList])
-
   useEffect(() => {
     checkButtonValid()
   }, [selectCnt, waitCnt])
@@ -189,8 +213,10 @@ function TeamSelect() {
   return (
     <CssVarsProviderm>
       <div className="team-building-page-container">
-        <div className="team-building-page">
-          <div className="qna-header-title">팀 빌딩</div>
+        <div className="team-building-container">
+          <div className="team-building-header">
+            <div className="team-building-title">팀 빌딩</div>
+          </div>
           <div className="team-selct-table">
             <TableContainer>
               <Table>
@@ -209,53 +235,69 @@ function TeamSelect() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {applyList &&
-                    applyList.map((apply, index) => (
-                      <TableRow
-                        key={index}
-                        value={apply.applySeq}
-                        sx={[
-                          {
-                            '&:hover': { backgroundColor: 'rgba(221, 219, 236, 0.5)', transition: '0.3s' },
-                          },
-                        ]}
-                      >
-                        <TableCell align="center">{apply.nickname}</TableCell>
-                        <TableCell align="center">
-                          <MeetingButton onClick={() => handleAlertOpen(apply.applySeq)} startIcon={<LaptopIcon />}>
+                  {rows.map((row, index) => (
+                    <TableRow
+                      key={index}
+                      value={row.applySeq}
+                      sx={[
+                        {
+                          '&:hover': { backgroundColor: 'rgba(221, 219, 236, 0.5)', transition: '0.3s' },
+                        },
+                      ]}
+                    >
+                      <TableCell align="center">{row.nickname}</TableCell>
+                      <TableCell align="center">
+                        {row.applyCode.name !== '미선택' ? (
+                          ''
+                        ) : (
+                          <MeetingButton onClick={() => handleAlertOpen(row.applySeq)} startIcon={<LaptopIcon />}>
                             사전미팅
                           </MeetingButton>
-                          <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
-                        </TableCell>
-                        <TableCell align="center">{moment(apply.meetingDt).format('MM/DD HH:00')}</TableCell>
-                        <TableCell align="center">{apply.positionCode.name}</TableCell>
-                        <TableCell align="center">
-                          <MemoModal applySeq={apply.applySeq}></MemoModal>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Link to={'/applydetail'} state={{ applySeq: apply.applySeq, userSeq: apply.userSeq }}>
+                        )}
+
+                        <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? '' : moment(row.meetingDt).format('MM/DD HH:00')}
+                      </TableCell>
+                      <TableCell align="center">{row.applySeq === '' ? '' : row.positionCode.name}</TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? '' : <MemoModal applySeq={row.applySeq} />}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
+                          <Link to={'/applydetail'} state={{ applySeq: row.applySeq, userSeq: row.userSeq }}>
                             <ImageButton startIcon={<AccountBoxIcon />}>지원서보기</ImageButton>
                           </Link>
-                        </TableCell>
-                        <TableCell align="center">
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
                           <ProjectInviteConfirm
-                            apply={apply}
-                            applySeqList={applySeqList}
-                            setapplySeqList={setapplySeqList}
+                            apply={row}
                             postingSeq={postingSeq}
                             valid={valid}
                           ></ProjectInviteConfirm>
-                        </TableCell>
-                        <TableCell align="center">
+                        )}
+                      </TableCell>
+                      <TableCell align="center">
+                        {row.applySeq === '' ? (
+                          ''
+                        ) : (
                           <StateCode
-                            color={() => stateCodeColor(apply.applyCode)}
+                            color={() => stateCodeColor(row.applyCode)}
                             className="team-project-building-state-code"
                           >
-                            {apply.applyCode.name}
+                            {row.applyCode.name}
                           </StateCode>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>

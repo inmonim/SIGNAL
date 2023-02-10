@@ -37,6 +37,13 @@ function ProjectProgress({ projectSeq }) {
 
   const [mode, setMode] = useState(0)
 
+  const [meetingOpen, setMeetingOpen] = useState(false)
+
+  const handleMeetingEnter = () => {
+    setMeetingOpen(false)
+    window.open(`/projectmeeting?nickname=${sessionStorage.getItem('nickname')}&projectSeq=${projectSeq}`, '_blank')
+  }
+
   return (
     <div className="team-progress-header">
       <div className="team-progress-title">{project.subject}</div>
@@ -64,6 +71,7 @@ function ProjectProgress({ projectSeq }) {
           sx={projectSubMenuStyle}
           onClick={() => {
             setMode(2)
+            setMeetingOpen(true)
           }}
         >
           화상회의 열기
@@ -84,7 +92,7 @@ function ProjectProgress({ projectSeq }) {
       ) : mode === 1 ? (
         <ProjectDocs projectSeq={projectSeq} />
       ) : mode === 2 ? (
-        <AlertModal />
+        <AlertModal open={meetingOpen} onClick={handleMeetingEnter} msg={'화상회의에 입장하시겠습니까?'} />
       ) : (
         <TeamEval projectSeq={projectSeq} />
       )}
