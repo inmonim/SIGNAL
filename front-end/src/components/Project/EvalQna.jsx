@@ -7,10 +7,8 @@ import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 import api from 'api/Api'
-// import api from 'api/Api'
 
-function EvalQna({ toUserSeq, projectSeq }) {
-  const userSeq = sessionStorage.getItem('userSeq')
+function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
   const [score, setScore] = useState([])
   const [weekCnt, setWeekCnt] = useState(1)
   const [evaluationStartDt, setEvaluationStartDt] = useState('')
@@ -18,52 +16,35 @@ function EvalQna({ toUserSeq, projectSeq }) {
   const [question, setQuestion] = useState([])
 
   const handleScoreChange = (e, index) => {
-    console.log(e.target.name)
     const scoreArr = [...score]
     scoreArr.splice(e.target.name, 1, e.target.value)
     setScore(scoreArr)
-    console.log(scoreArr)
   }
-  // const question = [
-  //   '의사소통에 적극적으로 참여했나요?',
-  //   '약속 시간을 잘 지켰나요?',
-  //   '얼마나 프로젝트에 성실히 임했나요?',
-  //   '얼마나 목표를 이행하였나요?',
-  //   '얼마나 프로젝트에 기여했나요?',
-  // ]
 
   const evaluationSubmit = async () => {
     try {
-      await api.post(process.env.REACT_APP_API_URL + '/project/evaluation', {
-        fromUserSeq: userSeq,
-        projectSeq,
-        scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-        weekCnt,
-        toUserSeq,
-      })
-      // console.log({
-      //   fromUserSeq: userSeq,
-      //   projectSeq,
-      //   scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-      //
-      //   toUserSeq,
-      // })
+      await api
+        .post(process.env.REACT_APP_API_URL + '/project/evaluation', {
+          fromUserSeq,
+          projectSeq,
+          scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
+          weekCnt,
+          toUserSeq,
+        })
+        .then(() => setFlag(true))
     } catch (error) {
-      console.log(error)
+      alert('이미 평가한 팀원 입니다.')
     }
   }
 
   const evaluationFetch = async () => {
-    console.log(projectSeq)
     await api
       .get(process.env.REACT_APP_API_URL + `/project/evaluation/` + projectSeq)
       .then((response) => {
-        console.log(response.data.body)
         setQuestion(response.data.body.questionList)
         setWeekCnt(response.data.body.weekCnt)
         setEvaluationStartDt(response.data.body.evaluationStartDt)
         setEvaluationEndDt(response.data.body.evaluationEndDt)
-        console.log(question)
       })
       .catch((error) => {
         console.log(error)
@@ -86,7 +67,7 @@ function EvalQna({ toUserSeq, projectSeq }) {
             {item.content}
           </div>
           <div className="eval-radio-btn">
-            <RadioGroup name={item.num} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
+            <RadioGroup name={`${index}`} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
               <FormControlLabel
                 value="10"
                 control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
