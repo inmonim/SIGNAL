@@ -1,9 +1,29 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import 'assets/styles/beforemeeting.css'
 import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
+// import MeetingQna from 'components/Meeting/MeetingQna'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
 
+// =================== url 파라미터 들고오기  =========================
+// 닉네임 : nickname
+// owner : false (지원자) , true (작성자)
+// applySeq : 지원서seq
+
+console.log('location >>> ', location)
+console.log('location.search >>> ', location.search)
+
+const params = new URLSearchParams(location.search)
+
+const nickname = params.get('nickname')
+const owner = params.get('owner')
+const applySeq = params.get('applySeq')
+
+console.log("params.get('nickname') >>> ", nickname)
+console.log("params.get('owner') >>> ", owner)
+console.log("params.get('applySeq') >>> ", applySeq)
+
+// ============================================
 let myStream
 
 let myName
@@ -20,11 +40,15 @@ let selfStream
 
 let numOfUsers
 let socket
+let isOwner
 
 const prevMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('사전 미팅 소켓 통신 시작!')
+  const params = new URLSearchParams(location.search)
+
+  // console.log(params.get('userSeq'))
 
   pcConfig = {
     iceServers: [
@@ -38,17 +62,14 @@ const prevMeetingSetting = () => {
       },
     ],
   }
-  roomId = '123'
-  myName = sessionStorage.getItem('username')
+  roomId = 'prev' + params.get('applySeq')
+  myName = sessionStorage.getItem('nickname')
+  isOwner = params.get('owner')
+  console.log(isOwner, params.get('applySeq'))
 
-  if (myName === null) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    myName = '익명' + result
+  if (myName !== params.get('nickname')) {
+    alert('권한이 없습니다. 다시 로그인하세요')
+    window.close()
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -419,6 +440,8 @@ function Beforemeeting() {
   const [memoOpen, setMemoOpen] = useState(false)
   const handleMemoOpen = () => setMemoOpen(true)
   const handleMemoClose = () => setMemoOpen(false)
+  // const [qnaOpen, setQnaOpen] = useState(false)
+  // const handleQnaOpen = () => setQnaOpen(true)
 
   const [voice, setVoice] = useState(false)
   const handleToVoice = () => {
@@ -449,14 +472,16 @@ function Beforemeeting() {
   }, [voice, video])
   return (
     <div className="before-meeting-container">
-      <div className="before-meeting-main">
-        <div className="before-meeting-left-person">
-          <video className="before-meeting-left-video" alt="상대방" poster={noProfileImg} />
-          <div className="before-meeting-left-person-name">{otherName}</div>
-        </div>
-        <div className="before-meeting-right-person">
-          <video className="before-meeting-right-video" alt="나" />
-          <div className="before-meeting-right-person-name">{myName}</div>
+      <div className="before-meeting-center">
+        <div className="before-meeting-main">
+          <div className="before-meeting-left-person">
+            <video className="before-meeting-left-video" alt="상대방" poster={noProfileImg} />
+            <div className="before-meeting-left-person-name">{otherName}</div>
+          </div>
+          <div className="before-meeting-right-person">
+            <video className="before-meeting-right-video" alt="나" />
+            <div className="before-meeting-right-person-name">{myName}</div>
+          </div>
         </div>
       </div>
       <div className="before-meeting-footer">
@@ -464,17 +489,6 @@ function Beforemeeting() {
           {today} {now}
         </div>
         <div className="before-meeting-btn">
-          <div className="before-meeting-btn-memo-container" onClick={handleMemoOpen}>
-            <MeetingMemoModal open={memoOpen} close={handleMemoClose}></MeetingMemoModal>
-            <div className="before-meeting-btn-memo"></div>
-            <div className="before-meeting-btn-name">메모</div>
-          </div>
-          <div className="before-meeting-btn-memo-container" onClick={window.close}>
-            <div className="before-meeting-btn-door"></div>
-            <div className="before-meeting-btn-name">종료</div>
-          </div>
-        </div>
-        <div className="before-meeting-footer-right">
           {voice === false ? (
             <div className="before-meeting-footer-right-novoice" onClick={handleToVoice}></div>
           ) : (
@@ -485,7 +499,23 @@ function Beforemeeting() {
           ) : (
             <div className="before-meeting-footer-right-video" onClick={handleNoVideo}></div>
           )}
-          <div className="before-meeting-footer-right-chat"></div>
+        </div>
+        <div className="before-meeting-footer-right">
+          <div className="before-meeting-btn-memo-container" onClick={handleMemoOpen}>
+            <div className="before-meeting-btn-memo"></div>
+            <MeetingMemoModal open={memoOpen} close={handleMemoClose}></MeetingMemoModal>
+            <div className="before-meeting-btn-name">메모</div>
+          </div>
+          <div className="before-meeting-btn-memo-container">
+            <div className="before-meeting-btn-qna"></div>
+            {/* <MeetingQna open={qnaOpen} close={handleMemoClose}></MeetingQna> */}
+            <div className="before-meeting-btn-name">사전 질문</div>
+          </div>
+          <div className="before-meeting-btn-memo-container" onClick={window.close}>
+            <div className="before-meeting-btn-door"></div>
+            <div className="before-meeting-btn-name">종료</div>
+          </div>
+          {/* <div className="before-meeting-footer-right-chat"></div> */}
         </div>
       </div>
     </div>

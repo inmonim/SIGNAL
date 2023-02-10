@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
 import MeetingDoor from 'assets/image/meeting-door.png'
@@ -12,6 +12,23 @@ import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 
+// =================== url 파라미터 들고오기  =========================
+// 닉네임 : nickname
+// owner : false (지원자) , true (작성자)
+// applySeq : 지원서seq
+
+console.log('location >>> ', location)
+console.log('location.search >>> ', location.search)
+
+const params = new URLSearchParams(location.search)
+
+const nickname = params.get('nickname')
+const projectSeq = params.get('projectSeq')
+
+console.log("params.get('nickname') >>> ", nickname)
+console.log("params.get('projectSeq') >>> ", projectSeq)
+
+// ============================================
 let myStream
 
 let myName
@@ -130,9 +147,8 @@ function ProjectMeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 접속해있음')
-
-      meetingStart()
     })
+    meetingStart()
 
     // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
     socket.on('user_enter', async (data) => {
@@ -253,13 +269,18 @@ function ProjectMeeting() {
     socket.on('clear', function () {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
     })
+
+    // 메시지받음
+    socket.on('get_message', (data) => {
+      getMessage(data)
+    })
   }
 
   // =============================================================================================
 
   function meetingStart() {
     console.log('meetingStart 실행')
-    setPersonList((personList) => [...personList, myName])
+
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -668,6 +689,13 @@ function ProjectMeeting() {
     drawingColor = selectedColor
     ctx.strokeStyle = selectedColor
   }
+  function sendMessage(message) {
+    socket.emit('send_message', { userName: myName, message })
+  }
+
+  function getMessage(data) {
+    chatting.current.getMessage(data)
+  }
 
   // =============================================================================================
   function setUserVideo() {
@@ -692,6 +720,7 @@ function ProjectMeeting() {
   const [personList, setPersonList] = useState([])
   const [streams, setStreams] = useState({})
   const [shareUserName, setShareUserName] = useState('')
+  const chatting = useRef()
 
   const [mode, setMode] = useState(0)
 
@@ -710,6 +739,11 @@ function ProjectMeeting() {
   }, [streams])
 
   useEffect(() => {
+    console.log(personList)
+  }, [voice])
+
+  useEffect(() => {
+    setPersonList((personList) => [...personList, myName])
     startPaint()
     canvas.addEventListener('mousemove', onMouseMove)
     canvas.addEventListener('mousedown', startPainting)
@@ -791,7 +825,9 @@ function ProjectMeeting() {
           </div>
         </ShareSection>
 
-        {chatOpen ? <Chatting key={100000}></Chatting> : ''}
+        <ChatSection chatOpen={chatOpen}>
+          <Chatting key={100000} sendMessage={sendMessage} ref={chatting}></Chatting>
+        </ChatSection>
       </div>
 
       <div className="project-meeting-footer">
@@ -927,4 +963,12 @@ const CodeEditSection = styled.div`
 
 const ShareSection = styled.div`
   ${share}
+`
+const chat = (props) => {
+  return css`
+    display: ${props.chatOpen ? 'block' : 'none'};
+  `
+}
+const ChatSection = styled.div`
+  ${chat}
 `

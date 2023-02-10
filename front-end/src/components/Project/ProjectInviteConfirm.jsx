@@ -82,10 +82,6 @@ function ProjectTeamSelectConfirmModal(props) {
           .catch((err) => {
             console.log(err)
           })
-
-        const copy = [...props.applySeqList]
-        copy.push(applySeq)
-        props.setapplySeqList(copy)
       } catch (error) {
         console.log(error)
       }
