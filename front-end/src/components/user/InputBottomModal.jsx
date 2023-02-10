@@ -119,7 +119,7 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
               }}
               src={closeBtn}
               alt="closeBtn"
-              onClick={onClose}
+              onClick={() => location.reload()}
             />
           </div>
           <div className="user-profile-input-main">
@@ -133,7 +133,7 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
                 sx={inputStyle}
                 onChange={handleHashtagChange}
                 onKeyUp={(e) => {
-                  if (e.code === 'Enter') console.log(e.target.value)
+                  if (e.code === 'Enter') newTag()
                 }}
               />
               <SignalBtn
