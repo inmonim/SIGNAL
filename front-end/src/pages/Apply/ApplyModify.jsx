@@ -15,6 +15,7 @@ import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 
 import api from 'api/Api.js'
+import Swal from 'sweetalert2'
 
 const inputStyle = {
   backgroundColor: '#f3f5f7',
@@ -67,6 +68,7 @@ function ApplyModify() {
       careerFetchFilter(applyRes.data.body.careerList)
       expFetchFilter(applyRes.data.body.expList)
       setPosition(applyRes.data.body.position.name)
+      console.log('position', applyRes.data.body.position.name)
       setContent(applyRes.data.body.content)
       qnaListDataFiltert(applyRes.data.body, postingRes.data.body)
       meetingFetchFilter(postingRes.data.body.postingMeetingList)
@@ -331,14 +333,29 @@ function ApplyModify() {
       await api
         .put(process.env.REACT_APP_API_URL + '/apply/' + applySeq, req)
         .then((res) => {
-          console.log(res)
+          console.log('지원서 put')
+          navigate(-1)
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          if (error.response) {
+            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
+            // REGIST_ALREADY("402", "이미 등록된 정보"),
+            // REGIST_FAIL("403", "등록 실패"),
+            // REGIST_BLACK("405", "블랙리스트에 등록된 유저"),
+            // REGIST_DUPLICATE("406", "중복된 지원 등록"),
+            // REGIST_LACK_HEART("407", "지원에 필요한 하트 부족"),
+            console.log(error.response.data.header.code)
+            if (error.response.data.header.code === '402' || error.response.data.header.code === '403') {
+              Swal.fire(error.response.data.message, '관리자에게 문의해주세요', 'warning')
+            } else if (error.response.data.header.code === '405') {
+              Swal.fire('꺼져 블랙리스트야', '관리자에게 문의해주세요', 'error')
+            } else if (error.response.data.header.code === '406') {
+              Swal.fire(error.response.data.message, '마이페이지를 확인해주세요', 'warning')
+            } else if (error.response.data.header.code === '407') {
+              Swal.fire(error.response.data.message, '하트 충전 후 이용해주세요', 'warning')
+            }
+          }
         })
-
-      console.log('지원서 put')
-      navigate(-1)
     } catch (error) {
       console.log(error)
     }
@@ -384,7 +401,7 @@ function ApplyModify() {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={position || ''}
+                    value={position}
                     onChange={handlePositionChange}
                     inputProps={{ 'aria-label': 'Without label' }}
                   >
