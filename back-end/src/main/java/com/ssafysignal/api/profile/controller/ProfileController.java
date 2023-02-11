@@ -312,4 +312,19 @@ public class ProfileController {
         }
     }
 
+
+    @Tag(name = "마이프로필")
+    @Operation(summary = "유저 하트 조회", description = "유저의 현재 하트를 조회한다")
+    @GetMapping("heartCnt/{userSeq}")
+    private ResponseEntity<BasicResponse> findUserHeart(@Parameter(name="userSeq", description = "사용자의 seq", required = true) @PathVariable("userSeq") Integer userSeq) {
+        log.info("findUserHeart - Call");
+
+        try {
+            Integer userHeartCnt = profileService.findUserHeartCnt(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, userHeartCnt));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
 }
