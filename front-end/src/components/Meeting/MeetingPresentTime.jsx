@@ -11,7 +11,13 @@ function MeetingPresentTime(props) {
   setTimeout(setNewDate, 5000)
   return (
     <div className="project-meeting-video-code-edit">
-      {moment(time).format('YYYY-MM-DD LT')} 접속 인원 : {props.personNum.length}명
+      {props.personNum === undefined ? (
+        <div> {moment(time).format('YYYY-MM-DD LT')} </div>
+      ) : (
+        <div>
+          {moment(time).format('YYYY-MM-DD LT')} 접속 인원 : {props.personNum.length}명
+        </div>
+      )}
     </div>
   )
 }

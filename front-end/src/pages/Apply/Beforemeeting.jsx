@@ -4,6 +4,8 @@ import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
 // import MeetingQna from 'components/Meeting/MeetingQna'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
+import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
+import MeetingQna from 'components/Meeting/MeetingQna'
 
 // ============================================
 let myStream
@@ -23,6 +25,8 @@ let selfStream
 let numOfUsers
 let socket
 let isOwner
+
+let postingSeq
 
 const prevMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
@@ -49,6 +53,9 @@ const prevMeetingSetting = () => {
   myName = sessionStorage.getItem('nickname')
   isOwner = params.get('owner')
   console.log(isOwner, params.get('applySeq'))
+
+  // 공고 질문 얻기 위한 postingSeq 파람 추가
+  postingSeq = params.get('postingSeq')
 
   if (myName !== params.get('nickname')) {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
@@ -166,8 +173,8 @@ function Beforemeeting() {
     })
   }
 
-  const now = ''
-  const today = ''
+  // const now = ''
+  // const today = ''
   console.log('랜더링')
 
   // const [now, setNow] = useState('00:00:00')
@@ -433,8 +440,10 @@ function Beforemeeting() {
   const [memoOpen, setMemoOpen] = useState(false)
   const handleMemoOpen = () => setMemoOpen(true)
   const handleMemoClose = () => setMemoOpen(false)
-  // const [qnaOpen, setQnaOpen] = useState(false)
-  // const handleQnaOpen = () => setQnaOpen(true)
+
+  const [qnaOpen, setQnaOpen] = useState(false)
+  const handleQnaOpen = () => setQnaOpen(true)
+  const handleQnaClose = () => setQnaOpen(false)
 
   const [voice, setVoice] = useState(false)
   const handleToVoice = () => {
@@ -479,7 +488,7 @@ function Beforemeeting() {
       </div>
       <div className="before-meeting-footer">
         <div className="before-meeting-time">
-          {today} {now}
+          <MeetingPresentTime key={10000}></MeetingPresentTime>
         </div>
         <div className="before-meeting-btn">
           {voice === false ? (
@@ -496,14 +505,23 @@ function Beforemeeting() {
         <div className="before-meeting-footer-right">
           <div className="before-meeting-btn-memo-container" onClick={handleMemoOpen}>
             <div className="before-meeting-btn-memo"></div>
-            <MeetingMemoModal open={memoOpen} close={handleMemoClose}></MeetingMemoModal>
             <div className="before-meeting-btn-name">메모</div>
           </div>
-          <div className="before-meeting-btn-memo-container">
+          <MeetingMemoModal
+            open={memoOpen}
+            onClose={handleMemoClose}
+            applySeq={parseInt(roomId.replace('prev', ''))}
+          ></MeetingMemoModal>
+          <div className="before-meeting-btn-memo-container" onClick={handleQnaOpen}>
             <div className="before-meeting-btn-qna"></div>
-            {/* <MeetingQna open={qnaOpen} close={handleMemoClose}></MeetingQna> */}
             <div className="before-meeting-btn-name">사전 질문</div>
           </div>
+          <MeetingQna
+            open={qnaOpen}
+            onClose={handleQnaClose}
+            applySeq={parseInt(roomId.replace('prev', ''))}
+            postingSeq={postingSeq}
+          ></MeetingQna>
           <div className="before-meeting-btn-memo-container" onClick={window.close}>
             <div className="before-meeting-btn-door"></div>
             <div className="before-meeting-btn-name">종료</div>
