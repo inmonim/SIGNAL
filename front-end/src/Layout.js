@@ -30,6 +30,7 @@ import SignalList from 'pages/Signal/SignalList'
 import Signalregister from 'pages/Signal/Signalregister'
 import SignalDetail from 'pages/Signal/SignalDetail'
 import SignalHonor from 'pages/Signal/SignalHonor'
+import SignalHonorList from 'pages/Signal/SignalHonorList'
 
 import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
@@ -98,6 +99,7 @@ function App() {
             <Route path="/signalregister" element={<Signalregister />} />
             <Route path="/signaldetail" element={<SignalDetail />} />
             <Route path="/signal/rank" element={<SignalHonor />} />
+            <Route path="/signal/ranklist" element={<SignalHonorList />} />
             <Route path="/openprofile" element={<Openprofile />}></Route>
             <Route path="/adminblacklist" element={<AdminBalckList />} />
             <Route path="/adminproject" element={<AdminProject />} />
