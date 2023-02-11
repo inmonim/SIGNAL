@@ -224,20 +224,38 @@ function TodoList({ projectSeq }) {
               <>
                 <div className="todo-todos-list-item" key={todo.todoSeq} id={todo.todoSeq}>
                   {dateValue === today ? (
-                    <FormControlLabel
-                      onChange={handleCompleteTodo}
-                      control={
-                        <Checkbox
-                          id={todo.todoSeq}
-                          defaultChecked={false}
-                          sx={{
-                            '& .MuiSvgIcon-root': { fontSize: 30 },
-                            color: '#574B9F',
-                            '&.Mui-checked': { color: '#574B9F' },
-                          }}
-                        />
-                      }
-                    />
+                    userSeq === JSON.parse(currentUser) ? (
+                      <FormControlLabel
+                        onChange={handleCompleteTodo}
+                        control={
+                          <Checkbox
+                            id={todo.todoSeq}
+                            defaultChecked={false}
+                            sx={{
+                              '& .MuiSvgIcon-root': { fontSize: 30 },
+                              color: '#574B9F',
+                              '&.Mui-checked': { color: '#574B9F' },
+                            }}
+                          />
+                        }
+                      />
+                    ) : (
+                      <FormControlLabel
+                        onChange={handleCompleteTodo}
+                        control={
+                          <Checkbox
+                            id={todo.todoSeq}
+                            defaultChecked={false}
+                            sx={{
+                              '& .MuiSvgIcon-root': { fontSize: 30 },
+                              color: '#574B9F',
+                              '&.Mui-checked': { color: '#574B9F' },
+                            }}
+                          />
+                        }
+                        disabled
+                      />
+                    )
                   ) : (
                     <WarningAmberIcon
                       sx={{
