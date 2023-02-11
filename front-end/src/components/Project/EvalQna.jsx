@@ -8,9 +8,8 @@ import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 import api from 'api/Api'
 
-function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
+function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, nickname }) {
   const [score, setScore] = useState([])
-  const [weekCnt, setWeekCnt] = useState(1)
   const [evaluationStartDt, setEvaluationStartDt] = useState('')
   const [evaluationEndDt, setEvaluationEndDt] = useState('')
   const [question, setQuestion] = useState([])
@@ -28,10 +27,12 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
           fromUserSeq,
           projectSeq,
           scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-          weekCnt,
+          weekCnt: weekCnt,
           toUserSeq,
         })
-        .then(() => setFlag(true))
+        .then(() => {
+          setFlag(true)
+        })
     } catch (error) {
       alert('이미 평가한 팀원 입니다.')
     }
@@ -42,7 +43,6 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
       .get(process.env.REACT_APP_API_URL + `/project/evaluation/` + projectSeq)
       .then((response) => {
         setQuestion(response.data.body.questionList)
-        setWeekCnt(response.data.body.weekCnt)
         setEvaluationStartDt(response.data.body.evaluationStartDt)
         setEvaluationEndDt(response.data.body.evaluationEndDt)
       })
@@ -57,8 +57,9 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
 
   return (
     <div className="eval-body">
+      <div className="eval-date">{nickname} 님 평가</div>
       <div className="eval-date">
-        {weekCnt}회차 {evaluationStartDt} ~ {evaluationEndDt}
+        {tab}회차 {evaluationStartDt} ~ {evaluationEndDt}
       </div>
       {question.map((item, index) => (
         <div key={index} className="eval-question-body">
@@ -97,20 +98,23 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, setFlag }) {
           </div>
         </div>
       ))}
-
-      <SignalBtn
-        sigwidth="224px"
-        sigheight="52px"
-        sigborderradius={14}
-        sigfontsize="24px"
-        sigmargin="43px auto"
-        sx={BtnStyle}
-        onClick={() => {
-          evaluationSubmit()
-        }}
-      >
-        평가 완료
-      </SignalBtn>
+      {weekCnt === tab ? (
+        <SignalBtn
+          sigwidth="224px"
+          sigheight="52px"
+          sigborderradius={14}
+          sigfontsize="24px"
+          sigmargin="43px auto"
+          sx={BtnStyle}
+          onClick={() => {
+            evaluationSubmit()
+          }}
+        >
+          평가 완료
+        </SignalBtn>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
