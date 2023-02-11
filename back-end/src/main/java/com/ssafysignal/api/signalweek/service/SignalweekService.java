@@ -1,5 +1,6 @@
 package com.ssafysignal.api.signalweek.service;
 
+import com.querydsl.core.types.Order;
 import com.ssafysignal.api.common.entity.ProjectFile;
 import com.ssafysignal.api.common.repository.ProjectFileRepository;
 import com.ssafysignal.api.common.service.FileService;
@@ -14,6 +15,7 @@ import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
+import com.ssafysignal.api.signalweek.dto.response.SignalweekScheduleFindAllResponse;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
@@ -34,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -251,5 +254,11 @@ public class SignalweekService {
                 userHeartLogRepository.save(heartLog);
             }
         }
+    }
+
+    @Transactional
+    public List<SignalweekScheduleFindAllResponse> findAllSignalweekSchedule(){
+        List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year")));
+        return signalweekScheduleList.stream().map(SignalweekScheduleFindAllResponse::fromEntity).collect(Collectors.toList());
     }
 }

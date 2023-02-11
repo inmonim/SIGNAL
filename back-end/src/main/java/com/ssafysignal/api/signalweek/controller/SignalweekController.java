@@ -8,6 +8,7 @@ import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
 import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
+import com.ssafysignal.api.signalweek.dto.response.SignalweekScheduleFindAllResponse;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.service.SignalweekService;
@@ -133,6 +134,20 @@ public class SignalweekController {
         try {
             signalweekService.endSignalweek();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+    
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "역대 시그널 위크 수상작 목록 조회", description = "역대 시그널 위크 수상작 목록 조회")
+    @GetMapping("signalweekschedule")
+    private ResponseEntity<BasicResponse> findAllSignalweekSchedule() {
+        log.info("quarterEndSignalweek - Call");
+
+        try {
+            List<SignalweekScheduleFindAllResponse> signalweekScheduleFindAllResponseList = signalweekService.findAllSignalweekSchedule();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekScheduleFindAllResponseList));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
