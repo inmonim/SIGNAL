@@ -222,7 +222,13 @@ public class ProfileService {
     // 하트 로그 조회
     @Transactional
     public HeartLogAllResponse findAllUserHeartLog(Integer userSeq) {
-        List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, Sort.by(Sort.Order.desc("ranking")));
+        List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, Sort.by(Sort.Order.desc("regDt")));
         return HeartLogAllResponse.fromEntity(userHeartLogList);
+    }
+
+    @Transactional
+    public Integer findUserHeartCnt(Integer userSeq) {
+        Integer userHeartCnt = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getHeartCnt();
+        return userHeartCnt;
     }
 }
