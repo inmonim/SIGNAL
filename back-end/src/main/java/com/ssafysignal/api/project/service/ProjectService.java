@@ -5,9 +5,13 @@ import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
+import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
+import com.ssafysignal.api.profile.entity.UserHeartLog;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
+import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogAllResponse;
+import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogResponse;
 import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
@@ -15,6 +19,7 @@ import com.ssafysignal.api.project.repository.ProjectUserRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -175,5 +180,18 @@ public class ProjectService {
         }
 
         projectRepository.save(project);
+    }
+
+    @Transactional
+    public ProjectUserHeartLogAllResponse findAllProjectUserHeartLog(Integer userSeq, Integer projectSeq) {
+        Integer projectUserSeq = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getProjectUserSeq();
+        List<ProjectUserHeartLog> projectUserHeartLogList = projectUserHeartLogRepository.findAllByProjectUserSeq(projectUserSeq, Sort.by(Sort.Order.desc("regDt")));
+        return ProjectUserHeartLogAllResponse.fromEntity(projectUserHeartLogList);
+    }
+
+    @Transactional
+    public Integer findProjectUserHeartCnt(Integer userSeq, Integer projectSeq) {
+        Integer projectUserSeq = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getProjectUserSeq();
+        return projectUserHeartLogRepository.findByProjectUserSeq(projectUserSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getHeartCnt();
     }
 }

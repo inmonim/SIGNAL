@@ -11,8 +11,10 @@ import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
 import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
 import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
+import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogAllResponse;
 import com.ssafysignal.api.project.entity.ProjectUserHeartLog;
 import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
+import com.ssafysignal.api.project.service.ProjectService;
 import com.ssafysignal.api.project.service.ProjectSettingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,9 +37,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/project")
 public class ProjectSettingController {
-    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
     private final ProjectSettingService projectSettingService;
+
+    private final ProjectService projectService;
 
     @Tag(name = "프로젝트")
     @Operation(summary = "프로젝트 설정 조회", description = "프로젝트 설정 조회한다.")
@@ -219,13 +222,28 @@ public class ProjectSettingController {
 
     @Tag(name = "프로젝트")
     @Operation(summary = "프로젝트 유저 하트 로그 목록 조회", description = "프로젝트에 참여햔 유저의 하트 로그 목록을 조회한다")
-    @GetMapping("/heart/{projectUserSeq}")
-    private ResponseEntity<BasicResponse> findAllProjectUserHeartLog(@Parameter(name = "projectUserSeq", description = "하트 로그 목록 조회") @PathVariable(name = "projectUserSeq") Integer projectUserSeq) {
+    @GetMapping("/heart/{userSeq}")
+    private ResponseEntity<BasicResponse> findAllProjectUserHeartLog(@Parameter(name = "userSeq", description = "유저 seq") @PathVariable(name = "userSeq") Integer userSeq,
+                                                                     @Parameter(name = "projectSeq") @RequestParam Integer projectSeq) {
         log.info("findAllProjectUserHeartLog - Call");
 
         try {
-            List<ProjectUserHeartLog> projectUserHeartLogList = projectUserHeartLogRepository.findAllByProjectUserSeq(projectUserSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectUserHeartLogList));
+            ProjectUserHeartLogAllResponse projectUserHeartLogAllResponse = projectService.findAllProjectUserHeartLog(userSeq, projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectUserHeartLogAllResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "프로젝트")
+    @Operation(summary = "프로젝트 유저 하트 조회", description = "프로젝트에 참여한 유저의 하트 개수를 조회한다")
+    @GetMapping("/heartCnt/{userSeq}")
+    private ResponseEntity<BasicResponse> findProjectUserHeartCnt(@Parameter(name = "userSeq", description = "유저 seq") @PathVariable(name = "userSeq") Integer userSeq,
+                                                                  @Parameter(name = "projectSeq") @RequestParam Integer projectSeq) {
+        log.info("findProjectUserHeartCnt");
+        try {
+            Integer projectUserCnt = projectService.findProjectUserHeartCnt(userSeq, projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectUserCnt));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
