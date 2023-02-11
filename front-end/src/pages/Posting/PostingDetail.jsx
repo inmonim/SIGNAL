@@ -63,14 +63,14 @@ function PostingDetail() {
                 <div className="apply-detail-project-title">{posting ? posting.subject : null}</div>
               </div>
               <div className="apply-detail-cancle-section">
-                {posting && (
+                {posting && posting.isMyPosting && (
                   <Link to={'/postingModify'} state={{ postingSeq: posting.postingSeq }}>
                     <ApplyModify variant="contained" startIcon={<ModeEditIcon />}>
                       공고 수정
                     </ApplyModify>
                   </Link>
                 )}
-                <PostingDelete open={open} postingSeq={postingSeq}></PostingDelete>
+                {posting && posting.isMyPosting && <PostingDelete open={open} postingSeq={postingSeq}></PostingDelete>}
               </div>
             </div>
             <hr className="apply-detail-hr" />
