@@ -112,3 +112,6 @@ hr {
   border: 1px solid #f44336;
   box-shadow: inset 0 0 0 1px #ff77774d;
 }
+.active-warning-span {
+  color: red;
+}
