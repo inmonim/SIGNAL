@@ -40,7 +40,8 @@ function UserModifyModal({ open, onClose }) {
         },
       })
       .then((res) => {
-        console.log(res)
+        console.log('.', res)
+        sessionStorage.setItem('nickname', inputs.nickname)
       })
 
     setAlertOpen(false)
