@@ -503,25 +503,32 @@ function Beforemeeting() {
           )}
         </div>
         <div className="before-meeting-footer-right">
-          <div className="before-meeting-btn-memo-container" onClick={handleMemoOpen}>
-            <div className="before-meeting-btn-memo"></div>
-            <div className="before-meeting-btn-name">메모</div>
-          </div>
-          <MeetingMemoModal
-            open={memoOpen}
-            onClose={handleMemoClose}
-            applySeq={parseInt(roomId.replace('prev', ''))}
-          ></MeetingMemoModal>
-          <div className="before-meeting-btn-memo-container" onClick={handleQnaOpen}>
-            <div className="before-meeting-btn-qna"></div>
-            <div className="before-meeting-btn-name">사전 질문</div>
-          </div>
-          <MeetingQna
-            open={qnaOpen}
-            onClose={handleQnaClose}
-            applySeq={parseInt(roomId.replace('prev', ''))}
-            postingSeq={postingSeq}
-          ></MeetingQna>
+          {isOwner === 'true' ? (
+            <>
+              <div className="before-meeting-btn-memo-container" onClick={handleMemoOpen}>
+                <div className="before-meeting-btn-memo"></div>
+                <div className="before-meeting-btn-name">메모</div>
+              </div>
+              <MeetingMemoModal
+                open={memoOpen}
+                onClose={handleMemoClose}
+                applySeq={parseInt(roomId.replace('prev', ''))}
+              ></MeetingMemoModal>
+              <div className="before-meeting-btn-memo-container" onClick={handleQnaOpen}>
+                <div className="before-meeting-btn-qna"></div>
+                <div className="before-meeting-btn-name">사전 질문</div>
+              </div>
+              <MeetingQna
+                open={qnaOpen}
+                onClose={handleQnaClose}
+                applySeq={parseInt(roomId.replace('prev', ''))}
+                postingSeq={postingSeq}
+              ></MeetingQna>
+            </>
+          ) : (
+            <></>
+          )}
+
           <div className="before-meeting-btn-memo-container" onClick={window.close}>
             <div className="before-meeting-btn-door"></div>
             <div className="before-meeting-btn-name">종료</div>
