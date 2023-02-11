@@ -218,7 +218,7 @@ public class ApplyController {
         log.info("modifyApplyMemo - Call");
 
         try {
-            log.info(applyMemoRequest.toString());
+            applyService.modifyApplyMemo(applyMemoRequest);
         //할것!
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){

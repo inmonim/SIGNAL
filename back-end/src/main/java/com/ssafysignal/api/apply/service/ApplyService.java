@@ -3,6 +3,7 @@ package com.ssafysignal.api.apply.service;
 import com.ssafysignal.api.admin.Entity.BlackUser;
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
+import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
 import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
 import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
@@ -329,5 +330,13 @@ public class ApplyService {
     public List<Apply> findAllApplyApplyer(int userSeq, int page, int size){
         List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
         return applyList;
+    }
+
+    @Transactional
+    public void modifyApplyMemo(ApplyMemoRequest applyMemoRequest) {
+        Apply apply = applyRepository.findById(applyMemoRequest.getApplySeq())
+                        .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
+        apply.setMemo(applyMemoRequest.getMemo());
+        applyRepository.save(apply);
     }
 }
