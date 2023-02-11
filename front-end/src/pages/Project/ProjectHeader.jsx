@@ -93,14 +93,6 @@ function ProjectHeader() {
                 </div>
                 <div className="project-detail-project-title">{project.subject}</div>
               </div>
-              <div className="project-detail-body-section">
-                <div className="project-detail-content">{project.content}</div>
-                <div className="project-detail-enter-progress">
-                  <div className="project-detail-enter-progress-btn" onClick={handleToProgress}>
-                    입장하기 &gt;&gt;
-                  </div>
-                </div>
-              </div>
               <div>
                 <div className="project-detail-team-detail-list">
                   {memberList.map((item, index) => (
@@ -109,6 +101,14 @@ function ProjectHeader() {
                       <div>{item.nickname}</div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div className="project-detail-body-section">
+                <div className="project-detail-content">{project.content}</div>
+                <div className="project-detail-enter-progress">
+                  <div className="project-detail-enter-progress-btn" onClick={handleToProgress}>
+                    입장하기 &gt;&gt;
+                  </div>
                 </div>
               </div>
             </div>

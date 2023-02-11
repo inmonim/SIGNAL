@@ -1,6 +1,39 @@
+/* 평가 회차 탭 */
+.eval-count-tab-container{
+  width:1000px;
+  border-bottom: 2px solid black;
+  margin: 30px;
+}
+
+.eval-count-tab-list{
+  display: flex;
+  font-size: 24px;
+  margin-left: 40px;
+  width: 900px
+}
+
+.eval-count-tab{
+  background-color: white;
+  border:2px solid #796fb2;
+  border-bottom: 0px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  width: 120px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+}
+
+.eval-count-tab.active{
+  background-color: #796fb2;
+  color: #fff;
+}
+
 .eval-container {
-  margin-top: 80px;
-  width: 100%;
+  width: 1110px;
+  margin-top: 30px;
 }
 
 .eval-section {
@@ -33,6 +66,12 @@
   cursor: pointer;
 }
 
+.eval-member.active{
+  border: 2px solid #796FB2;
+  color: #616161;
+  text-decoration: line-through;
+}
+
 .eval-qna-container{
   display: flex;
   justify-content: center;
@@ -40,6 +79,16 @@
 
 .eval-body{
   width: 760px;
+}
+
+.eval-end{
+  background-color: #CCC;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  border-radius: 15px;
 }
 
 .eval-date {

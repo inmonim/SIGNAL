@@ -4,6 +4,7 @@ import api from 'api/Api'
 import EvalQna from 'components/Project/EvalQna'
 
 function TeamEval({ projectSeq }) {
+  console.log(projectSeq)
   const userSeq = sessionStorage.getItem('userSeq')
   const [member, setMember] = useState([])
   const [fromUserSeq, setFromUserSeq] = useState('')
@@ -30,27 +31,67 @@ function TeamEval({ projectSeq }) {
     projectMemeberFetch()
   }, [flag])
 
+  const [tab, setTab] = useState(0)
+  const [end, setEnd] = useState(false)
+
   return (
-    <div className="eval-container">
-      <div className="eval-section">
-        <div className="eval-member-bar">
-          {member.map((item, index) => (
-            <div
-              className="eval-member"
-              key={index}
-              onClick={() => {
-                setToUserSeq(item.projectUserSeq)
-              }}
-            >
-              <div className="eval-member-name">{item.nickname}</div>
-            </div>
-          ))}
-        </div>
-        <div className="eval-qna-container">
-          <EvalQna fromUserSeq={fromUserSeq} toUserSeq={toUserSeq} projectSeq={projectSeq} setFlag={setFlag}></EvalQna>
+    <>
+      <div className="eval-count-tab-container">
+        <div className="eval-count-tab-list">
+          <div
+            className={`eval-count-tab ${tab === 0 ? 'active' : ''}`}
+            onClick={() => {
+              setTab(0)
+              // 몇회차인지 상태변경
+            }}
+          >
+            1회차
+          </div>
+          <div
+            className={`eval-count-tab ${tab === 1 ? 'active' : ''}`}
+            onClick={() => {
+              setTab(1)
+              // 몇회차인지 상태변경
+            }}
+          >
+            2회차
+          </div>
         </div>
       </div>
-    </div>
+      <div className="eval-container">
+        <div className="eval-section">
+          <div className="eval-member-bar">
+            {member.map((item, index) => (
+              <div
+                className={`eval-member ${end ? 'active' : ''}`}
+                key={index}
+                onClick={() => {
+                  // 평가 완료하면 end만 true로 바꿔주면 ui 알아서 바뀜여 ~~
+                  setToUserSeq(item.projectUserSeq)
+                }}
+              >
+                <div className="eval-member-name">{item.nickname}</div>
+              </div>
+            ))}
+          </div>
+          <div className="eval-qna-container">
+            {end ? (
+              <div className="eval-body">
+                <div className="eval-end">평가 완료</div>
+              </div>
+            ) : (
+              <EvalQna
+                fromUserSeq={fromUserSeq}
+                toUserSeq={toUserSeq}
+                projectSeq={projectSeq}
+                setFlag={setFlag}
+                setEnd={setEnd}
+              ></EvalQna>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 

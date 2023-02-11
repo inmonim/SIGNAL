@@ -69,6 +69,7 @@ function TodoList({ projectSeq }) {
   }, [])
 
   const [userSeq, setUserSeq] = useState(sessionStorage.getItem('userSeq'))
+  const currentUser = sessionStorage.getItem('userSeq')
   const regDt = dateValue
 
   const [data, setData] = useState('')
@@ -160,15 +161,12 @@ function TodoList({ projectSeq }) {
       <div className="todo-person-tab-container">
         <div className="todo-person-tab-list">
           {memberList.map((mem, index) => {
-            // if (index === 0) setUserSeq(mem.userSeq)
             return (
               <div
                 key={mem.userSeq}
                 id={index}
                 className={`todo-person-tab ${
-                  userSeq === mem.userSeq || (index === 0 && userSeq === sessionStorage.getItem('userSeq'))
-                    ? 'active'
-                    : ''
+                  userSeq === mem.userSeq || (index === 0 && userSeq === currentUser) ? 'active' : ''
                 }`}
                 onClick={() => {
                   setUserSeq(mem.userSeq)
@@ -178,31 +176,34 @@ function TodoList({ projectSeq }) {
               </div>
             )
           })}
-          <div className="todo-date">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                value={dateValue}
-                inputFormat="YYYY-MM-DD"
-                onChange={dateInput}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    sx={{
-                      '.MuiInputBase-input': { border: 0 },
-                    }}
-                  />
-                )}
-              />
-              {console.log(dateValue)}
-            </LocalizationProvider>
-          </div>
+        </div>
+      </div>
+      <div className="todo-date-container">
+        <div className="todo-date">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={dateValue}
+              inputFormat="YYYY-MM-DD"
+              onChange={dateInput}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{
+                    '.MuiInputBase-input': { border: 0 },
+                  }}
+                />
+              )}
+            />
+            {console.log(dateValue)}
+          </LocalizationProvider>
         </div>
       </div>
       <div className="todo-kanban-container">
         <div className="todo-todos-container">
           <div className="todo-todos-header">
             <div className="todo-todos-title">ToDos</div>
-            {dateValue === today ? (
+            {console.log(userSeq === currentUser)}
+            {(dateValue === today && userSeq === JSON.parse(currentUser)) || userSeq === currentUser ? (
               <div className="todo-todos-plus" onClick={handleToAlert}>
                 <img src={plusBtn} alt="" />
               </div>
