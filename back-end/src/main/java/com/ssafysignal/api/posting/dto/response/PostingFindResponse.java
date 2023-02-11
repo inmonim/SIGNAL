@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ public class PostingFindResponse {
     @Schema(description = "공고 사전 질문")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingQuestion> postingQuestionList;
+    @Schema(description = "나의 공고 여부")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isMyPosting;
 
     @Schema(description = "공고 상태 코드")
     @JsonInclude(JsonInclude.Include.NON_NULL)

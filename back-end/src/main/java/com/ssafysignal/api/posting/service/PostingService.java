@@ -4,12 +4,14 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
+import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
 import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
+import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
 import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.posting.repository.*;
 import com.ssafysignal.api.profile.entity.UserHeartLog;
@@ -27,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +50,7 @@ public class PostingService {
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
+    private final SecurityService securityService;
 
     @Transactional
     public Integer countPosting() {
@@ -162,9 +167,16 @@ public class PostingService {
     }
 
     @Transactional(readOnly = true)
-    public Project findPosting(Integer postingSeq){
-        return projectRepository.findByPostingSeq(postingSeq)
+    public PostingFindResponse findPosting(Integer postingSeq){
+
+        Project project = projectRepository.findByPostingSeq(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        Integer userSeq = securityService.currentUserSeq();
+
+        PostingFindResponse postingFindResponse = PostingFindResponse.fromEntity(project);
+        postingFindResponse.setIsMyPosting(project.getPosting().getUserSeq().equals(userSeq));
+
+        return postingFindResponse;
     }
 
     @Transactional

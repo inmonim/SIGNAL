@@ -181,7 +181,7 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/evaluation")
     private ResponseEntity<BasicResponse> findProjectUserEvaluation(@Parameter(name = "projectUserSeq", description = "평가하는 팀원") @RequestParam Integer projectUserSeq,
-                                                                    @Parameter(name = "termCnt", description = "평가 회차") @RequestParam Integer weekCnt) {
+                                                                    @Parameter(name = "weekCnt", description = "평가 회차") @RequestParam Integer weekCnt) {
         log.info("findProjectUserEvaluation - Call");
 
         try {

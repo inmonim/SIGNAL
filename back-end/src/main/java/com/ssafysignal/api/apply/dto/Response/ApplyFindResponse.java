@@ -36,4 +36,6 @@ public class ApplyFindResponse {
     private List<CommonCode> skillList;
     @Schema(description = "사전미팅시간")
     private PostingMeeting postingMeeting;
+    @Schema(description = "나의 지원서 여부")
+    private Boolean isMyApply;
 }

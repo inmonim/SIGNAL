@@ -5,6 +5,7 @@ import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.common.entity.ImageFile;
 import com.ssafysignal.api.common.repository.ImageFileRepository;
 import com.ssafysignal.api.common.service.FileService;
+import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
@@ -38,6 +39,7 @@ public class ProjectSettingService {
     private final BlackUserRepository blackUserRepository;
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
+    private final SecurityService securityService;
 
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
@@ -56,8 +58,17 @@ public class ProjectSettingService {
 
     @Transactional(readOnly = true)
     public List<ProjectUserFindAllDto> findProjectUser(Integer projectSeq) {
+        Integer userSeq = securityService.currentUserSeq();
+
         List<ProjectUser> projectUserList = projectUserRepository.findByProjectSeq(projectSeq);
 
+        // 씹억까 Integer wrapper 객체를 비교할 때는 equals 사용 (별표 100개)
+        for (int idx = 0; idx < projectUserList.size(); idx++){
+            if (projectUserList.get(idx).getUserSeq().equals(userSeq)){
+                projectUserList.add(0, projectUserList.get(idx));
+                projectUserList.remove(idx + 1);
+            }
+        }
         return projectUserList.stream()
                 .map(ProjectUserFindAllDto::fromEntity)
                 .collect(Collectors.toList());
