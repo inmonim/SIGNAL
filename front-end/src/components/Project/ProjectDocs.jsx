@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import 'assets/styles/project/projectdocs.css'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import plusBtn from 'assets/image/plusButton.png'
 import InputUrlModal from './InputUrlModal'
 import Notion from './Notion'
@@ -105,6 +106,17 @@ function ProjectDocs({ projectSeq }) {
     <div className="docs-container">
       <div className="docs-header">
         <div className="docs-title">프로젝트 문서</div>
+      </div>
+      <div className="docs-howto-container">
+        <div className="docs-howto">사용법</div>
+        <div className="docs-howto-arrow">
+          <InfoOutlinedIcon className="docs-howto-icon"></InfoOutlinedIcon>
+          <p className="arrow-box">
+            <div className="arrow-box-title">문서 사용법</div>
+            <div className="arrow-box-content">➿ 노션 문서의 공유 링크를 등록해주세요.</div>
+            <div className="arrow-box-content">➿ notion.site/ 뒤의 주소만 입력해주세요.</div>
+          </p>
+        </div>
       </div>
       <div className="docs-list">
         <div className="docs-list-item" onClick={handleDisplayNone1}>

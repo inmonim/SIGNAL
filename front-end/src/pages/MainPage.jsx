@@ -34,7 +34,7 @@ function MainPage() {
   return (
     <div className="MainPage">
       <FullPage ref={fullPageRef} afterChange={handleChange} controls controlsProps={{ className: 'slide-navigation' }}>
-        <Slide initialSlide={0}>
+        <Slide>
           <Section isBg={true}>
             <div className="left">
               <div className="text-wrap">
@@ -54,7 +54,7 @@ function MainPage() {
             </div>
           </Section>
         </Slide>
-        <Slide initialSlide={1}>
+        <Slide>
           <Section>
             <div className="left">
               <div className="img-wrap">
@@ -83,7 +83,7 @@ function MainPage() {
             </div>
           </Section>
         </Slide>
-        <Slide initialSlide={2}>
+        <Slide>
           <Section isBg={true}>
             <div className="left">
               <div className="text-wrap">
