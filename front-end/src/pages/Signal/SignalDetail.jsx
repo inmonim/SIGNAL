@@ -124,7 +124,7 @@ function signalDetail() {
           </p>
         </div>
         <div className="apply-detail-content-section">
-          <label>README</label>
+          <label>내용</label>
           <div className="apply-detail-content">{data.content}</div>
         </div>
       </div>
