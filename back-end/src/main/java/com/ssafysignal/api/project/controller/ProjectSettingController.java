@@ -129,6 +129,27 @@ public class ProjectSettingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
+    @Tag(name = "프로젝트")
+    @Operation(summary = "프로젝트 현재 주차 조회", description = "프로젝트 현재 주차 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로젝트 현재 주차 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "프로젝트 현재 주차 조회 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/weekCnt")
+    private ResponseEntity<BasicResponse> countWeekCnt(@Parameter(name = "projectSeq", description = "프로젝트 Seq") @RequestParam Integer projectSeq) {
+        log.info("countWeekCnt - Call");
+
+        try {
+            Integer weekCnt = projectSettingService.countWeekCnt(projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, weekCnt));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
 
     @Tag(name = "프로젝트")
     @Operation(summary = "팀원 평가 항목 조회", description = "팀원 평가 항목을 조회한다.")

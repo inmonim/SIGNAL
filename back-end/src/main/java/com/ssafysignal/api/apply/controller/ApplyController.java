@@ -219,7 +219,6 @@ public class ApplyController {
 
         try {
             applyService.modifyApplyMemo(applyMemoRequest);
-        //할것!
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));

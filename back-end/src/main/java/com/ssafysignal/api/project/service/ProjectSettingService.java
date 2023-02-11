@@ -191,4 +191,11 @@ public class ProjectSettingService {
 
         return FindEvaluationResponse.fromEntity(project, projectEvaluationQuestionList);
     }
+
+    @Transactional(readOnly = true)
+    public Integer countWeekCnt(Integer projectSeq) {
+        Project project = projectRepository.findById(projectSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        return project.getWeekCnt();
+    }
 }
