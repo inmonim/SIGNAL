@@ -208,7 +208,7 @@
   height: 84px;
   position: absolute;
   top: 550px;
-  left: 450px;
+  right: 10px;
   background-color: #fff;
   border-radius: 15px;
   display: flex;

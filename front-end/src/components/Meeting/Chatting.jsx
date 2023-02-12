@@ -100,9 +100,11 @@ const Chatting = forwardRef((props, ref) => {
                           backgroundColor: 'white',
                           fontSize: '22px',
                           minWidth: '100px',
+                          maxWidth: '290px',
+                          wordWrap: 'break-word',
                           borderRadius: '25px',
                           minHeight: '60px',
-                          padding: '20px 0px 20px 20px',
+                          padding: '20px 20px 20px 20px',
                           marginLeft: '30px',
                           boxShadow: '0 3px 1px  rgba(0,0,0,0.25)',
                         }}
