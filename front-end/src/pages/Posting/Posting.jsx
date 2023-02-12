@@ -15,6 +15,8 @@ import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
 import Paging from 'components/Paging'
 import api from 'api/Api'
+import Lottie from 'react-lottie'
+import searchani from 'assets/lottie/searchani'
 // import SkillList from 'components/Apply/SkillList'
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
@@ -60,6 +62,15 @@ function Posting() {
   // )
   // `${process.env.REACT_APP_API_URL}/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
   // console.log(result.data?.body?.postingList)
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: searchani,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
+
   // const userName = sessionStorage.getItem('username')
   // console.log(userName)
   const navigate = useNavigate()
@@ -167,7 +178,11 @@ function Posting() {
   }, [skillList, skillListauto])
   return (
     <div>
-      <Banner />
+      <Box sx={{ width: '100ox', height: '100px' }}></Box>
+      <div style={{ position: 'relative' }}>
+        <Lottie options={defaultOptions} height={300} width={400} style={{ position: 'absolute', top: 0, left: 0 }} />
+        <Banner />
+      </div>
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}>
           {/* <button
