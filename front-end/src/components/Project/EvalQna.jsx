@@ -27,7 +27,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
           fromUserSeq,
           projectSeq,
           scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-          weekCnt: weekCnt,
+          weekCnt,
           toUserSeq,
         })
         .then(() => {

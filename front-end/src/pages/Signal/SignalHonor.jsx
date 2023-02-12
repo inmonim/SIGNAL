@@ -5,6 +5,7 @@ import trophy from 'assets/lottie/trophy.json'
 import second from 'assets/lottie/2rd.json'
 import third from 'assets/lottie/3rd.json'
 import { useNavigate } from 'react-router-dom'
+import noImg from 'assets/image/noImage.png'
 import api from 'api/Api'
 
 function SignalHonor(props) {
@@ -39,18 +40,21 @@ function SignalHonor(props) {
     navigate('/signal/ranklist')
   }
 
+  const year = 2023
+  const quarter = 1
+  // const [winnerList, setWinnerList] = useState([])
   const getHonor = () => {
-    api
-      .get(process.env.REACT_APP_API_URL + '/signalweek/rank', {
-        year: 2023,
-        quarter: 1,
-      })
-      .then((res) => console.log(res.data.body))
+    api.get(process.env.REACT_APP_API_URL + `/signalweek/rank?year=${year}&quarter=${quarter}`).then((res) => {
+      console.log(res.data.body)
+      // setWinnerList(res.data.body)
+    })
+    // console.log(winnerList)
   }
 
   useEffect(() => {
     getHonor()
   }, [])
+
   return (
     <div className="signal-rank-page-container">
       <div className="signal-rank-container">
@@ -64,9 +68,41 @@ function SignalHonor(props) {
           </div>
         </div>
         <div className="signal-rank-img">
-          <Lottie options={firstOptions} height={300} width={300} isClickToPauseDisabled={true} />
-          <Lottie options={secondOptions} height={600} width={600} isClickToPauseDisabled={true} />
-          <Lottie options={thirdOptions} height={600} width={600} isClickToPauseDisabled={true} />
+          <div className="signal-rank-1st-container">
+            <div className="signal-rank-1st-lottie">
+              <Lottie options={firstOptions} height={150} width={150} isClickToPauseDisabled={true} />
+            </div>
+            <div className="signal-rank-1st">
+              <div className="signal-rank-1st-img">
+                <img className="signal-rank-1st-img-item" src={noImg} alt="signal" />
+              </div>
+              <div className="signal-rank-1st-subject">프로젝트 이름</div>
+            </div>
+          </div>
+          <div className="signal-rank-under-container">
+            <div className="signal-rank-1st-container">
+              <div className="signal-rank-1st-lottie">
+                <Lottie options={secondOptions} height={100} width={100} isClickToPauseDisabled={true} />
+              </div>
+              <div className="signal-rank-1st">
+                <div className="signal-rank-1st-img">
+                  <img className="signal-rank-1st-img-item" src={noImg} alt="signal" />
+                </div>
+                <div className="signal-rank-1st-subject">프로젝트 이름</div>
+              </div>
+            </div>
+            <div className="signal-rank-1st-container">
+              <div className="signal-rank-1st-lottie">
+                <Lottie options={thirdOptions} height={100} width={100} isClickToPauseDisabled={true} />
+              </div>
+              <div className="signal-rank-1st">
+                <div className="signal-rank-1st-img">
+                  <img className="signal-rank-1st-img-item" src={noImg} alt="signal" />
+                </div>
+                <div className="signal-rank-1st-subject">프로젝트 이름</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

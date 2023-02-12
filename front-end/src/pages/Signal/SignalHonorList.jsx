@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import api from 'api/Api'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Link } from 'react-router-dom'
 import 'assets/styles/signalweekrank.css'
 
 function SignalHonorList() {
+  const [honorList, setHonorList] = useState([])
+  const getHonorList = () => {
+    api.get(process.env.REACT_APP_API_URL + '/signalweek/signalweekschedule').then((res) => {
+      setHonorList(res.data.body)
+    })
+    console.log(honorList)
+  }
+
+  useEffect(() => {
+    getHonorList()
+  }, [])
   return (
     <div className="signal-rank-list-page-container">
       <div className="signal-rank-list-container">
