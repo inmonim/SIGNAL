@@ -8,6 +8,8 @@ import Regist from 'pages/user/Regist'
 import PostingRegister from 'pages/Posting/PostingRegister'
 import Notice from 'pages/Notice/Notice'
 import NoticeDetail from 'pages/Notice/NoticeDetail'
+import NoticeRegist from 'pages/Notice/NoticeRegist'
+import NoticeModify from 'pages/Notice/NoticeModify'
 import Qna from 'pages/QnA/Qna'
 import QnaDetail from 'pages/QnA/QnaDetail'
 import QnaRegist from 'pages/QnA/QnaRegist'
@@ -90,6 +92,8 @@ function App() {
             <Route path="/myproject" element={<MyProject />} />
             <Route path="/notice" element={<Notice />} />
             <Route path="/noticeDetail" element={<NoticeDetail />} />
+            <Route path="/noticeRegist" element={<NoticeRegist />} />
+            <Route path="/noticeModify" element={<NoticeModify />} />
             <Route path="/qna" element={<Qna />} />
             <Route path="/qnaDetail" element={<QnaDetail />} />
             <Route path="/qnaRegist" element={<QnaRegist />} />
