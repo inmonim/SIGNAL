@@ -4,10 +4,10 @@ import Lottie from 'react-lottie'
 import trophy from 'assets/lottie/trophy.json'
 import second from 'assets/lottie/2rd.json'
 import third from 'assets/lottie/3rd.json'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import api from 'api/Api'
 
-function SignalHonor() {
+function SignalHonorMain() {
   const firstOptions = {
     loop: true,
     autoplay: true,
@@ -39,21 +39,25 @@ function SignalHonor() {
     navigate('/signal/ranklist')
   }
 
-  const location = useLocation()
   const [year, setYear] = useState(0)
   const [quarter, setQuarter] = useState(0)
   const [winnerList, setWinnerList] = useState([])
 
   const getHonor = async () => {
-    const nowYear = location.state.year
-    const nowQuarter = location.state.quarter
-    setYear(nowYear)
-    setQuarter(nowQuarter)
-    await api
-      .get(process.env.REACT_APP_API_URL + `/signalweek/rank?year=${nowYear}&quarter=${nowQuarter}`)
-      .then((res) => {
-        setWinnerList(res.data.body)
-      })
+    await api.get(process.env.REACT_APP_API_URL + '/signalweek/signalweekschedule').then(async (res) => {
+      if (res.data.body) {
+        const nowYear = res.data.body[0].year
+        const nowQuarter = res.data.body[0].quarter
+        setYear(nowYear)
+        setQuarter(nowQuarter)
+
+        await api
+          .get(process.env.REACT_APP_API_URL + `/signalweek/rank?year=${nowYear}&quarter=${nowQuarter}`)
+          .then((res) => {
+            setWinnerList(res.data.body)
+          })
+      }
+    })
   }
 
   useEffect(() => {
@@ -64,10 +68,10 @@ function SignalHonor() {
     <div className="signal-rank-page-container">
       <div className="signal-rank-container">
         <div className="signal-rank-header">
-          <div className="signal-rank-header-title">시그널 위크 수상작</div>
+          <div className="signal-rank-header-title">명예의 전당</div>
           <div className="signal-rank-header-sub">
             <div className="signal-rank-header-now">
-              {year}년 {quarter}분기
+              {year}년 {quarter}분기 시그널위크 수상작
             </div>
             <div className="signal-rank-header-menu" onClick={handleToList}>
               &gt; 역대 수상작 보러가기
@@ -128,4 +132,4 @@ function SignalHonor() {
   )
 }
 
-export default SignalHonor
+export default SignalHonorMain
