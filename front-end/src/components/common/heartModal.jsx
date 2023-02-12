@@ -22,36 +22,35 @@ function heartModal({ open, onClose, mode, projectSeq }) {
   const [userHeartLog, setUserHeartLog] = useState([])
   const getUserHeartLog = async () => {
     await api.get(process.env.REACT_APP_API_URL + '/profile/heart/' + userSeq).then((res) => {
-      console.log(res.data.body)
       setUserHeartLog(res.data.body.heartLogList)
     })
   }
 
-  // const [projectCnt, setProjectCnt] = useState(0)
-  // const getProjectHeartCnt = async () => {
-  //   await api.get(process.env.REACT_APP_API_URL + '/project/heartCnt/' + userSeq, projectSeq).then((res) => {
-  //     setProjectCnt(res.data.body)
-  //   })
-  // }
+  const [projectCnt, setProjectCnt] = useState(0)
+  const getProjectHeartCnt = async () => {
+    await api
+      .get(process.env.REACT_APP_API_URL + `/project/heartCnt/${userSeq}?projectSeq=${projectSeq}`)
+      .then((res) => {
+        setProjectCnt(res.data.body)
+      })
+  }
 
-  // const [projectHeartLog, setProjectHeartLog] = useState([])
-  // const getProjectHeartLog = async () => {
-  //   await api.get(process.env.REACT_APP_API_URL + '/project/heart/' + userSeq, projectSeq).then((res) => {
-  //     console.log(res.data.body)
-  //     setProjectHeartLog(res.data.body.heartLogList)
-  //   })
-  // }
+  const [projectHeartLog, setProjectHeartLog] = useState([])
+  const getProjectHeartLog = async () => {
+    await api.get(process.env.REACT_APP_API_URL + `/project/heart/${userSeq}?projectSeq=${projectSeq}`).then((res) => {
+      setProjectHeartLog(res.data.body.projectUserHeartLogList)
+    })
+  }
 
-  // mode === 'user'
-  //   ?
-  useEffect(() => {
-    getUserHeartCnt()
-    getUserHeartLog()
-  }, [])
-  // : useEffect(() => {
-  //     getProjectHeartCnt()
-  //     getProjectHeartLog()
-  //   }, [])
+  mode === 'user'
+    ? useEffect(() => {
+        getUserHeartCnt()
+        getUserHeartLog()
+      }, [])
+    : useEffect(() => {
+        getProjectHeartCnt()
+        getProjectHeartLog()
+      }, [])
 
   // 하트 충전
   const [inputHeart, setInputHeart] = useState(0)
@@ -99,11 +98,11 @@ function heartModal({ open, onClose, mode, projectSeq }) {
             <div className="my-user-heart-modal-top">
               <div className="my-user-heart-modal">
                 <img className="my-user-heart-modal-img" src={heart} alt="" />
-                {/* {mode === 'user' ? ( */}
-                <div className="my-user-heart-modal-cnt">{userCnt}</div>
-                {/* ) : (
+                {mode === 'user' ? (
+                  <div className="my-user-heart-modal-cnt">{userCnt}</div>
+                ) : (
                   <div className="my-user-heart-modal-cnt">{projectCnt}</div>
-                )} */}
+                )}
               </div>
               {mode === 'user' ? (
                 <div className="my-user-heart-modal-charge">
@@ -138,20 +137,19 @@ function heartModal({ open, onClose, mode, projectSeq }) {
             <div className="my-user-heart-modal-bottom-container">
               <div className="my-user-heart-modal-bottom-title">사용내역</div>
               <div className="my-user-heart-modal-bottom">
-                {/* {mode === 'user'
-                  ?  */}
-                {userHeartLog.map((item, index) => (
-                  <div key={index} className="my-user-heart-modal-bottom-content">
-                    <div className="my-user-heart-modal-content-left">{item.content}</div>
-                    <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
-                  </div>
-                ))}
-                {/* : projectHeartLog.map((item, index) => (
+                {mode === 'user'
+                  ? userHeartLog.map((item, index) => (
                       <div key={index} className="my-user-heart-modal-bottom-content">
                         <div className="my-user-heart-modal-content-left">{item.content}</div>
                         <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
                       </div>
-                    ))} */}
+                    ))
+                  : projectHeartLog.map((item, index) => (
+                      <div key={index} className="my-user-heart-modal-bottom-content">
+                        <div className="my-user-heart-modal-content-left">{item.content}</div>
+                        <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
+                      </div>
+                    ))}
               </div>
             </div>
           </div>
