@@ -39,6 +39,5 @@ public class FindAdminUserResponse {
                 .regDt(blackUser.getRegDt())
                 .projectSeq(blackUser.getProjectSeq())
                 .build();
-
     }
 }

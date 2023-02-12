@@ -1,7 +1,7 @@
 package com.ssafysignal.api.admin.service;
 
 import com.ssafysignal.api.admin.dto.Response.FindAdminProjectResponse;
-import com.ssafysignal.api.project.entity.Project;
+import com.ssafysignal.api.admin.dto.Response.FindAllAdminProjectResponse;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AdminProjectService {
     private final ProjectRepository projectRepository;
 
     @Transactional(readOnly = true)
-    public List<FindAdminProjectResponse> findAllProject() {
-        return FindAdminProjectResponse.toList(projectRepository.findAll());
+    public FindAllAdminProjectResponse findAllProject() {
+        return FindAllAdminProjectResponse.builder().projectList(FindAdminProjectResponse.toList(projectRepository.findAll())).build();
     }
 }

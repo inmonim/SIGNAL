@@ -2,7 +2,6 @@ package com.ssafysignal.api.admin.controller;
 
 import com.ssafysignal.api.admin.dto.Request.BasicAdminSignalWeekRequest;
 import com.ssafysignal.api.admin.dto.Response.FindAdminSignalWeekResponse;
-import com.ssafysignal.api.admin.service.AdminNoticeService;
 import com.ssafysignal.api.admin.service.AdminSignalWeekService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -27,15 +26,13 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/admin/signalweek")
 public class AdminSignalWeekController {
-
     private final AdminSignalWeekService adminSignalWeekService;
-
     @Tag(name = "관리자")
     @Operation(summary = "시그널 위크 스케줄 목록 조회", description = "시그널 위크 스케줄 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "시그널 위크 목록 조회 완료"),
             @ApiResponse(responseCode = "400", description = "시그널 위크 목록 조회 중 오류 발생"),
-            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("")
     private ResponseEntity<BasicResponse> findAllSignalWeek() {
         log.info("findAllSignalWeek - Call");
@@ -53,7 +50,7 @@ public class AdminSignalWeekController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "시그널 위크 등록 완료"),
             @ApiResponse(responseCode = "400", description = "시그널 위크 등록 중 오류 발생"),
-            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("")
     private ResponseEntity<BasicResponse> registSignalWeek(@Parameter(name = "basicSignalWeekRequest", description = "시그널 위크 등록 정보", required = true) @RequestBody BasicAdminSignalWeekRequest basicAdminSignalWeekRequest) {
         log.info("registSignalWeek - Call");
@@ -70,7 +67,7 @@ public class AdminSignalWeekController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "시그널 위크 스케줄 수정 완료"),
             @ApiResponse(responseCode = "400", description = "시그널 위크 스케줄 수정 중 오류 발생"),
-            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PutMapping("/{signalweekScheduleSeq}")
     private ResponseEntity<BasicResponse> modifySignalWeek(@Parameter(name = "signalweekScheduleSeq", description = "시그널 위크 스케줄 수정 정보", required = true) @PathVariable("signalweekScheduleSeq") Integer signalweekScheduleSeq,
                                                            @Parameter(name = "basicSignalWeekRequest", description = "시그널 위크 스케줄 수정 정보", required = true) @RequestBody BasicAdminSignalWeekRequest basicAdminSignalWeekRequest) {
@@ -90,7 +87,7 @@ public class AdminSignalWeekController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "시그널 위크 삭제 완료"),
             @ApiResponse(responseCode = "400", description = "시그널 위크 삭제 중 오류 발생"),
-            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
     @DeleteMapping("/{signalweekScheduleSeq}")
     private ResponseEntity<BasicResponse> deleteSignalWeek(@Parameter(name = "signalweekScheduleSeq", description = "시그널 위크 스케줄 Seq", required = true) @PathVariable("signalweekScheduleSeq") Integer signalweekScheduleSeq) {
         log.info("deleteSignalWeek - Call");

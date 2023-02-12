@@ -6,13 +6,13 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SignalweekScheduleFindAllResponse {
+public class FindAllSignalweekScheduleResponse {
     private Integer signalweekScheduleSeq;
     private Integer year;
     private Integer quarter;
 
-    public static SignalweekScheduleFindAllResponse fromEntity(SignalweekSchedule signalweekSchedule) {
-        return SignalweekScheduleFindAllResponse.builder()
+    public static FindAllSignalweekScheduleResponse fromEntity(SignalweekSchedule signalweekSchedule) {
+        return FindAllSignalweekScheduleResponse.builder()
                 .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
                 .year(signalweekSchedule.getYear())
                 .quarter(signalweekSchedule.getQuarter())

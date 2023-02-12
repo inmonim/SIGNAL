@@ -1,6 +1,5 @@
 package com.ssafysignal.api.admin.service;
 
-import com.ssafysignal.api.admin.Entity.BlackUser;
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.admin.dto.Response.FindAdminUserResponse;
 import lombok.RequiredArgsConstructor;

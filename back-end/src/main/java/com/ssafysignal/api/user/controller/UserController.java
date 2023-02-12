@@ -3,7 +3,7 @@ package com.ssafysignal.api.user.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.user.dto.request.UserInfo;
+import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
 import com.ssafysignal.api.user.dto.request.RegistUserRequest;
 import com.ssafysignal.api.user.dto.response.FindUserResponse;
 import com.ssafysignal.api.user.entity.User;
@@ -25,9 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     private final UserService userService;
-
     @Tag(name = "회원")
     @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
     @PostMapping("")
@@ -42,12 +40,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
-
     @Tag(name = "회원")
     @Operation(summary = "회원 상세 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
     @GetMapping("/{userSeq}")
-    private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
+    private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq) {
         log.info("findUser - Call");
+
         try {
             User user = userService.findUser(userSeq);
             FindUserResponse findUserResponse = FindUserResponse.builder()
@@ -65,11 +63,10 @@ public class UserController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-
     @Tag(name = "회원")
     @Operation(summary = "회원 탈퇴", description = "회원의 권한을 탈퇴자로 변경.")
     @DeleteMapping("/{userSeq}")
-    private ResponseEntity<BasicResponse> deleteUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
+    private ResponseEntity<BasicResponse> deleteUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq) {
         log.info("deleteUser - Call");
 
         try {
@@ -81,7 +78,6 @@ public class UserController {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
-
     @Tag(name = "회원")
     @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
     @PostMapping("/{userSeq}")
@@ -91,40 +87,34 @@ public class UserController {
                                                      @Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
         log.info("modifyUser - Call");
 
-        UserInfo userInfo = UserInfo.builder()
+        ModifyUserRequest modifyUserRequest = ModifyUserRequest.builder()
                 .nickname(nickname)
                 .phone(phone)
                 .profileImageFile(profileImageFile)
                 .build();
 
         try {
-            userService.modifyUser(userSeq, userInfo);
+            userService.modifyUser(userSeq, modifyUserRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
-
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
-
     @Tag(name = "회원")
     @Operation(summary = "비밀번호 변경", description = "회원의 비밀번호 변경.")
     @PutMapping("/password/{userSeq}")
-    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
+    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq,
                                                      @Parameter(description = "비밀번호", required = true)  @RequestBody Map<String,String> info){
         log.info("modifyPassword - Call");
 
         String password = info.get("password");
         String newPassword = info.get("newPassword");
-        System.out.println(password);
         try {
             userService.modifyPassword(userSeq, password, newPassword);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (Exception e){
-            System.out.println(e);
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
-
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }
-
 }

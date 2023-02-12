@@ -43,6 +43,5 @@ public class FindAdminProjectResponse {
                 .projectUserCnt(project.getProjectUserList().size())
                 .regDt(project.getRegDt())
                 .build();
-
     }
 }

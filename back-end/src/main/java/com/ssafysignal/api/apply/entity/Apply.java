@@ -10,8 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "apply")
 public class Apply {
     @Id
@@ -78,25 +78,4 @@ public class Apply {
     @OneToMany(targetEntity = ApplyAnswer.class, orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "apply_seq")
     private List<ApplyAnswer> applyAnswerList;
-
-    @Builder
-    public Apply(Integer applySeq, Integer userSeq, Integer postingSeq, Integer postingMeetingSeq, String content, String positionCode, String memo, CommonCode state, String applyCode, LocalDateTime regDt, CommonCode code, Posting posting, PostingMeeting postingMeeting, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList, List<ApplyAnswer> applyAnswerList) {
-        this.applySeq = applySeq;
-        this.userSeq = userSeq;
-        this.postingSeq = postingSeq;
-        this.postingMeetingSeq = postingMeetingSeq;
-        this.content = content;
-        this.positionCode = positionCode;
-        this.memo = memo;
-        this.state = state;
-        this.applyCode = applyCode;
-        this.regDt = regDt;
-        this.code = code;
-        this.posting = posting;
-        this.postingMeeting = postingMeeting;
-        this.applyCareerList = applyCareerList;
-        this.applyExpList = applyExpList;
-        this.applySkillList = applySkillList;
-        this.applyAnswerList = applyAnswerList;
-    }
 }

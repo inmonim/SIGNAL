@@ -10,8 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SignalweekRankRepository extends JpaRepository<SignalweekRank, Integer> {
-    List<SignalweekRank> findAllBySignalweekScheduleSeq(Integer signalweekScheduleSeq);
-
     @Query(value = "SELECT signalweek_seq, count(signalweek_seq), row_number() over (order by count(signalweek_seq) DESC) as ranking\n"
             + "from signalweek_vote \n"
             + "where signalweek_seq in (\n"
@@ -20,4 +18,5 @@ public interface SignalweekRankRepository extends JpaRepository<SignalweekRank, 
             + "    where signalweek_schedule_seq = (:scheduleSeq) \n"
             + ")\n" + "group by signalweek_seq;", nativeQuery = true)
     List<List<Integer>> findByRank(@Param("scheduleSeq") Integer signalweekScheduleSeq);
+    List<SignalweekRank> findAllBySignalweekScheduleSeq(Integer signalweekScheduleSeq);
 }

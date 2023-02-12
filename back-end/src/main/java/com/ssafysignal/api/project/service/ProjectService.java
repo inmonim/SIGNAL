@@ -191,7 +191,7 @@ public class ProjectService {
 
     @Transactional
     public Integer findProjectUserHeartCnt(Integer userSeq, Integer projectSeq) {
-        Integer projectUserSeq = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getProjectUserSeq();
-        return projectUserHeartLogRepository.findByProjectUserSeq(projectUserSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getHeartCnt();
+        ProjectUser projectUser = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        return projectUser.getHeartCnt();
     }
 }

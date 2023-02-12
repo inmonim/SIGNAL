@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Entity
 @DynamicInsert
 @DynamicUpdate
 @Builder
+@AllArgsConstructor
 @Table(name = "user")
 public class User {
     @Id
@@ -48,20 +48,6 @@ public class User {
     @JoinColumn(name = "user_image_file_seq", insertable = false, updatable = false)
     private ImageFile imageFile;
 
-    @Builder
-    public User(Integer userSeq, String name, String email, String password, String nickname, String birth, String phone, LocalDateTime regDt, int heartCnt, ImageFile imageFile) {
-        this.userSeq = userSeq;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.birth = birth;
-        this.phone = phone;
-        this.regDt = regDt;
-        this.heartCnt = heartCnt;
-        this.imageFile = imageFile;
-    }
-    
     public void modifyUser( String nickname,String phone) {
         this.nickname = nickname;
         this.phone = phone;
