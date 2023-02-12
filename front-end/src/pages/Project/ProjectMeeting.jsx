@@ -11,6 +11,7 @@ import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
+// import Swal from 'sweetalert2'
 
 // ============================================
 let myStream
@@ -40,7 +41,7 @@ let CANVAS_W
 const DRAWING = 0
 const ERASE = 1
 let MODE
-const ERASER_SIZE = 20
+const ERASER_SIZE = 30
 
 let drawingXYs
 let drawingColor
