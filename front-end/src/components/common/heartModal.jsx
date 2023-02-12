@@ -8,6 +8,7 @@ import 'assets/styles/profile/heart.css'
 import SignalBtn from 'components/common/SignalBtn'
 import { TextField } from '@mui/material'
 import AlertModal from 'components/AlertModal'
+import axios from 'axios'
 
 function heartModal({ open, onClose, mode, projectSeq }) {
   const userSeq = sessionStorage.getItem('userSeq')
@@ -61,18 +62,69 @@ function heartModal({ open, onClose, mode, projectSeq }) {
     setInputHeart(e.target.value)
   }
   const chargeHeart = async () => {
+    kakaoPay(inputHeart)
     setAlertOpen(false)
-    await api
-      .post(process.env.REACT_APP_API_URL + '/profile/heart/' + userSeq, {
-        heartCnt: parseInt(inputHeart),
-      })
-      .then(() => {
-        getUserHeartCnt()
-        getUserHeartLog()
-      })
-      .catch((e) => {
-        return e.message
-      })
+    // await api
+    //   .post(process.env.REACT_APP_API_URL + '/profile/heart/' + userSeq, {
+    //     heartCnt: parseInt(inputHeart),
+    //   })
+    //   .then(() => {
+    //     getUserHeartCnt()
+    //     getUserHeartLog()
+    //   })
+    //   .catch((e) => {
+    //     return e.message
+    //   })
+  }
+
+  const [payState, setPayState] = useState({
+    // 응답에서 가져올 값들
+    next_redirect_pc_url: '',
+    tid: '',
+    // 요청에 넘겨줄 매개변수들
+    params: {
+      cid: 'TC0ONETIME',
+      partner_order_id: '1',
+      partner_user_id: '1',
+      item_name: '시그널하트',
+      quantity: 1,
+      total_amount: 100,
+      tax_free_amount: 0,
+      approval_url: 'https://www.ssafysignal.site/kakaoPay',
+      fail_url: 'https://www.ssafysignal.site/kakaoPay',
+      cancel_url: 'https://www.ssafysignal.site/kakaoPay',
+    },
+  })
+
+  const kakaoPay = (heartCnt) => {
+    const { params } = payState
+
+    params.total_amount *= heartCnt
+
+    console.log(params)
+
+    axios({
+      url: '/v1/payment/ready',
+      // 결제 준비 API는 POST 메소드라고 한다.
+      method: 'POST',
+      headers: {
+        // 카카오 developers에 등록한 admin키를 헤더에 줘야 한다.
+        Authorization: 'KakaoAK ef29e9bc7f62d89ff3128aa5ce609d77',
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+      // 설정한 매개변수들
+      params,
+    }).then((response) => {
+      // 응답에서 필요한 data만 뽑는다.
+      const nextRedirectPcUrl = response.data.next_redirect_pc_url
+      const tid = response.data.tid
+
+      console.log(nextRedirectPcUrl)
+      console.log(tid)
+
+      setPayState({ nextRedirectPcUrl, tid })
+      window.oepn(nextRedirectPcUrl, '_blank')
+    })
   }
 
   return (
