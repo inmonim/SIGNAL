@@ -98,7 +98,6 @@ function ProjectHeader() {
                   <HeartModal
                     open={heartOpen}
                     onClose={handleHeartClose}
-                    cnt={project.heartCnt}
                     mode="project"
                     projectSeq={projectSeq}
                   ></HeartModal>
