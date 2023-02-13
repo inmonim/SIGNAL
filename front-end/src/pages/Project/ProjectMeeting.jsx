@@ -10,11 +10,15 @@ import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
-import Codemirror from 'codemirror'
-import 'codemirror/lib/codemirror.css'
 import 'assets/styles/projectMeeting.css'
+import Codemirror from 'codemirror'
+import Select from 'react-select'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/javascript/javascript'
-// import Swal from 'sweetalert2'
+import 'codemirror/mode/clike/clike.js'
+import 'codemirror/mode/xml/xml'
+import 'codemirror/mode/python/python'
 
 // ============================================
 let myStream
@@ -55,6 +59,19 @@ let mx, my, isPainting
 // ==================================
 let codemirror, version
 
+const modeOptions = [
+  { value: 'text/html', label: 'HTML' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'text/x-java', label: 'JAVA' },
+  { value: 'text/x-c++src', label: 'C++' },
+  { value: 'python', label: 'Python' },
+]
+
+const themeOptions = [
+  { value: 'monokai', label: '다크 모드' },
+  { value: 'default', label: '라이트 모드' },
+]
+
 const projectMeetingSetting = () => {
   // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
@@ -86,7 +103,6 @@ const projectMeetingSetting = () => {
   } */
   myName = Math.random() + ''
   roomId = 'a123'
-  console.log(myName)
 
   userNames = {} // userNames[socketId]="이름"
   socketIds = {} // socketIds["이름"]=socketId
@@ -344,8 +360,13 @@ function ProjectMeeting() {
       })
       .catch((error) => {
         console.error(error)
+        if (error.name === 'NotFoundError') {
+          console.alert('더보기 구성 > 설정 > 개인정보 및 보안 > 사이트 설정에서 권한을 부여해주세요')
+        }
+
         if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
           // window.location = '..'
+          // window.close()
         }
       })
   }
@@ -747,6 +768,15 @@ function ProjectMeeting() {
 
   const [mode, setMode] = useState(0)
 
+  const [selectedMode, setSelectedMode] = React.useState(modeOptions[0])
+  const handleMode = (selectedOption) => {
+    setSelectedMode(selectedOption)
+  }
+  const [selectedTheme, setSelectedTheme] = React.useState(themeOptions[0])
+  const handleTheme = (selectedOption) => {
+    setSelectedTheme(selectedOption)
+  }
+
   const handleToVoice = () => {
     myStream.getAudioTracks().forEach((track) => (track.enabled = !voice))
     setVoice((voice) => !voice)
@@ -808,6 +838,15 @@ function ProjectMeeting() {
     ctx.strokeStyle = color
   }, [color])
 
+  useEffect(() => {
+    codemirror.setOption('mode', selectedMode.value)
+  }, [selectedMode])
+
+  useEffect(() => {
+    codemirror.setOption('theme', selectedTheme.value)
+    console.log(selectedTheme.value)
+  }, [selectedTheme])
+
   return (
     <div className="project-meeting-container">
       <div className="project-meeting-main">
@@ -827,6 +866,8 @@ function ProjectMeeting() {
         </VideoListSection>
 
         <CodeEditSection mode={mode}>
+          <Select options={modeOptions} onChange={handleMode} value={selectedMode} />
+          <Select options={themeOptions} onChange={handleTheme} value={selectedTheme} />
           <div style={{ width: '100%', height: '100%' }}>
             <textarea id="realtimeEditor"></textarea>
           </div>
