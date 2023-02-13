@@ -165,6 +165,7 @@ public class SignalweekService {
                 .readmeUrl(signalweek.getReadmeFile().getUrl())
                 .uccUrl(signalweek.getUccUrl())
                 .deployUrl(signalweek.getDeployUrl())
+                .content(signalweek.getContent())
                 .vote(vote)
                 .build();
     }
@@ -173,13 +174,15 @@ public class SignalweekService {
     // 투표
 
     @Transactional
-    public void registSignalweekVote(RegistSignalweekVoteRequest registSignalweekVoteRequest) {
+    public boolean registSignalweekVote(RegistSignalweekVoteRequest registSignalweekVoteRequest) {
+        boolean res = false;
 
         if (signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(
                 registSignalweekVoteRequest.getSignalweekSeq(), registSignalweekVoteRequest.getUserSeq()).isPresent()) {
             SignalweekVote signalweekVote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(
                     registSignalweekVoteRequest.getSignalweekSeq(), registSignalweekVoteRequest.getUserSeq()).get();
 
+            res = false;
             signalweekVoteRepository.delete(signalweekVote);
 
         } else {
@@ -188,9 +191,10 @@ public class SignalweekService {
                     .fromUserSeq(registSignalweekVoteRequest.getUserSeq())
                     .build();
 
+            res = true;
             signalweekVoteRepository.save(signalweekVote);
-
         }
+        return res;
     }
 
 //     띵예의 전당
