@@ -3,7 +3,6 @@ import SignalBtn from 'components/common/SignalBtn'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import 'assets/styles/adminSignalWeek.css'
 import EditIcon from '@mui/icons-material/Edit'
-import SearchIcon from '@mui/icons-material/Search'
 import api from 'api/Api'
 import SignalWeekModal from 'components/Admin/SingnalWeekModal'
 
@@ -24,10 +23,10 @@ function AdminSignalWeek() {
     singalWeekListFetch()
   }, [])
 
-  const [registOpen, setRegistOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  const handleRegistOpen = () => setRegistOpen(true)
-  const handleRegistClose = () => setRegistOpen(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   return (
     <div className="admin-signal-week-page-container">
@@ -40,11 +39,19 @@ function AdminSignalWeek() {
               sigfontsize="24px"
               sigborderradius={14}
               sigmargin="0px 0px 5px 0px"
-              onClick={handleRegistOpen}
+              onClick={handleOpen}
             >
               등록
             </SignalBtn>
-            <SignalWeekModal open={registOpen} onClose={handleRegistClose} mode={true}></SignalWeekModal>
+            <SignalWeekModal
+              open={open}
+              onClose={handleClose}
+              mode={true}
+              defaultOpenStartDt={null}
+              defaultOpenEndDt={null}
+              defualtVoteStartDt={null}
+              defualtVoteEndDt={null}
+            ></SignalWeekModal>
           </div>
         </div>
         <div className="admin-signal-week-body">
@@ -57,7 +64,6 @@ function AdminSignalWeek() {
                   <TableCell align="center">신청기간</TableCell>
                   <TableCell align="center">투표기간</TableCell>
                   <TableCell align="center">수정</TableCell>
-                  <TableCell align="center">프로젝트보기</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -72,10 +78,27 @@ function AdminSignalWeek() {
                       {row.voteStartDt}~{row.voteEndDt}
                     </TableCell>
                     <TableCell align="center">
-                      <SignalBtn startIcon={<EditIcon />}>수정</SignalBtn>
-                    </TableCell>
-                    <TableCell align="center">
-                      <SignalBtn startIcon={<SearchIcon />}>프로젝트조회</SignalBtn>
+                      <SignalBtn
+                        startIcon={<EditIcon />}
+                        open={open}
+                        onClose={handleClose}
+                        mode={false}
+                        defaultOpenStartDt={row.openStartDt}
+                        defaultOpenEndDt={row.openEndDt}
+                        defualtVoteStartDt={row.voteStartDt}
+                        defualtVoteEndDt={row.voteEndDt}
+                      >
+                        수정
+                      </SignalBtn>
+                      <SignalWeekModal
+                        open={open}
+                        onClose={handleClose}
+                        mode={false}
+                        defaultOpenStartDt={row.openStartDt}
+                        defaultOpenEndDt={row.openEndDt}
+                        defualtVoteStartDt={row.voteStartDt}
+                        defualtVoteEndDt={row.voteEndDt}
+                      ></SignalWeekModal>
                     </TableCell>
                   </TableRow>
                 ))}

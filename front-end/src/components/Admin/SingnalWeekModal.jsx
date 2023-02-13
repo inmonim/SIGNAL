@@ -15,11 +15,19 @@ const getQuarter = (month) => {
   else return 4
 }
 
-function SignalWeekModal(props) {
-  const [openStartDt, setOpenStartDt] = useState(null)
-  const [openEndDt, setOpenEndDt] = useState(null)
-  const [voteStartDt, setVoteStartDt] = useState(null)
-  const [voteEndDt, setVoteEndDt] = useState(null)
+function SignalWeekModal({
+  open,
+  onClose,
+  mode,
+  defaultOpenStartDt,
+  defaultOpenEndDt,
+  defualtVoteStartDt,
+  defualtVoteEndDt,
+}) {
+  const [openStartDt, setOpenStartDt] = useState(defaultOpenStartDt)
+  const [openEndDt, setOpenEndDt] = useState(defaultOpenEndDt)
+  const [voteStartDt, setVoteStartDt] = useState(defualtVoteStartDt)
+  const [voteEndDt, setVoteEndDt] = useState(defualtVoteEndDt)
 
   const handleSignalWeekRegist = async () => {
     try {
@@ -41,7 +49,7 @@ function SignalWeekModal(props) {
   }
   return (
     <>
-      <Modal open={props.open}>
+      <Modal open={open}>
         <Box sx={style}>
           <div className="close">
             <img
@@ -56,11 +64,11 @@ function SignalWeekModal(props) {
               }}
               src={closeBtn}
               alt="closeBtn"
-              onClick={props.onClose}
+              onClick={onClose}
             />
           </div>
           <div className="admin-singal-week-modal-body">
-            <div className="admin-signal-week-modal-title"> {props.mode ? '시그널위크 등록' : '시그널위크 수정'}</div>
+            <div className="admin-signal-week-modal-title"> {mode ? '시그널위크 등록' : '시그널위크 수정'}</div>
             <div className="admin-signal-week-modal-form">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="admin-signal-week-modal-openDt">
@@ -133,7 +141,7 @@ function SignalWeekModal(props) {
                 </div>
               </LocalizationProvider>
             </div>
-            {props.mode ? (
+            {mode ? (
               <div className="admin-signal-week-modal-submit-btn">
                 <SignalBtn
                   sigwidth="120px"
