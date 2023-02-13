@@ -135,6 +135,8 @@ public class ProjectService {
         ProjectUser projectUser = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
+
+
         ProjectFindResponse projectFindResponse = ProjectFindResponse.fromEntity(project);
         projectFindResponse.setProjectUserList(projectUserList.stream()
                 .map(user -> new HashMap<String, Object>() {{
@@ -142,6 +144,7 @@ public class ProjectService {
                     put("projectUserSeq", user.getProjectUserSeq());
                     put("nickname", user.getUser().getNickname());
                     put("userImageUrl", user.getUser().getImageFile());
+                    put("isMyProject", user.equals(project.getPosting().getUserSeq()));
                 }})
                 .collect(Collectors.toList()));
 
