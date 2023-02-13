@@ -1,7 +1,5 @@
 package com.ssafysignal.api.posting.service;
 
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.common.service.SecurityService;
@@ -9,9 +7,9 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
-import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
-import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
-import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
+import com.ssafysignal.api.posting.dto.response.FindAllPostingByUserSeqResponse;
+import com.ssafysignal.api.posting.dto.response.FindAllPostingResponse;
+import com.ssafysignal.api.posting.dto.response.FindPostingResponse;
 import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.posting.repository.*;
 import com.ssafysignal.api.profile.entity.UserHeartLog;
@@ -29,8 +27,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,29 +150,34 @@ public class PostingService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostingFindAllResponse> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
+    public Map<String, Object> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
         if (postingSkillList != null && postingSkillList.size() > 0) {
             List<Integer> postingList = postingSkillRepository.findBySkillList(postingSkillList, postingSkillList.size());
             searchKeys.put("postingList", postingList);
         }
 
         Page<Project> projectList = projectRepository.findAll(ProjectSpecification.bySearchWord(searchKeys), PageRequest.of(page - 1, size, Sort.Direction.DESC, "projectSeq"));
-        return projectList.stream()
-                .map(PostingFindAllResponse::fromEntity)
-                .collect(Collectors.toList());
+
+        Map<String, Object> findAllPostingResponse = new HashMap<>();
+        findAllPostingResponse.put("count", projectList.getTotalElements());
+        findAllPostingResponse.put("postingList", projectList.stream()
+                .map(FindAllPostingResponse::fromEntity)
+                .collect(Collectors.toList()));
+
+        return findAllPostingResponse;
     }
 
     @Transactional(readOnly = true)
-    public PostingFindResponse findPosting(Integer postingSeq){
+    public FindPostingResponse findPosting(Integer postingSeq){
 
         Project project = projectRepository.findByPostingSeq(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         Integer userSeq = securityService.currentUserSeq();
 
-        PostingFindResponse postingFindResponse = PostingFindResponse.fromEntity(project);
-        postingFindResponse.setIsMyPosting(project.getPosting().getUserSeq().equals(userSeq));
+        FindPostingResponse findPostingResponse = FindPostingResponse.fromEntity(project);
+        findPostingResponse.setIsMyPosting(project.getPosting().getUserSeq().equals(userSeq));
 
-        return postingFindResponse;
+        return findPostingResponse;
     }
 
     @Transactional
@@ -308,19 +309,19 @@ public class PostingService {
             }
 
     @Transactional(readOnly = true)
-    public List<PostingFindAllByUserSeq> findAllApplyPosting(Integer userSeq){
+    public List<FindAllPostingByUserSeqResponse> findAllApplyPosting(Integer userSeq){
         List<Apply> applyList = applyRepository.findByUserSeq(userSeq);
         System.out.println("applyList.toString() = " + applyList.toString());
         return applyList.stream()
-                .map(PostingFindAllByUserSeq::toApplyer)
+                .map(FindAllPostingByUserSeqResponse::toApplyer)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PostingFindAllByUserSeq> findAllPostPosting(Integer page, Integer size, Integer userSeq){
+    public List<FindAllPostingByUserSeqResponse> findAllPostPosting(Integer page, Integer size, Integer userSeq){
         List<Posting> postingList = postingRepository.findByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "postingSeq"));
         return postingList.stream()
-                .map(PostingFindAllByUserSeq::toWriter)
+                .map(FindAllPostingByUserSeqResponse::toWriter)
                 .collect(Collectors.toList());
     }
 

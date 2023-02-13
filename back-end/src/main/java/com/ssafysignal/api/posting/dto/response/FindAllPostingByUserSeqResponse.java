@@ -10,12 +10,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
 @ApiModel(value = "PostingFindAllByUserSeq", description = "작성한 공고, 지원한 공고 목록 정보")
-public class PostingFindAllByUserSeq {
+public class FindAllPostingByUserSeqResponse {
     @Schema(description = "공고 Seq")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer postingSeq;
@@ -32,8 +30,8 @@ public class PostingFindAllByUserSeq {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String subject;
 
-    public static PostingFindAllByUserSeq toApplyer(final Apply apply) {
-        return PostingFindAllByUserSeq.builder()
+    public static FindAllPostingByUserSeqResponse toApplyer(final Apply apply) {
+        return FindAllPostingByUserSeqResponse.builder()
                 .subject(apply.getPosting().getProject().getSubject())
                 .postingSeq(apply.getPosting().getPostingSeq())
                 .applySeq(apply.getApplySeq())
@@ -42,8 +40,8 @@ public class PostingFindAllByUserSeq {
                 .build();
     }
 
-    public static PostingFindAllByUserSeq toWriter(final Posting posting) {
-        return PostingFindAllByUserSeq.builder()
+    public static FindAllPostingByUserSeqResponse toWriter(final Posting posting) {
+        return FindAllPostingByUserSeqResponse.builder()
                 .subject(posting.getProject().getSubject())
                 .postingSeq(posting.getPostingSeq())
                 .postingCode(posting.getCode())

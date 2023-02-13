@@ -5,11 +5,9 @@ import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
 import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
-import com.ssafysignal.api.posting.dto.response.PostingFindAllByUserSeq;
-import com.ssafysignal.api.posting.dto.response.PostingFindAllResponse;
-import com.ssafysignal.api.posting.dto.response.PostingFindResponse;
+import com.ssafysignal.api.posting.dto.response.FindAllPostingResponse;
+import com.ssafysignal.api.posting.dto.response.FindPostingResponse;
 import com.ssafysignal.api.posting.service.PostingService;
-import com.ssafysignal.api.project.entity.Project;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,13 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,8 +91,8 @@ public class PostingController {
         if (fieldCode != null && !fieldCode.equals("")) searchKeys.put("fieldCode", fieldCode);
 
         try {
-            List<PostingFindAllResponse> postingFindAllResponseList = postingService.findAllPosting(page, size, searchKeys, postingSkillList);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("postingList", postingFindAllResponseList); }}));
+            Map<String, Object> findAllPostingResponseList = postingService.findAllPosting(page, size, searchKeys, postingSkillList);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllPostingResponseList));
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
@@ -114,8 +109,8 @@ public class PostingController {
         log.info("findPosting - Call");
 
         try {
-            PostingFindResponse postingFindResponse = postingService.findPosting(postingSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, postingFindResponse));
+            FindPostingResponse findPostingResponse = postingService.findPosting(postingSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findPostingResponse));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
