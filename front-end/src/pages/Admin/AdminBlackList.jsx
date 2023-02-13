@@ -18,25 +18,6 @@ function AdminBlackList() {
     } catch (error) {
       console.log(error)
     }
-
-    // setBlackList([
-    //   {
-    //     blackUserSeq: 1,
-    //     userSeq: 1,
-    //     email: 'user@naver.com',
-    //     nickname: '나유',
-    //     regDt: '2022-11-05',
-    //     projectSeq: 123,
-    //   },
-    //   {
-    //     blackUserSeq: 2,
-    //     userSeq: 2,
-    //     email: 'user2@naver.com',
-    //     nickname: '나유2',
-    //     regDt: '2022-11-06',
-    //     projectSeq: 1234,
-    //   },
-    // ])
   }
 
   const rows = []
@@ -110,9 +91,7 @@ function AdminBlackList() {
             <Table>
               <TableHead className="qna-tabl e-head">
                 <TableRow>
-                  <TableCell align="center">
-                    <Checkbox color="primary" />
-                  </TableCell>
+                  <TableCell align="center">선택</TableCell>
                   <TableCell align="center">이메일</TableCell>
                   <TableCell align="center">닉네임</TableCell>
                   <TableCell align="center">가입일시</TableCell>
