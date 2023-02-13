@@ -4,6 +4,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
+import AlertModal from 'components/AlertModal'
 
 function ProjectMaintain({ projectSeq }) {
   const [mode, setMode] = useState(true)
@@ -26,7 +27,6 @@ function ProjectMaintain({ projectSeq }) {
   const [localCodeList, setLocalCodeList] = useState([])
   const termList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-  // 이미지 업로드 안함
   const handleProjectModify = async () => {
     const req = {
       subject,
@@ -122,6 +122,16 @@ function ProjectMaintain({ projectSeq }) {
     projectDataFetch()
   }, [mode])
 
+  const [endAlertOpen, setEndAlertOpen] = useState(false)
+  const handleToEndAlert = () => {
+    setEndAlertOpen(true)
+  }
+  const handleToEnd = async () => {
+    await api.put(process.env.REACT_APP_API_URL + '/project/' + projectSeq).then((res) => setEndAlertOpen(false))
+  }
+  const handleToClose = () => {
+    setEndAlertOpen(false)
+  }
   return (
     <div className="project-maintain-container">
       <div className="poject-maintain-width">
@@ -316,6 +326,18 @@ function ProjectMaintain({ projectSeq }) {
             </div>
           </div>
         </div>
+        <hr className="project-maintain-hr" />
+        <div className="project-maintain-end">
+          <SignalBtn sigwidth="150px" sigheight="50px" sigfontsize="24px" sx={endBtnStyle} onClick={handleToEndAlert}>
+            프로젝트 종료
+          </SignalBtn>
+          <AlertModal
+            open={endAlertOpen}
+            onClick={handleToEnd}
+            onClose={handleToClose}
+            msg="종료하시겠습니까?"
+          ></AlertModal>
+        </div>
       </div>
     </div>
   )
@@ -336,4 +358,14 @@ const textAreaStyle = {
 const selectStyle = {
   backgroundColor: '#f3f5f7',
   width: '100%',
+}
+
+const endBtnStyle = {
+  backgroundColor: '#ff0000',
+  color: '#fff',
+  border: '1px solid #ff0000',
+  '&:hover': {
+    backgroundColor: '#fff',
+    color: '#ff0000',
+  },
 }

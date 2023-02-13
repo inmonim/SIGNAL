@@ -4,7 +4,7 @@ import 'assets/styles/projectDetail.css'
 import ProjectMaintainPage from './ProjectMaintainPage'
 import ProjectProgress from './ProjectProgress'
 
-import HeartModal from 'components/common/HeartModal'
+import HeartDetailModal from 'components/common/HeartDetailModal'
 import { useLocation } from 'react-router-dom'
 import settings from 'assets/image/settings.png'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
@@ -32,6 +32,7 @@ function ProjectHeader() {
     })
       .then((res) => {
         setProject(res.data.body)
+        console.log('project:', project)
       })
       .catch((e) => {
         console.log(e)
@@ -95,12 +96,12 @@ function ProjectHeader() {
                     <img src={heart} style={{ width: '30px' }} />
                     <div>{project.heartCnt}</div>
                   </div>
-                  <HeartModal
+                  <HeartDetailModal
                     open={heartOpen}
                     onClose={handleHeartClose}
                     mode="project"
                     projectSeq={projectSeq}
-                  ></HeartModal>
+                  ></HeartDetailModal>
                 </div>
                 <div className="project-detail-project-title">{project.subject}</div>
               </div>
