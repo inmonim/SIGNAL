@@ -132,7 +132,9 @@ function TeamSelect() {
     // 팀빌딩 입장은 팀장
     console.log(meetingApplySeq)
     window.open(
-      `/beforemeeting?nickname=${sessionStorage.getItem('nickname')}&owner=${true}&applySeq=${meetingApplySeq}`,
+      `/beforemeeting?nickname=${sessionStorage.getItem(
+        'nickname'
+      )}&owner=${true}&applySeq=${meetingApplySeq}&postingSeq=${postingSeq}`,
       '_blank'
     )
   }

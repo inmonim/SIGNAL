@@ -25,6 +25,10 @@ function Header() {
 
   const [letterCnt, setLetterCnt] = useState(0)
   const [isLogin, setIsLogin] = useState(false)
+  const isAdmin = sessionStorage.getItem('admin')
+  // const [isAdmin, setIsAdmin] = useState(sessionStorage.getItem('admin'))
+  console.log(isAdmin)
+
   useEffect(() => {
     // 로컬 스토리지에 refreshToken 이 존재하고 로그인 상태가 아니면 한번 쫘악 긁어옴 (= 자동로그인 상태)
     if (localStorage.getItem('refreshToken') !== null && sessionStorage.getItem('refreshToken') === null) {
@@ -46,6 +50,7 @@ function Header() {
           sessionStorage.setItem('username', res.data.body.name)
           sessionStorage.setItem('nickname', res.data.body.nickname)
           sessionStorage.setItem('userSeq', res.data.body.userSeq)
+          sessionStorage.setItem('admin', res.data.body.admin)
           setIsLogin(true)
         })
         .catch((e) => {
@@ -84,8 +89,10 @@ function Header() {
         sessionStorage.removeItem('username')
         sessionStorage.removeItem('nickname')
         sessionStorage.removeItem('userSeq')
+        sessionStorage.removeItem('admin')
         localStorage.removeItem('refreshToken')
         setIsLogin(false)
+        // setIsAdmin('false')
         navigate(`/`)
       })
       .catch((e) => {
@@ -105,64 +112,93 @@ function Header() {
               <img style={{ height: '95px', width: '188.26px' }} src={logo} alt="logo" />
             </Link>
           </div>
-          <ul>
-            <li>
-              <D.DropdownContainer>
-                <D.NavBtn onClick={postingHandler} ref={postingRef}>
-                  팀원 모집
-                </D.NavBtn>
-                <D.Down isDropped={postingIsOpen}>
-                  <D.Ul>
-                    <D.Li>
-                      <D.LinkWrapper href="/posting">공고</D.LinkWrapper>
-                    </D.Li>
-                    <D.Li>
-                      <D.LinkWrapper href="/openprofile">오픈 프로필</D.LinkWrapper>
-                    </D.Li>
-                  </D.Ul>
-                </D.Down>
-              </D.DropdownContainer>
-            </li>
-            {isLogin ? (
+          {isAdmin === 'false' || isAdmin === null ? (
+            // 사용자 헤더
+            <ul>
               <li>
-                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/myproject">
-                  마이프로젝트
+                <D.DropdownContainer>
+                  <D.NavBtn onClick={postingHandler} ref={postingRef}>
+                    팀원 모집
+                  </D.NavBtn>
+                  <D.Down isDropped={postingIsOpen}>
+                    <D.Ul>
+                      <D.Li>
+                        <D.LinkWrapper href="/posting">공고</D.LinkWrapper>
+                      </D.Li>
+                      <D.Li>
+                        <D.LinkWrapper href="/openprofile">오픈 프로필</D.LinkWrapper>
+                      </D.Li>
+                    </D.Ul>
+                  </D.Down>
+                </D.DropdownContainer>
+              </li>
+              {isLogin ? (
+                <li>
+                  <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/myproject">
+                    마이프로젝트
+                  </Link>
+                </li>
+              ) : (
+                <li></li>
+              )}
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
+                  공지사항
                 </Link>
               </li>
-            ) : (
-              <li></li>
-            )}
-            <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
-                공지사항
-              </Link>
-            </li>
-            <li>
-              <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/qna">
-                Q & A
-              </Link>
-            </li>
-            <li>
-              <D.DropdownContainer>
-                <D.NavBtn onClick={signalWeekHandler} ref={signalWeekRef}>
-                  시그널위크
-                </D.NavBtn>
-                <D.Down isDropped={signalWeekIsOpen}>
-                  <D.Ul>
-                    <D.Li>
-                      <D.LinkWrapper href="/signal">프로젝트 보기</D.LinkWrapper>
-                    </D.Li>
-                    <D.Li>
-                      <D.LinkWrapper href="/signal/rank">명예의 전당</D.LinkWrapper>
-                    </D.Li>
-                  </D.Ul>
-                </D.Down>
-              </D.DropdownContainer>
-            </li>
-            {/* <li>
-              <SignalBtn onClick={() => window.open('/beforemeeting', '_blank')}>사전미팅</SignalBtn>
-            </li> */}
-          </ul>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/qna">
+                  Q & A
+                </Link>
+              </li>
+              <li>
+                <D.DropdownContainer>
+                  <D.NavBtn onClick={signalWeekHandler} ref={signalWeekRef}>
+                    시그널위크
+                  </D.NavBtn>
+                  <D.Down isDropped={signalWeekIsOpen}>
+                    <D.Ul>
+                      <D.Li>
+                        <D.LinkWrapper href="/signal">프로젝트 보기</D.LinkWrapper>
+                      </D.Li>
+                      <D.Li>
+                        <D.LinkWrapper href="/signal/rankMain">명예의 전당</D.LinkWrapper>
+                      </D.Li>
+                    </D.Ul>
+                  </D.Down>
+                </D.DropdownContainer>
+              </li>
+            </ul>
+          ) : (
+            // 관리자 헤더
+            <ul>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/adminproject">
+                  프로젝트 관리
+                </Link>
+              </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/adminsignalweek">
+                  시그널위크 관리
+                </Link>
+              </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/adminblacklist">
+                  블랙리스트 관리
+                </Link>
+              </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/notice">
+                  공지사항
+                </Link>
+              </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/qna">
+                  Q & A
+                </Link>
+              </li>
+            </ul>
+          )}
         </div>
         <div className="header-right-wrap">
           {isLogin ? (
@@ -190,9 +226,13 @@ function Header() {
                   </D.NavBtn>
                   <D.Down isDropped={nameIsOpen}>
                     <D.Ul>
-                      <D.Li>
-                        <D.LinkWrapper href="/myprofile">마이페이지</D.LinkWrapper>
-                      </D.Li>
+                      {isAdmin === 'false' || isAdmin === null ? (
+                        <D.Li>
+                          <D.LinkWrapper href="/myprofile">마이페이지</D.LinkWrapper>
+                        </D.Li>
+                      ) : (
+                        <></>
+                      )}
                       <D.Li>
                         <D.LinkWrapper onClick={onLogout}>로그아웃</D.LinkWrapper>
                       </D.Li>
