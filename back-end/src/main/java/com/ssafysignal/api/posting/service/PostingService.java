@@ -172,10 +172,14 @@ public class PostingService {
 
         Project project = projectRepository.findByPostingSeq(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        Integer userSeq = securityService.currentUserSeq();
 
         FindPostingResponse findPostingResponse = FindPostingResponse.fromEntity(project);
-        findPostingResponse.setIsMyPosting(project.getPosting().getUserSeq().equals(userSeq));
+        findPostingResponse.setIsMyPosting(false);
+
+        if (!securityService.isAnonymouseUser()) {
+            Integer userSeq = securityService.currentUserSeq();
+            findPostingResponse.setIsMyPosting(project.getPosting().getUserSeq().equals(userSeq));
+        }
 
         return findPostingResponse;
     }

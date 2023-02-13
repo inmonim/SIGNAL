@@ -18,9 +18,8 @@ public class FindAdminQnaResponse {
     private String answer;
     private Boolean isAnswer;
     private LocalDateTime regDt;
-    private Boolean isMyQna;
 
-    public static FindAdminQnaResponse fromEntity(Qna qna, Boolean isMyQna){
+    public static FindAdminQnaResponse fromEntity(Qna qna){
         return FindAdminQnaResponse.builder()
                 .qnaSeq(qna.getQnaSeq())
                 .userSeq(qna.getUserSeq())
@@ -31,7 +30,6 @@ public class FindAdminQnaResponse {
                 .answer(qna.getAnswer())
                 .isAnswer(qna.getIsAnswer())
                 .regDt(qna.getRegDt())
-                .isMyQna(isMyQna)
                 .build();
     }
 }

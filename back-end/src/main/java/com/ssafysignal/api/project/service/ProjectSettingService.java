@@ -40,7 +40,6 @@ public class ProjectSettingService {
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
     private final SecurityService securityService;
-
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
 
     @Value("${app.fileUpload.uploadPath}")

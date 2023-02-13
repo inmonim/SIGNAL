@@ -7,14 +7,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import springfox.documentation.spring.web.json.Json;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @ApiModel(value = "QnaFindResponse", description = "QnA 상세 정보")
-public class QnaFindResponse {
+public class FindQnaResponse {
 
     @Schema(description = "QnA Seq", required = true)
     private Integer qnaSeq;
@@ -43,9 +42,10 @@ public class QnaFindResponse {
     @Schema(description = "작성시간")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
+    private Boolean isMyQna;
 
-    public static QnaFindResponse fromEntity(final Qna qna) {
-        return QnaFindResponse.builder()
+    public static FindQnaResponse fromEntity(final Qna qna) {
+        return FindQnaResponse.builder()
                 .qnaSeq(qna.getQnaSeq())
                 .userSeq(qna.getUserSeq())
                 .title(qna.getTitle())
