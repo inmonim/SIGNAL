@@ -46,6 +46,7 @@ public class QnaService {
         Qna qna = qnaRepository.findById(qnaSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         qna.addView(qna.getView());
+        qnaRepository.save(qna);
         return qna;
     }
 
