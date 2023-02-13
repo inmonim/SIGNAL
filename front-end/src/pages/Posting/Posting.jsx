@@ -178,7 +178,8 @@ function Posting() {
   }, [skillList, skillListauto])
   return (
     <div>
-      <Box sx={{ width: '100ox', height: '110px' }}></Box>
+      <Banner style={{ height: '110px' }} />
+      {/* <Box sx={{ width: '100ox', height: '110px' }}></Box> */}
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '100%' }}>
         <div
           style={{
