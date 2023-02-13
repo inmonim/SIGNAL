@@ -10,7 +10,7 @@ import { TextField } from '@mui/material'
 import AlertModal from 'components/AlertModal'
 import axios from 'axios'
 
-function HeartModal({ open, onClose, mode, projectSeq }) {
+function HeartDetailModal({ open, onClose, mode, projectSeq }) {
   const userSeq = sessionStorage.getItem('userSeq')
 
   const [userCnt, setUserCnt] = useState(0)
@@ -234,4 +234,4 @@ const heartChargeStyle = {
   },
 }
 
-export default HeartModal
+export default HeartDetailModal
