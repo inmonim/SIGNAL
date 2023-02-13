@@ -1,11 +1,19 @@
 import { Modal, Table, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Box } from '@mui/system'
+import api from 'api/Api'
 import closeBtn from 'assets/image/x.png'
 import SignalBtn from 'components/common/SignalBtn'
 
 import React from 'react'
 
 function BlackListReleaseModal(props) {
+  const handleDisBan = async () => {
+    try {
+      api.delete(process.env.REACT_APP_API_URL + '/admin/user', {})
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <>
       <Modal open={props.open}>
@@ -28,8 +36,8 @@ function BlackListReleaseModal(props) {
           </div>
           <div className="black-list-modal-main">
             <div className="black-list-modal-title">블랙리스트를 해지하시겠습니까</div>
-            <TableContainer>
-              <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableContainer sx={{ minWidth: 650, height: 440 }}>
+              <Table size="small" aria-label="a dense table">
                 <TableHead>
                   <TableRow>
                     <TableCell align="center">번호</TableCell>
@@ -50,9 +58,17 @@ function BlackListReleaseModal(props) {
                 </TableBody> */}
               </Table>
             </TableContainer>
-            <SignalBtn sigwidth="60px" sigheight="40px" sigfontsize="20px" sigborderradius={15}>
-              확인
-            </SignalBtn>
+            <div className="black-list-modal-submit-btn">
+              <SignalBtn
+                sigwidth="120px"
+                sigheight="60px"
+                sigfontsize="30px"
+                sigborderradius={25}
+                onClick={handleDisBan}
+              >
+                확인
+              </SignalBtn>
+            </div>
           </div>
         </Box>
       </Modal>
@@ -64,10 +80,11 @@ export default BlackListReleaseModal
 const style = {
   width: 727,
   height: 800,
-  bgcolor: 'background.paper',
+  bgcolor: '#ffffff',
   borderRadius: 20,
   border: 'none',
-  boxShadow: 24,
+  boxShadow:
+    '0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%)',
   p: 4,
   position: 'relative',
   top: '50%',
