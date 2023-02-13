@@ -1,6 +1,6 @@
 package com.ssafysignal.api.admin.service;
 
-import com.ssafysignal.api.admin.dto.Request.BasicAdminNoticeRequest;
+import com.ssafysignal.api.admin.dto.request.BasicAdminNoticeRequest;
 import com.ssafysignal.api.board.entity.Notice;
 import com.ssafysignal.api.board.repository.NoticeRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;

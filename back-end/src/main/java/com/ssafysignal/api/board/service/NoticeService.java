@@ -1,8 +1,6 @@
 package com.ssafysignal.api.board.service;
 
-import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
 import com.ssafysignal.api.board.entity.Notice;
-import com.ssafysignal.api.board.entity.Qna;
 import com.ssafysignal.api.board.repository.*;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;

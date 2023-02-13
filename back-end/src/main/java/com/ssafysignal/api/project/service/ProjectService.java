@@ -5,14 +5,12 @@ import com.ssafysignal.api.apply.repository.ApplyRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
-import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
 import com.ssafysignal.api.profile.entity.UserHeartLog;
 import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
-import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
-import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
-import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogAllResponse;
-import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectDto;
+import com.ssafysignal.api.project.dto.reponse.FindProjectResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserHeartLogResponse;
 import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
@@ -110,22 +108,22 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectFindAllResponse findAllProject(Integer userSeq) {
+    public FindAllProjectResponse findAllProject(Integer userSeq) {
         List<Project> endProjectList = projectRepository.findAll(ProjectSpecification.byUserSeq(userSeq, "PS101"));
         List<Project> ingProjectList = projectRepository.findAll(ProjectSpecification.byUserSeq(userSeq, "PS100"));
 
-        return ProjectFindAllResponse.builder()
+        return FindAllProjectResponse.builder()
                 .endProjectList(endProjectList.stream()
-                        .map(ProjectFindAllDto::fromEntity)
+                        .map(FindAllProjectDto::fromEntity)
                         .collect(Collectors.toList()))
                 .ingProjectList(ingProjectList.stream()
-                        .map(ProjectFindAllDto::fromEntity)
+                        .map(FindAllProjectDto::fromEntity)
                         .collect(Collectors.toList()))
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public ProjectFindResponse findProject(Integer userSeq, Integer projectSeq) throws RuntimeException {
+    public FindProjectResponse findProject(Integer userSeq, Integer projectSeq) throws RuntimeException {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
@@ -137,8 +135,8 @@ public class ProjectService {
 
 
 
-        ProjectFindResponse projectFindResponse = ProjectFindResponse.fromEntity(project);
-        projectFindResponse.setProjectUserList(projectUserList.stream()
+        FindProjectResponse findProjectResponse = FindProjectResponse.fromEntity(project);
+        findProjectResponse.setProjectUserList(projectUserList.stream()
                 .map(user -> new HashMap<String, Object>() {{
                     put("userSeq", user.getUserSeq());
                     put("projectUserSeq", user.getProjectUserSeq());
@@ -148,10 +146,10 @@ public class ProjectService {
                 }})
                 .collect(Collectors.toList()));
 
-        projectFindResponse.setHeartCnt(projectUser.getHeartCnt());
-        projectFindResponse.setWarningCnt(projectUser.getWarningCnt());
+        findProjectResponse.setHeartCnt(projectUser.getHeartCnt());
+        findProjectResponse.setWarningCnt(projectUser.getWarningCnt());
 
-        return projectFindResponse;
+        return findProjectResponse;
     }
 
     @Transactional
@@ -195,10 +193,10 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectUserHeartLogAllResponse findAllProjectUserHeartLog(Integer userSeq, Integer projectSeq) {
+    public FindAllProjectUserHeartLogResponse findAllProjectUserHeartLog(Integer userSeq, Integer projectSeq) {
         Integer projectUserSeq = projectUserRepository.findByUserSeqAndProjectSeq(userSeq, projectSeq).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND)).getProjectUserSeq();
         List<ProjectUserHeartLog> projectUserHeartLogList = projectUserHeartLogRepository.findAllByProjectUserSeq(projectUserSeq, Sort.by(Sort.Order.desc("regDt")));
-        return ProjectUserHeartLogAllResponse.fromEntity(projectUserHeartLogList);
+        return FindAllProjectUserHeartLogResponse.fromEntity(projectUserHeartLogList);
     }
 
     @Transactional

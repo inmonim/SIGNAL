@@ -1,7 +1,5 @@
 package com.ssafysignal.api.admin.controller;
 
-import com.ssafysignal.api.admin.dto.Response.FindAdminProjectResponse;
-import com.ssafysignal.api.admin.dto.Response.FindAllAdminProjectResponse;
 import com.ssafysignal.api.admin.service.AdminProjectService;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
@@ -14,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor

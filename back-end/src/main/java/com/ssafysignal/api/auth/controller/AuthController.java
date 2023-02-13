@@ -175,11 +175,12 @@ import java.util.Map;
             String email = String.valueOf(param.get("email"));
             authService.findPassword(email);
             response.sendRedirect(host);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MAILSEND_FAIL, null));
+        } finally {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         }
     }
 

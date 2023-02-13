@@ -2,8 +2,8 @@ package com.ssafysignal.api.admin.service;
 
 import com.ssafysignal.api.admin.Entity.BlackUser;
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
-import com.ssafysignal.api.admin.dto.Response.FindAdminUserResponse;
-import com.ssafysignal.api.admin.dto.Response.FindAllAdminUserResponse;
+import com.ssafysignal.api.admin.dto.response.FindAdminUserResponse;
+import com.ssafysignal.api.admin.dto.response.FindAllAdminUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

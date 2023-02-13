@@ -1,6 +1,6 @@
 package com.ssafysignal.api.board.service;
 
-import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
+import com.ssafysignal.api.board.dto.request.RegistQnaRequest;
 import com.ssafysignal.api.board.dto.response.FindQnaResponse;
 import com.ssafysignal.api.board.entity.Qna;
 import com.ssafysignal.api.board.repository.QnaRepository;
@@ -33,11 +33,11 @@ public class QnaService {
     }
 
     @Transactional
-    public void registQna(QnaRegistRequest qnaRegistRequest) {
+    public void registQna(RegistQnaRequest registQnaRequest) {
         Qna qna = Qna.builder()
-                .userSeq(qnaRegistRequest.getUserSeq())
-                .title(qnaRegistRequest.getTitle())
-                .content(qnaRegistRequest.getContent())
+                .userSeq(registQnaRequest.getUserSeq())
+                .title(registQnaRequest.getTitle())
+                .content(registQnaRequest.getContent())
                 .build();
         qnaRepository.save(qna);
     }
@@ -62,12 +62,12 @@ public class QnaService {
     }
 
     @Transactional
-    public void modifyQna(Integer qnaSeq, QnaRegistRequest qnaRegistRequest) {
+    public void modifyQna(Integer qnaSeq, RegistQnaRequest registQnaRequest) {
         if (qnaRepository.findById(qnaSeq).isPresent()) {
             Qna qna = qnaRepository.findById(qnaSeq)
                     .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
-            qna.setTitle(qnaRegistRequest.getTitle());
-            qna.setContent(qnaRegistRequest.getContent());
+            qna.setTitle(registQnaRequest.getTitle());
+            qna.setContent(registQnaRequest.getContent());
             qnaRepository.save(qna);
         }
     }

@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "RegistUserRequest", description = "회원 가입 정보")
 public class RegistUserRequest {
 	@Schema(description = "사용자 이름")

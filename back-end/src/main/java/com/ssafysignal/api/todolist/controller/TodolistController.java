@@ -2,8 +2,8 @@ package com.ssafysignal.api.todolist.controller;
 
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.todolist.dto.request.TodoModifyRequest;
-import com.ssafysignal.api.todolist.dto.request.TodoRegistRequest;
+import com.ssafysignal.api.todolist.dto.request.ModifyTodoRequest;
+import com.ssafysignal.api.todolist.dto.request.RegistTodoRequest;
 import com.ssafysignal.api.todolist.dto.response.TodolistFindResponse;
 import com.ssafysignal.api.todolist.service.TodolistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,11 +28,11 @@ public class TodolistController {
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 등록", description = "To Do List를 생성한다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registTodo(@Parameter(name = "todoRegistRequest", description = "Todo 정보") @RequestBody TodoRegistRequest todoRegistRequest) {
+    private ResponseEntity<BasicResponse> registTodo(@Parameter(name = "todoRegistRequest", description = "Todo 정보") @RequestBody RegistTodoRequest registTodoRequest) {
         log.info("registTodo - Call");
 
         try {
-            todolistService.registTodo(todoRegistRequest);
+            todolistService.registTodo(registTodoRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
@@ -74,7 +74,7 @@ public class TodolistController {
     @Tag(name = "ToDoList")
     @Operation(summary = "ToDoList 수정", description = "To Do List 내용을 수정한다")
     @PutMapping("/{toDoSeq}")
-    private ResponseEntity<BasicResponse> modifyTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq, @RequestBody TodoModifyRequest toDoListModifyRequest) {
+    private ResponseEntity<BasicResponse> modifyTodo(@Parameter(name = "toDoSeq", description = "toDoSeq") @PathVariable("toDoSeq") Integer toDoSeq, @RequestBody ModifyTodoRequest toDoListModifyRequest) {
 
         log.info(String.format("modifyTodo - %d - Call", toDoSeq));
         try {

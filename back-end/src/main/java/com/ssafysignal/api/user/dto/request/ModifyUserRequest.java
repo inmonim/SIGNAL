@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "ModifyUserRequest", description = "회원 수정 정보")
 public class ModifyUserRequest {
 	@Schema(description = "닉네임")

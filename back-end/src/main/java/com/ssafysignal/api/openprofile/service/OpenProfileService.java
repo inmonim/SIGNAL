@@ -3,10 +3,10 @@ package com.ssafysignal.api.openprofile.service;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfile;
-import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfileRes;
+import com.ssafysignal.api.openprofile.dto.response.FindAllOpenProfileResponse;
 import com.ssafysignal.api.openprofile.entity.OpenProfile;
 import com.ssafysignal.api.openprofile.repository.OpenProfileRepository;
-import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
+import com.ssafysignal.api.profile.dto.response.BasicProfileResponse;
 import com.ssafysignal.api.profile.service.ProfileService;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
@@ -41,7 +41,7 @@ public class OpenProfileService {
     }
 
     @Transactional(readOnly = true)
-    public FindAllOpenProfileRes findAllOpenProfile(int size, int page){
+    public FindAllOpenProfileResponse findAllOpenProfile(int size, int page){
         Page<OpenProfile> openProfileList = openProfileRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "openProfileSeq"));
 
         List<FindAllOpenProfile> profileList = new ArrayList<>();
@@ -50,7 +50,7 @@ public class OpenProfileService {
             User user = userRepository.findByUserSeq(userSeq).get();
             String nickname = user.getNickname();
             String imageUrl = user.getImageFile().getUrl();
-            ProfileBasicResponse profileBasic =profileService.findProfile(userSeq);
+            BasicProfileResponse profileBasic =profileService.findProfile(userSeq);
 
             FindAllOpenProfile profile = FindAllOpenProfile.builder()
                     .userSeq(userSeq)
@@ -65,7 +65,7 @@ public class OpenProfileService {
             profileList.add(profile);
         }
 
-        FindAllOpenProfileRes openProfileRes = FindAllOpenProfileRes.builder()
+        FindAllOpenProfileResponse openProfileRes = FindAllOpenProfileResponse.builder()
                 .openProfileList(profileList)
                 .totalNum(openProfileList.getTotalElements())
                 .totalPage(openProfileList.getTotalPages())

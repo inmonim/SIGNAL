@@ -7,13 +7,11 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
-import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
-import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
-import com.ssafysignal.api.project.dto.request.ProjectUserHeartLogAllResponse;
-import com.ssafysignal.api.project.entity.ProjectUserHeartLog;
-import com.ssafysignal.api.project.repository.ProjectUserHeartLogRepository;
+import com.ssafysignal.api.project.dto.reponse.FindProjectSettingResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserDto;
+import com.ssafysignal.api.project.dto.request.RegistProjectEvaluationRequest;
+import com.ssafysignal.api.project.dto.request.ModifyProjectSettingRequest;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserHeartLogResponse;
 import com.ssafysignal.api.project.service.ProjectService;
 import com.ssafysignal.api.project.service.ProjectSettingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,8 +52,8 @@ public class ProjectSettingController {
         log.info("findProjectSetting - Call");
 
         try {
-            ProjectSettingFindResponse projectSettingFindResponse = projectSettingService.findProjectSetting(projectSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectSettingFindResponse));
+            FindProjectSettingResponse findProjectSettingResponse = projectSettingService.findProjectSetting(projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findProjectSettingResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -76,8 +74,8 @@ public class ProjectSettingController {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper().registerModule(new SimpleModule());
-            ProjectSettingModifyRequest projectSettingModifyRequest = objectMapper.readValue(modifyData, new TypeReference<ProjectSettingModifyRequest>() {});
-            projectSettingService.modifyProjectSetting(projectSeq, uploadImage, projectSettingModifyRequest);
+            ModifyProjectSettingRequest modifyProjectSettingRequest = objectMapper.readValue(modifyData, new TypeReference<ModifyProjectSettingRequest>() {});
+            projectSettingService.modifyProjectSetting(projectSeq, uploadImage, modifyProjectSettingRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e){
             e.printStackTrace();
@@ -103,8 +101,8 @@ public class ProjectSettingController {
         log.info("findProjectUser - Call");
 
         try {
-            List<ProjectUserFindAllDto> projectUserFindAllDtoList = projectSettingService.findProjectUser(projectSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("projectUserList", projectUserFindAllDtoList); }}));
+            List<FindAllProjectUserDto> findAllProjectUserDtoList = projectSettingService.findProjectUser(projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>(){{ put("projectUserList", findAllProjectUserDtoList); }}));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -183,11 +181,11 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PostMapping("/evaluation")
-    private ResponseEntity<BasicResponse> registProjectUserEvaluation(@Parameter(name = "projectEvaluation", description = "프로젝트 평가 정보") @RequestBody ProjectEvaluationRegistRequest projectEvaluationRegistRequest) {
+    private ResponseEntity<BasicResponse> registProjectUserEvaluation(@Parameter(name = "projectEvaluation", description = "프로젝트 평가 정보") @RequestBody RegistProjectEvaluationRequest registProjectEvaluationRequest) {
         log.info("registProjectUserEvaluation - Call");
 
         try {
-            projectSettingService.registProjectUserEvaluation(projectEvaluationRegistRequest);
+            projectSettingService.registProjectUserEvaluation(registProjectEvaluationRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         }  catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -228,8 +226,8 @@ public class ProjectSettingController {
         log.info("findAllProjectUserHeartLog - Call");
 
         try {
-            ProjectUserHeartLogAllResponse projectUserHeartLogAllResponse = projectService.findAllProjectUserHeartLog(userSeq, projectSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectUserHeartLogAllResponse));
+            FindAllProjectUserHeartLogResponse findAllProjectUserHeartLogResponse = projectService.findAllProjectUserHeartLog(userSeq, projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllProjectUserHeartLogResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
