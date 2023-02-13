@@ -13,11 +13,21 @@ const Chatting = forwardRef((props, ref) => {
       const chattArr = [...chatList]
       chattArr.push({
         flag: false,
-        message: '[' + data.userName + '] : ' + data.message,
+        // message: '[' + data.userName + '] : ' + data.message,
+        message: data.message,
+        nickname: data.userName,
       })
       setChatList(chattArr)
     },
   }))
+
+  // const userProfileFetch = async () => {
+  //   try {
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
+
   // true 보낸거, false 받은거
   const [chatList, setChatList] = useState([])
 
@@ -60,7 +70,7 @@ const Chatting = forwardRef((props, ref) => {
                         borderRadius: '25px',
                         minHeight: '60px',
                         padding: '20px 20px 20px 20px',
-                        boxShadow: '0 4px 5px  rgba(0,0,0,0.25)',
+                        boxShadow: '0 3px 1px  rgba(0,0,0,0.25)',
                         wordWrap: 'break-word',
                       }}
                     >
@@ -78,24 +88,29 @@ const Chatting = forwardRef((props, ref) => {
               return (
                 <div key={index} style={{ position: 'relative', marginBottom: '25px' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                    <img
-                      src={fromChatImg}
-                      alt=""
-                      style={{ width: '50px', position: 'absolute', top: '15px', zIndex: '-1' }}
-                    />
-                    <div
-                      style={{
-                        backgroundColor: 'white',
-                        fontSize: '22px',
-                        minWidth: '100px',
-                        borderRadius: '25px',
-                        minHeight: '60px',
-                        padding: '20px 0px 20px 20px',
-                        marginLeft: '30px',
-                        boxShadow: '0 4px 5px  rgba(0,0,0,0.25)',
-                      }}
-                    >
-                      {item.message}
+                    <div className="chatting-receive-nickname">{item.nickname}</div>
+                    <div>
+                      <img
+                        src={fromChatImg}
+                        alt=""
+                        style={{ width: '50px', position: 'absolute', top: '15px', zIndex: '-1' }}
+                      />
+                      <div
+                        style={{
+                          backgroundColor: 'white',
+                          fontSize: '22px',
+                          minWidth: '100px',
+                          maxWidth: '290px',
+                          wordWrap: 'break-word',
+                          borderRadius: '25px',
+                          minHeight: '60px',
+                          padding: '20px 20px 20px 20px',
+                          marginLeft: '30px',
+                          boxShadow: '0 3px 1px  rgba(0,0,0,0.25)',
+                        }}
+                      >
+                        {item.message}
+                      </div>
                     </div>
                   </div>
                 </div>

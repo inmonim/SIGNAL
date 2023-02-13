@@ -37,9 +37,8 @@
   border-top: 2px solid #796fb2;
 }
 
-.qna-detail-comment-container{
+.qna-detail-comment-container {
   border-bottom: 2px solid #796fb2;
-
 }
 
 .qna-detail-header {
@@ -55,8 +54,8 @@
   font-size: 44px;
 }
 
-.qna-detail-qnanum{
-  color: #463C7F
+.qna-detail-qnanum {
+  color: #463c7f;
 }
 
 .qna-detail-qnaSeq {
@@ -98,6 +97,41 @@
   font-size: 24px;
 }
 
+.qna-detail-comment-write-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 30px 20px;
+  background-color: rgba(221, 219, 236, 0.5);
+}
+
+.qna-detail-comment-write-left {
+  font-size: 44px;
+  margin-bottom: 100px;
+}
+
+.qna-detail-comment-write {
+  width: 80%;
+  font-size: 24px;
+  resize: none;
+  padding: 10px;
+  border: 2px solid #796fb2;
+  border-radius: 10px;
+  outline-color: #342d5f;
+  background-color: #dddbec;
+}
+
+.qna-detail-comment-write::-webkit-scrollbar {
+  width: 10px;
+}
+
+.qna-detail-comment-write::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
 .qna-detail-comment {
   margin-top: 40px;
   display: flex;
@@ -105,20 +139,69 @@
   align-items: center;
 }
 
-.qna-detail-comment-left{
+.qna-detail-comment-left {
   font-size: 44px;
   margin-left: 20px;
+  margin-bottom: 50px;
 }
 
-.qna-detail-comment-right{
+.qna-detail-comment-right {
   position: relative;
 }
 
-.qna-detail-comment-answer{
+.qna-detail-comment-answer {
   position: absolute;
   top: 40px;
   left: 150px;
   font-size: 24px;
+  height: 100px;
+  overflow-y: scroll;
+  width: 850px;
+}
+
+.qna-detail-comment-answer::-webkit-scrollbar
+ {
+  width: 10px;
+}
+
+.qna-detail-comment-answer::-webkit-scrollbar-thumb {
+  background-color: #9A93C5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.qna-detail-comment-answer-btn{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.qna-detail-comment-modify{
+  width: 80%;
+  font-size: 24px;
+  resize: none;
+  border: 2px solid #796fb2;
+  border-radius: 10px;
+  outline-color: #342d5f;
+  background-color: #dddbec;
+
+  position: absolute;
+  top: 40px;
+  left: 150px;
+  height: 100px;
+  overflow-y: scroll;
+}
+
+.qna-detail-comment-modify::-webkit-scrollbar
+ {
+  width: 10px;
+}
+
+.qna-detail-comment-modify::-webkit-scrollbar-thumb {
+  background-color: #9A93C5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 /* qnaRegist */
