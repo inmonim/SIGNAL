@@ -4,6 +4,7 @@ import 'assets/styles/projectDetail.css'
 import ProjectMaintainPage from './ProjectMaintainPage'
 import ProjectProgress from './ProjectProgress'
 
+import HeartDetailModal from 'components/common/HeartDetailModal'
 import { useLocation } from 'react-router-dom'
 import settings from 'assets/image/settings.png'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
@@ -31,6 +32,7 @@ function ProjectHeader() {
     })
       .then((res) => {
         setProject(res.data.body)
+        console.log('project:', project)
       })
       .catch((e) => {
         console.log(e)
@@ -67,6 +69,10 @@ function ProjectHeader() {
   const handleToSetting = () => setMode(1)
   const handleToProgress = () => setMode(2)
 
+  const [heartOpen, setHeartOpen] = useState(false)
+  const handleHeartOpen = () => setHeartOpen(true)
+  const handleHeartClose = () => setHeartOpen(false)
+
   return (
     <div className="project-header-container">
       <div className="project-header-width">
@@ -85,21 +91,19 @@ function ProjectHeader() {
                   <div className="project-detail-my-warning-section">
                     <div>나의 경고 :</div> &nbsp; <div>{project.warningCnt}회</div>
                   </div>
-                  <div className="project-detail-my-heart-section">
+                  <div className="project-detail-my-heart-section" onClick={handleHeartOpen}>
                     <div>나의 하트 : </div>
                     <img src={heart} style={{ width: '30px' }} />
                     <div>{project.heartCnt}</div>
                   </div>
+                  <HeartDetailModal
+                    open={heartOpen}
+                    onClose={handleHeartClose}
+                    mode="project"
+                    projectSeq={projectSeq}
+                  ></HeartDetailModal>
                 </div>
                 <div className="project-detail-project-title">{project.subject}</div>
-              </div>
-              <div className="project-detail-body-section">
-                <div className="project-detail-content">{project.content}</div>
-                <div className="project-detail-enter-progress">
-                  <div className="project-detail-enter-progress-btn" onClick={handleToProgress}>
-                    입장하기 &gt;&gt;
-                  </div>
-                </div>
               </div>
               <div>
                 <div className="project-detail-team-detail-list">
@@ -109,6 +113,14 @@ function ProjectHeader() {
                       <div>{item.nickname}</div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div className="project-detail-body-section">
+                <div className="project-detail-content">{project.content}</div>
+                <div className="project-detail-enter-progress">
+                  <div className="project-detail-enter-progress-btn" onClick={handleToProgress}>
+                    입장하기 &gt;&gt;
+                  </div>
                 </div>
               </div>
             </div>
