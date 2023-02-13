@@ -3,7 +3,6 @@ import { TextField, MenuItem, InputLabel, FormControl, Select, Chip } from '@mui
 import plusButton from '../../assets/image/plusButton.png'
 import ExpList from '../../components/Apply/ExpList'
 import CareerList from '../../components/Apply/CareerList'
-// import { createFilterOptions } from '@mui/material/Autocomplete'
 import '../../assets/styles/applyRegister.css'
 import { Skilldata } from 'data/Skilldata'
 import { getPositionName, getPositionCode } from 'data/Positiondata'
@@ -11,7 +10,6 @@ import QnAList from 'components/Apply/QnaList'
 import MeetingDtSelect from 'components/Meeting/MeetingDtSelect'
 import SignalBtn from 'components/common/SignalBtn'
 import { useLocation, useNavigate } from 'react-router-dom'
-// import { useNavigate, useLocation } from 'react-router-dom'/
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import api from 'api/Api.js'
@@ -338,7 +336,7 @@ function ApplyRegister() {
         .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, applyReq)
         .then((res) => {
           console.log('지원서 post')
-          navigate('/')
+          navigate('/myprofile')
         })
         .catch((error) => {
           if (error.response) {
