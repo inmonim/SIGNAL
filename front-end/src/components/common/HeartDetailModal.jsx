@@ -54,14 +54,19 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       }, [])
 
   // 하트 충전
-  const [inputHeart, setInputHeart] = useState(1)
+  const [inputHeart, setInputHeart] = useState(null)
   const [alertOpen, setAlertOpen] = useState(false)
+  const [minusAlert, setMinusAlert] = useState(false)
 
   const handleAlertOpen = () => setAlertOpen(true)
-  const handleToClose = () => setAlertOpen(false)
+  const handleToClose = () => {
+    setAlertOpen(false)
+    setMinusAlert(false)
+  }
   const handleInputHeart = (e) => {
     if (e.target.value <= 0) {
-      setInputHeart(1)
+      // setInputHeart(1)
+      setMinusAlert(true)
     } else {
       setInputHeart(e.target.value)
     }
@@ -144,8 +149,8 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
                 <div className="my-user-heart-modal-charge">
                   <TextField
                     id="filled-multiline-flexible"
-                    name="nickname"
                     value={inputHeart}
+                    type="number"
                     onChange={handleInputHeart}
                     sx={inputStyle}
                   />
@@ -165,6 +170,12 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
                     onClick={chargeHeart}
                     onClose={handleToClose}
                     msg="충전하시겠습니까?"
+                  ></AlertModal>
+                  <AlertModal
+                    open={minusAlert}
+                    onClick={handleToClose}
+                    onClose={handleToClose}
+                    msg="1개 이상의 하트만 충전 가능합니다."
                   ></AlertModal>
                 </div>
               ) : (
