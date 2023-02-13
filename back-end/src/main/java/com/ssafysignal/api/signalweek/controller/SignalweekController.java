@@ -94,8 +94,7 @@ public class SignalweekController {
         log.info("registSignalweekVote - Call");
 
         try {
-            signalweekService.registSignalweekVote(registSignalweekVoteRequest);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekService.registSignalweekVote(registSignalweekVoteRequest)));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
