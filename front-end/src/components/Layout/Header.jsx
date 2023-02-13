@@ -226,9 +226,13 @@ function Header() {
                   </D.NavBtn>
                   <D.Down isDropped={nameIsOpen}>
                     <D.Ul>
-                      <D.Li>
-                        <D.LinkWrapper href="/myprofile">마이페이지</D.LinkWrapper>
-                      </D.Li>
+                      {isAdmin === 'false' || isAdmin === null ? (
+                        <D.Li>
+                          <D.LinkWrapper href="/myprofile">마이페이지</D.LinkWrapper>
+                        </D.Li>
+                      ) : (
+                        <></>
+                      )}
                       <D.Li>
                         <D.LinkWrapper onClick={onLogout}>로그아웃</D.LinkWrapper>
                       </D.Li>
