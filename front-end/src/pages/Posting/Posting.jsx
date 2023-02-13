@@ -17,6 +17,7 @@ import Paging from 'components/Paging'
 import api from 'api/Api'
 import Lottie from 'react-lottie'
 import searchani from 'assets/lottie/searchani'
+import { Typography } from '@mui/material'
 // import SkillList from 'components/Apply/SkillList'
 // import { useQuery } from 'react-query'
 // import { Input } from 'assets/styles/apply'
@@ -77,7 +78,7 @@ function Posting() {
   const [postingList, setPostingList] = useState([])
   // result.data && setPostingList(result.data?.body?.postingList)
   // 테이블 코드 state Field 코드
-  const [value, setValue] = React.useState('FI100')
+  const [value, setValue] = React.useState('')
   // 버튼 색 변경
   // console.log(...skillBtnList)
   const [local, setLocal] = useState('')
@@ -134,17 +135,15 @@ function Posting() {
   }
 
   const [page, setPage] = useState(1)
-  const [size] = useState(20)
+  const [size] = useState(16)
   const [count, setCount] = useState(0)
   const handleToPage = (page) => {
     setPage(page)
   }
 
   const postList = async () => {
-    await api.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}&fieldCode=FI100`).then((res) => {
+    await api.get(process.env.REACT_APP_API_URL + `/posting?page=${page}&size=${size}`).then((res) => {
       setPostingList(res.data.body.postingList)
-    })
-    await api.get(process.env.REACT_APP_API_URL + '/posting/count').then((res) => {
       setCount(res.data.body.count)
     })
   }
@@ -154,6 +153,7 @@ function Posting() {
       process.env.REACT_APP_API_URL +
         `/posting?page=${page}&size=${size}&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=${skillaxios}`
     )
+    setCount(res.data.body.count)
     setPostingList(res.data.body.postingList)
 
     // console.log(Title)/
@@ -178,9 +178,27 @@ function Posting() {
   }, [skillList, skillListauto])
   return (
     <div>
-      <Box sx={{ width: '100ox', height: '100px' }}></Box>
-      <div style={{ position: 'relative' }}>
-        <Lottie options={defaultOptions} height={300} width={400} style={{ position: 'absolute', top: 0, left: 0 }} />
+      <Box sx={{ width: '100ox', height: '110px' }}></Box>
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '100%' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            transform: 'translate(-50%, 0)',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: ' center' }}>
+            <Typography fontSize={40} style={{ whiteSpace: 'nowrap' }}>
+              프로젝트를 찾는 가장 쉬운 방법
+            </Typography>
+          </div>
+          <div>
+            <Lottie options={defaultOptions} height={300} width={400} />
+          </div>
+        </div>
         <Banner />
       </div>
       <Container>
@@ -201,14 +219,44 @@ function Posting() {
                 aria-label="lab API tabs example"
                 TabIndicatorProps={{ style: { background: '#574B9F' } }}
               >
+                <Tab2 label="All" value="" />
                 <Tab2 label="Web" value="FI100" />
                 <Tab2 label="android" value="FI101" />
                 <Tab2 label="iOS" value="FI102" />
                 <Tab2 label="IoT" value="FI104" />
                 <Tab2 label="AI" value="FI105" />
-                <Tab2 label="All" value="" />
               </TabList>
             </Box>
+            <TabPanel value="">
+              <SkillSelectBox>
+                {Skilldatabtn.map((ele, i) => (
+                  <Skillbtn
+                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
+                    onClick={() => {
+                      changeSkillBtn(i)
+                      const copy = [...skillList]
+                      const set = new Set(copy)
+                      if (set.has(ele.code)) {
+                        set.delete(ele.code)
+                      } else {
+                        set.add(ele.code)
+                      }
+                      const copy2 = Array.from(set)
+                      setSkillList(copy2)
+                    }}
+                    key={i}
+                  >
+                    {' '}
+                    <img
+                      src={process.env.REACT_APP_API_URL + ele.url}
+                      alt="JavaScript"
+                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
+                    />
+                    {ele.name}
+                  </Skillbtn>
+                ))}
+              </SkillSelectBox>
+            </TabPanel>
             <TabPanel value="FI100">
               <SkillSelectBox>
                 {Skilldatabtn.map((ele, i) => (
@@ -330,36 +378,6 @@ function Posting() {
               </SkillSelectBox>
             </TabPanel>
             <TabPanel value="FI105">
-              <SkillSelectBox>
-                {Skilldatabtn.map((ele, i) => (
-                  <Skillbtn
-                    style={{ backgroundColor: skillImgIs[i] ? '#bcb7d9' : null }}
-                    onClick={() => {
-                      changeSkillBtn(i)
-                      const copy = [...skillList]
-                      const set = new Set(copy)
-                      if (set.has(ele.code)) {
-                        set.delete(ele.code)
-                      } else {
-                        set.add(ele.code)
-                      }
-                      const copy2 = Array.from(set)
-                      setSkillList(copy2)
-                    }}
-                    key={i}
-                  >
-                    {' '}
-                    <img
-                      src={process.env.REACT_APP_API_URL + ele.url}
-                      alt="JavaScript"
-                      style={{ marginRight: '1em', width: '47px', height: '37px' }}
-                    />
-                    {ele.name}
-                  </Skillbtn>
-                ))}
-              </SkillSelectBox>
-            </TabPanel>
-            <TabPanel value="">
               <SkillSelectBox>
                 {Skilldatabtn.map((ele, i) => (
                   <Skillbtn

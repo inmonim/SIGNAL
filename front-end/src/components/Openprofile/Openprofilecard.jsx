@@ -25,8 +25,8 @@ export default function Openprofilecard({ open }) {
         // navigate(`/posting/${post.postingSeq}`)
       }}
     >
-      <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <CardContent sx={{ height: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '35%' }}>
           <div className="open-profile-card-box">
             <img
               className="open-profile-card-profile"
@@ -35,7 +35,7 @@ export default function Openprofilecard({ open }) {
               // style={{ width: '100px', height: '100px' }}
             />
           </div>
-          <Box sx={{ width: 1 / 3, alignItems: 'center' }}>
+          <Box sx={{ width: 1 / 3, alignItems: 'center', whiteSpace: 'nowrap', overflow: 'hidden' }}>
             <Typography variant="h6">{open.nickname}</Typography>
             {open.userPositionList.map((ele, i) => (
               <Typography variant="h6" key={i}>
@@ -47,24 +47,11 @@ export default function Openprofilecard({ open }) {
         <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
           {/* {post.subject} */}
         </Typography>
-        {/* <Box sx={{ display: 'flex' }}>
-          {post.postingSkillList.map((ele) => {
-            return (
-              <Box sx={{ mr: 1, fontSize: '13px' }} key={ele.postingSkillSeq}>
-                <img
-                  src={process.env.REACT_APP_API_URL + ele.code.url}
-                  alt=""
-                  style={{ width: '25px', height: '25px' }}
-                />
-              </Box>
-            )
-          })}
-        </Box> */}
 
         {/* 여기는 스킬아이콘 */}
         <hr />
 
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', height: '30%', alignItems: 'center' }}>
           {open.userSkillList.map((ele, i) => (
             <Box sx={{ mr: 1, fontSize: '13px' }} key={i}>
               <img
@@ -75,7 +62,7 @@ export default function Openprofilecard({ open }) {
             </Box>
           ))}
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1em' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', height: '20%' }}>
           <SignalBtn sigwidth={'80%'} sigborderradius={'10px'}>
             프로필 상세 조회
           </SignalBtn>

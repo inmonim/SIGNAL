@@ -107,20 +107,16 @@ const PostingRegister = () => {
     postingQuestionList: [],
   })
   // const [profile, setProfile] = useState([])
-  const [heart, setHeart] = useState(0)
+  // const [heart, setHeart] = useState(0)
 
   const checkHeart = () => {
-    api
-      .get(process.env.REACT_APP_API_URL + `/profile/heartCnt/${sessionStorage.getItem('userSeq')}`)
-      .then((res) => {
-        setHeart(res.data.body)
-      })
-      .then(() => {
-        if (heart < 100) {
-          alert('하트가 부족해양')
-          navigate('/posting')
-        }
-      })
+    api.get(process.env.REACT_APP_API_URL + `/profile/heartCnt/${sessionStorage.getItem('userSeq')}`).then((res) => {
+      // setHeart(res.data.body)
+      if (res.data.body < 100) {
+        alert('하트가 부족해양')
+        navigate('/posting')
+      }
+    })
   }
   const [careerList, setCareerList] = useState([])
 
@@ -267,7 +263,7 @@ const PostingRegister = () => {
       posting.postingSkillList.length !== 0 &&
       posting.postingPositionList.length !== 0 &&
       posting.postingQuestionList !== 0 &&
-      DateList.length > positionReduxlen
+      DateList.length >= positionReduxlen
     ) {
       const config = { 'Content-Type': 'application/json' }
 
