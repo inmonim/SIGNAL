@@ -89,6 +89,7 @@ function WriteLetter({ handleMenuListItemClick }) {
           <label>내용</label>
           <br />
           <TextField
+            className="letter-write-textfield"
             id="filled-multiline-flexible"
             rows={10}
             multiline

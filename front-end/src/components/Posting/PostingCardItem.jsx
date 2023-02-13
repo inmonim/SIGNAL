@@ -12,6 +12,7 @@ export default function PostingCardItem({ post }) {
     <Card
       sx={{
         minWidth: 275,
+        maxWidth: 275,
         mb: 2,
         mr: 2,
         '&:hover': {
@@ -24,7 +25,19 @@ export default function PostingCardItem({ post }) {
       }}
     >
       <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
+        <Typography
+          sx={{
+            fontSize: 20,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            wordBreak: 'break-word',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+          }}
+          color="black"
+          gutterBottom
+        >
           {post.subject}
         </Typography>
         <Typography variant="body2">{Localdata[post.localCode].name}</Typography>

@@ -350,13 +350,13 @@ function ApplyRegister() {
             // REGIST_LACK_HEART("407", "지원에 필요한 하트 부족"),
             console.log(error.response.data.header.code)
             if (error.response.data.header.code === '402' || error.response.data.header.code === '403') {
-              Swal.fire(error.response.data.message, '관리자에게 문의해주세요', 'warning')
+              Swal.fire(error.response.data.header.message, '관리자에게 문의해주세요', 'warning')
             } else if (error.response.data.header.code === '405') {
-              Swal.fire('꺼져 블랙리스트야', '관리자에게 문의해주세요', 'error')
+              Swal.fire(error.response.data.header.message, '꺼져 블랙리스트야', 'error')
             } else if (error.response.data.header.code === '406') {
-              Swal.fire(error.response.data.message, '마이페이지를 확인해주세요', 'warning')
+              Swal.fire(error.response.data.header.message, '마이페이지를 확인해주세요', 'warning')
             } else if (error.response.data.header.code === '407') {
-              Swal.fire(error.response.data.message, '하트 충전 후 이용해주세요', 'warning')
+              Swal.fire(error.response.data.header.message, '하트 충전 후 이용해주세요', 'warning')
             }
           }
         })
