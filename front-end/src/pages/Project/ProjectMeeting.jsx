@@ -756,14 +756,10 @@ function ProjectMeeting() {
         <VideoListSection className="project-meeting-video-list" mode={mode}>
           {personList.map((item, index) => (
             <VideoBox key={index} className="project-meeting-person" size={personList.length}>
-              <video
-                className="project-meeting-video"
-                alt="나"
-                style={{ width: '100%', height: '100%' }}
-                autoPlay
-                playsInline
-              />
-              <div className="project-meeting-person-name">{item}</div>
+              <video className="project-meeting-video" alt="나" autoPlay playsInline />
+              <div className="project-meeting-person-name">
+                <div>{item}</div>
+              </div>
             </VideoBox>
           ))}
         </VideoListSection>
