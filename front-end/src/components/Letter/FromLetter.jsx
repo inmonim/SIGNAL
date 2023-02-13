@@ -48,16 +48,17 @@ function FromLetter({ handleChangeView, view, handleMenuListItemClick }) {
     handleMenuListItemClick(2)
   }
 
-  const [letterList, setLetterList] = useState({ letterSeq: '' })
+  const [letterList, setLetterList] = useState([])
 
   const handleToTrash = () => {
-    const a = letterList.map((item) => {
-      return { letterSeq: item }
-    })
-    api.delete(process.env.REACT_APP_API_URL + '/letter/list', JSON.stringify({ letterSeqList: a })).then((res) => {
-      console.log(res.data.body)
-      setAlertOpen(true)
-    })
+    if (letterList.length > 0) {
+      api
+        .delete(process.env.REACT_APP_API_URL + `/letter/list?letterSeqList=${JSON.stringify(letterList).slice(1, -1)}`)
+        .then((res) => {
+          console.log(res.data.body)
+          setAlertOpen(true)
+        })
+    }
   }
 
   return (
