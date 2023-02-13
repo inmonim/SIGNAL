@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Paging from 'components/Paging'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/notice.css'
 import 'assets/styles/table.css'
 import api from 'api/Api.js'
 
 function Notice() {
+  const isAdmin = sessionStorage.getItem('admin')
   const [data, setData] = useState([])
 
   const [size] = useState(8)
@@ -45,12 +47,31 @@ function Notice() {
       })
   }
 
-  console.log(size - rows.length)
+  const navigate = useNavigate()
 
   return (
     <div className="notice-page-container">
       <div className="notice-container">
-        <div className="notice-header">공지사항</div>
+        <div className="notice-header">
+          <div className="notice-header-title">공지사항</div>
+          {isAdmin === 'true' ? (
+            <div className="notice-header-regist">
+              <SignalBtn
+                sigwidth="84px"
+                sigheight="45px"
+                sigfontsize="24px"
+                sigborderradius={14}
+                sigmargin="0px 0px 5px 0px"
+                variant="contained"
+                onClick={() => navigate(`/noticeRegist`)}
+              >
+                등록
+              </SignalBtn>
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
         <div className="notice-table">
           <TableContainer>
             <Table>

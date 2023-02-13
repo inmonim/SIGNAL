@@ -3,6 +3,7 @@
   width:1100px;
   border-bottom: 2px solid black;
   margin: 30px;
+  margin-bottom: 10px;
 }
 
 .todo-person-tab-list{
@@ -31,10 +32,13 @@
   color: #fff;
 }
 
-.todo-date{
-  position: absolute;
+.todo-date-container{
+  /* position: absolute;
   right: 50px;
-  top: 210px;
+  top: 260px; */
+  width: 1100px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* kanban board */
