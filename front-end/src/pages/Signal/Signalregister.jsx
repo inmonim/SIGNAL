@@ -114,13 +114,13 @@ function Signalregister() {
         <div className="signal-regist-main">
           <div className="signal-regist-title">
             <label>프로젝트 제목 </label>
-            <button
+            {/* <button
               onClick={() => {
                 console.log(inputs)
               }}
             >
               dfdf
-            </button>
+            </button> */}
             <TextField id="filled-multiline-flexible" name="title" multiline sx={inputStyle} onChange={handleInput} />
           </div>
           <div className="signal-regist-title">

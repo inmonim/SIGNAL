@@ -8,6 +8,7 @@ import 'assets/styles/table.css'
 import api from 'api/Api.js'
 
 function Qna() {
+  const isAdmin = sessionStorage.getItem('admin')
   const [data, setData] = useState([])
 
   const [size] = useState(8)
@@ -53,19 +54,23 @@ function Qna() {
       <div className="qna-container">
         <div className="qna-header">
           <div className="qna-header-title">Q & A</div>
-          <div className="qna-header-regist">
-            <SignalBtn
-              sigwidth="84px"
-              sigheight="45px"
-              sigfontsize="24px"
-              sigborderradius={14}
-              sigmargin="0px 0px 5px 0px"
-              variant="contained"
-              onClick={() => navigate(`/qnaRegist`)}
-            >
-              등록
-            </SignalBtn>
-          </div>
+          {isAdmin === 'false' ? (
+            <div className="qna-header-regist">
+              <SignalBtn
+                sigwidth="84px"
+                sigheight="45px"
+                sigfontsize="24px"
+                sigborderradius={14}
+                sigmargin="0px 0px 5px 0px"
+                variant="contained"
+                onClick={() => navigate(`/qnaRegist`)}
+              >
+                등록
+              </SignalBtn>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="qna-table">
           <TableContainer>
