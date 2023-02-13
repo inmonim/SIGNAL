@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import 'assets/styles/notice.css'
 import AlertModal from 'components/AlertModal'
+import SignalBtn from 'components/common/SignalBtn'
 import view from 'assets/image/view.png'
 import commentimg from 'assets/image/comment.png'
 import EditIcon from '@mui/icons-material/Edit'
@@ -10,10 +11,14 @@ import api from 'api/Api.js'
 
 function QnaDetail() {
   const isAdmin = sessionStorage.getItem('admin')
+  console.log('admin: ', isAdmin)
   const location = useLocation()
   const qnaSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
   const [alertOpen, setAlertOpen] = useState(false)
+  const [ansAlertOpen, setAnsAlertOpen] = useState(false)
+  const [ansModifyAlertOpen, setAnsModifyAlertOpen] = useState(false)
+  const [ansDeleteAlertOpen, setAnsDeleteAlertOpen] = useState(false)
 
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq).then((res) => {
@@ -37,6 +42,59 @@ function QnaDetail() {
     navigate(`/qnaModify`, { state: { qnaSeq: data.qnaSeq, title: data.title, content: data.content } })
   }
 
+  // 댓글
+
+  const [answer, setAnswer] = useState('')
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    const nextInputs = { ...answer, [name]: value }
+    setAnswer(nextInputs)
+  }
+
+  const handleToAnsRegist = async () => {
+    setAnsAlertOpen(true)
+  }
+
+  const [mode, setMode] = useState('detail')
+  const handleToAnsModifyMode = () => {
+    setMode('modify')
+  }
+
+  const handleToDetailMode = () => {
+    setMode('detail')
+  }
+
+  const handleToAnsModify = async () => {
+    setAnsModifyAlertOpen(true)
+  }
+
+  const handleAnsModifyAlert = async (e) => {
+    await api.put(process.env.REACT_APP_API_URL + `/admin/qna/` + qnaSeq, JSON.stringify(answer))
+    setAnsModifyAlertOpen(false)
+    window.location.reload()
+  }
+
+  const handleToAnsDelete = () => {
+    setAnsDeleteAlertOpen(true)
+  }
+
+  const handleAnsDeleteAlert = async (e) => {
+    await api.delete(process.env.REACT_APP_API_URL + `/admin/qna/` + qnaSeq)
+    setAnsModifyAlertOpen(false)
+    window.location.reload()
+  }
+
+  const handleAnsAlert = async (e) => {
+    await api.post(process.env.REACT_APP_API_URL + `/admin/qna/` + qnaSeq, JSON.stringify(answer))
+    setAnsAlertOpen(false)
+    window.location.reload()
+  }
+
+  const handleToClose = () => {
+    setAnsAlertOpen(false)
+  }
+
   return (
     <div className="qna-page-container">
       <div className="qna-detail-container">
@@ -48,15 +106,11 @@ function QnaDetail() {
               </span>
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
-            {isAdmin === 'false' ? (
-              <div className="qna-detail-header-right">
-                <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
-                <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
-                <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
-              </div>
-            ) : (
-              <></>
-            )}
+            <div className="qna-detail-header-right">
+              <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
+              <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
+              <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
+            </div>
           </div>
           <div className="qna-detail-middle">
             <div className="qna-detail-middle-regDt">{data.regDt}</div>
@@ -84,16 +138,123 @@ function QnaDetail() {
             <div className="qna-detail-comment-right">
               <div className="qna-detail-comment-sb">
                 <img src={commentimg} alt="" />
+                {mode === 'detail' ? (
+                  <div className="qna-detail-comment-answer">
+                    {(data.answer || '').split('\n').map((line, index) => {
+                      return (
+                        <span key={index}>
+                          {line}
+                          <br />
+                        </span>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <textarea rows="5" className="qna-detail-comment-modify" name="answer" onChange={handleInput}>
+                    {data.answer}
+                  </textarea>
+                )}
               </div>
-              <div className="qna-detail-comment-answer">{data.answer}</div>
+              {isAdmin === 'true' ? (
+                mode === 'modify' ? (
+                  <div className="qna-detail-comment-answer-btn">
+                    <SignalBtn
+                      sigfontsize="20px"
+                      sigheight="40px"
+                      sigborderradius={10}
+                      sigmargin="0px 5px"
+                      sx={answerBtnStyle}
+                      onClick={handleToAnsModify}
+                    >
+                      수정
+                    </SignalBtn>
+                    <AlertModal
+                      open={ansModifyAlertOpen}
+                      onClick={handleAnsModifyAlert}
+                      onClose={handleToClose}
+                      msg="수정되었습니다."
+                    ></AlertModal>
+                    <SignalBtn
+                      sigfontsize="20px"
+                      sigheight="40px"
+                      sigborderradius={10}
+                      sigmargin="0px 5px"
+                      sx={answerBtnStyle}
+                      onClick={handleToDetailMode}
+                    >
+                      취소
+                    </SignalBtn>
+                  </div>
+                ) : (
+                  <div className="qna-detail-comment-answer-btn">
+                    <SignalBtn
+                      sigfontsize="20px"
+                      sigheight="40px"
+                      sigborderradius={10}
+                      sigmargin="0px 5px"
+                      sx={answerBtnStyle}
+                      onClick={handleToAnsModifyMode}
+                    >
+                      수정
+                    </SignalBtn>
+                    <SignalBtn
+                      sigfontsize="20px"
+                      sigheight="40px"
+                      sigborderradius={10}
+                      sigmargin="0px 5px"
+                      onClick={handleToAnsDelete}
+                    >
+                      삭제
+                    </SignalBtn>
+                    <AlertModal
+                      open={ansDeleteAlertOpen}
+                      onClick={handleAnsDeleteAlert}
+                      onClose={handleToClose}
+                      msg="삭제되었습니다."
+                    ></AlertModal>
+                  </div>
+                )
+              ) : (
+                <></>
+              )}
             </div>
           </div>
+        ) : isAdmin === 'true' ? (
+          <div className="qna-detail-comment-write-container">
+            <div className="qna-detail-comment-write-left">A</div>
+            <textarea rows="5" className="qna-detail-comment-write" name="answer" onChange={handleInput} />
+            <SignalBtn
+              sigwidth="80px"
+              sigheight="50px"
+              sigfontsize="24px"
+              sigborderradius={15}
+              sx={answerBtnStyle}
+              onClick={handleToAnsRegist}
+            >
+              등록
+            </SignalBtn>
+            <AlertModal
+              open={ansAlertOpen}
+              onClick={handleAnsAlert}
+              onClose={handleToClose}
+              msg="등록되었습니다."
+            ></AlertModal>
+          </div>
         ) : (
-          <div></div>
+          <></>
         )}
       </div>
     </div>
   )
+}
+
+const answerBtnStyle = {
+  backgroundColor: '#fff',
+  color: '#574B9F',
+  '&:hover': {
+    backgroundColor: '#574B9F',
+    color: '#fff',
+  },
 }
 
 export default QnaDetail
