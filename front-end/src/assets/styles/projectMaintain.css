@@ -223,3 +223,8 @@
   justify-content: space-evenly;
   margin-top: 10px;
 }
+
+.project-maintain-end{
+  display: flex;
+  justify-content: center;
+}
