@@ -1,22 +1,32 @@
-import { Modal, Table, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Box } from '@mui/system'
 import api from 'api/Api'
 import closeBtn from 'assets/image/x.png'
 import SignalBtn from 'components/common/SignalBtn'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
-function BlackListReleaseModal(props) {
+function BlackListReleaseModal({ open, onClose, rows }) {
   const handleDisBan = async () => {
+    const req = []
+    rows.forEach((row) => {
+      req.push(parseInt(row.blackUserSeq))
+    })
+
+    console.log(req)
     try {
-      api.delete(process.env.REACT_APP_API_URL + '/admin/user', {})
+      await api.delete(process.env.REACT_APP_API_URL + '/admin/user', { data: req })
     } catch (error) {
       console.log(error)
     }
+    location.reload()
   }
+
+  useEffect(() => {}, [rows])
+
   return (
     <>
-      <Modal open={props.open}>
+      <Modal open={open}>
         <Box sx={style}>
           <div className="close">
             <img
@@ -31,12 +41,12 @@ function BlackListReleaseModal(props) {
               }}
               src={closeBtn}
               alt="closeBtn"
-              onClick={props.onClose}
+              onClick={onClose}
             />
           </div>
           <div className="black-list-modal-main">
             <div className="black-list-modal-title">블랙리스트를 해지하시겠습니까</div>
-            <TableContainer sx={{ minWidth: 650, height: 440 }}>
+            <TableContainer sx={{ minWidth: 600, height: 400 }} className="blackList-modal-container">
               <Table size="small" aria-label="a dense table">
                 <TableHead>
                   <TableRow>
@@ -45,17 +55,15 @@ function BlackListReleaseModal(props) {
                     <TableCell align="center">닉네임</TableCell>
                   </TableRow>
                 </TableHead>
-                {/* <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    
-                      <TableCell align="center"></TableCell>
-                      <TableCell align="center">{row.fat}</TableCell>
-                      <TableCell align="center">{row.carbs}</TableCell>
-                      <TableCell align="center">{row.protein}</TableCell>
+                <TableBody className="black-list-modal-table">
+                  {rows.map((row, index) => (
+                    <TableRow key={index} className="blackList-modal-tr">
+                      <TableCell align="center">{index + 1}</TableCell>
+                      <TableCell align="center">{row.email}</TableCell>
+                      <TableCell align="center">{row.nickname}</TableCell>
                     </TableRow>
                   ))}
-                </TableBody> */}
+                </TableBody>
               </Table>
             </TableContainer>
             <div className="black-list-modal-submit-btn">
@@ -79,7 +87,7 @@ export default BlackListReleaseModal
 
 const style = {
   width: 727,
-  height: 800,
+  height: 700,
   bgcolor: '#ffffff',
   borderRadius: 20,
   border: 'none',
