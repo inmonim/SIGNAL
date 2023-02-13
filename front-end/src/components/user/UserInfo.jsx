@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import heart from 'assets/image/heart.png'
-import HeartModal from '../common/HeartModal'
+import HeartDetailModal from '../common/HeartDetailModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
@@ -101,7 +101,7 @@ function UserInfo() {
         <img className="my-user-heart-img" src={heart} alt="" />
         <div className="my-user-heart-cnt">{heartCnt}</div>
       </div>
-      <HeartModal open={heartOpen} onClose={handleToClose} mode="user"></HeartModal>
+      <HeartDetailModal open={heartOpen} onClose={handleToClose} mode="user"></HeartDetailModal>
       <div className="my-user-btn">
         <SignalBtn
           className="my-user-btn-modify"
