@@ -5,28 +5,87 @@ import 'assets/styles/adminSignalWeek.css'
 import EditIcon from '@mui/icons-material/Edit'
 import api from 'api/Api'
 import SignalWeekModal from 'components/Admin/SingnalWeekModal'
+import Paging from 'components/Paging'
 
 function AdminSignalWeek() {
   const [singalWeekList, setSingalWeekListt] = useState([])
 
-  const singalWeekListFetch = async () => {
-    try {
-      await api
-        .get(process.env.REACT_APP_API_URL + '/admin/signalweek')
-        .then((res) => setSingalWeekListt(res.data.body.signalWeekList))
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const [size] = useState(8)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(0)
+
+  const [signalweekScheduleSeq, setSignalweekScheduleSeq] = useState(0)
 
   useEffect(() => {
-    singalWeekListFetch()
-  }, [])
+    api.get(process.env.REACT_APP_API_URL + `/admin/signalweek?page=${page}&size=${size}`).then((res) => {
+      setSingalWeekListt(res.data.body.signalweekList)
+      setCount(res.data.body.count)
+    })
+  }, [page])
+
+  const rows = []
+  Array.from(singalWeekList).forEach((item) => {
+    rows.push({
+      year: item.year,
+      quarter: item.quarter,
+      openStartDt: item.openStartDt,
+      openEndDt: item.openEndDt,
+      voteStartDt: item.voteStartDt,
+      voteEndDt: item.voteEndDt,
+      signalweekScheduleSeq: item.signalweekScheduleSeq,
+    })
+  })
+  const rowLen = rows.length
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
+      rows.push({
+        year: '',
+        quarter: '',
+        openStartDt: '',
+        openEndDt: '',
+        voteStartDt: '',
+        voteEndDt: '',
+        signalweekScheduleSeq: '',
+      })
+  }
+
+  const handlePageChange = (page) => {
+    setPage(page)
+  }
 
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
+  const [mode, setMode] = useState(true)
+
+  const [defaultData, setDefaultData] = useState({})
+
+  const handleModifyOpen = (row) => {
+    setDefaultData({
+      defaultOpenStartDt: row.openStartDt,
+      defaultOpenEndDt: row.openEndDt,
+      defualtVoteStartDt: row.voteStartDt,
+      defualtVoteEndDt: row.voteEndDt,
+    })
+    setSignalweekScheduleSeq(row.signalweekScheduleSeq)
+    setMode(false)
+    console.log(defaultData)
+    handleOpen()
+  }
+
+  const handleRegistOpen = () => {
+    setSignalweekScheduleSeq(null)
+    setDefaultData({
+      defaultOpenStartDt: null,
+      defaultOpenEndDt: null,
+      defualtVoteStartDt: null,
+      defualtVoteEndDt: null,
+    })
+    setMode(true)
+    handleOpen()
+  }
 
   return (
     <div className="admin-signal-week-page-container">
@@ -39,18 +98,16 @@ function AdminSignalWeek() {
               sigfontsize="24px"
               sigborderradius={14}
               sigmargin="0px 0px 5px 0px"
-              onClick={handleOpen}
+              onClick={handleRegistOpen}
             >
               등록
             </SignalBtn>
             <SignalWeekModal
               open={open}
               onClose={handleClose}
-              mode={true}
-              defaultOpenStartDt={null}
-              defaultOpenEndDt={null}
-              defualtVoteStartDt={null}
-              defualtVoteEndDt={null}
+              mode={mode}
+              defaultData={defaultData}
+              signalweekScheduleSeq={signalweekScheduleSeq}
             ></SignalWeekModal>
           </div>
         </div>
@@ -67,44 +124,45 @@ function AdminSignalWeek() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {singalWeekList.map((row, index) => (
+                {rows.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">{row.year}</TableCell>
                     <TableCell align="center">{row.quarter}</TableCell>
                     <TableCell align="center">
-                      {row.openStartDt}~{row.openEndDt}
+                      {row.year !== '' ? (
+                        <>
+                          {row.openStartDt}~{row.openEndDt}
+                        </>
+                      ) : (
+                        ''
+                      )}
                     </TableCell>
                     <TableCell align="center">
-                      {row.voteStartDt}~{row.voteEndDt}
+                      {row.year !== '' ? (
+                        <>
+                          {row.voteStartDt}~{row.voteEndDt}
+                        </>
+                      ) : (
+                        ''
+                      )}
                     </TableCell>
                     <TableCell align="center">
-                      <SignalBtn
-                        startIcon={<EditIcon />}
-                        open={open}
-                        onClose={handleClose}
-                        mode={false}
-                        defaultOpenStartDt={row.openStartDt}
-                        defaultOpenEndDt={row.openEndDt}
-                        defualtVoteStartDt={row.voteStartDt}
-                        defualtVoteEndDt={row.voteEndDt}
-                      >
-                        수정
-                      </SignalBtn>
-                      <SignalWeekModal
-                        open={open}
-                        onClose={handleClose}
-                        mode={false}
-                        defaultOpenStartDt={row.openStartDt}
-                        defaultOpenEndDt={row.openEndDt}
-                        defualtVoteStartDt={row.voteStartDt}
-                        defualtVoteEndDt={row.voteEndDt}
-                      ></SignalWeekModal>
+                      {row.year !== '' ? (
+                        <>
+                          <SignalBtn startIcon={<EditIcon />} onClick={() => handleModifyOpen(row)}>
+                            수정
+                          </SignalBtn>
+                        </>
+                      ) : (
+                        ''
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
         </div>
       </div>
     </div>

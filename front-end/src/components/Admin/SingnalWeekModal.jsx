@@ -1,5 +1,5 @@
 import { Box, Modal, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import closeBtn from 'assets/image/x.png'
 import { DatePicker } from '@mui/x-date-pickers'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -15,27 +15,51 @@ const getQuarter = (month) => {
   else return 4
 }
 
-function SignalWeekModal({
-  open,
-  onClose,
-  mode,
-  defaultOpenStartDt,
-  defaultOpenEndDt,
-  defualtVoteStartDt,
-  defualtVoteEndDt,
-}) {
-  const [openStartDt, setOpenStartDt] = useState(defaultOpenStartDt)
-  const [openEndDt, setOpenEndDt] = useState(defaultOpenEndDt)
-  const [voteStartDt, setVoteStartDt] = useState(defualtVoteStartDt)
-  const [voteEndDt, setVoteEndDt] = useState(defualtVoteEndDt)
+function SignalWeekModal({ open, onClose, mode, defaultData, signalweekScheduleSeq }) {
+  const date = new Date()
+  const [openStartDt, setOpenStartDt] = useState(
+    defaultData.defaultOpenStartDt === null ? date : new Date(defaultData.defaultOpenStartDt)
+  )
+  const [openEndDt, setOpenEndDt] = useState(
+    defaultData.defaultOpenEndDt === null ? date : new Date(defaultData.defaultOpenEndDt)
+  )
+  const [voteStartDt, setVoteStartDt] = useState(
+    defaultData.defualtVoteStartDt === null ? date : new Date(defaultData.defualtVoteStartDt)
+  )
+  const [voteEndDt, setVoteEndDt] = useState(
+    defaultData.defualtVoteEndDt === null ? date : new Date(defaultData.defualtVoteEndDt)
+  )
+
+  console.log('openStartDt', openStartDt)
+  console.log('defaultData', defaultData)
 
   const handleSignalWeekRegist = async () => {
     try {
-      const date = new Date()
-      const year = parseInt(moment(date).format('YYYY'))
-      const month = parseInt(moment(date).format('MM'))
+      const year = parseInt(moment(openEndDt.$d).format('YYYY'))
+      const month = parseInt(moment(openEndDt.$d).format('MM'))
       const quarter = getQuarter(month)
-      await api.post(process.env.REACT_APP_API_URL + '/admin/signalweek', {
+
+      const req = {
+        openEndDt: moment(openEndDt.$d).format('YYYY-MM-DD'),
+        openStartDt: moment(openStartDt.$d).format('YYYY-MM-DD'),
+        quarter,
+        voteEndDt: moment(voteEndDt.$d).format('YYYY-MM-DD'),
+        voteStartDt: moment(voteStartDt.$d).format('YYYY-MM-DD'),
+        year,
+      }
+      console.log(JSON.stringify(req))
+      await api.post(process.env.REACT_APP_API_URL + '/admin/signalweek', JSON.stringify(req))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleSignalWeekModify = async () => {
+    try {
+      const year = parseInt(moment(openEndDt.$d).format('YYYY'))
+      const month = parseInt(moment(openEndDt.$d).format('MM'))
+      const quarter = getQuarter(month)
+      await api.put(process.env.REACT_APP_API_URL + `/admin/signalweek/${signalweekScheduleSeq}`, {
         openEndDt: moment(openEndDt.$d).format('YYYY-MM-DD'),
         openStartDt: moment(openStartDt.$d).format('YYYY-MM-DD'),
         quarter,
@@ -47,6 +71,17 @@ function SignalWeekModal({
       console.log(error)
     }
   }
+  const handleSignalWeekDelete = async () => {
+    try {
+      await api.delete(process.env.REACT_APP_API_URL + `/admin/signalweek/${signalweekScheduleSeq}`)
+      location.reload()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {}, [open])
+
   return (
     <>
       <Modal open={open}>
@@ -83,6 +118,8 @@ function SignalWeekModal({
                       <DatePicker
                         label="신청 시작날짜"
                         value={openStartDt}
+                        inputFormat={'YYYY/MM/DD'}
+                        mask={'____/__/__'}
                         onChange={(newValue) => {
                           setOpenStartDt(newValue)
                         }}
@@ -97,6 +134,9 @@ function SignalWeekModal({
                       <DatePicker
                         label="신청 종료날짜"
                         value={openEndDt}
+                        inputFormat={'YYYY/MM/DD'}
+                        minDate={openStartDt}
+                        mask={'____/__/__'}
                         onChange={(newValue) => {
                           setOpenEndDt(newValue)
                         }}
@@ -117,6 +157,9 @@ function SignalWeekModal({
                       <DatePicker
                         label="투표 시작날짜"
                         value={voteStartDt}
+                        inputFormat={'YYYY/MM/DD'}
+                        mask={'____/__/__'}
+                        minDate={openEndDt}
                         onChange={(newValue) => {
                           setVoteStartDt(newValue)
                         }}
@@ -131,6 +174,9 @@ function SignalWeekModal({
                       <DatePicker
                         label="투표 종료날짜"
                         value={voteEndDt}
+                        inputFormat={'YYYY/MM/DD'}
+                        mask={'____/__/__'}
+                        minDate={voteStartDt}
                         onChange={(newValue) => {
                           setVoteEndDt(newValue)
                         }}
@@ -154,16 +200,28 @@ function SignalWeekModal({
                 </SignalBtn>
               </div>
             ) : (
-              <>
-                <div>
-                  <SignalBtn sigwidth="120px" sigheight="60px" sigfontsize="30px" sigborderradius={25}>
+              <div className="admin-signal-week-modal-modify-btns">
+                <div className="admin-signal-week-modal-modify-btns-container">
+                  <SignalBtn
+                    sigwidth="120px"
+                    sigheight="60px"
+                    sigfontsize="30px"
+                    sigborderradius={25}
+                    onClick={handleSignalWeekModify}
+                  >
                     수정
                   </SignalBtn>
-                  <SignalBtn sigwidth="120px" sigheight="60px" sigfontsize="30px" sigborderradius={25}>
+                  <SignalBtn
+                    sigwidth="120px"
+                    sigheight="60px"
+                    sigfontsize="30px"
+                    sigborderradius={25}
+                    onClick={handleSignalWeekDelete}
+                  >
                     삭제
                   </SignalBtn>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </Box>
