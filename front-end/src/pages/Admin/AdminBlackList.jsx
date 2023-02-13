@@ -7,6 +7,7 @@ import BlackListReleaseModal from 'components/Admin/BlackListReleaseModal'
 
 function AdminBlackList() {
   const [blackList, setBlackList] = useState([])
+  const [disBlackList, setDisBlackList] = useState([])
 
   const blackListFetch = async () => {
     try {
@@ -19,9 +20,33 @@ function AdminBlackList() {
     }
   }
 
+  const rows = []
+  Array.from(blackList).forEach((item) => {
+    rows.push(item)
+  })
+  const rowLen = rows.length
+  if (rowLen !== 8 && rowLen !== 0) {
+    for (let i = 0; i < 8 - rowLen; i++)
+      rows.push({
+        blackUserSeq: ' ',
+        userSeq: ' ',
+        email: ' ',
+        nickname: ' ',
+        regDt: ' ',
+        projectSeq: ' ',
+      })
+  }
+
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => {
+    const disBlackListArr = []
+    rows.forEach((row, index) => {
+      if (checked[index]) {
+        disBlackListArr.push(row)
+      }
+    })
+    setDisBlackList(disBlackListArr)
     setOpen(true)
   }
 
@@ -32,6 +57,16 @@ function AdminBlackList() {
   useEffect(() => {
     blackListFetch()
   }, [])
+
+  // 8개 checkbox default false
+  const [checked, setChecked] = useState([false, false, false, false, false, false, false, false])
+
+  const handleChecked = (event, index) => {
+    const checkedArr = [...checked]
+    const temp = checked[index]
+    checkedArr.splice(index, 1, !temp)
+    setChecked(checkedArr)
+  }
 
   return (
     <div className="admin-black-list-page-container">
@@ -48,7 +83,7 @@ function AdminBlackList() {
             >
               블랙리스트 해제
             </SignalBtn>
-            <BlackListReleaseModal open={open} onClose={handleClose}></BlackListReleaseModal>
+            <BlackListReleaseModal open={open} onClose={handleClose} rows={disBlackList}></BlackListReleaseModal>
           </div>
         </div>
         <div className="admin-black-list-body">
@@ -56,26 +91,26 @@ function AdminBlackList() {
             <Table>
               <TableHead className="qna-tabl e-head">
                 <TableRow>
-                  <TableCell align="center">
-                    <Checkbox color="primary" />
-                  </TableCell>
+                  <TableCell align="center">선택</TableCell>
                   <TableCell align="center">이메일</TableCell>
                   <TableCell align="center">닉네임</TableCell>
                   <TableCell align="center">가입일시</TableCell>
-                  <TableCell align="center">프로젝트</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {blackList &&
-                  blackList.map((row, index) => (
+                {rows &&
+                  rows.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell padding="checkbox">
-                        <Checkbox color="primary" />
+                        {row.userSeq === ' ' ? (
+                          ''
+                        ) : (
+                          <Checkbox color="primary" onChange={() => handleChecked(event, index)} />
+                        )}
                       </TableCell>
                       <TableCell align="center">{row.email}</TableCell>
                       <TableCell align="center">{row.nickname}</TableCell>
                       <TableCell align="center">{row.regDt}</TableCell>
-                      <TableCell align="center">{row.projectCnt}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

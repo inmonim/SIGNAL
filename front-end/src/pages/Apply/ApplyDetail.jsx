@@ -21,19 +21,12 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 }))
 
 function ApplyDetail() {
-  // 1. 아래 default userSeq, applySeq 지우기
-  // 2. import { Link, useLocation } from 'react-router-dom'
-
   const location = useLocation()
   const applySeq = parseInt(location.state.applySeq)
   const stateCode = location.state.stateCode
 
   const navigate = useNavigate()
 
-  // const userSeq = 1
-  // const applySeq = 82
-
-  const currentUserSeq = sessionStorage.getItem('userSeq')
   const showButton = (
     <div>
       <Link to={'/applymodify'} state={{ applySeq: location.state.applySeq }}>
@@ -50,7 +43,6 @@ function ApplyDetail() {
   const [apply, setApply] = useState([])
   const [user, setUser] = useState([])
   const [position, setPosition] = useState([])
-  const [userSeq, setUserSeq] = useState(0)
 
   const dataFetch = async () => {
     try {
@@ -58,7 +50,6 @@ function ApplyDetail() {
       setApply(res.data.body)
       console.log('detail', res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
-      setUserSeq(res.data.body.userSeq + '')
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
         setPosting(res.data.body)
@@ -87,7 +78,7 @@ function ApplyDetail() {
               <div className="apply-detail-project-title">{posting.subject}</div>
             </div>
             <div className="apply-detail-cancle-section">
-              {userSeq === currentUserSeq && stateCode === '심사중' ? showButton : ''}
+              {apply.isMyApply && stateCode === '심사중' ? showButton : ''}
             </div>
           </div>
           <hr className="apply-detail-hr" />
