@@ -9,6 +9,7 @@ import trashcan from 'assets/image/TrashLetter.png'
 import api from 'api/Api.js'
 
 function QnaDetail() {
+  const isAdmin = sessionStorage.getItem('admin')
   const location = useLocation()
   const qnaSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
@@ -47,11 +48,15 @@ function QnaDetail() {
               </span>
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
-            <div className="qna-detail-header-right">
-              <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
-              <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
-              <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
-            </div>
+            {isAdmin === 'false' ? (
+              <div className="qna-detail-header-right">
+                <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
+                <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
+                <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div className="qna-detail-middle">
             <div className="qna-detail-middle-regDt">{data.regDt}</div>
