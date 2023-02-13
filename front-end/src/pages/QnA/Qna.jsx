@@ -49,6 +49,11 @@ function Qna() {
 
   const navigate = useNavigate()
 
+  // const [faqAlertOpen, setFaqAlertOpen] = useState(false)
+  // const faqRegistAlert = () => {
+
+  // }
+
   return (
     <div className="qna-page-container">
       <div className="qna-container">
@@ -87,7 +92,10 @@ function Qna() {
                 {rows.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell align="left">
+                    <TableCell
+                      align="left"
+                      //  onContextMenu={faqRegistAlert}
+                    >
                       <Link to={`/qnaDetail`} state={{ id: row.id }}>
                         {row.title}
                       </Link>
