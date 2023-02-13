@@ -14,11 +14,6 @@ import Openprofilecard from 'components/Openprofile/Openprofilecard'
 
 function Openprofile() {
   const [openList, setOpenList] = useState([])
-  // result.data && setPostingList(result.data?.body?.postingList)
-  // 테이블 코드 state Field 코드
-
-  // 버튼 색 변경
-  // console.log(...skillBtnList)
 
   const [page, setPage] = useState(1)
   const [size] = useState(20)
@@ -53,24 +48,6 @@ function Openprofile() {
       <Banner />
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}></Box>
-
-        {/* <Box sx={{ display: 'flex' }}>
-          <Autocomplete
-            multiple
-            limitTags={3}
-            size="small"
-            id="multiple-limit-tags"
-            options={Skilldata}
-            getOptionLabel={(option) => option.name}
-            onChange={(event, newValue) => {
-              // console.log(newValue)
-              handleChangeSkill(newValue)
-            }}
-            renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
-            sx={{ skillStyle, width: 1 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
-          />
-          <div style={{ width: '50%' }}>dd</div>
-        </Box> */}
 
         <Box sx={{ display: 'flex', flexDirection: 'row-reverse', marginBottom: '1em' }}>
           <button

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player/lazy'
-import Badge from '@mui/material/Badge'
 import { IconButton } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import { useLocation } from 'react-router-dom'
@@ -8,10 +7,12 @@ import 'assets/styles/signaldetail.css'
 import api from 'api/Api.js'
 import { Document, Page } from 'react-pdf'
 import SignalBtn from 'components/common/SignalBtn'
+import styled from '@emotion/styled'
 
 function signalDetail() {
   const location = useLocation()
   const signalSeq = parseInt(location.state)
+  const userSeq = sessionStorage.getItem('userSeq')
   console.log(signalSeq)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
@@ -23,11 +24,16 @@ function signalDetail() {
 
   // const signaldetailSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
-  const [likes, setLikes] = useState(1)
+
   const [liked, setLiked] = useState(false)
   const [ucc, setUcc] = useState()
   // const aaaa = 'https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL'
   const handleClick = async () => {
+    console.log(22)
+    api.post(process.env.REACT_APP_API_URL + '/signalweek/vote', {
+      signalweekSeq: signalSeq,
+      userSeq,
+    })
     if (!liked) {
       try {
         // Make a POST request to your API to add a like
@@ -35,7 +41,6 @@ function signalDetail() {
         //   method: "POST",
         // });
         // const data = await response.json();
-        setLikes(likes + 1)
         setLiked(true)
       } catch (error) {
         console.error(error)
@@ -47,7 +52,6 @@ function signalDetail() {
         //   method: "DELETE",
         // });
         // const data = await response.json();
-        setLikes(likes - 1)
         setLiked(false)
       } catch (error) {
         console.error(error)
@@ -59,27 +63,19 @@ function signalDetail() {
     api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`).then((res) => {
       setData(res.data.body)
       setUcc(res.data.body.uccUrl)
+      setLiked(res.data.body.vote)
       console.log(JSON.stringify(res.data.body))
     })
   }, [])
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
-        <button
-          onClick={() => {
-            setUcc('https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL')
-            console.log(ucc)
-          }}
-        >
-          d
-        </button>
+        <button>ddd</button>
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
-        <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right' }}>
+        <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right', marginBottom: '1em' }}>
           <IconButton size="medium" onClick={handleClick}>
-            <Badge badgeContent={likes} color="secondary">
-              <ThumbUpIcon fontSize="large" color={liked ? 'secondary' : 'action'} />
-            </Badge>
+            <ThumbUpIcon fontSize="large" color={liked ? 'secondary' : 'action'} />
           </IconButton>
         </div>
         <div className="player-wrapper">
@@ -95,41 +91,59 @@ function signalDetail() {
           />
         </div>
         {/* <div className="signal-regist-title" style={{ marginTop: '1em' }}>
-          <label>Git 주소</label>
+          <Label>Git 주소</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
             <a href={data.deployUrl}>{data.deployUrl}</a>
           </div>
         </div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
-          <label>배포 주소</label>
+          <Label>배포 주소</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
             <a href={data.deployUrl}>{data.deployUrl}</a>
           </div>
         </div>
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
-          <label>PDF 파일</label>
-          <div style={{ width: '1126px  ', height: '620px', overflow: 'hidden', marginTop: '1em' }}>
-            <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page width={1126} height={720} pageNumber={pageNumber} />
-            </Document>
-          </div>
-          <p style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}>
-            <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
-              &lt;
-            </SignalBtn>
-            <h2 style={{ margin: '1em' }}>
-              Page {pageNumber} of {numPages}
-            </h2>
-            <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</SignalBtn>
-          </p>
+          <Label>PDF 파일</Label>
+          {data.pptUrl ? (
+            <div>
+              <div style={{ width: '1126px  ', height: '620px', overflow: 'hidden', marginTop: '1em' }}>
+                <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
+                  <Page width={1126} height={720} pageNumber={pageNumber} />
+                </Document>
+              </div>
+              <p
+                style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}
+              >
+                <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
+                  &lt;
+                </SignalBtn>
+                <div style={{ margin: '1em' }}>
+                  Page {pageNumber} of {numPages}
+                </div>
+                <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>
+                  &gt;
+                </SignalBtn>
+              </p>
+            </div>
+          ) : (
+            <Label> PDF 파일이 없습니다</Label>
+          )}
         </div>
         <div className="apply-detail-content-section">
-          <label>내용</label>
+          <Label>내용</Label>
           <div className="apply-detail-content">{data.content}</div>
         </div>
       </div>
     </div>
   )
 }
+
+const Label = styled.h1`
+  font-size: 20px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  color: #574b9f;
+`
 
 export default signalDetail

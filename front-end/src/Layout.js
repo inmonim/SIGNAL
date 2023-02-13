@@ -26,6 +26,7 @@ import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectHeader from './pages/Project/ProjectHeader'
+import EndProject from './pages/Project/EndProject'
 import TeamMaintain from 'components/Project/TeamMaintain'
 import ProjectMaintain from 'components/Project/ProjectMaintain'
 import ScrollTop from 'components/common/ScrollTop'
@@ -89,6 +90,7 @@ function App() {
             <Route path="/applydetail" element={<ApplyDetail />} />
             <Route path="/teamBuilding" element={<TeamBuilding />} />
             <Route path="/project" element={<ProjectHeader />} />
+            <Route path="/endproject" element={<EndProject />} />
             <Route path="/teamMaintain" element={<TeamMaintain />} />
             <Route path="/projectMaintain" element={<ProjectMaintain />} />
             <Route path="/myproject" element={<MyProject />} />
