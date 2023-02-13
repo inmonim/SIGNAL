@@ -254,8 +254,6 @@ function TeamSelect() {
                             사전미팅
                           </MeetingButton>
                         )}
-
-                        <AlertModal msg="입장 하시겠습니까?" open={alertOpen} onClick={handleToMeeting}></AlertModal>
                       </TableCell>
                       <TableCell align="center">
                         {row.applySeq === '' ? '' : moment(row.meetingDt).format('MM/DD HH:00')}
@@ -298,6 +296,12 @@ function TeamSelect() {
                       </TableCell>
                     </TableRow>
                   ))}
+                  <AlertModal
+                    msg="입장 하시겠습니까?"
+                    open={alertOpen}
+                    onClick={handleToMeeting}
+                    onClose={() => setAlertOpen(false)}
+                  ></AlertModal>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -330,6 +334,7 @@ function TeamSelect() {
               </div>
             </Dialog>
           </div>
+
           <div>
             <Paging page={page} count={count} setPage={handlePageChange} size={size} />
           </div>

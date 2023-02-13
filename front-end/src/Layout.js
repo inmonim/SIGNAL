@@ -8,6 +8,8 @@ import Regist from 'pages/user/Regist'
 import PostingRegister from 'pages/Posting/PostingRegister'
 import Notice from 'pages/Notice/Notice'
 import NoticeDetail from 'pages/Notice/NoticeDetail'
+import NoticeRegist from 'pages/Notice/NoticeRegist'
+import NoticeModify from 'pages/Notice/NoticeModify'
 import Qna from 'pages/QnA/Qna'
 import QnaDetail from 'pages/QnA/QnaDetail'
 import QnaRegist from 'pages/QnA/QnaRegist'
@@ -30,6 +32,7 @@ import SignalList from 'pages/Signal/SignalList'
 import Signalregister from 'pages/Signal/Signalregister'
 import SignalDetail from 'pages/Signal/SignalDetail'
 import SignalHonor from 'pages/Signal/SignalHonor'
+import SignalHonorList from 'pages/Signal/SignalHonorList'
 
 import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
@@ -89,6 +92,8 @@ function App() {
             <Route path="/myproject" element={<MyProject />} />
             <Route path="/notice" element={<Notice />} />
             <Route path="/noticeDetail" element={<NoticeDetail />} />
+            <Route path="/noticeRegist" element={<NoticeRegist />} />
+            <Route path="/noticeModify" element={<NoticeModify />} />
             <Route path="/qna" element={<Qna />} />
             <Route path="/qnaDetail" element={<QnaDetail />} />
             <Route path="/qnaRegist" element={<QnaRegist />} />
@@ -98,12 +103,11 @@ function App() {
             <Route path="/signalregister" element={<Signalregister />} />
             <Route path="/signaldetail" element={<SignalDetail />} />
             <Route path="/signal/rank" element={<SignalHonor />} />
+            <Route path="/signal/ranklist" element={<SignalHonorList />} />
             <Route path="/openprofile" element={<Openprofile />}></Route>
             <Route path="/adminblacklist" element={<AdminBalckList />} />
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
-
-            <Route path="/projectmeeting" element={<ProjectMeeting />} />
 
             <Route path="*" element={<Fourzerofour />} />
           </Route>
@@ -111,6 +115,7 @@ function App() {
           <Route element={<FooterLayout />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/beforemeeting" element={<Beforemeeting />} />
+            <Route path="/projectmeeting" element={<ProjectMeeting />} />
           </Route>
         </Routes>
       </BrowserRouter>

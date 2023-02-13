@@ -12,22 +12,6 @@ import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 
-// =================== url 파라미터 들고오기  =========================
-// 닉네임 : nickname
-// owner : false (지원자) , true (작성자)
-// applySeq : 지원서seq
-
-console.log('location >>> ', location)
-console.log('location.search >>> ', location.search)
-
-const params = new URLSearchParams(location.search)
-
-const nickname = params.get('nickname')
-const projectSeq = params.get('projectSeq')
-
-console.log("params.get('nickname') >>> ", nickname)
-console.log("params.get('projectSeq') >>> ", projectSeq)
-
 // ============================================
 let myStream
 
@@ -81,17 +65,17 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  roomId = 'project1234'
-  myName = sessionStorage.getItem('username')
+  const params = new URLSearchParams(location.search)
 
-  if (myName === null) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    let result = ''
-    const charactersLength = characters.length
-    for (let i = 0; i < 6; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  const nickname = params.get('nickname')
+  const projectSeq = params.get('projectSeq')
+  roomId = 'project' + projectSeq
+  myName = sessionStorage.getItem('nickname')
+  console.log(roomId, myName)
+  if (myName !== nickname) {
+    if (!alert('권한이 없습니다. 다시 로그인하세요')) {
+      window.close()
     }
-    myName = '익명' + result
   }
 
   userNames = {} // userNames[socketId]="이름"
@@ -147,8 +131,15 @@ function ProjectMeeting() {
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
       console.log(numOfUsers, '명이 접속해있음')
+
+      if (data.isDup === true) {
+        if (!alert('중복접속입니다.!!')) {
+          window.close()
+        }
+        return
+      }
+      meetingStart()
     })
-    meetingStart()
 
     // user가 들어오면 이미 들어와있던 user에게 수신되는 이벤트
     socket.on('user_enter', async (data) => {
@@ -832,7 +823,7 @@ function ProjectMeeting() {
 
       <div className="project-meeting-footer">
         <div className="project-meeting-time">
-          <MeetingPresentTime key={10000} personNum={personList.length}></MeetingPresentTime>
+          <MeetingPresentTime key={10000} personNum={personList}></MeetingPresentTime>
         </div>
         <div className="project-meeting-btn">
           <div className="project-meeting-btn-meeting-container" onClick={() => setMode(0)}>
@@ -849,7 +840,7 @@ function ProjectMeeting() {
             <div className="project-meeting-btn-share">화면 공유</div>
             {/* 고정이여야함  absolute */}
           </div>
-          <div className="project-meeting-btn-close-container" onClick={() => alert('close')}>
+          <div className="project-meeting-btn-close-container" onClick={() => window.close()}>
             <img src={MeetingDoor} alt="" className="project-meeting-btn-close-icon" />
             <div className="project-meeting-btn-close">종료</div>
           </div>

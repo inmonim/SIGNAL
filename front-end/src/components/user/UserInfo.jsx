@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import heart from 'assets/image/heart.png'
-import HeartModal from './heartModal'
+import HeartModal from '../common/heartModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
@@ -34,6 +34,7 @@ function UserInfo() {
     setAlertOpen(false)
     setUserPwdOpen(false)
     setHeartOpen(false)
+    getHeartCnt()
   }
 
   const [heartOpen, setHeartOpen] = useState(false)
@@ -75,8 +76,18 @@ function UserInfo() {
     }
   }
 
+  const [heartCnt, setHeartCnt] = useState(0)
+  const getHeartCnt = async () => {
+    await api
+      .get(process.env.REACT_APP_API_URL + '/profile/heartCnt/' + sessionStorage.getItem('userSeq'))
+      .then((res) => {
+        setHeartCnt(res.data.body)
+      })
+  }
+
   useEffect(() => {
     userFetch()
+    getHeartCnt()
   }, [])
 
   return (
@@ -88,9 +99,9 @@ function UserInfo() {
       </div>
       <div className="my-user-heart" onClick={handleToHeart}>
         <img className="my-user-heart-img" src={heart} alt="" />
-        <div className="my-user-heart-cnt">{userInfo.heartCnt}</div>
+        <div className="my-user-heart-cnt">{heartCnt}</div>
       </div>
-      <HeartModal open={heartOpen} onClose={handleToClose} cnt={userInfo.heartCnt}></HeartModal>
+      <HeartModal open={heartOpen} onClose={handleToClose} mode="user"></HeartModal>
       <div className="my-user-btn">
         <SignalBtn
           className="my-user-btn-modify"

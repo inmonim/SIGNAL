@@ -4,8 +4,9 @@
   border: 1px solid white;
   padding: 10px 30px;
   border-radius: 8px;
-  width: 70%;
+  width: 50%;
   transition-duration: 0.5s;
+  font-size: 22px;
 }
 .apply-button:hover {
   color: #574b9f;
@@ -45,7 +46,7 @@ hr {
 
 .content-section,
 .question-answer-section {
-  padding: 1em 1.2em;
+  padding: 1em 1.2em 1em 5em;
 }
 
 .career-section,
@@ -103,8 +104,8 @@ hr {
   display: flex;
   align-items: center;
 }
-.react-datepicker-wrapper {
-  width: 100%;
+.react-datepicker-wrapper input {
+  font-size: 18px;
 }
 .active-warning {
   margin-bottom: 4px;

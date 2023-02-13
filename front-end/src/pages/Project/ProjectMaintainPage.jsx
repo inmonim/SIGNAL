@@ -31,7 +31,6 @@ function ProjectMaintainPage({ projectSeq }) {
     } catch (error) {
       console.log(error)
     }
-    console.log('Dd')
   }
 
   const [mode, setMode] = useState(0)
@@ -64,7 +63,7 @@ function ProjectMaintainPage({ projectSeq }) {
       {mode === 0 ? (
         <TeamMaintain data={memberList}></TeamMaintain>
       ) : (
-        <ProjectMaintain data={projectData}></ProjectMaintain>
+        <ProjectMaintain data={projectData} projectSeq={projectSeq}></ProjectMaintain>
       )}
       <div></div>
     </div>

@@ -31,9 +31,10 @@ import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
+import SignalBtn from 'components/common/SignalBtn'
 
 const Container = styled.section`
-  padding: 100px 10em;
+  width: '900px';
 `
 // const skillStyle = {
 //   width: '100%',
@@ -303,19 +304,26 @@ const PostingRegister = () => {
   }, [arrayOfTags])
 
   return (
-    <Container>
+    <Container className="posting-container">
       <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
         </div>
+        <button
+          onClick={() => {
+            console.log(posting)
+          }}
+        >
+          dd
+        </button>
         <div>
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <div style={{ width: '20%' }}>
-                <Label>프로젝트 주제</Label>
+              <div style={{ width: '25%' }}>
+                <Label className="posting-label-name">프로젝트 주제</Label>
               </div>
-              <div style={{ width: '80%' }}>
+              <div style={{ width: '75%' }}>
                 <TextField
                   error={errorBox && !posting.subject}
                   sx={inputStyle}
@@ -329,10 +337,10 @@ const PostingRegister = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>프로젝트 모집 기간</Label>
+              <div style={{ width: '25%' }}>
+                <Label>프로젝트 모집기간</Label>
               </div>
-              <div style={{ width: '70%' }}>
+              <div style={{ width: '75%' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="마감 날짜"
@@ -352,10 +360,10 @@ const PostingRegister = () => {
           {/* 여기는 진행지역,분야 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <div style={{ width: '20%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>진행 지역</Label>
               </div>
-              <div style={{ width: '80%' }}>
+              <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
                     console.log(e.target.value)
@@ -371,10 +379,10 @@ const PostingRegister = () => {
               </div>
             </div>
             <div className="email-section " style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>분야</Label>
               </div>
-              <div style={{ width: '70%' }}>
+              <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -393,10 +401,10 @@ const PostingRegister = () => {
           {/* 여기는 진행유형,프로젝트기간 */}
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <div style={{ width: '20%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>진행 유형 </Label>
               </div>
-              <div style={{ width: '80%' }}>
+              <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -418,10 +426,10 @@ const PostingRegister = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>프로젝트 기간</Label>
               </div>
-              <div style={{ width: '70%' }}>
+              <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -439,10 +447,10 @@ const PostingRegister = () => {
           </div>
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <div style={{ width: '20%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>사용 기술 </Label>
               </div>
-              <div style={{ width: '80%' }}>
+              <div style={{ width: '75%' }}>
                 <ReactSelect
                   placeholder=""
                   isClearable
@@ -453,13 +461,17 @@ const PostingRegister = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>화상미팅 예약</Label>
               </div>
-              <div style={{ width: '70%' }}>
-                <Box>
+              <div style={{ width: '75%' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <DateSelect setDate={setDaily} />
-                  <button
+                  <SignalBtn
+                    sigwidth="50px"
+                    sigfontsize="12px"
+                    sigborderradius={15}
+                    sigmargin="0px 20px"
                     className="post-button-modi"
                     onClick={() => {
                       if (!DateList.includes(Daily) && Daily) {
@@ -470,19 +482,21 @@ const PostingRegister = () => {
                     }}
                   >
                     시간 선택
-                  </button>
+                  </SignalBtn>
                 </Box>
               </div>
             </div>
           </div>
           {/* 여기는 사용기술 , 시간선택 */}
           <div style={{ display: 'flex', marginLeft: '5em' }}>
-            <div className="phone-section" style={{ alignContent: 'flex-start' }}>
-              <div style={{ width: '20%' }}></div>
-              <div style={{ width: '80%', margin: 0 }}>{numberOfTags > 0 ? tags : ''}</div>
+            <div className="phone-section">
+              <div style={{ width: '25%' }}></div>
+              <div className="skill-scroll" style={{ width: '75%', margin: 0 }}>
+                {numberOfTags > 0 ? tags : ''}
+              </div>
             </div>
-            <div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '6 00px' }}>
+            <div style={{ width: '50%' }}>
+              <Stack direction="row" spacing={1} className="meeting-time-scroll">
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
@@ -501,10 +515,11 @@ const PostingRegister = () => {
           </div>
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
-              <div style={{ width: '20%' }}>
-                <Label>포지션 인원</Label>
+              <div style={{ width: '25%' }}>
+                <Label>포지션</Label>
+                <Label>인원</Label>
               </div>
-              <div style={{ width: '80%', display: 'flex' }}>
+              <div style={{ width: '75%', display: 'flex', alignItems: 'center' }}>
                 <FilterSelect
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
@@ -531,10 +546,10 @@ const PostingRegister = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>난이도</Label>
               </div>
-              <div style={{ width: '70%' }}>
+              <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
@@ -551,16 +566,14 @@ const PostingRegister = () => {
             </div>
           </div>
           {/* 여기는 포지션인원 , 예상난이도 */}
-          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '6em' }}>
-            <Box sx={{ width: '4.5%' }}></Box>
-            <div className="phone-section1">
-              <div>
+          <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
+            <div className="phone-section">
+              <div className="posting-position-plus">
                 <div className="career-label">
-                  <div style={{ width: '20%' }}></div>
+                  <div style={{ width: '25%' }}></div>
                 </div>
-                <hr></hr>
                 <PositionTodo />
-                <div style={{ width: '80%', display: 'flex' }}></div>
+                <div style={{ width: '75%', display: 'flex' }}></div>
               </div>
               <CareerList
                 careerList={careerList}
@@ -570,10 +583,10 @@ const PostingRegister = () => {
               ></CareerList>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
+              <div style={{ width: '25%' }}>
                 <Label>팀장 포지션</Label>
               </div>
-              <div style={{ width: '70%', display: 'flex' }}>
+              <div style={{ width: '75%', display: 'flex' }}>
                 <FilterSelect
                   style={{ marginRight: '0px' }}
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}

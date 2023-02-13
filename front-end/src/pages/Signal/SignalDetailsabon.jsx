@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom'
 import 'assets/styles/signaldetail.css'
 import api from 'api/Api.js'
 import { Document, Page } from 'react-pdf'
-import SignalBtn from 'components/common/SignalBtn'
 
 function signalDetail() {
   const location = useLocation()
@@ -15,7 +14,9 @@ function signalDetail() {
   console.log(signalSeq)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  // const [pdfDocument] = useState()
+  const [pdfDocument] = useState(
+    process.env.REACT_APP_API_URL + '/static/ppt/c478da35-e08b-4335-b077-3426484ca8c9.pptx'
+  )
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages)
@@ -94,35 +95,29 @@ function signalDetail() {
             pip={true} // pip 모드 설정 여부
           />
         </div>
-        {/* <div className="signal-regist-title" style={{ marginTop: '1em' }}>
+        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>Git 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            <a href={data.deployUrl}>{data.deployUrl}</a>
+            {data.deployUrl}
           </div>
-        </div> */}
+        </div>
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <label>배포 주소</label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            <a href={data.deployUrl}>{data.deployUrl}</a>
+            {data.deployUrl}
           </div>
         </div>
-        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
-          <label>PDF 파일</label>
-          <div style={{ width: '1126px  ', height: '620px', overflow: 'hidden', marginTop: '1em' }}>
-            <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page width={1126} height={720} pageNumber={pageNumber} />
-            </Document>
-          </div>
-          <p style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}>
-            <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
-              &lt;
-            </SignalBtn>
-            <h2 style={{ margin: '1em' }}>
-              Page {pageNumber} of {numPages}
-            </h2>
-            <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</SignalBtn>
-          </p>
-        </div>
+        <Document file={pdfDocument} onLoadSuccess={onDocumentLoadSuccess}>
+          <Page pageNumber={pageNumber} />
+        </Document>
+        <p>
+          <span onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</span>
+          <span>
+            Page {pageNumber} of {numPages}
+          </span>
+
+          <span onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>&gt;</span>
+        </p>
         <div className="apply-detail-content-section">
           <label>README</label>
           <div className="apply-detail-content">
