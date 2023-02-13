@@ -8,12 +8,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@ToString
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "letter")
 public class Letter {
 
@@ -34,19 +36,6 @@ public class Letter {
     @OneToOne
     @JoinColumn(name = "toUserSeq", insertable = false, updatable = false)
     private User toUser;
-
-    @Builder
-
-    public Letter(int letterSeq, int fromUserSeq, int toUserSeq, String title, String content, boolean isTrash, boolean isRead, LocalDateTime regDt) {
-        this.letterSeq = letterSeq;
-        this.fromUserSeq = fromUserSeq;
-        this.toUserSeq = toUserSeq;
-        this.title = title;
-        this.content = content;
-        this.isTrash = isTrash;
-        this.isRead = isRead;
-        this.regDt = regDt;
-    }
 
     public void makeReadTrue(){
         this.isRead=true;

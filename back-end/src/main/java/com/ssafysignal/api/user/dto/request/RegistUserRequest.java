@@ -1,6 +1,5 @@
 package com.ssafysignal.api.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -9,8 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ApiModel(value = "RegistUserRequest", description = "회원 가입 정보")
 public class RegistUserRequest {
 	@Schema(description = "사용자 이름")

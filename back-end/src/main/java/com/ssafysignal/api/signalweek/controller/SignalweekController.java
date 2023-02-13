@@ -2,30 +2,24 @@ package com.ssafysignal.api.signalweek.controller;
 
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekModifyRequest;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekRegistRequest;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
-import com.ssafysignal.api.signalweek.entity.Signalweek;
-import com.ssafysignal.api.signalweek.entity.SignalweekRank;
+import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
+import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindSignalweekResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindSignalweekRankResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekScheduleResponse;
 import com.ssafysignal.api.signalweek.service.SignalweekService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,9 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/signalweek")
 public class SignalweekController {
-
     private final SignalweekService signalweekService;
-
     @Tag(name = "시그널 위크")
     @Operation(summary = "시그널 위크 등록", description = "프로젝트를 시그널 위크에 등록한다")
     @PostMapping("")
@@ -48,6 +40,7 @@ public class SignalweekController {
                                                             @RequestPart(value = "pptFile", required = false) MultipartFile pptFile,
                                                             @RequestPart(value = "readmeFile", required = false) MultipartFile readmeFile) {
         log.info("registSignalweek - Call");
+
         HashMap<String, Object> signalweekRegistRequest = new HashMap<>();
         signalweekRegistRequest.put("projectSeq", projectSeq);
         signalweekRegistRequest.put("title", title);
@@ -72,7 +65,7 @@ public class SignalweekController {
         log.info("findAllSignalweek - Call");
 
         try {
-            SignalweekFindAllResponse signalweekList = signalweekService.findAllSignalweek(page, size, subject);
+            FindAllSignalweekResponse signalweekList = signalweekService.findAllSignalweek(page, size, subject);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekList));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
@@ -87,7 +80,7 @@ public class SignalweekController {
         log.info("findSignalweek - Call");
 
         try {
-            SignalweekFindResponse signalweek = signalweekService.findSignalweek(signalweekSeq, userSeq);
+            FindSignalweekResponse signalweek = signalweekService.findSignalweek(signalweekSeq, userSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweek));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
@@ -97,12 +90,11 @@ public class SignalweekController {
     @Tag(name = "시그널 위크")
     @Operation(summary = "시그널 위크 투표", description = "시그널 위크 프로젝트에 투표를 한다.")
     @PostMapping("vote")
-    private ResponseEntity<BasicResponse> registSignalweekVote(@Parameter(description = "시그널 위크 투표 등록 정보") @RequestBody SignalweekVoteRequest signalweekVoteRequest) {
+    private ResponseEntity<BasicResponse> registSignalweekVote(@Parameter(description = "시그널 위크 투표 등록 정보") @RequestBody RegistSignalweekVoteRequest registSignalweekVoteRequest) {
         log.info("registSignalweekVote - Call");
 
         try {
-            signalweekService.registSignalweekVote(signalweekVoteRequest);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekService.registSignalweekVote(registSignalweekVoteRequest)));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
@@ -116,13 +108,12 @@ public class SignalweekController {
         log.info("findAllSignalweekRank - Call");
 
         try {
-            List<SignalweekRankFindResponse> signalweekRankList = signalweekService.findAllSiganlweekRank(year, quarter);
+            List<FindSignalweekRankResponse> signalweekRankList = signalweekService.findAllSiganlweekRank(year, quarter);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweekRankList));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
-
 
     @Tag(name = "시그널 위크")
     @Operation(summary = "시그널 위크 쿼터 종료 시 정산", description = "시그널 위크 투표 결과에 따라 명예의 전당 등록, 쿼터 종료, 하트 지급")
@@ -133,6 +124,20 @@ public class SignalweekController {
         try {
             signalweekService.endSignalweek();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+    
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "역대 시그널 위크 수상작 목록 조회", description = "역대 시그널 위크 수상작 목록 조회")
+    @GetMapping("signalweekschedule")
+    private ResponseEntity<BasicResponse> findAllSignalweekSchedule() {
+        log.info("quarterEndSignalweek - Call");
+
+        try {
+            List<FindAllSignalweekScheduleResponse> findAllSignalweekScheduleResponseList = signalweekService.findAllSignalweekSchedule();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllSignalweekScheduleResponseList));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }

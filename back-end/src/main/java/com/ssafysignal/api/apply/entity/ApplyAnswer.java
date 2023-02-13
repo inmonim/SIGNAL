@@ -1,6 +1,5 @@
 package com.ssafysignal.api.apply.entity;
 
-import com.ssafysignal.api.posting.entity.PostingQuestion;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "apply_answer")
 public class ApplyAnswer {
     @Id
@@ -30,14 +31,4 @@ public class ApplyAnswer {
     private String content;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-
-    @Builder
-    public ApplyAnswer(Integer applyAnswerSeq, Integer applySeq, Integer postingSeq, Integer postingQuestionSeq, String content, LocalDateTime regDt) {
-        this.applyAnswerSeq = applyAnswerSeq;
-        this.applySeq = applySeq;
-        this.postingSeq = postingSeq;
-        this.postingQuestionSeq = postingQuestionSeq;
-        this.content = content;
-        this.regDt = regDt;
-    }
 }

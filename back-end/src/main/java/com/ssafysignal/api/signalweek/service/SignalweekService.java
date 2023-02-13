@@ -10,10 +10,11 @@ import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
-import com.ssafysignal.api.signalweek.dto.request.SignalweekVoteRequest;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekFindAllResponse;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekFindResponse;
-import com.ssafysignal.api.signalweek.dto.response.SignalweekRankFindResponse;
+import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
+import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindSignalweekResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindSignalweekRankResponse;
+import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekScheduleResponse;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -141,28 +143,29 @@ public class SignalweekService {
 
     // 목록 조회
     @Transactional(readOnly = true)
-    public SignalweekFindAllResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
+    public FindAllSignalweekResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
         Page<Signalweek> signalweekList = signalweekRepository.findByTitleContaining(searchKeyword, PageRequest.of(page - 1, size, Sort.Direction.ASC, "signalweekSeq"));
 
-        SignalweekFindAllResponse signalweekFindAllResponse = SignalweekFindAllResponse.fromEntity(signalweekList);
+        FindAllSignalweekResponse findAllSignalweekResponse = FindAllSignalweekResponse.fromEntity(signalweekList);
 
-        return signalweekFindAllResponse;
+        return findAllSignalweekResponse;
     }
     
     // 상세 조회
     @Transactional(readOnly = true)
-    public SignalweekFindResponse findSignalweek(Integer signalweekSeq, Integer userSeq) {
+    public FindSignalweekResponse findSignalweek(Integer signalweekSeq, Integer userSeq) {
         Signalweek signalweek = signalweekRepository.findBySignalweekSeq(signalweekSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
         boolean vote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(signalweekSeq, userSeq).isPresent();
 
-        return SignalweekFindResponse.builder()
+        return FindSignalweekResponse.builder()
                 .title(signalweek.getTitle())
                 .pptUrl(signalweek.getPptFile().getUrl())
                 .readmeUrl(signalweek.getReadmeFile().getUrl())
                 .uccUrl(signalweek.getUccUrl())
                 .deployUrl(signalweek.getDeployUrl())
+                .content(signalweek.getContent())
                 .vote(vote)
                 .build();
     }
@@ -171,39 +174,42 @@ public class SignalweekService {
     // 투표
 
     @Transactional
-    public void registSignalweekVote(SignalweekVoteRequest signalweekVoteRequest) {
+    public boolean registSignalweekVote(RegistSignalweekVoteRequest registSignalweekVoteRequest) {
+        boolean res = false;
 
         if (signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(
-                signalweekVoteRequest.getSignalweekSeq(), signalweekVoteRequest.getUserSeq()).isPresent()) {
+                registSignalweekVoteRequest.getSignalweekSeq(), registSignalweekVoteRequest.getUserSeq()).isPresent()) {
             SignalweekVote signalweekVote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(
-                    signalweekVoteRequest.getSignalweekSeq(), signalweekVoteRequest.getUserSeq()).get();
+                    registSignalweekVoteRequest.getSignalweekSeq(), registSignalweekVoteRequest.getUserSeq()).get();
 
+            res = false;
             signalweekVoteRepository.delete(signalweekVote);
 
         } else {
             SignalweekVote signalweekVote = SignalweekVote.builder()
-                    .signalweekSeq(signalweekVoteRequest.getSignalweekSeq())
-                    .fromUserSeq(signalweekVoteRequest.getUserSeq())
+                    .signalweekSeq(registSignalweekVoteRequest.getSignalweekSeq())
+                    .fromUserSeq(registSignalweekVoteRequest.getUserSeq())
                     .build();
 
+            res = true;
             signalweekVoteRepository.save(signalweekVote);
-
         }
+        return res;
     }
 
 //     띵예의 전당
     @Transactional(readOnly = true)
-    public List<SignalweekRankFindResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
+    public List<FindSignalweekRankResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
         List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
         Integer signalweekScheduleSeq = signalweekScheduleList.get(0).getSignalweekScheduleSeq();
 
         List<SignalweekRank> signalweekRankList = signalweekRankRepository.findAllBySignalweekScheduleSeq(signalweekScheduleSeq);
 
-        List<SignalweekRankFindResponse> responseSignalweekRank = new ArrayList<>();
+        List<FindSignalweekRankResponse> responseSignalweekRank = new ArrayList<>();
 
         for (SignalweekRank signalweekRank:signalweekRankList) {
 
-            responseSignalweekRank.add(SignalweekRankFindResponse.builder()
+            responseSignalweekRank.add(FindSignalweekRankResponse.builder()
                     .rank(signalweekRank.getRanking())
                     .subject(signalweekRank.getSignalweek().getTitle())
                     .signalweekSeq(signalweekRank.getSignalweek().getSignalweekSeq())
@@ -251,5 +257,11 @@ public class SignalweekService {
                 userHeartLogRepository.save(heartLog);
             }
         }
+    }
+
+    @Transactional
+    public List<FindAllSignalweekScheduleResponse> findAllSignalweekSchedule(){
+        List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year")));
+        return signalweekScheduleList.stream().map(FindAllSignalweekScheduleResponse::fromEntity).collect(Collectors.toList());
     }
 }

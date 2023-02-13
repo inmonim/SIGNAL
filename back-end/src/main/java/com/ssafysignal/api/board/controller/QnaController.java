@@ -1,15 +1,13 @@
 package com.ssafysignal.api.board.controller;
 
 import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
-import com.ssafysignal.api.board.dto.response.NoticeFindAllResponse;
-import com.ssafysignal.api.board.dto.response.NoticeFindResponse;
-import com.ssafysignal.api.board.dto.response.QnaFindAllResponse;
-import com.ssafysignal.api.board.dto.response.QnaFindResponse;
-import com.ssafysignal.api.board.entity.Notice;
+import com.ssafysignal.api.board.dto.response.FindAllQnaResponse;
+import com.ssafysignal.api.board.dto.response.FindQnaResponse;
 import com.ssafysignal.api.board.entity.Qna;
-import com.ssafysignal.api.board.service.NoticeService;
 import com.ssafysignal.api.board.service.QnaService;
+import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.exception.UnAuthException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -74,7 +73,7 @@ public class QnaController {
         log.info("findAllQna - Call");
 
         Page<Qna> QnaList = qnaService.findAllQna(page, size);
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaFindAllResponse.fromEntity(QnaList)));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindAllQnaResponse.fromEntity(QnaList)));
     }
 
 
@@ -85,8 +84,7 @@ public class QnaController {
         log.info("findQna - Call");
 
         try {
-            Qna qna = qnaService.findQna(qnaSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaFindResponse.fromEntity(qna)));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, qnaService.findQna(qnaSeq)));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

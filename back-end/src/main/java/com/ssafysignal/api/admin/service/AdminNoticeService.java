@@ -22,7 +22,6 @@ public class AdminNoticeService {
                 .content(basicAdminNoticeRequest.getContent())
                 .build());
     }
-
     @Transactional
     public void modifyNotice(Integer noticeSeq, BasicAdminNoticeRequest basicAdminNoticeRequest) throws RuntimeException {
         Notice notice = noticeRepository.findById(noticeSeq)
@@ -33,7 +32,6 @@ public class AdminNoticeService {
 
         noticeRepository.save(notice);
     }
-
     @Transactional
     public void deleteNotice(Integer noticeSeq) throws RuntimeException {
         Notice notice = noticeRepository.findById(noticeSeq)

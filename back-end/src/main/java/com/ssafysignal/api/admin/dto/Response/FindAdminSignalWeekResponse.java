@@ -7,13 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @Builder
 public class FindAdminSignalWeekResponse {
+    @Schema(description = "시그널 위크 등록 시작일자")
+    private Integer signalweekScheduleSeq;
     @Schema(description = "시그널 위크 등록 시작일자")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate openStartDt;
@@ -37,6 +38,7 @@ public class FindAdminSignalWeekResponse {
 
     public static FindAdminSignalWeekResponse fromEntity(SignalweekSchedule signalweekSchedule){
         return FindAdminSignalWeekResponse.builder()
+                .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
                 .openStartDt(signalweekSchedule.getOpenStartDt())
                 .openEndDt(signalweekSchedule.getOpenEndDt())
                 .voteStartDt(signalweekSchedule.getVoteStartDt())

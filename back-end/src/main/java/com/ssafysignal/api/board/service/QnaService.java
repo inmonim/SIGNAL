@@ -1,10 +1,10 @@
 package com.ssafysignal.api.board.service;
 
 import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
-import com.ssafysignal.api.board.entity.Notice;
+import com.ssafysignal.api.board.dto.response.FindQnaResponse;
 import com.ssafysignal.api.board.entity.Qna;
-import com.ssafysignal.api.board.repository.NoticeRepository;
 import com.ssafysignal.api.board.repository.QnaRepository;
+import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QnaService {
 
     private final QnaRepository qnaRepository;
+    private final SecurityService securityService;
 
     @Transactional(readOnly = true)
     public Integer countNotice() {
@@ -42,11 +43,22 @@ public class QnaService {
     }
 
     @Transactional
-    public Qna findQna(Integer qnaSeq) {
+    public FindQnaResponse findQna(Integer qnaSeq) {
         Qna qna = qnaRepository.findById(qnaSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        qna.addView(qna.getView());
-        return qna;
+
+        qna.setView(qna.getView() + 1);
+        qnaRepository.save(qna);
+
+        FindQnaResponse findQnaResponse = FindQnaResponse.fromEntity(qna);
+        findQnaResponse.setIsMyQna(false);
+
+        if (!securityService.isAnonymouseUser()){
+            Integer userSeq = securityService.currentUserSeq();
+            findQnaResponse.setIsMyQna(userSeq.equals(findQnaResponse.getUserSeq()));
+        }
+
+        return findQnaResponse;
     }
 
     @Transactional

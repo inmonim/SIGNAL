@@ -1,6 +1,5 @@
 package com.ssafysignal.api.board.entity;
 
-import io.swagger.models.auth.In;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;

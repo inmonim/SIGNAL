@@ -1,16 +1,19 @@
 package com.ssafysignal.api.apply.entity;
 
-import com.ssafysignal.api.apply.entity.Apply;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "apply_exp")
 public class ApplyExp {
     @Id
@@ -23,11 +26,4 @@ public class ApplyExp {
 
     @Column(name = "content")
     private String content;
-
-    @Builder
-    public ApplyExp(final Integer applyExpSeq, final Integer applySeq, final String content) {
-        this.applyExpSeq = applyExpSeq;
-        this.applySeq = applySeq;
-        this.content = content;
-    }
 }

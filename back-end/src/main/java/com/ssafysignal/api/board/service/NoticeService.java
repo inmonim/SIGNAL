@@ -30,7 +30,6 @@ public class NoticeService {
         return noticeList;
     }
 
-
     @Transactional
     public Notice findNotice(Integer noticeSeq) throws NotFoundException {
         Notice notice = noticeRepository.findByNoticeSeq(noticeSeq)

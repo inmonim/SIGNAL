@@ -1,7 +1,7 @@
 package com.ssafysignal.api.board.controller;
 
-import com.ssafysignal.api.board.dto.response.NoticeFindAllResponse;
-import com.ssafysignal.api.board.dto.response.NoticeFindResponse;
+import com.ssafysignal.api.board.dto.response.FindAllNoticeResponse;
+import com.ssafysignal.api.board.dto.response.FindNoticeResponse;
 import com.ssafysignal.api.board.service.NoticeService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -55,7 +55,7 @@ public class NoticeController {
         log.info("findAllNotice - Call");
 
         Page<Notice> noticeList = noticeService.findAllNotice(page, size);
-        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, NoticeFindAllResponse.fromEntity(noticeList)));
+        return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindAllNoticeResponse.fromEntity(noticeList)));
     }
 
 
@@ -68,7 +68,7 @@ public class NoticeController {
 
         try {
             Notice notice = noticeService.findNotice(noticeSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, NoticeFindResponse.fromEntity(notice)));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindNoticeResponse.fromEntity(notice)));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
