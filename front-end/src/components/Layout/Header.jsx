@@ -112,7 +112,7 @@ function Header() {
               <img style={{ height: '95px', width: '188.26px' }} src={logo} alt="logo" />
             </Link>
           </div>
-          {isAdmin === 'false' ? (
+          {isAdmin === 'false' || isAdmin === null ? (
             // 사용자 헤더
             <ul>
               <li>
@@ -162,7 +162,7 @@ function Header() {
                         <D.LinkWrapper href="/signal">프로젝트 보기</D.LinkWrapper>
                       </D.Li>
                       <D.Li>
-                        <D.LinkWrapper href="/signal/rank">명예의 전당</D.LinkWrapper>
+                        <D.LinkWrapper href="/signal/rankMain">명예의 전당</D.LinkWrapper>
                       </D.Li>
                     </D.Ul>
                   </D.Down>
