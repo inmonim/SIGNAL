@@ -112,7 +112,7 @@ function Header() {
               <img style={{ height: '95px', width: '188.26px' }} src={logo} alt="logo" />
             </Link>
           </div>
-          {isAdmin === 'false' ? (
+          {isAdmin === 'false' || isAdmin === null ? (
             // 사용자 헤더
             <ul>
               <li>
