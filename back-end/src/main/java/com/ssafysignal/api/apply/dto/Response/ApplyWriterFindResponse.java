@@ -1,17 +1,13 @@
 package com.ssafysignal.api.apply.dto.Response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.common.entity.CommonCode;
-import com.ssafysignal.api.project.entity.Project;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.domain.Page;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

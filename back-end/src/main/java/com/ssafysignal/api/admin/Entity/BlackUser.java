@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "black_user")
 public class BlackUser {
     @Id
@@ -29,12 +31,4 @@ public class BlackUser {
     @OneToOne
     @JoinColumn(name = "user_seq", insertable = false, updatable = false)
     private User user;
-
-    @Builder
-    public BlackUser(Integer blackUserSeq, Integer userSeq, Integer projectSeq, User user) {
-        this.blackUserSeq = blackUserSeq;
-        this.userSeq = userSeq;
-        this.projectSeq = projectSeq;
-        this.user = user;
-    }
 }

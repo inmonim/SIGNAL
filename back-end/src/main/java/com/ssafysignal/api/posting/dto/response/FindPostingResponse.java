@@ -11,14 +11,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
 @Builder
 @ApiModel(value = "PostingFindResponse", description = "공고 상세")
-public class PostingFindResponse {
+public class FindPostingResponse {
     @Schema(description = "공고 Seq", example = "1", required = true)
     private Integer postingSeq;
     @Schema(description = "프로젝트 주제", example = "프로젝트 팀 빌딩 시스템 시그널", required = true)
@@ -50,6 +49,9 @@ public class PostingFindResponse {
     @Schema(description = "공고 사전 질문")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingQuestion> postingQuestionList;
+    @Schema(description = "나의 공고 여부")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean isMyPosting;
 
     @Schema(description = "공고 상태 코드")
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -61,8 +63,8 @@ public class PostingFindResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer selectCnt;
 
-    public static PostingFindResponse fromEntity(final Project project) {
-        return PostingFindResponse.builder()
+    public static FindPostingResponse fromEntity(final Project project) {
+        return FindPostingResponse.builder()
                 .postingSeq(project.getPosting().getPostingSeq())
                 .subject(project.getSubject())
                 .localCode(project.getLocalCode())

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SignalweekRankFindResponse {
+public class FindSignalweekRankResponse {
 
     @Schema(description = "signalweekSeq")
     private Integer signalweekSeq;

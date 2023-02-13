@@ -2,8 +2,6 @@ package com.ssafysignal.api.letter.controller;
 
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqListRequest;
-import com.ssafysignal.api.letter.dto.request.DeleteLetterSeqRequest;
 import com.ssafysignal.api.letter.dto.request.SendLetterRequest;
 import com.ssafysignal.api.letter.dto.response.CountNotReadLetterResponse;
 import com.ssafysignal.api.letter.dto.response.FindLetterResponse;
@@ -101,11 +99,10 @@ public class LetterController {
     @Tag(name = "쪽지")
     @Operation(summary = "쪽지 리스트 휴지통 보내기", description = "쪽지seq 리스트에 해당하는 쪽지 휴지통 보내기")
     @DeleteMapping("/list")
-    private ResponseEntity<BasicResponse> deleteListLetter(@Parameter(description = "쪽지seq 리스트", required = true)@RequestBody DeleteLetterSeqListRequest deleteLetterSeqList){
-        List<DeleteLetterSeqRequest> letterSeqList = deleteLetterSeqList.getLetterSeqList();
-        for(DeleteLetterSeqRequest deleteLetterSeqRequest : letterSeqList){
-            int letterSeq = deleteLetterSeqRequest.getLetterSeq();
-            letterService.deleteLetter(letterSeq);
+    private ResponseEntity<BasicResponse> deleteListLetter(@Parameter(description = "쪽지seq 리스트") @RequestParam List<String> letterSeqList){
+        System.out.println("letterSeqList = " + letterSeqList);
+        for(String letterSeq : letterSeqList){
+            letterService.deleteLetter(Integer.parseInt(letterSeq));
         }
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
     }

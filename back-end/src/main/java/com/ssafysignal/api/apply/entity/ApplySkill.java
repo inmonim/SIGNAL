@@ -1,17 +1,19 @@
 package com.ssafysignal.api.apply.entity;
 
-//import com.ssafysignal.api.commoncode.CommonCode;
-import com.ssafysignal.api.apply.entity.Apply;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "apply_skill")
 public class ApplySkill {
     @Id
@@ -24,11 +26,4 @@ public class ApplySkill {
 
     @Column(name = "skill_code")
     private String skillCode;
-
-    @Builder
-    public ApplySkill(final Integer applySkillSeq, final Integer applySeq, final String skillCode) {
-        this.applySkillSeq = applySkillSeq;
-        this.applySeq = applySeq;
-        this.skillCode = skillCode;
-    }
 }

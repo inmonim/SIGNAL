@@ -24,6 +24,8 @@ public class HeartLogAllResponse {
 
 
     public static HeartLogAllResponse fromEntity(final List<UserHeartLog> findHeartLogList) {
-        return new HeartLogAllResponse(findHeartLogList.stream().map(HeartLogResponse::fromEntity).collect(Collectors.toList()));
+        return new HeartLogAllResponse(findHeartLogList.stream()
+                .map(HeartLogResponse::fromEntity)
+                .collect(Collectors.toList()));
     }
 }

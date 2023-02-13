@@ -7,11 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ApiModel(value = "ModifyUserRequest", description = "회원 수정 정보")
-public class UserInfo {
-
+public class ModifyUserRequest {
 	@Schema(description = "닉네임")
 	private String nickname;
 	@Schema(description = "전화번호")

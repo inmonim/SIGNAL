@@ -11,19 +11,19 @@ import java.util.stream.Collectors;
 
 @Data
 @ApiModel(value = "NoticeFindAllResponse")
-public class NoticeFindAllResponse {
+public class FindAllNoticeResponse {
 
     @Schema(description = "공지사항 목록", required = true)
-    private List<NoticeFindAllResponseItem> noticeList;
+    private List<FindAllNoticeResponseItem> noticeList;
 
-    private NoticeFindAllResponse(final List<NoticeFindAllResponseItem> noticeList) {
+    private FindAllNoticeResponse(final List<FindAllNoticeResponseItem> noticeList) {
         this.noticeList = noticeList;
     }
 
-    public static NoticeFindAllResponse fromEntity(final Page<Notice> findNoticeList) {
-        List<NoticeFindAllResponseItem> noticeList = findNoticeList.stream()
-                .map(NoticeFindAllResponseItem::fromEntity)
+    public static FindAllNoticeResponse fromEntity(final Page<Notice> findNoticeList) {
+        List<FindAllNoticeResponseItem> noticeList = findNoticeList.stream()
+                .map(FindAllNoticeResponseItem::fromEntity)
                 .collect(Collectors.toList());
-        return new NoticeFindAllResponse(noticeList);
+        return new FindAllNoticeResponse(noticeList);
     }
 }

@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface BlackUserRepository extends JpaRepository<BlackUser, Integer> {
-
     Optional<BlackUser> findByUserSeqAndProjectSeq(Integer userSeq, Integer ProjectSeq);
 }

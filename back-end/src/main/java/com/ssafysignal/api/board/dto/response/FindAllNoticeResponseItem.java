@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class NoticeFindAllResponseItem {
+public class FindAllNoticeResponseItem {
 
     @Schema(description = "공지사항 Seq", example = "1", required = true)
     private Integer noticeSeq;
@@ -31,8 +31,8 @@ public class NoticeFindAllResponseItem {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
 
-    public static NoticeFindAllResponseItem fromEntity(final Notice notice) {
-        return NoticeFindAllResponseItem.builder()
+    public static FindAllNoticeResponseItem fromEntity(final Notice notice) {
+        return FindAllNoticeResponseItem.builder()
                 .noticeSeq(notice.getNoticeSeq())
                 .userSeq(notice.getUserSeq())
                 .title(notice.getTitle())

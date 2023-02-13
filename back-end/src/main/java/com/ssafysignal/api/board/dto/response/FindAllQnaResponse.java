@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class QnaFindAllResponse {
+public class FindAllQnaResponse {
 
     @Schema(description = "QnA 목록")
-    List<QnaFindResponse> qnaList;
+    private List<FindQnaResponse> qnaList;
 
-    private QnaFindAllResponse(final List<QnaFindResponse> qnaList) {
+    private FindAllQnaResponse(final List<FindQnaResponse> qnaList) {
         this.qnaList = qnaList;
     }
 
-    public static QnaFindAllResponse fromEntity(final Page<Qna> findQnaList) {
-        List<QnaFindResponse> qnaList = findQnaList.stream()
-                .map(QnaFindResponse::fromEntity)
+    public static FindAllQnaResponse fromEntity(final Page<Qna> findQnaList) {
+        List<FindQnaResponse> qnaList = findQnaList.stream()
+                .map(FindQnaResponse::fromEntity)
                 .collect(Collectors.toList());
-        return new QnaFindAllResponse(qnaList);
+        return new FindAllQnaResponse(qnaList);
     }
 }
