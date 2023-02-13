@@ -217,3 +217,13 @@
   width: 200px;
   height: 50px;
 }
+
+.CodeMirror-sizer {
+  margin-left: 30px !important;
+}
+
+.CodeMirror-gutters {
+  width: 29px !important;
+  border-right: 1px solid #ddd !important;
+  background-color: #f7f7f7 !important;
+}

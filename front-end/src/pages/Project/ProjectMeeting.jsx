@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
 import MeetingDoor from 'assets/image/meeting-door.png'
 import Share from 'assets/image/share.png'
@@ -13,6 +12,7 @@ import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
 import Codemirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
+import 'assets/styles/projectMeeting.css'
 import 'codemirror/mode/javascript/javascript'
 // import Swal from 'sweetalert2'
 
