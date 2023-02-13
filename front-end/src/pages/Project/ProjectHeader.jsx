@@ -32,6 +32,7 @@ function ProjectHeader() {
     })
       .then((res) => {
         setProject(res.data.body)
+        console.log('project:', project)
       })
       .catch((e) => {
         console.log(e)

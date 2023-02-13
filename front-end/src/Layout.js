@@ -87,7 +87,8 @@ function App() {
             <Route path="/applymodify" element={<ApplyModify />} />
             <Route path="/applydetail" element={<ApplyDetail />} />
             <Route path="/teamBuilding" element={<TeamBuilding />} />
-            <Route path="/project" element={<ProjectHeader />} />
+            {/* <Route path="/project" element={<EndProject />} /> */}
+            <Route path="/endproject" element={<ProjectHeader />} />
             <Route path="/teamMaintain" element={<TeamMaintain />} />
             <Route path="/projectMaintain" element={<ProjectMaintain />} />
             <Route path="/myproject" element={<MyProject />} />
