@@ -11,6 +11,9 @@ import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
+import Codemirror from 'codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/mode/javascript/javascript'
 // import Swal from 'sweetalert2'
 
 // ============================================
@@ -49,9 +52,12 @@ let drawingSize
 
 let mx, my, isPainting
 
+// ==================================
+let codemirror, version
+
 const projectMeetingSetting = () => {
-  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
   pcConfig = {
@@ -66,7 +72,7 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  const params = new URLSearchParams(location.search)
+  /* const params = new URLSearchParams(location.search)
 
   const nickname = params.get('nickname')
   const projectSeq = params.get('projectSeq')
@@ -77,7 +83,10 @@ const projectMeetingSetting = () => {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
       window.close()
     }
-  }
+  } */
+  myName = Math.random() + ''
+  roomId = 'a123'
+  console.log(myName)
 
   userNames = {} // userNames[socketId]="이름"
   socketIds = {} // socketIds["이름"]=socketId
@@ -265,6 +274,28 @@ function ProjectMeeting() {
     // 메시지받음
     socket.on('get_message', (data) => {
       getMessage(data)
+    })
+
+    // 코드에디터 내용받아오기
+    socket.on('get_editor', (data) => {
+      console.log('editor정보 받아옴')
+      version = data.version
+      codemirror.setValue(data.content)
+    })
+
+    // 다른유저의 코드에디터 수정 반영하기
+    socket.on('change_editor', (data) => {
+      version = data.version
+      const changes = data.changes
+      codemirror.replaceRange(changes.text, changes.from, changes.to)
+    })
+
+    // 나의 수정이 다른유저와 수정이 겹쳤을때 롤백
+    socket.on('rollback_editor', (data) => {
+      version = data.version
+      const content = data.content
+      console.log('rollback_editor', content)
+      console.log('cursor', codemirror.getCursor())
     })
   }
 
@@ -743,6 +774,32 @@ function ProjectMeeting() {
     canvas.addEventListener('mouseleave', stopPainting)
     canvas.addEventListener('contextmenu', handleCM)
     // canvas.addEventListener('click', handleCanvasClick)
+
+    codemirror = Codemirror.fromTextArea(document.getElementById('realtimeEditor'), {
+      mode: { name: 'javascript', json: true },
+      theme: 'dracula',
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      lineNumbers: true,
+    })
+
+    codemirror.on('change', (instance, changes) => {
+      const { origin } = changes
+      const content = instance.getValue()
+      console.log('변화 상태:', origin)
+      console.log('change:  ', changes)
+      // onCodeChange(code);
+      // input이면 입력, setValue는 받음, delete삭제, 한글은 *compose
+      if (origin !== undefined && origin !== 'setValue') {
+        socket.emit('change_editor', {
+          roomId,
+          changes,
+          content,
+          version: version++,
+        })
+      }
+    })
+    socket.emit('get_editor', { roomId })
   }, [])
 
   useEffect(() => {
@@ -769,8 +826,10 @@ function ProjectMeeting() {
           ))}
         </VideoListSection>
 
-        <CodeEditSection className="project-meeting-video-code-edit" mode={mode}>
-          <div style={{ width: '100%', height: '100%' }}> 코드편집</div>
+        <CodeEditSection mode={mode}>
+          <div style={{ width: '100%', height: '100%' }}>
+            <textarea id="realtimeEditor"></textarea>
+          </div>
         </CodeEditSection>
 
         <ShareSection className="project-meeting-video-share-section" mode={mode}>
