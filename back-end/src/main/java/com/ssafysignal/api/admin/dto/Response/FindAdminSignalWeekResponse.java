@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Builder
 public class FindAdminSignalWeekResponse {
     @Schema(description = "시그널 위크 등록 시작일자")
+    private Integer signalweekScheduleSeq;
+    @Schema(description = "시그널 위크 등록 시작일자")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     private LocalDate openStartDt;
     @Schema(description = "시그널 위크 마감 시작일자")
@@ -36,6 +38,7 @@ public class FindAdminSignalWeekResponse {
 
     public static FindAdminSignalWeekResponse fromEntity(SignalweekSchedule signalweekSchedule){
         return FindAdminSignalWeekResponse.builder()
+                .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
                 .openStartDt(signalweekSchedule.getOpenStartDt())
                 .openEndDt(signalweekSchedule.getOpenEndDt())
                 .voteStartDt(signalweekSchedule.getVoteStartDt())
