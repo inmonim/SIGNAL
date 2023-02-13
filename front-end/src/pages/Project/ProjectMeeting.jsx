@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import 'assets/styles/projectMeeting.css'
 import CodeEditIcon from 'assets/image/code-edit.png'
 import MeetingDoor from 'assets/image/meeting-door.png'
 import Share from 'assets/image/share.png'
@@ -11,6 +10,15 @@ import Chatting from 'components/Meeting/Chatting'
 import SignalBtn from 'components/common/SignalBtn'
 import { videoList, codeEidt, share } from 'assets/styles/projectMeeting'
 import io from 'socket.io-client'
+import 'assets/styles/projectMeeting.css'
+import Codemirror from 'codemirror'
+import Select from 'react-select'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/monokai.css'
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/clike/clike.js'
+import 'codemirror/mode/xml/xml'
+import 'codemirror/mode/python/python'
 
 // ============================================
 let myStream
@@ -40,7 +48,7 @@ let CANVAS_W
 const DRAWING = 0
 const ERASE = 1
 let MODE
-const ERASER_SIZE = 20
+const ERASER_SIZE = 30
 
 let drawingXYs
 let drawingColor
@@ -48,9 +56,25 @@ let drawingSize
 
 let mx, my, isPainting
 
+// ==================================
+let codemirror, version
+
+const modeOptions = [
+  { value: 'text/html', label: 'HTML' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'text/x-java', label: 'JAVA' },
+  { value: 'text/x-c++src', label: 'C++' },
+  { value: 'python', label: 'Python' },
+]
+
+const themeOptions = [
+  { value: 'monokai', label: '다크 모드' },
+  { value: 'default', label: '라이트 모드' },
+]
+
 const projectMeetingSetting = () => {
-  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
   pcConfig = {
@@ -65,7 +89,7 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  const params = new URLSearchParams(location.search)
+  /* const params = new URLSearchParams(location.search)
 
   const nickname = params.get('nickname')
   const projectSeq = params.get('projectSeq')
@@ -76,7 +100,9 @@ const projectMeetingSetting = () => {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
       window.close()
     }
-  }
+  } */
+  myName = Math.random() + ''
+  roomId = 'a123'
 
   userNames = {} // userNames[socketId]="이름"
   socketIds = {} // socketIds["이름"]=socketId
@@ -265,6 +291,28 @@ function ProjectMeeting() {
     socket.on('get_message', (data) => {
       getMessage(data)
     })
+
+    // 코드에디터 내용받아오기
+    socket.on('get_editor', (data) => {
+      console.log('editor정보 받아옴')
+      version = data.version
+      codemirror.setValue(data.content)
+    })
+
+    // 다른유저의 코드에디터 수정 반영하기
+    socket.on('change_editor', (data) => {
+      version = data.version
+      const changes = data.changes
+      codemirror.replaceRange(changes.text, changes.from, changes.to)
+    })
+
+    // 나의 수정이 다른유저와 수정이 겹쳤을때 롤백
+    socket.on('rollback_editor', (data) => {
+      version = data.version
+      const content = data.content
+      console.log('rollback_editor', content)
+      console.log('cursor', codemirror.getCursor())
+    })
   }
 
   // =============================================================================================
@@ -312,8 +360,13 @@ function ProjectMeeting() {
       })
       .catch((error) => {
         console.error(error)
+        if (error.name === 'NotFoundError') {
+          console.alert('더보기 구성 > 설정 > 개인정보 및 보안 > 사이트 설정에서 권한을 부여해주세요')
+        }
+
         if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
           // window.location = '..'
+          // window.close()
         }
       })
   }
@@ -715,6 +768,15 @@ function ProjectMeeting() {
 
   const [mode, setMode] = useState(0)
 
+  const [selectedMode, setSelectedMode] = React.useState(modeOptions[0])
+  const handleMode = (selectedOption) => {
+    setSelectedMode(selectedOption)
+  }
+  const [selectedTheme, setSelectedTheme] = React.useState(themeOptions[0])
+  const handleTheme = (selectedOption) => {
+    setSelectedTheme(selectedOption)
+  }
+
   const handleToVoice = () => {
     myStream.getAudioTracks().forEach((track) => (track.enabled = !voice))
     setVoice((voice) => !voice)
@@ -742,6 +804,32 @@ function ProjectMeeting() {
     canvas.addEventListener('mouseleave', stopPainting)
     canvas.addEventListener('contextmenu', handleCM)
     // canvas.addEventListener('click', handleCanvasClick)
+
+    codemirror = Codemirror.fromTextArea(document.getElementById('realtimeEditor'), {
+      mode: { name: 'javascript', json: true },
+      theme: 'dracula',
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      lineNumbers: true,
+    })
+
+    codemirror.on('change', (instance, changes) => {
+      const { origin } = changes
+      const content = instance.getValue()
+      console.log('변화 상태:', origin)
+      console.log('change:  ', changes)
+      // onCodeChange(code);
+      // input이면 입력, setValue는 받음, delete삭제, 한글은 *compose
+      if (origin !== undefined && origin !== 'setValue') {
+        socket.emit('change_editor', {
+          roomId,
+          changes,
+          content,
+          version: version++,
+        })
+      }
+    })
+    socket.emit('get_editor', { roomId })
   }, [])
 
   useEffect(() => {
@@ -750,26 +838,35 @@ function ProjectMeeting() {
     ctx.strokeStyle = color
   }, [color])
 
+  useEffect(() => {
+    codemirror.setOption('mode', selectedMode.value)
+  }, [selectedMode])
+
+  useEffect(() => {
+    codemirror.setOption('theme', selectedTheme.value)
+    console.log(selectedTheme.value)
+  }, [selectedTheme])
+
   return (
     <div className="project-meeting-container">
       <div className="project-meeting-main">
         <VideoListSection className="project-meeting-video-list" mode={mode}>
           {personList.map((item, index) => (
             <VideoBox key={index} className="project-meeting-person" size={personList.length}>
-              <video
-                className="project-meeting-video"
-                alt="나"
-                style={{ width: '100%', height: '100%' }}
-                autoPlay
-                playsInline
-              />
-              <div className="project-meeting-person-name">{item}</div>
+              <video className="project-meeting-video" alt="나" autoPlay playsInline />
+              <div className="project-meeting-person-name">
+                <div>{item}</div>
+              </div>
             </VideoBox>
           ))}
         </VideoListSection>
 
-        <CodeEditSection className="project-meeting-video-code-edit" mode={mode}>
-          <div style={{ width: '100%', height: '100%' }}> 코드편집</div>
+        <CodeEditSection mode={mode}>
+          <Select options={modeOptions} onChange={handleMode} value={selectedMode} />
+          <Select options={themeOptions} onChange={handleTheme} value={selectedTheme} />
+          <div style={{ width: '100%', height: '100%' }}>
+            <textarea id="realtimeEditor"></textarea>
+          </div>
         </CodeEditSection>
 
         <ShareSection className="project-meeting-video-share-section" mode={mode}>

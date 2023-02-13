@@ -101,7 +101,7 @@
 
 .project-detail-enter-progress{
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .project-detail-enter-progress-btn{
@@ -109,6 +109,7 @@
   text-decoration: underline;
   color: #574b9f;
   cursor: pointer;
+  padding: 30px;
 }
 
 .project-detail-enter-progress-btn:hover{

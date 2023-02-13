@@ -107,7 +107,17 @@ const PostingRegister = () => {
     postingQuestionList: [],
   })
   // const [profile, setProfile] = useState([])
+  // const [heart, setHeart] = useState(0)
 
+  const checkHeart = () => {
+    api.get(process.env.REACT_APP_API_URL + `/profile/heartCnt/${sessionStorage.getItem('userSeq')}`).then((res) => {
+      // setHeart(res.data.body)
+      if (res.data.body < 100) {
+        alert('하트가 부족해양')
+        navigate('/posting')
+      }
+    })
+  }
   const [careerList, setCareerList] = useState([])
 
   // const profileFetch = async () => {
@@ -134,9 +144,9 @@ const PostingRegister = () => {
   }
   const newTag = (tag) => {
     console.log(tag)
-    const set = new Set(arrayOfTags.concat(tag))
-    setNumberOfTags(set.size)
-    const uniqueTags = Array.from(set)
+    const set = arrayOfTags.concat(tag)
+    const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
+    setNumberOfTags(uniqueTags.length)
     addTag(uniqueTags)
   }
   const tags = arrayOfTags.map((h, index) => (
@@ -146,7 +156,7 @@ const PostingRegister = () => {
       variant="outlined"
       sx={{ fontSize: '20px', margin: '5px' }}
       key={index}
-      onDelete={() => handleDelete(h)}
+      onDelete={() => handleDeleteSkill(h)}
     />
   ))
   const skillPostFilter = (list) => {
@@ -166,6 +176,7 @@ const PostingRegister = () => {
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
+  const [positionReduxlen, setPositionReduxlen] = useState(0)
   // end >> handle position
 
   // end >> skill filter
@@ -189,6 +200,9 @@ const PostingRegister = () => {
     }
 
     setCareerList(newCareerArr)
+  }
+  const handleDeleteSkill = (h) => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
   }
 
   const handleCareerRemove = (key) => {
@@ -248,7 +262,8 @@ const PostingRegister = () => {
       posting.postingMeetingList.length !== 0 &&
       posting.postingSkillList.length !== 0 &&
       posting.postingPositionList.length !== 0 &&
-      posting.postingQuestionList !== 0
+      posting.postingQuestionList !== 0 &&
+      DateList.length >= positionReduxlen
     ) {
       const config = { 'Content-Type': 'application/json' }
 
@@ -267,23 +282,33 @@ const PostingRegister = () => {
       // console.log('공고 post')
     } else {
       setErrorBox(true)
-      window.scrollTo(0, 0)
       Swal.fire({
         title: '등록 실패',
+        heightAuto: true,
         text: '선택하지 않은 값이 있습니다.',
         icon: 'error',
-        button: '예',
+        showConfirmButton: true,
+        onClose: () => {
+          window.scrollTo(0, 0)
+        },
       })
     }
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
+    const countSum = copy.reduce((accumulator, currentValue) => accumulator + currentValue.positionCnt, 0)
+    setPositionReduxlen(countSum)
     setPosting({ ...posting, postingPositionList: copy })
   }
   const handleqna = () => {
     const copy = qnaRedux.map((ele, i) => ({ num: i + 1, content: ele.text }))
     setPosting({ ...posting, postingQuestionList: copy })
   }
+
+  useEffect(() => {
+    checkHeart()
+  }, [])
+
   useEffect(() => {
     // postingFetch()
     // profileFetch()
@@ -301,6 +326,7 @@ const PostingRegister = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
     skillPostFilter(arrayOfTags)
+    console.log(arrayOfTags)
   }, [arrayOfTags])
 
   return (
@@ -309,13 +335,13 @@ const PostingRegister = () => {
         <div>
           <Title>공고 등록</Title>
         </div>
-        <button
+        {/* <button
           onClick={() => {
             console.log(posting)
           }}
         >
           dd
-        </button>
+        </button> */}
         <div>
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
@@ -507,6 +533,14 @@ const PostingRegister = () => {
                   />
                 ))}
               </Stack>
+              <p style={{ marginTop: '1em', color: '#574b9f' }} className="meeting-time-scroll">
+                <span className={errorBox && DateList.length < positionReduxlen ? 'active-warning-span' : ''}>
+                  미팅예약은 포지션인원수의 최소값 만큼 설정해야합니다.
+                </span>{' '}
+                (<span style={{ color: DateList.length < positionReduxlen ? 'red' : '' }}>{DateList.length}</span>
+                {' / '}
+                <span>{positionReduxlen}</span>)
+              </p>
               <div className="email-section" style={{ marginLeft: '3em' }}>
                 <div style={{ width: '30%' }}></div>
                 <div style={{ width: '70%' }}></div>
@@ -589,7 +623,7 @@ const PostingRegister = () => {
               <div style={{ width: '75%', display: 'flex' }}>
                 <FilterSelect
                   style={{ marginRight: '0px' }}
-                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  // className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     const position = JSON.parse(e.target.value)
                     console.log(position.code)

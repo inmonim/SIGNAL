@@ -59,6 +59,5 @@
   font-family: Arial, sans-serif;
 }
 .player-wrapper {
-  position: relative;
   padding-top: 7%; /* Player ratio: 100 / (1280 / 720) */
 }
