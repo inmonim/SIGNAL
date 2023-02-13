@@ -1,4 +1,4 @@
-.admin-signal-week-page-container{
+.admin-signal-week-page-container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -8,29 +8,29 @@
   padding-top: 108px;
 }
 
-.admin-signal-week-container{
+.admin-signal-week-container {
   width: 1125px;
   margin: auto;
 }
 
-.admin-signal-week-header{
+.admin-signal-week-header {
   justify-content: center;
   align-items: center;
   margin-top: 50px;
 }
 
-.admin-signal-week-title{
+.admin-signal-week-title {
   font-size: 44px;
   display: flex;
   justify-content: center;
 }
 
-.admin-signal-week-release-btn{
+.admin-signal-week-release-btn {
   display: block;
   float: right;
 }
 
-.admin-singal-week-modal-body{
+.admin-singal-week-modal-body {
   width: 100%;
   height: 600px;
 }
@@ -43,30 +43,41 @@
 }
 
 .admin-signal-week-modal-openDt,
-.admin-signal-week-modal-voteDt{
+.admin-signal-week-modal-voteDt {
   padding: 40px;
   font-size: 22px;
 }
 
 .admin-signal-week-modal-openDt-title,
-.admin-signal-week-modal-voteDt-title{
+.admin-signal-week-modal-voteDt-title {
   font-size: 33px;
 }
 
 .admin-signal-week-modal-openDt-form,
-.admin-signal-week-modal-voteDt-form{
+.admin-signal-week-modal-voteDt-form {
   display: flex;
 }
 
-.admin-signal-week-modal-submit-btn{
+.admin-signal-week-modal-submit-btn {
   display: flex;
   justify-content: center;
 }
 
-.admin-signal-week-modal-form-label{
+.admin-signal-week-modal-form-label {
   margin: auto;
 }
 
-.admin-signal-week-modal-form{
+.admin-signal-week-modal-form {
   height: 450px;
+}
+
+.admin-signal-week-modal-modify-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.admin-signal-week-modal-modify-btns-container {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
 }
