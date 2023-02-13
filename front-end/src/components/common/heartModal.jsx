@@ -8,8 +8,9 @@ import 'assets/styles/profile/heart.css'
 import SignalBtn from 'components/common/SignalBtn'
 import { TextField } from '@mui/material'
 import AlertModal from 'components/AlertModal'
+import axios from 'axios'
 
-function heartModal({ open, onClose, mode, projectSeq }) {
+function HeartModal({ open, onClose, mode, projectSeq }) {
   const userSeq = sessionStorage.getItem('userSeq')
 
   const [userCnt, setUserCnt] = useState(0)
@@ -53,26 +54,60 @@ function heartModal({ open, onClose, mode, projectSeq }) {
       }, [])
 
   // 하트 충전
-  const [inputHeart, setInputHeart] = useState(0)
+  const [inputHeart, setInputHeart] = useState(1)
   const [alertOpen, setAlertOpen] = useState(false)
   const handleAlertOpen = () => setAlertOpen(true)
   const handleToClose = () => setAlertOpen(false)
   const handleInputHeart = (e) => {
-    setInputHeart(e.target.value)
+    if (e.target.value <= 0) {
+      setInputHeart(1)
+    } else {
+      setInputHeart(e.target.value)
+    }
   }
   const chargeHeart = async () => {
+    payReady(inputHeart)
     setAlertOpen(false)
-    await api
-      .post(process.env.REACT_APP_API_URL + '/profile/heart/' + userSeq, {
-        heartCnt: parseInt(inputHeart),
-      })
-      .then(() => {
-        getUserHeartCnt()
-        getUserHeartLog()
-      })
-      .catch((e) => {
-        return e.message
-      })
+  }
+
+  const [payState, setPayState] = useState({
+    // 응답에서 가져올 값들
+    next_redirect_pc_url: '',
+    tid: '',
+    // 요청에 넘겨줄 매개변수들
+    params: {
+      cid: 'TC0ONETIME',
+      partner_order_id: userSeq,
+      partner_user_id: userSeq,
+      item_name: '시그널하트',
+      quantity: 1,
+      total_amount: 100,
+      tax_free_amount: 0,
+      approval_url: `http://localhost:3000/myprofile/kakaoPay/success?userSeq=${userSeq}`,
+      fail_url: `http://localhost:3000/myprofile/kakaoPay/fail`,
+      cancel_url: `http://localhost:3000/myprofile/kakaoPay/cancle`,
+    },
+  })
+
+  const payReady = (heartCnt) => {
+    const { params } = payState
+    params.total_amount *= heartCnt
+    axios({
+      url: '/v1/payment/ready',
+      method: 'POST',
+      headers: {
+        Authorization: 'KakaoAK ef29e9bc7f62d89ff3128aa5ce609d77',
+        'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+      },
+      params,
+    }).then((response) => {
+      const nextRedirectPcUrl = response.data.next_redirect_pc_url
+      const tid = response.data.tid
+
+      localStorage.setItem('tid', tid)
+      setPayState({ nextRedirectPcUrl, tid })
+      window.open(nextRedirectPcUrl, '', 'width=500, height=700, scrollbars=yes, resizable=no')
+    })
   }
 
   return (
@@ -109,6 +144,7 @@ function heartModal({ open, onClose, mode, projectSeq }) {
                   <TextField
                     id="filled-multiline-flexible"
                     name="nickname"
+                    value={inputHeart}
                     onChange={handleInputHeart}
                     sx={inputStyle}
                   />
@@ -197,4 +233,4 @@ const heartChargeStyle = {
   },
 }
 
-export default heartModal
+export default HeartModal
