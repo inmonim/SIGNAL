@@ -129,7 +129,7 @@ const PostingModify = () => {
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
     setDateList(resultMeeting)
-    setDeSkill(resultSkillde)
+    // setDeSkill(resultSkillde)
     addTag(resultSkillde)
     setPosting({
       ...posting,
@@ -167,7 +167,7 @@ const PostingModify = () => {
   // }
 
   // end >> Fetch
-  const [deSkill, setDeSkill] = useState([])
+  // const [deSkill, setDeSkill] = useState([])
   // start >> Data filter
   const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
@@ -178,6 +178,8 @@ const PostingModify = () => {
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
+  const [positionReduxlen, setPositionReduxlen] = useState(0)
+
   // end >> handle position
 
   // end >> skill filter
@@ -201,8 +203,6 @@ const PostingModify = () => {
     const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
     setNumberOfTags(uniqueTags.length)
     addTag(uniqueTags)
-    console.log(arrayOfTags)
-    console.log(numberOfTags)
   }
   const tags = arrayOfTags.map((h, index) => (
     <Chip
@@ -211,13 +211,16 @@ const PostingModify = () => {
       variant="outlined"
       sx={{ fontSize: '20px', margin: '5px' }}
       key={index}
-      onDelete={() => handleDelete(h)}
+      onDelete={() => handleDeleteSkill(h)}
     />
   ))
   const skillPostFilter = (list) => {
     const skillArr = []
     list.map((item) => skillArr.push(item.value))
     setPosting({ ...posting, postingSkillList: skillArr })
+  }
+  const handleDeleteSkill = (h) => {
+    addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
   }
   // start >> handle career
   // const handleChangeSkill = (value) => {
@@ -327,6 +330,7 @@ const PostingModify = () => {
         })
         .catch((err) => {
           console.log(err)
+          console.log(numberOfTags)
           // console.log(JSON.stringify(posting))
           // console.log(posting)
           // console.log(JSON.stringify(posting))
@@ -346,6 +350,8 @@ const PostingModify = () => {
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
+    const countSum = copy.reduce((accumulator, currentValue) => accumulator + currentValue.positionCnt, 0)
+    setPositionReduxlen(countSum)
     setPosting({ ...posting, postingPositionList: copy })
   }
   const handleqna = () => {
@@ -378,11 +384,11 @@ const PostingModify = () => {
           <Title>공고 수정</Title>
           <button
             onClick={() => {
-              console.log(posting)
-              console.log(deSkill, 'dd')
-              console.log(posting)
-              console.log(arrayOfTags)
-              console.log(tags)
+              // console.log(posting)
+              // console.log(deSkill, 'dd')
+              // console.log(posting)
+              // console.log(arrayOfTags)
+              // console.log(tags)
             }}
           >
             dd
@@ -575,6 +581,14 @@ const PostingModify = () => {
                   />
                 ))}
               </Stack>
+              <p style={{ marginTop: '1em', color: '#574b9f' }} className="meeting-time-scroll">
+                <span className={errorBox && DateList.length < positionReduxlen ? 'active-warning-span' : ''}>
+                  미팅예약은 포지션인원수의 최소값 만큼 설정해야합니다.
+                </span>{' '}
+                (<span style={{ color: DateList.length < positionReduxlen ? 'red' : '' }}>{DateList.length}</span>
+                {' / '}
+                <span>{positionReduxlen}</span>)
+              </p>
               <div className="email-section" style={{ marginLeft: '3em' }}>
                 <div style={{ width: '30%' }}></div>
                 <div style={{ width: '70%' }}></div>

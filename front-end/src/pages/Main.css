@@ -16,12 +16,20 @@
   padding-bottom: 140px;
 }
 
+.sinal-img{
+  z-index: 1;
+  left: 300px;
+}
 .fanfare-img{
   position: absolute;
   z-index: 1;
   transform: rotate(45deg);
   top: 1050px;
   left: 460px;
+}
+.sparkle-img{
+  position: absolute;
+  right: 30px;
 }
 
 img.main-2-img{
@@ -41,12 +49,7 @@ animation-iteration-count: infinite;
   position: relative;
   width: 654px;
   height: 540px;
-  /* transition: all ease 1s; */
 }
-
-/* .main-2-img.focus{
-  transform: rotate(20deg);
-} */
 
 .text-item {
   font-size: 4.948vw;
@@ -57,7 +60,6 @@ animation-iteration-count: infinite;
 
 .btn-item {
   text-align: center;
-  padding: 97.11px 0px;
   display: flex;
   justify-content: center;
 }

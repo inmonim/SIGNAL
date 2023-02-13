@@ -8,7 +8,7 @@
 
 .project-meeting-main {
   margin: 0px 30px;
-  height: 95%;
+  height: 100vh;
   display: flex;
   position: relative;
 }
@@ -146,7 +146,7 @@
   width: 90%;
   margin: auto;
   font-family: 'D2coding' !important;
-} 
+}
 
 .project-meeting-video-share {
   position: absolute;
@@ -204,16 +204,35 @@
 }
 
 .project-meeting-person-name {
-  position: relative;
+  width: 234px;
+  height: 84px;
+  position: absolute;
+  top: 550px;
+  right: 10px;
   background-color: #fff;
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 44px;
-  top: -60px;
-  left: 270px;
-  border: 1px solid;
-  width: 200px;
-  height: 50px;
+}
+
+.CodeMirror-sizer {
+  margin-left: 30px !important;
+}
+
+.CodeMirror-gutters {
+  width: 29px !important;
+  border-right: 1px solid #ddd !important;
+  background-color: #f7f7f7 !important;
+}
+.project-meeting-person {
+  overflow: hidden;
+  position: relative;
+}
+
+.project-meeting-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
