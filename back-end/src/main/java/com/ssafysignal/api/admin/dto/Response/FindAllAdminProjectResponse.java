@@ -11,4 +11,5 @@ import java.util.stream.Collectors;
 @Builder
 public class FindAllAdminProjectResponse {
     private List<FindAdminProjectResponse> projectList;
+    private Long count;
 }

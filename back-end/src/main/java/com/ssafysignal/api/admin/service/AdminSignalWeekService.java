@@ -2,23 +2,35 @@ package com.ssafysignal.api.admin.service;
 
 import com.ssafysignal.api.admin.dto.Request.BasicAdminSignalWeekRequest;
 import com.ssafysignal.api.admin.dto.Response.FindAdminSignalWeekResponse;
+import com.ssafysignal.api.admin.dto.Response.FindAllAdminSignalweekResponse;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
 import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AdminSignalWeekService {
     private final SignalweekScheduleRepository signalweekScheduleRepository;
     @Transactional(readOnly = true)
-    public List<FindAdminSignalWeekResponse> findAllSignalWeek() {
-        return FindAdminSignalWeekResponse.toList(signalweekScheduleRepository.findAll());
+    public FindAllAdminSignalweekResponse findAllSignalWeek(Integer page, Integer size) {
+        Page<SignalweekSchedule> signalweekSchedulePage = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "signalweekScheduleSeq"));
+
+        return FindAllAdminSignalweekResponse.builder()
+                .signalweekList(signalweekSchedulePage.stream().map(FindAdminSignalWeekResponse::fromEntity).collect(Collectors.toList()))
+                .count(signalweekSchedulePage.getTotalElements())
+                .build();
     }
     @Transactional
     public void registSignalWeek(BasicAdminSignalWeekRequest basicAdminSignalWeekRequest) throws RuntimeException {

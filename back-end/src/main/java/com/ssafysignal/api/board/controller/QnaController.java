@@ -85,8 +85,7 @@ public class QnaController {
         log.info("findQna - Call");
 
         try {
-            Qna qna = qnaService.findQna(qnaSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, QnaFindResponse.fromEntity(qna)));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, qnaService.findQna(qnaSeq)));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

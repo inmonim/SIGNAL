@@ -1,10 +1,12 @@
 package com.ssafysignal.api.board.service;
 
+import com.ssafysignal.api.admin.dto.Response.FindAdminQnaResponse;
 import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
 import com.ssafysignal.api.board.entity.Notice;
 import com.ssafysignal.api.board.entity.Qna;
 import com.ssafysignal.api.board.repository.NoticeRepository;
 import com.ssafysignal.api.board.repository.QnaRepository;
+import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QnaService {
 
     private final QnaRepository qnaRepository;
+    private final SecurityService securityService;
 
     @Transactional(readOnly = true)
     public Integer countNotice() {
@@ -42,12 +45,16 @@ public class QnaService {
     }
 
     @Transactional
-    public Qna findQna(Integer qnaSeq) {
+    public FindAdminQnaResponse findQna(Integer qnaSeq) {
         Qna qna = qnaRepository.findById(qnaSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-        qna.addView(qna.getView());
+
+        qna.setView(qna.getView() + 1);
         qnaRepository.save(qna);
-        return qna;
+
+        Integer userSeq = securityService.currentUserSeq();
+
+        return FindAdminQnaResponse.fromEntity(qna, userSeq.equals(qna.getUserSeq()));
     }
 
     @Transactional

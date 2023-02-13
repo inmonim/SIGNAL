@@ -34,12 +34,12 @@ public class AdminSignalWeekController {
             @ApiResponse(responseCode = "400", description = "시그널 위크 목록 조회 중 오류 발생"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("")
-    private ResponseEntity<BasicResponse> findAllSignalWeek() {
+    private ResponseEntity<BasicResponse> findAllSignalWeek(@Parameter(description = "페이지", required = true) Integer page,
+                                                            @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findAllSignalWeek - Call");
 
         try {
-            List<FindAdminSignalWeekResponse> signalWeekList = adminSignalWeekService.findAllSignalWeek();
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>() {{ put("signalWeekList", signalWeekList); }}));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, adminSignalWeekService.findAllSignalWeek(page, size)));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }

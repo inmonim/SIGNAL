@@ -31,12 +31,12 @@ public class AdminUserController {
             @ApiResponse(responseCode = "400", description = "회원 목록을 조회 중 오류 발생"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("")
-    private ResponseEntity<BasicResponse> findAllUser() {
+    private ResponseEntity<BasicResponse> findAllUser(@Parameter(description = "페이지", required = true) Integer page,
+                                                      @Parameter(description = "사이즈", required = true) Integer size) {
         log.info("findAllUser - Call");
 
         try {
-            List<FindAdminUserResponse> userList = adminUserService.findAllUser();
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Object>() {{ put("userList", userList); }}));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, adminUserService.findAllUser(page, size)));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }

@@ -7,13 +7,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@ToString
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "qna")
 public class Qna {
 
@@ -45,25 +46,4 @@ public class Qna {
 
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-
-    public void addView(Integer view) {
-        this.view = view+1;
-    }
-
-
-    @Builder
-    public Qna(Integer qnaSeq, Integer userSeq, String title, String content,
-               Boolean isTop, Integer view, String answer, Boolean isAnswer, LocalDateTime regDt)
-        {
-            this.qnaSeq = qnaSeq;
-            this.userSeq = userSeq;
-            this.title = title;
-            this.content = content;
-            this.isTop = isTop;
-            this.view = view;
-            this.answer = answer;
-            this.isAnswer = isAnswer;
-            this.regDt = regDt;
-        }
-
 }
