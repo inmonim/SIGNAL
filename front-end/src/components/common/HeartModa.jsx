@@ -56,6 +56,7 @@ function HeartModal({ open, onClose, mode, projectSeq }) {
   // 하트 충전
   const [inputHeart, setInputHeart] = useState(1)
   const [alertOpen, setAlertOpen] = useState(false)
+
   const handleAlertOpen = () => setAlertOpen(true)
   const handleToClose = () => setAlertOpen(false)
   const handleInputHeart = (e) => {

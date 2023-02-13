@@ -4,7 +4,7 @@ import 'assets/styles/projectDetail.css'
 import ProjectMaintainPage from './ProjectMaintainPage'
 import ProjectProgress from './ProjectProgress'
 
-import HeartModal from 'components/common/HeartModal'
+import HeartModal from 'components/common/HeartModa'
 import { useLocation } from 'react-router-dom'
 import settings from 'assets/image/settings.png'
 import proejctBackground1 from 'assets/image/projectBackground1.png'
