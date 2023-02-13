@@ -21,6 +21,7 @@ import MyProfile from 'pages/user/MyProfile'
 import ApplyModify from 'pages/Apply/ApplyModify'
 import { Posting } from 'pages/Posting/Posting'
 import MyProject from './pages/Project/MyProject'
+import KakaoPay from './components/common/KakaoPay'
 import PostingDetail from 'pages/Posting/PostingDetail'
 import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
@@ -100,6 +101,7 @@ function App() {
             <Route path="/qnaRegist" element={<QnaRegist />} />
             <Route path="/qnaModify" element={<QnaModify />} />
             <Route path="/myprofile" element={<MyProfile />} />
+            <Route path="/myprofile/kakaoPay/:status" element={<KakaoPay />} />
             <Route path="/signal" element={<SignalList />} />
             <Route path="/signalregister" element={<Signalregister />} />
             <Route path="/signaldetail" element={<SignalDetail />} />

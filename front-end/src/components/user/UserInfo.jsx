@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import SignalBtn from 'components/common/SignalBtn'
 import heart from 'assets/image/heart.png'
-import HeartModal from '../common/heartModal'
+import HeartModal from '../common/HeartModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
