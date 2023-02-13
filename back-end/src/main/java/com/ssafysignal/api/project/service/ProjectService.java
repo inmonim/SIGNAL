@@ -7,6 +7,7 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
 import com.ssafysignal.api.profile.entity.UserHeartLog;
+import com.ssafysignal.api.profile.repository.UserHeartLogRepository;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindAllDto;
 import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
@@ -36,6 +37,7 @@ public class ProjectService {
     private final ApplyRepository applyRepository;
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
     private final UserRepository userRepository;
+    private final UserHeartLogRepository userHeartLogRepository;
 
 
     @Transactional
@@ -162,11 +164,18 @@ public class ProjectService {
             // global user 가져오기
             User user = projectUser.getUser();
 
+            userHeartLogRepository.save(UserHeartLog.builder()
+                    .userSeq(user.getUserSeq())
+                    .heartCnt(projectUser.getHeartCnt())
+                    .content(project.getSubject()+" 종료로 인한 보증금 반환")
+                    .build());
+
             // global user에 보증금을 더해준다
             user.setHeartCnt(user.getHeartCnt() + projectUser.getHeartCnt());
 
             // project user의 하트 로그에 보증금 반환 내역 작성 및 저장
             projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                    .projectUserSeq(projectUser.getProjectUserSeq())
                     .heartCnt(-projectUser.getHeartCnt())
                     .content(project.getSubject()+" 종료로 인한 보증금 반환")
                     .build());
