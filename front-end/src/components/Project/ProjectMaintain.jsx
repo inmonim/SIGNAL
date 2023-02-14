@@ -130,11 +130,13 @@ function ProjectMaintain({ projectSeq }) {
     setEndAlertOpen(true)
   }
   const handleToEnd = async () => {
-    await api.put(process.env.REACT_APP_API_URL + '/project/' + projectSeq).then((res) => setEndAlertOpen(false))
+    await api.put(process.env.REACT_APP_API_URL + '/project/' + projectSeq).then((res) => {
+      setEndAlertOpen(false)
+      navigate('/myproject')
+    })
   }
   const handleToClose = () => {
     setEndAlertOpen(false)
-    navigate('/myproject')
   }
   return (
     <div className="project-maintain-container">
