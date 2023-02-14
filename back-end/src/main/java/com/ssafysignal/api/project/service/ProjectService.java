@@ -141,12 +141,12 @@ public class ProjectService {
                     put("projectUserSeq", user.getProjectUserSeq());
                     put("nickname", user.getUser().getNickname());
                     put("userImageUrl", user.getUser().getImageFile());
-                    put("isMyProject", user.getUserSeq().equals(project.getPosting().getUserSeq()));
                 }})
                 .collect(Collectors.toList()));
 
         findProjectResponse.setHeartCnt(projectUser.getHeartCnt());
         findProjectResponse.setWarningCnt(projectUser.getWarningCnt());
+        findProjectResponse.setIsMyProject(userSeq.equals(project.getPosting().getUserSeq()));
 
         return findProjectResponse;
     }

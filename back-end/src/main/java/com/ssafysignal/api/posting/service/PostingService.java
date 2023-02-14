@@ -207,17 +207,17 @@ public class PostingService {
         posting.setPostingSkillList(postingSkillList);
 
         // 사전 미팅
-        List<PostingMeeting> postingMeetingList = posting.getPostingMeetingList();
-        postingMeetingList.clear();
-        for (LocalDateTime meeting : postingModifyRequest.getPostingMeetingList()) {
-            postingMeetingList.add(PostingMeeting.builder()
-                    .postingSeq(postingSeq)
-                    .fromUserSeq(postingModifyRequest.getUserSeq())
-                    .meetingDt(meeting)
-                    .build()
-            );
-        }
-        posting.setPostingMeetingList(postingMeetingList);
+//        List<PostingMeeting> postingMeetingList = posting.getPostingMeetingList();
+//        postingMeetingList.clear();
+//        for (LocalDateTime meeting : postingModifyRequest.getPostingMeetingList()) {
+//            postingMeetingList.add(PostingMeeting.builder()
+//                    .postingSeq(postingSeq)
+//                    .fromUserSeq(postingModifyRequest.getUserSeq())
+//                    .meetingDt(meeting)
+//                    .build()
+//            );
+//        }
+//        posting.setPostingMeetingList(postingMeetingList);
 
         // 포지션
         List<PostingPosition> postingPositionList = posting.getPostingPositionList();
