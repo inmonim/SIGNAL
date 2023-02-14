@@ -30,10 +30,12 @@ export default function PostingCardItem({ post }) {
             fontSize: 20,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
             wordBreak: 'break-word',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
+            lineHeight: 1.5,
           }}
           color="black"
           gutterBottom
@@ -49,7 +51,7 @@ export default function PostingCardItem({ post }) {
                 {/* {JSON.stringify(ele.code.url)} */}
                 <img
                   src={process.env.REACT_APP_API_URL + ele.code.url}
-                  alt=""
+                  alt=" "
                   style={{ width: '25px', height: '25px' }}
                 />
               </Box>
