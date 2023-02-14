@@ -59,8 +59,10 @@ public class ProjectService {
         // 나머지 지원자들 탈락 처리
         List<Apply> failList = applyRepository.findByPostingSeqAndApplyCodeNot(postingSeq, "AS101");
         for (Apply apply : failList) {
-            apply.setStateCode("PAS102");
-            apply.setApplyCode("AS104");
+//            apply.setStateCode("PAS102");
+//            apply.setApplyCode("AS104");
+            apply.setStateCode("PAS109");
+            apply.setApplyCode("AS109");
             applyRepository.save(apply);
         }
 
@@ -88,6 +90,7 @@ public class ProjectService {
                     .positionCnt(positionCount.get(key))
                     .build());
         }
+
         // 프로젝트 "진행중" PS100
         project.setProjectCode("PS100");
         // 공고 "모집 마감" PPS101
@@ -100,11 +103,9 @@ public class ProjectService {
             projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
                     .projectUserSeq(projectUser.getProjectUserSeq())
                     .heartCnt(100)
-                    .content("프로젝트 시작")
+                    .content(project.getSubject() + " 프로젝트 시작")
                     .build());
         }
-
-
     }
 
     @Transactional(readOnly = true)

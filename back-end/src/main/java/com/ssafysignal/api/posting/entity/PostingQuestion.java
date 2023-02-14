@@ -1,9 +1,6 @@
 package com.ssafysignal.api.posting.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -11,9 +8,12 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "posting_question")
 public class PostingQuestion {
     @Id
@@ -26,12 +26,4 @@ public class PostingQuestion {
     private Integer num;
     @Column(name = "content")
     private String content;
-
-    @Builder
-    public PostingQuestion(final Integer postingQuestionSeq, final Integer postingSeq, final Integer num, final String content){
-        this.postingQuestionSeq = postingQuestionSeq;
-        this.postingSeq = postingSeq;
-        this.num = num;
-        this.content = content;
-    }
 }

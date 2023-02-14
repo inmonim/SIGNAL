@@ -5,8 +5,10 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.common.entity.CommonCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,8 +16,10 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "ApplyWriterFindResponse", description = "공고 작성자 기준 지원서 목록 항목")
-public class ApplyWriterFindResponse {
+public class FindApplyWriterResponse {
     @Schema(description = "지원서 Seq", example = "1")
     private Integer applySeq;
     @Schema(description = "지원자 Seq", example = "1")
@@ -36,15 +40,15 @@ public class ApplyWriterFindResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     private LocalDateTime meetingDt;
 
-    public static List<ApplyWriterFindResponse> toList(List<Apply> applyList){
+    public static List<FindApplyWriterResponse> toList(List<Apply> applyList){
         return applyList.stream()
-                .map(ApplyWriterFindResponse::fromEntity)
+                .map(FindApplyWriterResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
 
-    public static ApplyWriterFindResponse fromEntity(Apply apply) {
-        return ApplyWriterFindResponse.builder()
+    public static FindApplyWriterResponse fromEntity(Apply apply) {
+        return FindApplyWriterResponse.builder()
                 .applySeq(apply.getApplySeq())
                 .userSeq(apply.getUserSeq())
                 .nickname(apply.getUser().getNickname())

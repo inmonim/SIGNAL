@@ -42,6 +42,7 @@ public class PostingService {
     private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;
     private final PostingSkillRepository postingSkillRepository;
+    private final PostingPositionRepository postingPositionRepository;
     private final ApplyRepository applyRepository;
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
@@ -263,7 +264,9 @@ public class PostingService {
         posting.setPostingCode("PPS100");
 
         for (Apply apply : posting.getApplyList()) {
+            // 지원자 기준 공고 마감 상태로 변경
             apply.setStateCode("PAS100");
+            // 작성자 기준 지원취소 상태로 변경
             apply.setApplyCode("AS104");
         }
 
@@ -286,36 +289,39 @@ public class PostingService {
         Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-                if (applySelectConfirmRequest.isSelect()) {
-                    // 지원자 기준 '합격'상태로 변경
-                    apply.setStateCode("PAS101");
-                    // 작성자 기준 '확정'상태로 변경
-                    apply.setApplyCode("AS101");
+        if (applySelectConfirmRequest.isSelect()) {
+            // 지원자 기준 '합격'상태로 변경
+            apply.setStateCode("PAS101");
+            // 작성자 기준 '확정'상태로 변경
+            apply.setApplyCode("AS101");
 
-                    // 하트 차감 및 하트 로그 작성
-                    User applyUser = apply.getUser();
-                    applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
-                    userRepository.save(applyUser);
+            // 하트 차감 및 하트 로그 작성
+            User applyUser = apply.getUser();
+            applyUser.setHeartCnt(applyUser.getHeartCnt() - 100);
+            userRepository.save(applyUser);
 
-                    UserHeartLog userHeartLog = UserHeartLog.builder()
-                            .userSeq(applyUser.getUserSeq())
-                            .heartCnt(-100)
-                            .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
-                            .build();
-                    userHeartLogRepository.save(userHeartLog);
+            UserHeartLog userHeartLog = UserHeartLog.builder()
+                    .userSeq(applyUser.getUserSeq())
+                    .heartCnt(-100)
+                    .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
+                    .build();
+            userHeartLogRepository.save(userHeartLog);
 
-                } else {
-                    // 지원자 기준 '지원취소'상태로 변경
-                    apply.setStateCode("PAS104");
-                    // 작성자 기준 '거절'상태로 변경
-                    apply.setApplyCode("AS102");
-                }
-            }
+            PostingPosition postingPosition = postingPositionRepository.findByPostingSeqAndPositionCode(apply.getPostingSeq(), apply.getPositionCode())
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
+            postingPosition.setPositionCnt(postingPosition.getPositionCnt() - 1);
+            postingPositionRepository.save(postingPosition);
+        } else {
+            // 지원자 기준 '지원취소'상태로 변경
+            apply.setStateCode("PAS104");
+            // 작성자 기준 '거절'상태로 변경
+            apply.setApplyCode("AS102");
+        }
+    }
 
     @Transactional(readOnly = true)
     public List<FindAllPostingByUserSeqResponse> findAllApplyPosting(Integer userSeq){
         List<Apply> applyList = applyRepository.findByUserSeq(userSeq);
-        System.out.println("applyList.toString() = " + applyList.toString());
         return applyList.stream()
                 .map(FindAllPostingByUserSeqResponse::toApplyer)
                 .collect(Collectors.toList());

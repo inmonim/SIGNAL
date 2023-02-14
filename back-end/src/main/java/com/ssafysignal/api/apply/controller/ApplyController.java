@@ -3,8 +3,8 @@ package com.ssafysignal.api.apply.controller;
 
 import com.ssafysignal.api.apply.dto.request.BasicApplyRequest;
 import com.ssafysignal.api.apply.dto.request.ApplyMemoRequest;
-import com.ssafysignal.api.apply.dto.response.ApplyApplyerFindResponse;
-import com.ssafysignal.api.apply.dto.response.ApplyFindResponse;
+import com.ssafysignal.api.apply.dto.response.FindApplyApplyerResponse;
+import com.ssafysignal.api.apply.dto.response.FindApplyResponse;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.service.ApplyService;
 import com.ssafysignal.api.global.exception.NotFoundException;
@@ -90,7 +90,7 @@ public class ApplyController {
         log.info("findApply - Call");
 
         try {
-            ApplyFindResponse res = applyService.findApply(applySeq);
+            FindApplyResponse res = applyService.findApply(applySeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, res));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
@@ -170,7 +170,7 @@ public class ApplyController {
 
         try {
             List<Apply> applyList = applyService.findAllApplyApplyer(userSeq, page, size);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ApplyApplyerFindResponse.toList(applyList)));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindApplyApplyerResponse.toList(applyList)));
         } catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
