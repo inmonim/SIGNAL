@@ -14,28 +14,20 @@ import java.time.LocalDateTime;
 @Builder
 @ApiModel(value = "QnaFindResponse", description = "QnA 상세 정보")
 public class FindQnaResponse {
-
     @Schema(description = "QnA Seq", required = true)
     private Integer qnaSeq;
-
     @Schema(description = "user Seq", required = true)
     private Integer userSeq;
-
     @Schema(description = "Qna 제목", required = true)
     private String title;
-
     @Schema(description = "Qna 본문", required = true)
     private String content;
-
     @Schema(description = "qna 조회수")
     private Integer view;
-
     @Schema(description = "관리자 답변")
     private String answer;
-
     @Schema(description = "답변 완료 여부")
     private Boolean isAnswer;
-
     @Schema(description = "FAQ 여부")
     private Boolean isTop;
 

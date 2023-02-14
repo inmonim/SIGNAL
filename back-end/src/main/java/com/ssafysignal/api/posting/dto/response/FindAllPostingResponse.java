@@ -5,13 +5,17 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.posting.entity.PostingPosition;
 import com.ssafysignal.api.posting.entity.PostingSkill;
 import com.ssafysignal.api.project.entity.Project;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FindAllPostingResponse {
     private Integer postingSeq;
     private String subject;

@@ -9,10 +9,12 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@ToString
+@Builder
+@AllArgsConstructor
 @Table(name = "posting_skill")
 public class PostingSkill {
     @Id
@@ -26,12 +28,4 @@ public class PostingSkill {
     @OneToOne
     @JoinColumn(name = "skill_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public PostingSkill(Integer postingSkillSeq, Integer postingSeq, String skillCode, CommonCode code) {
-        this.postingSkillSeq = postingSkillSeq;
-        this.postingSeq = postingSeq;
-        this.skillCode = skillCode;
-        this.code = code;
-    }
 }

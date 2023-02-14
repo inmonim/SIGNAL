@@ -11,10 +11,7 @@ import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
-import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindSignalweekResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindSignalweekRankResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekScheduleResponse;
+import com.ssafysignal.api.signalweek.dto.response.*;
 import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekRank;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
@@ -258,10 +255,13 @@ public class SignalweekService {
             }
         }
     }
-
     @Transactional
-    public List<FindAllSignalweekScheduleResponse> findAllSignalweekSchedule(){
-        List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year")));
-        return signalweekScheduleList.stream().map(FindAllSignalweekScheduleResponse::fromEntity).collect(Collectors.toList());
+    public FindAllSignalweekScheduleResponse findAllSignalweekSchedule(Integer page, Integer size){
+        Page<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year"))));
+        return FindAllSignalweekScheduleResponse.builder()
+                .signalweekList(signalweekScheduleList.stream()
+                        .map(FindAllSignalweekScheduleResponseItem::fromEntity)
+                        .collect(Collectors.toList()))
+                .count(signalweekScheduleList.getTotalElements()).build();
     }
 }

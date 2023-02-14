@@ -235,6 +235,7 @@ public class AuthService {
                         .content("변경된 임시 비밀번호 입니다.\n임시 비밀번호 : " + tempPassword)
                         .text("로그인")
                         .host(host)
+                        .url("")
                         .build());
     }
 }

@@ -132,12 +132,13 @@ public class SignalweekController {
     @Tag(name = "시그널 위크")
     @Operation(summary = "역대 시그널 위크 수상작 목록 조회", description = "역대 시그널 위크 수상작 목록 조회")
     @GetMapping("signalweekschedule")
-    private ResponseEntity<BasicResponse> findAllSignalweekSchedule() {
+    private ResponseEntity<BasicResponse> findAllSignalweekSchedule(@Parameter(description = "page", required = true) Integer page,
+                                                                    @Parameter(description = "size", required = true) Integer size) {
         log.info("quarterEndSignalweek - Call");
 
         try {
-            List<FindAllSignalweekScheduleResponse> findAllSignalweekScheduleResponseList = signalweekService.findAllSignalweekSchedule();
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllSignalweekScheduleResponseList));
+            FindAllSignalweekScheduleResponse findAllSignalweekScheduleResponse = signalweekService.findAllSignalweekSchedule(page, size);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllSignalweekScheduleResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }

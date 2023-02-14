@@ -3,8 +3,8 @@ package com.ssafysignal.api.apply.service;
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
 import com.ssafysignal.api.apply.dto.request.BasicApplyRequest;
 import com.ssafysignal.api.apply.dto.request.ApplyMemoRequest;
-import com.ssafysignal.api.apply.dto.response.ApplyFindResponse;
-import com.ssafysignal.api.apply.dto.response.ApplyWriterFindResponse;
+import com.ssafysignal.api.apply.dto.response.FindApplyResponse;
+import com.ssafysignal.api.apply.dto.response.FindApplyWriterResponse;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.common.entity.CommonCode;
@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static java.util.stream.Collectors.reducing;
 
 import java.util.*;
-
 
 @Service
 @RequiredArgsConstructor
@@ -59,10 +58,14 @@ public class ApplyService {
             throw new NotFoundException(ResponseCode.REGIST_BLACK);
         }
 
-        if (applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).isPresent()) {
-            Apply apply = applyRepository.findByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).get();
-            if (!(apply.getApplyCode().equals("AS103") & apply.getStateCode().equals("PAS102"))) {
+        if (applyRepository.findTop1ByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).isPresent()) {
+            Apply apply = applyRepository.findTop1ByUserSeqAndPostingSeq(user.getUserSeq(), postingSeq).get();
+            // 1. 이전 지원서가 아니고 지원취소한 지원서가 아니면
+            // 2. 거절한 지원서이면
+            if ((!(apply.getApplyCode().equals("AS109") && apply.getStateCode().equals("PAS109")) && !(apply.getApplyCode().equals("AS104") && apply.getStateCode().equals("PAS104")))||
+                apply.getApplyCode().equals("AS102") && apply.getStateCode().equals("PAS104")) {
                 throw new NotFoundException(ResponseCode.REGIST_DUPLICATE);
+                // 재지원 불가능
             }
         }
 
@@ -128,7 +131,7 @@ public class ApplyService {
         postingMeetingRepository.save(postingMeeting);
     }
     @Transactional(readOnly = true)
-    public ApplyFindResponse findApply(Integer applySeq) {
+    public FindApplyResponse findApply(Integer applySeq) {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         String positionCode = apply.getPositionCode();
@@ -145,7 +148,7 @@ public class ApplyService {
         PostingMeeting postingMeeting = postingMeetingRepository.findByApplySeqAndToUserSeq(applySeq, apply.getUserSeq());
         Integer userSeq = securityService.currentUserSeq();
 
-        return ApplyFindResponse.builder()
+        return FindApplyResponse.builder()
                 .userSeq(apply.getUserSeq())
                 .postingSeq(apply.getPostingSeq())
                 .content(apply.getContent())
@@ -225,7 +228,7 @@ public class ApplyService {
         	postingMeetingRepository.save(curPostingMeeting);
         	
         	newPostingmeeting.setApplySeq(applySeq);
-        	newPostingmeeting.setToUser(applyModifyRequest.getUserSeq());
+        	newPostingmeeting.setToUserSeq(applyModifyRequest.getUserSeq());
         	newPostingmeeting.setPostingMeetingCode("PM100");
         	postingMeetingRepository.save(newPostingmeeting);
         }
@@ -273,7 +276,7 @@ public class ApplyService {
         Integer waitCnt = applyRepository.countByPostingSeqAndApplyCode(postingSeq, "AS100");
 
         Map<String, Object> resList = new HashMap<>();
-        resList.put("applyList", ApplyWriterFindResponse.toList(applyList));
+        resList.put("applyList", FindApplyWriterResponse.toList(applyList));
         resList.put("totalCnt", totalCnt);
         resList.put("selectCnt",selectCnt);
         resList.put("waitCnt", waitCnt);
@@ -281,7 +284,7 @@ public class ApplyService {
     }
     @Transactional(readOnly = true)
     public List<Apply> findAllApplyApplyer(Integer userSeq, Integer page, Integer size){
-        List<Apply> applyList = applyRepository.findALlByUserSeqAndStateCodeIsNot(userSeq, "PAS104", PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
+        List<Apply> applyList = applyRepository.findAllByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
         return applyList;
     }
     @Transactional

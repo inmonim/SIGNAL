@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "posting_meeting")
 public class PostingMeeting {
     @Id
@@ -39,20 +41,4 @@ public class PostingMeeting {
     @OneToOne
     @JoinColumn(name = "posting_meeting_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public PostingMeeting(Integer postingMeetingSeq, Integer postingSeq, Integer applySeq, Integer fromUserSeq, Integer toUserSeq, LocalDateTime meetingDt, String postingMeetingCode, CommonCode code) {
-        this.postingMeetingSeq = postingMeetingSeq;
-        this.postingSeq = postingSeq;
-        this.applySeq = applySeq;
-        this.fromUserSeq = fromUserSeq;
-        this.toUserSeq = toUserSeq;
-        this.meetingDt = meetingDt;
-        this.postingMeetingCode = postingMeetingCode;
-        this.code = code;
-    }
-
-    public void setToUser(Integer toUserSeq) {
-        this.toUserSeq = toUserSeq;
-    }
 }

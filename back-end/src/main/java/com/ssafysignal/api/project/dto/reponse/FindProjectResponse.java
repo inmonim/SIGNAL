@@ -29,6 +29,7 @@ public class FindProjectResponse {
     private Integer warningCnt;
     @Schema(description = "프로젝트 팀 구성원 nickname 목록")
     private List<Object> projectUserList;
+    private Boolean isMyProject;
 
     public static FindProjectResponse fromEntity(final Project project){
         return FindProjectResponse.builder()
