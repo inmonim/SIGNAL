@@ -24,17 +24,22 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   const evaluationSubmit = async () => {
     try {
-      await api
-        .post(process.env.REACT_APP_API_URL + '/project/evaluation', {
-          fromUserSeq,
-          projectSeq,
-          scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
-          weekCnt,
-          toUserSeq,
-        })
-        .then(() => {
-          setFlag(true)
-        })
+      if (score.length === 5) {
+        await api
+          .post(process.env.REACT_APP_API_URL + '/project/evaluation', {
+            fromUserSeq,
+            projectSeq,
+            scoreList: score.map((item, index) => ({ num: index + 1, score: item })),
+            weekCnt,
+            toUserSeq,
+          })
+          .then(() => {
+            setFlag(true)
+          })
+        location.reload()
+      } else {
+        alert('평가하지 않은 항목이 있습니다.')
+      }
     } catch (error) {
       alert('이미 평가한 팀원 입니다.')
     }
@@ -62,6 +67,8 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
       )
       .then((res) => {
         setEvalHistory(res.data.body)
+        console.log('toUserSeq', toUserSeq, 'fromUserSeq', fromUserSeq, 'weekCnt', weekCnt)
+        console.log(evalHistory)
       })
       .catch((error) => {
         console.log(error)
@@ -115,13 +122,13 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                 />
               </RadioGroup>
             ) : (
-              <RadioGroup name={`${index}`} sx={{ flexDirection: 'row' }} onChange={handleScoreChange}>
-                {evalHistory[index].score === 10 ? (
+              <RadioGroup name={`${index}`} sx={{ flexDirection: 'row' }}>
+                {evalHistory && evalHistory[index].score === 10 ? (
                   <FormControlLabel
                     value="10"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
-                    checked
+                    checked={true}
                     label="매우 그렇지 않다"
                   />
                 ) : (
@@ -129,6 +136,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="10"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
+                    checked={false}
                     label="매우 그렇지 않다"
                   />
                 )}
@@ -137,7 +145,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="20"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
-                    checked
+                    checked={true}
                     label="그렇지 않다"
                   />
                 ) : (
@@ -145,6 +153,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="20"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
+                    checked={false}
                     label="그렇지 않다"
                   />
                 )}
@@ -153,7 +162,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="30"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
-                    checked
+                    checked={true}
                     label="보통이다"
                   />
                 ) : (
@@ -161,6 +170,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="30"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
+                    checked={false}
                     label="보통이다"
                   />
                 )}
@@ -169,7 +179,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="40"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
-                    checked
+                    checked={true}
                     label="그렇다"
                   />
                 ) : (
@@ -177,6 +187,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="40"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
+                    checked={false}
                     label="그렇다"
                   />
                 )}
@@ -185,7 +196,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="50"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
-                    checked
+                    checked={true}
                     label="매우 그렇다"
                   />
                 ) : (
@@ -193,6 +204,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
                     value="50"
                     control={<Radio checkedIcon={<RadioButtonCheckedIcon sx={{ color: '#796FB2' }} />} />}
                     disabled
+                    checked={false}
                     label="매우 그렇다"
                   />
                 )}
