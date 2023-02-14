@@ -16,12 +16,14 @@ export default function Openprofilecard({ open }) {
         minWidth: 275,
         mb: 2,
         mr: 2,
+        maxHeight: 240,
         '&:hover': {
           boxShadow: '0 0 0 2px #bcb7d9',
           cursor: 'pointer',
         },
       }}
       onClick={() => {
+        console.log(JSON.stringify(open))
         // navigate(`/posting/${post.postingSeq}`)
       }}
     >
