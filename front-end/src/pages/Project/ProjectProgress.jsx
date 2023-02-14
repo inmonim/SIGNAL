@@ -7,9 +7,7 @@ import AlertModal from 'components/AlertModal'
 import TeamEval from 'components/Project/TeamEval'
 import api from 'api/Api.js'
 
-// import TeamProfile from 'components/Project/TeamProfile'
-
-function ProjectProgress({ projectSeq }) {
+function ProjectProgress({ projectSeq, setProjectMode }) {
   const userSeq = sessionStorage.getItem('userSeq')
   const [project, setProject] = useState([])
 
@@ -45,7 +43,9 @@ function ProjectProgress({ projectSeq }) {
 
   return (
     <div className="team-progress-header">
-      <div className="team-progress-title">{project.subject}</div>
+      <div className="team-progress-title" onClick={() => setProjectMode('main')}>
+        {project.subject}
+      </div>
       <div className="team-progress-menu">
         <SignalBtn
           className={`team-progress-menu-item ${mode === 0 ? 'active' : ''}`}

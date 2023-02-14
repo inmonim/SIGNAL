@@ -27,7 +27,7 @@ export default function SignalItem({ signal }) {
           style={{
             cursor: 'pointer',
             width: '250px',
-            height: '100px',
+            height: '160px',
           }}
         />
 

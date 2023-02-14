@@ -14,7 +14,8 @@ import noProfile from 'assets/image/noProfileImg.png'
 
 function ProjectHeader() {
   const location = useLocation()
-  const [mode, setMode] = useState(0)
+  const [projectMode, setProjectMode] = useState('main')
+  const [isMyProject, setIsMyProject] = useState(false)
   const userSeq = sessionStorage.getItem('userSeq')
   const projectSeq = parseInt(location.state.projectSeq)
 
@@ -32,7 +33,8 @@ function ProjectHeader() {
     })
       .then((res) => {
         setProject(res.data.body)
-        console.log('project:', project)
+        setIsMyProject(res.data.body.isMyProject)
+        console.log(res.data.body)
       })
       .catch((e) => {
         console.log(e)
@@ -45,6 +47,7 @@ function ProjectHeader() {
       method: 'GET',
     })
       .then((res) => {
+        console.log(res)
         setMember(res.data.body.projectUserList)
       })
       .catch((e) => {
@@ -66,8 +69,8 @@ function ProjectHeader() {
     getProjectMember()
   }, [])
 
-  const handleToSetting = () => setMode(1)
-  const handleToProgress = () => setMode(2)
+  const handleToSetting = () => setProjectMode('setting')
+  const handleToProgress = () => setProjectMode('progress')
 
   const [heartOpen, setHeartOpen] = useState(false)
   const handleHeartOpen = () => setHeartOpen(true)
@@ -77,9 +80,13 @@ function ProjectHeader() {
     <div className="project-header-container">
       <div className="project-header-width">
         <div className="project-header-settings">
-          <img className="project-header-img-settings" src={settings} alt="" onClick={handleToSetting} />
+          {isMyProject ? (
+            <img className="project-header-img-settings" src={settings} alt="" onClick={handleToSetting} />
+          ) : (
+            <></>
+          )}
         </div>
-        {mode === 0 ? (
+        {projectMode === 'main' ? (
           <div className="project-detail-container">
             <div>
               <img className="project-detail-img-proejct-background-1" src={proejctBackground1} />
@@ -125,10 +132,10 @@ function ProjectHeader() {
               </div>
             </div>
           </div>
-        ) : mode === 1 ? (
-          <ProjectMaintainPage projectSeq={projectSeq}></ProjectMaintainPage>
+        ) : projectMode === 'setting' ? (
+          <ProjectMaintainPage projectSeq={projectSeq} setProjectMode={setProjectMode}></ProjectMaintainPage>
         ) : (
-          <ProjectProgress projectSeq={projectSeq}></ProjectProgress>
+          <ProjectProgress projectSeq={projectSeq} setProjectMode={setProjectMode}></ProjectProgress>
         )}
       </div>
     </div>

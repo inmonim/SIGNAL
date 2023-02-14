@@ -97,9 +97,12 @@ function ProjectDocs({ projectSeq, mode }) {
   }
 
   const getNotionDoc = async (num, setValue) => {
-    await api.get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`).then((res) => {
-      setValue(res.data.body.url)
-    })
+    await api
+      .get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`)
+      .then((res) => {
+        setValue(res.data.body.url)
+      })
+      .catch(() => {})
   }
 
   return (
@@ -114,8 +117,8 @@ function ProjectDocs({ projectSeq, mode }) {
             <InfoOutlinedIcon className="docs-howto-icon"></InfoOutlinedIcon>
             <p className="arrow-box">
               <div className="arrow-box-title">문서 사용법</div>
-              <div className="arrow-box-content">➿ 노션 문서의 공유 링크를 등록해주세요.</div>
-              <div className="arrow-box-content">➿ notion.site/ 뒤의 주소만 입력해주세요.</div>
+              <div className="arrow-box-content">❗ 노션 문서의 공유 링크를 등록해주세요.</div>
+              <div className="arrow-box-content">❗ notion.site/ 뒤의 주소만 입력해주세요.</div>
             </p>
           </div>
         </div>

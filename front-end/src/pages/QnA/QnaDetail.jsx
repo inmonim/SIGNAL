@@ -148,10 +148,15 @@ function QnaDetail() {
                   ></AlertModal>
                 </>
               )}
-
-              <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
-              <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
-              <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
+              {data.isMyQna ? (
+                <>
+                  <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
+                  <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
+                  <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
           <div className="qna-detail-middle">
