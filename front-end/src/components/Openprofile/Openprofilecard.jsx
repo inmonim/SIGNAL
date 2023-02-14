@@ -6,14 +6,16 @@ import 'assets/styles/openprofilecar.css'
 import { Box } from '@mui/system'
 import { getPositionName } from 'data/Positiondata'
 import SignalBtn from 'components/common/SignalBtn'
+import { useNavigate } from 'react-router'
 // import { useNavigate } from 'react-router-dom'
 
 export default function Openprofilecard({ open }) {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <Card
       sx={{
         minWidth: 275,
+        maxWidth: 275,
         mb: 2,
         mr: 2,
         maxHeight: 240,
@@ -23,12 +25,11 @@ export default function Openprofilecard({ open }) {
         },
       }}
       onClick={() => {
-        console.log(JSON.stringify(open))
-        // navigate(`/posting/${post.postingSeq}`)
+        navigate('/openprofiledetail', { state: open })
       }}
     >
       <CardContent sx={{ height: '100%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '35%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '90px' }}>
           <div className="open-profile-card-box">
             <img
               className="open-profile-card-profile"

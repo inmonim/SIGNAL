@@ -62,7 +62,6 @@ function Qna() {
                 sigfontsize="24px"
                 sigborderradius={14}
                 sigmargin="0px 0px 5px 0px"
-                variant="contained"
                 onClick={() => navigate(`/qnaRegist`)}
               >
                 등록

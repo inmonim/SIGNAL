@@ -5,6 +5,8 @@ import AlertModal from 'components/AlertModal'
 import SignalBtn from 'components/common/SignalBtn'
 import view from 'assets/image/view.png'
 import commentimg from 'assets/image/comment.png'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import PushPinIcon from '@mui/icons-material/PushPin'
 import EditIcon from '@mui/icons-material/Edit'
 import trashcan from 'assets/image/TrashLetter.png'
 import api from 'api/Api.js'
@@ -25,6 +27,7 @@ function QnaDetail() {
       setData(res.data.body)
     })
   }, [])
+
   const navigate = useNavigate()
 
   const handleToTrash = () => {
@@ -93,6 +96,23 @@ function QnaDetail() {
 
   const handleToClose = () => {
     setAnsAlertOpen(false)
+    setFaqAlertOpen(false)
+  }
+
+  const [faqAlertOpen, setFaqAlertOpen] = useState(false)
+  const [qnaAlertOpen, setQnaAlertOpen] = useState(false)
+  const [isTop, setIsTop] = useState(data.isTop)
+  const handleToFaqAlert = () => setFaqAlertOpen(true)
+  const handleToQnaAlert = () => setQnaAlertOpen(true)
+  const handleToFaq = () => {
+    api.get(process.env.REACT_APP_API_URL + `/admin/qna/${qnaSeq}?isTop=true`)
+    setFaqAlertOpen(false)
+    setIsTop(true)
+  }
+  const handleToQna = () => {
+    api.get(process.env.REACT_APP_API_URL + `/admin/qna/${qnaSeq}?isTop=false`)
+    setQnaAlertOpen(false)
+    setIsTop(false)
   }
 
   return (
@@ -107,6 +127,28 @@ function QnaDetail() {
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
             <div className="qna-detail-header-right">
+              {isTop ? (
+                <>
+                  <PushPinIcon className="qna-detail-faq" onClick={handleToQnaAlert}></PushPinIcon>
+                  <AlertModal
+                    open={qnaAlertOpen}
+                    onClick={handleToQna}
+                    onClose={handleToClose}
+                    msg="FAQ를 해지하시겠습니까?"
+                  ></AlertModal>
+                </>
+              ) : (
+                <>
+                  <PushPinOutlinedIcon className="qna-detail-faq" onClick={handleToFaqAlert}></PushPinOutlinedIcon>
+                  <AlertModal
+                    open={faqAlertOpen}
+                    onClick={handleToFaq}
+                    onClose={handleToClose}
+                    msg="FAQ로 등록하시겠습니까?"
+                  ></AlertModal>
+                </>
+              )}
+
               <EditIcon className="qna-detail-modify" onClick={handleToModify}></EditIcon>
               <img className="qna-detail-delete" src={trashcan} alt="trashcan" onClick={handleToTrash} />
               <AlertModal open={alertOpen} onClick={handleAlert} msg="삭제하시겠습니까?"></AlertModal>

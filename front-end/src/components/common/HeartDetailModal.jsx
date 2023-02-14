@@ -54,14 +54,19 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       }, [])
 
   // 하트 충전
-  const [inputHeart, setInputHeart] = useState(1)
+  const [inputHeart, setInputHeart] = useState(null)
   const [alertOpen, setAlertOpen] = useState(false)
+  const [minusAlert, setMinusAlert] = useState(false)
 
   const handleAlertOpen = () => setAlertOpen(true)
-  const handleToClose = () => setAlertOpen(false)
+  const handleToClose = () => {
+    setAlertOpen(false)
+    setMinusAlert(false)
+  }
   const handleInputHeart = (e) => {
     if (e.target.value <= 0) {
-      setInputHeart(1)
+      // setInputHeart(1)
+      setMinusAlert(true)
     } else {
       setInputHeart(e.target.value)
     }
@@ -84,9 +89,9 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       quantity: 1,
       total_amount: 100,
       tax_free_amount: 0,
-      approval_url: `http://localhost:3000/myprofile/kakaoPay/success?userSeq=${userSeq}`,
-      fail_url: `http://localhost:3000/myprofile/kakaoPay/fail`,
-      cancel_url: `http://localhost:3000/myprofile/kakaoPay/cancle`,
+      approval_url: `https://www.ssafysignal.site/myprofile/kakaoPay/success?userSeq=${userSeq}`,
+      fail_url: `https://www.ssafysignal.site/myprofile/kakaoPay/fail`,
+      cancel_url: `https://www.ssafysignal.site/myprofile/kakaoPay/cancle`,
     },
   })
 
@@ -94,7 +99,7 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
     const { params } = payState
     params.total_amount *= heartCnt
     axios({
-      url: '/v1/payment/ready',
+      url: 'https://kapi.kakao.com/v1/payment/ready',
       method: 'POST',
       headers: {
         Authorization: 'KakaoAK ef29e9bc7f62d89ff3128aa5ce609d77',
@@ -144,8 +149,8 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
                 <div className="my-user-heart-modal-charge">
                   <TextField
                     id="filled-multiline-flexible"
-                    name="nickname"
                     value={inputHeart}
+                    type="number"
                     onChange={handleInputHeart}
                     sx={inputStyle}
                   />
@@ -165,6 +170,12 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
                     onClick={chargeHeart}
                     onClose={handleToClose}
                     msg="충전하시겠습니까?"
+                  ></AlertModal>
+                  <AlertModal
+                    open={minusAlert}
+                    onClick={handleToClose}
+                    onClose={handleToClose}
+                    msg="1개 이상의 하트만 충전 가능합니다."
                   ></AlertModal>
                 </div>
               ) : (

@@ -7,11 +7,6 @@ import '../../assets/styles/posting.css'
 import Paging from 'components/Paging'
 import api from 'api/Api'
 import Openprofilecard from 'components/Openprofile/Openprofilecard'
-import Swal from 'sweetalert2'
-// import SkillList from 'components/Apply/SkillList'
-// import { useQuery } from 'react-query'
-// import { Input } from 'assets/styles/apply'
-// const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
 
 function Openprofile() {
   const [openList, setOpenList] = useState([])

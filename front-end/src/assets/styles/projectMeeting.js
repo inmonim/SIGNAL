@@ -13,11 +13,10 @@ export const codeEidt = (props) => {
   return css`
     display: ${props.mode === 1 ? 'block' : 'none'};
     border: 1px solid black;
-    border-radius: 25px;
     height: 95%;
     width: 90%;
     margin: auto;
-    font-family: 'D2coding' !important;
+    /* font-family: 'D2coding' !important; */
   `
 }
 

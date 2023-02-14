@@ -26,7 +26,7 @@ function KakaoPay() {
   const payApprove = async () => {
     const { params } = payState
     await axios({
-      url: '/v1/payment/approve',
+      url: 'https://kapi.kakao.com/v1/payment/approve',
       method: 'POST',
       headers: {
         Authorization: 'KakaoAK ef29e9bc7f62d89ff3128aa5ce609d77',

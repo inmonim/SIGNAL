@@ -32,9 +32,6 @@ import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import SignalBtn from 'components/common/SignalBtn'
-// import Lottie from 'react-lottie'
-// import postingfirework from 'assets/lottie/postingfirework.json'
-
 const Container = styled.section`
   padding: 130px 10em;
 `
@@ -90,14 +87,6 @@ const PostingRegister = () => {
   // console.log(JSON.stringify(Skilldata))
   // const today = dateNow.toISOString().slice(0, 10)
   const navigate = useNavigate()
-  // const firework = {
-  //   loop: true,
-  //   autoplay: true,
-  //   animationData: postingfirework,
-  //   rendererSettings: {
-  //     preserveAspectRatio: 'xMidYMid slice',
-  //   },
-  // }
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
   const [posting, setPosting] = useState({
@@ -345,14 +334,6 @@ const PostingRegister = () => {
         <div>
           <Title>공고 등록</Title>
         </div>
-        {/* <Lottie options={firework} height={150} width={150} isClickToPauseDisabled={true} /> */}
-        {/* <button
-          onClick={() => {
-            Swal.fire({ content: <div>하이</div> })
-          }}
-        >
-          dd
-        </button> */}
         <div>
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
