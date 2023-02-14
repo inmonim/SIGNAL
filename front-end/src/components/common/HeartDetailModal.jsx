@@ -84,9 +84,9 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       quantity: 1,
       total_amount: 100,
       tax_free_amount: 0,
-      approval_url: `http://localhost:3000/myprofile/kakaoPay/success?userSeq=${userSeq}`,
-      fail_url: `http://localhost:3000/myprofile/kakaoPay/fail`,
-      cancel_url: `http://localhost:3000/myprofile/kakaoPay/cancle`,
+      approval_url: `https://www.ssafysignal.site/myprofile/kakaoPay/success?userSeq=${userSeq}`,
+      fail_url: `https://www.ssafysignal.site/myprofile/kakaoPay/fail`,
+      cancel_url: `https://www.ssafysignal.site/myprofile/kakaoPay/cancle`,
     },
   })
 
@@ -94,7 +94,7 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
     const { params } = payState
     params.total_amount *= heartCnt
     axios({
-      url: '/v1/payment/ready',
+      url: 'https://kapi.kakao.com/v1/payment/ready',
       method: 'POST',
       headers: {
         Authorization: 'KakaoAK ef29e9bc7f62d89ff3128aa5ce609d77',
