@@ -21,7 +21,7 @@ function UserPwdModal({ open, onClose }) {
     console.log(nextInputs)
   }
 
-  const [alertOpen, setAlertOpen] = useState('')
+  const [alertOpen, setAlertOpen] = useState(false)
 
   const handleToAlert = () => {
     setAlertOpen(true)
