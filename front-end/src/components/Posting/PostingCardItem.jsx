@@ -25,23 +25,26 @@ export default function PostingCardItem({ post }) {
       }}
     >
       <CardContent>
-        <Typography
-          sx={{
-            fontSize: 20,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            wordBreak: 'break-word',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            lineHeight: 1.5,
-          }}
-          color="black"
-          gutterBottom
-        >
-          {post.subject}
-        </Typography>
+        <div>
+          <Typography
+            sx={{
+              fontSize: 20,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical',
+              lineHeight: 1.5,
+            }}
+            color="black"
+            gutterBottom
+          >
+            {post.subject}
+          </Typography>
+        </div>
+
         <Typography variant="body2">{Localdata[post.localCode].name}</Typography>
         <Typography variant="body2">{Fielddata[post.fieldCode].name}</Typography>
         <Box sx={{ display: 'flex' }}>

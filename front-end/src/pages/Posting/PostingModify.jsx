@@ -13,9 +13,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 // import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
-import DateSelect from 'components/Posting/DateSelect'
+// import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
-import Stack from '@mui/material/Stack'
+// import Stack from '@mui/material/Stack'
 // import { ko } from 'date-fns/esm/locale'
 // import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
@@ -31,7 +31,7 @@ import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
-import SignalBtn from 'components/common/SignalBtn'
+// import SignalBtn from 'components/common/SignalBtn'
 
 const Container = styled.section`
   padding: 130px 10em;
@@ -91,36 +91,65 @@ const PostingModify = () => {
   const postingSeq = location.state.postingSeq
 
   //   console.log(postingSeq)
-  const [subjectMo, setSubjectMo] = useState()
-  const [posting, setPosting] = useState({
+  const [posting] = useState({
     userSeq: '',
     subject: '',
     localCode: '',
     fieldCode: '',
-    leaderPosition: 'PO100',
     isContact: '',
-    term: 1,
+    term: 3,
     content: '',
     postingEndDt: humjaetime,
-    level: 5,
-    postingMeetingList: ['2023-01-01 11:00:00.000', '2023-01-02 11:00:00.000'],
+    level: 1,
+    postingMeetingList: [],
     postingSkillList: [],
     postingPositionList: [],
     postingQuestionList: [],
   })
+  const [userSeqget, setUserSeqget] = useState('')
+  const [subjectget, setSubjectget] = useState('')
+  const [localCodeget, setLocalCodeget] = useState('')
+  const [fieldCodeget, setFieldCodeget] = useState('')
+  // const [leaderPositionget, setLeaderPositionget] = useState('')
+  const [isContactget, setIsContactget] = useState('')
+  const [termget, setTermget] = useState(3)
+  const [contentget, setContentget] = useState('')
+  const [postingEndDtget, setPostingEndDtget] = useState('')
+  const [levelget, setLevelget] = useState(1)
+  const [postingSkillListget, setPostingSkillListget] = useState([])
+  // const [postingMeetingListget, setPostingMeetingListget] = useState([])
+  const [postingPositionListget, setPostingPositionListget] = useState([])
+  const [postingQuestionListget, setPostingQuestionListget] = useState([])
+
   // console.log(JSON.stringify(posting))
+  // const [u]
   const postPutFetch = async () => {
     const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
     console.log(post)
-
-    const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+    setUserSeqget(sessionStorage.getItem('userSeq'))
+    setSubjectget(post.subject)
+    setLocalCodeget(post.localCode)
+    setFieldCodeget(post.fieldCode)
+    // setLeaderPositionget(post.leaderPosition)
+    setIsContactget(post.isContact)
+    setTermget(post.term)
+    setContentget(post.content)
+    setPostingEndDtget(post.postingEndDt)
+    setLevelget(post.level)
+    // 스킬
+    const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+    setPostingSkillListget(resultSkill)
+    // 미팅
+    // const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
+    // setPostingMeetingListget(resultMeeting)
+    //
     const resultPosition = post.postingPositionList.map((e) => ({
       code: e.positionCode,
       name: e.code.name,
       count: e.positionCnt,
     }))
-    const resultSkill = post.postingSkillList.map((e) => e.skillCode)
+    setPostingPositionListget()
     const resultSkillde = post.postingSkillList.map((e) => ({ label: e.code.name, value: e.code.code }))
     const resultQuestion = post.postingQuestionList.map((e) => ({
       id: e.num,
@@ -129,63 +158,25 @@ const PostingModify = () => {
 
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
-    setDateList(resultMeeting)
-    // setDeSkill(resultSkillde)
+    // setDateList(resultMeeting)
     addTag(resultSkillde)
-    setSubjectMo(post.subject)
-    setPosting({
-      ...posting,
-      userSeq: sessionStorage.getItem('userSeq'),
-      subject: post.subject,
-      localCode: post.localCode,
-      leaderPosition: post.leaderPosition,
-      fieldCode: post.fieldCode,
-      isContact: post.isContact,
-      term: post.term,
-      content: post.content,
-      postingEndDt: post.postingEndDt,
-      level: post.level,
-      postingMeetingList: post.postingMeetingList,
-      postingSkillList: resultSkill,
-      postingPositionList: post.postingPositionList,
-      postingQuestionList: post.postingQuestionList,
-    })
   }
   // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
   const navigate = useNavigate()
-  // const profileFetch = async () => {
-  //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-  //     setProfile(res.data.body)
-  //     console.log(res.data.body)
-  //     console.log(profile)
-  //     careerFetchFilter(res.data.body.userCareerList)
-  //     expFetchFilter(res.data.body.userExpList)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
-  // end >> Fetch
-  // const [deSkill, setDeSkill] = useState([])
-  // start >> Data filter
-  const [Daily, setDaily] = useState('')
-  const [DateList, setDateList] = useState([])
-  const [errorBox, setErrorBox] = useState(false)
+  // const [Daily, setDaily] = useState('')
+  // const [DateList, setDateList] = useState([])
+  // const [errorBox, setErrorBox] = useState(false)
   // end >> Data filter
 
   // start >> handle position
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
-  const [positionReduxlen, setPositionReduxlen] = useState(0)
+  // const [positionReduxlen, setPositionReduxlen] = useState(0)
 
-  // end >> handle position
-
-  // end >> skill filter
-  // end >> handle skill
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
   const handleSkillInput = (e) => {
@@ -197,10 +188,6 @@ const PostingModify = () => {
     })
   }
   const newTag = (tag) => {
-    // const set = new Set(arrayOfTags.concat(tag))
-    // setNumberOfTags(set.size)
-    // const uniqueTags = Array.from(set)
-    // addTag(uniqueTags)
     const set = arrayOfTags.concat(tag)
     const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
     setNumberOfTags(uniqueTags.length)
@@ -219,17 +206,12 @@ const PostingModify = () => {
   const skillPostFilter = (list) => {
     const skillArr = []
     list.map((item) => skillArr.push(item.value))
-    setPosting({ ...posting, postingSkillList: skillArr })
+    setPostingSkillListget(skillArr)
+    // setPosting({ ...posting, postingSkillList: skillArr })
   }
   const handleDeleteSkill = (h) => {
     addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
   }
-  // start >> handle career
-  // const handleChangeSkill = (value) => {
-  //   const copy = value.map((ele) => ele.code)
-  //   setPosting({ ...posting, postingSkillList: copy })
-  // }
-  // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
     const careerArr = [...careerList]
@@ -249,28 +231,21 @@ const PostingModify = () => {
   }
 
   // end >> handle career
-  const handleDelete = (ele) => {
-    // console.log('함수')
-    setDateList(
-      DateList.filter((date) => {
-        // console.log(date, 'date')
-        // console.log(ele, 'ele')
-        return date !== ele
-      })
-    )
-  }
-  // const getDateList = () => {
-  //   DateList.push()
+  // const handleDelete = (ele) => {
+  //   // console.log('함수')
+  //   setDateList(
+  //     DateList.filter((date) => {
+  //       // console.log(date, 'date')
+  //       // console.log(ele, 'ele')
+  //       return date !== ele
+  //     })
+  //   )
   // }
-  // const [startDate, setStartDate] = useState(new Date())
-  // start >> handle exp
-
-  // end >> handle exp
-
-  // start >> handle content
+  // const getDateList = () => {
 
   const handleContentChange = (event) => {
-    setPosting({ ...posting, content: event.target.value })
+    setContentget(event.target.value)
+    // setPosting({ ...posting, content: event.target.value })
   }
 
   // end >> handle content
@@ -286,60 +261,46 @@ const PostingModify = () => {
   function onReset() {
     setTodolist({ text: '' })
   }
-  // start >> handle qna
-  // function getMatchingValues(postingSkillList, Skilldata) {
-  //   console.log('실행')
-  //   console.log(postingSkillList)
-  //   console.log(Skilldata)
-  //   const result = []
-  //   for (let i = 0; i < postingSkillList.length; i++) {
-  //     for (let j = 0; j < Skilldata.length; j++) {
-  //       console.log(postingSkillList[i])
-  //       console.log(Skilldata[j].code)
-  //       if (postingSkillList[i] === Skilldata[j].code) {
-  //         result.push(Skilldata[j])
-  //         break
-  //       }
-  //     }
-  //   }
-  //   return result
-  // }
-  // const handleQnAChange = (value, key) => {
-  //   const qnaArr = [...qnaList]
-  //   qnaArr.splice(key, 1, value)
-  //   setQnaList(qnaArr)
-  //   console.log(qnaList)
-  // }
 
   // end >> handle qna
 
   const handleApplySubmit = async (event) => {
+    const req = {
+      userSeq: userSeqget,
+      subject: subjectget,
+      localCode: localCodeget,
+      fieldCode: fieldCodeget,
+      isContact: isContactget,
+      term: termget,
+      content: contentget,
+      postingEndDt: postingEndDtget,
+      level: levelget,
+      postingSkillList: postingSkillListget,
+      postingPositionList: postingPositionListget,
+      postingQuestionList: postingQuestionListget,
+    }
+    console.log(req)
     if (
-      posting.subject !== '' &&
-      posting.content !== '' &&
-      posting.postingMeetingList.length !== 0 &&
-      posting.postingSkillList.length !== 0 &&
-      posting.postingPositionList.length !== 0 &&
-      posting.postingQuestionList !== 0
+      subjectget !== '' &&
+      contentget !== '' &&
+      postingSkillListget.length !== 0 &&
+      postingPositionListget.length !== 0 &&
+      postingQuestionListget !== 0
     ) {
       const config = { 'Content-Type': 'application/json' }
 
       await axios
-        .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
+        .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)
-          // console.log(JSON.stringify(posting))
         })
         .catch((err) => {
           console.log(err)
           console.log(numberOfTags)
-          // console.log(JSON.stringify(posting))
-          // console.log(posting)
-          // console.log(JSON.stringify(posting))
         })
       navigate('/posting')
     } else {
-      setErrorBox(true)
+      // setErrorBox(true)
       window.scrollTo(0, 0)
       Swal.fire({
         title: '등록 실패',
@@ -352,23 +313,21 @@ const PostingModify = () => {
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
-    const countSum = copy.reduce((accumulator, currentValue) => accumulator + currentValue.positionCnt, 0)
-    setPositionReduxlen(countSum)
-    setPosting({ ...posting, postingPositionList: copy })
+    // const countSum = copy.reduce((accumulator, currentValue) => accumulator + currentValue.positionCnt, 0)
+    // setPositionReduxlen(countSum)
+    setPostingPositionListget(copy)
+    // setPosting({ ...posting, postingPositionList: copy })
   }
   const handleqna = () => {
     const copy = qnaRedux.map((ele, i) => ({ num: i + 1, content: ele.text }))
-    setPosting({ ...posting, postingQuestionList: copy })
+    setPostingQuestionListget(copy)
+    // setPosting({ ...posting, postingQuestionList: copy })
   }
   useEffect(() => {
     postPutFetch()
   }, [])
   useEffect(() => {
-    // postingFetch()
-    // profileFetch()
     handlePositon()
-
-    // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
   useEffect(() => {
     handleqna()
@@ -399,12 +358,14 @@ const PostingModify = () => {
                 <Label>프로젝트 주제</Label>
               </div>
               <div style={{ width: '80%' }}>
-                {subjectMo && (
+                {1 && (
                   <TextField
                     sx={inputStyle}
-                    defaultValue={subjectMo}
+                    defaultValue={subjectget}
                     onChange={(e) => {
-                      setPosting({ ...posting, subject: e.target.value })
+                      setSubjectget(e.target.value)
+                      console.log(subjectget)
+                      // setPosting({ ...posting, subject: e.target.value })
                     }}
                   />
                 )}
@@ -418,11 +379,11 @@ const PostingModify = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="마감 날짜"
-                    value={posting.postingEndDt}
+                    value={postingEndDtget}
                     onChange={(newValue) => {
                       const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
-
-                      setPosting({ ...posting, postingEndDt: time })
+                      setPostingEndDtget(time)
+                      // setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
                     minDate={hunjae}
@@ -439,10 +400,11 @@ const PostingModify = () => {
               </div>
               <div style={{ width: '80%' }}>
                 <FilterSelect
-                  value={posting.localCode}
+                  value={localCodeget}
                   onChange={(e) => {
                     // console.log(e.target.value)
-                    setPosting({ ...posting, localCode: e.target.value })
+                    setLocalCodeget(e.target.value)
+                    // setPosting({ ...posting, localCode: e.target.value })
                   }}
                 >
                   {Object.keys(Localdata).map((ele, i) => (
@@ -461,9 +423,10 @@ const PostingModify = () => {
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
-                    setPosting({ ...posting, fieldCode: e.target.value })
+                    setFieldCodeget(e.target.value)
+                    // setPosting({ ...posting, fieldCode: e.target.value })
                   }}
-                  value={posting.fieldCode}
+                  value={fieldCodeget}
                 >
                   {Fielddata2.map((ele, i) => (
                     <option key={ele.code} value={ele.code}>
@@ -485,14 +448,14 @@ const PostingModify = () => {
                   onChange={(e) => {
                     // console.log(e.target.value)
                     if (e.target.value === 'true') {
-                      setPosting({ ...posting, isContact: true })
+                      setIsContactget(true)
+                      // setPosting({ ...posting, isContact: true })
                     } else {
-                      setPosting({ ...posting, isContact: false })
+                      setIsContactget(false)
+                      // setPosting({ ...posting, isContact: false })
                     }
-                    // console.log(typeof e.target.value)
-                    // console.log(range(10, 3))
                   }}
-                  value={posting.isContact}
+                  value={isContactget}
                 >
                   {contactList.map((ele, i) => (
                     <option key={i} value={ele.status}>
@@ -509,10 +472,10 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
-                    setPosting({ ...posting, term: Number(e.target.value) })
+                    setTermget(Number(e.target.value))
+                    // setPosting({ ...posting, term: Number(e.target.value) })
                   }}
-                  value={posting.term}
+                  value={termget}
                 >
                   {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((ele, i) => (
                     <option key={i} value={ele}>
@@ -540,11 +503,9 @@ const PostingModify = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>화상미팅 예약</Label>
-              </div>
+              <div style={{ width: '30%' }}>{/* <Label>화상미팅 예약</Label> */}</div>
               <div style={{ width: '70%' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <DateSelect setDate={setDaily} />
                   <SignalBtn
                     sigwidth="50px"
@@ -563,7 +524,7 @@ const PostingModify = () => {
                   >
                     시간 선택
                   </SignalBtn>
-                </Box>
+                </Box> */}
               </div>
             </div>
           </div>
@@ -573,7 +534,7 @@ const PostingModify = () => {
               <div style={{ width: '80%', margin: 0 }}>{tags && tags}</div>
             </div>
             <div>
-              <Stack direction="row" spacing={1} className="meeting-time-scroll">
+              {/* <Stack direction="row" spacing={1} className="meeting-time-scroll">
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}
@@ -583,15 +544,15 @@ const PostingModify = () => {
                     }}
                   />
                 ))}
-              </Stack>
-              <p style={{ marginTop: '1em', color: '#574b9f' }} className="meeting-time-scroll">
+              </Stack> */}
+              {/* <p style={{ marginTop: '1em', color: '#574b9f' }} className="meeting-time-scroll">
                 <span className={errorBox && DateList.length < positionReduxlen ? 'active-warning-span' : ''}>
                   미팅예약은 포지션인원수의 최소값 만큼 설정해야합니다.
                 </span>{' '}
                 (<span style={{ color: DateList.length < positionReduxlen ? 'red' : '' }}>{DateList.length}</span>
                 {' / '}
                 <span>{positionReduxlen}</span>)
-              </p>
+              </p> */}
               <div className="email-section" style={{ marginLeft: '3em' }}>
                 <div style={{ width: '30%' }}></div>
                 <div style={{ width: '70%' }}></div>
@@ -606,7 +567,7 @@ const PostingModify = () => {
               </div>
               <div style={{ width: '80%', display: 'flex' }}>
                 <FilterSelect
-                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  // className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
@@ -638,9 +599,10 @@ const PostingModify = () => {
                 <FilterSelect
                   onChange={(e) => {
                     // console.log(e.target.value)
-                    setPosting({ ...posting, level: Number(e.target.value) })
+                    setLevelget(Number(e.target.value))
+                    // setPosting({ ...posting, level: Number(e.target.value) })
                   }}
-                  value={posting.level}
+                  value={levelget}
                 >
                   {[1, 2, 3, 4, 5].map((ele, i) => (
                     <option key={i} value={ele}>
@@ -671,26 +633,25 @@ const PostingModify = () => {
               ></CareerList>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>
-                <Label>팀장 포지션</Label>
-              </div>
+              <div style={{ width: '30%' }}>{/* <Label>팀장 포지션</Label> */}</div>
               <div style={{ width: '70%', display: 'flex' }}>
-                <FilterSelect
+                {/* <FilterSelect
                   style={{ marginRight: '0px' }}
-                  className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
+                  className={errorBox && leaderPositionget ? 'active-warning' : ''}
                   onChange={(e) => {
                     // console.log(position.code)
-                    console.log(e.target.value)
-                    setPosting({ ...posting, leaderPosition: e.target.value })
+                    // console.log(e.target.value)
+                    setLeaderPositionget(e.target.value)
+                    // setPosting({ ...posting, leaderPosition: e.target.value })
                   }}
-                  value={posting.leaderPosition && posting.leaderPosition}
+                  value={leaderPositionget && leaderPositionget}
                 >
                   {positionData.map((ele, i) => (
                     <option key={i} value={ele.code}>
                       {ele.name}
                     </option>
                   ))}
-                </FilterSelect>
+                </FilterSelect> */}
               </div>
             </div>
           </div>
@@ -705,7 +666,7 @@ const PostingModify = () => {
                 multiline={true}
                 minRows="5"
                 onChange={handleContentChange}
-                value={posting.content}
+                value={contentget}
               />
             </div>
           </div>
