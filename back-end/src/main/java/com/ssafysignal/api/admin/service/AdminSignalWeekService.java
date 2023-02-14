@@ -1,11 +1,10 @@
 package com.ssafysignal.api.admin.service;
 
-import com.ssafysignal.api.admin.dto.Request.BasicAdminSignalWeekRequest;
-import com.ssafysignal.api.admin.dto.Response.FindAdminSignalWeekResponse;
-import com.ssafysignal.api.admin.dto.Response.FindAllAdminSignalweekResponse;
+import com.ssafysignal.api.admin.dto.request.BasicAdminSignalWeekRequest;
+import com.ssafysignal.api.admin.dto.response.FindAdminSignalWeekResponse;
+import com.ssafysignal.api.admin.dto.response.FindAllAdminSignalweekResponse;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
 import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

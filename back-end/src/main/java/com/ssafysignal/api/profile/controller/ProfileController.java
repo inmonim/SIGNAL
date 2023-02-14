@@ -3,9 +3,8 @@ package com.ssafysignal.api.profile.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
-import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
-import com.ssafysignal.api.profile.entity.UserHeartLog;
+import com.ssafysignal.api.profile.dto.response.FindAllHeartLogResponse;
+import com.ssafysignal.api.profile.dto.response.BasicProfileResponse;
 import com.ssafysignal.api.profile.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,10 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -42,8 +39,8 @@ public class ProfileController {
         log.info("findProfile - Call");
 
         try {
-            ProfileBasicResponse profileBasicResponse = profileService.findProfile(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            BasicProfileResponse basicProfileResponse = profileService.findProfile(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, basicProfileResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -81,7 +78,7 @@ public class ProfileController {
         log.info("findAllPosition - Call");
 
         try {
-            ProfileBasicResponse positionList = profileService.findAllPosition(userSeq);
+            BasicProfileResponse positionList = profileService.findAllPosition(userSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, positionList));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
@@ -140,8 +137,8 @@ public class ProfileController {
         log.info("findAllSkill - Call");
 
         try {
-            ProfileBasicResponse profileBasicResponse = profileService.findAllSkill(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            BasicProfileResponse basicProfileResponse = profileService.findAllSkill(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, basicProfileResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -199,8 +196,8 @@ public class ProfileController {
         log.info("findAllSkill - Call");
 
         try {
-            ProfileBasicResponse profileBasicResponse = profileService.findAllCareer(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            BasicProfileResponse basicProfileResponse = profileService.findAllCareer(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, basicProfileResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -258,8 +255,8 @@ public class ProfileController {
         log.info("findAllSkill - Call");
 
         try {
-            ProfileBasicResponse profileBasicResponse = profileService.findAllExp(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, profileBasicResponse));
+            BasicProfileResponse basicProfileResponse = profileService.findAllExp(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, basicProfileResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -305,7 +302,7 @@ public class ProfileController {
         log.info("findAllHeartLog - Call");
 
         try {
-            HeartLogAllResponse userHeartLogList = profileService.findAllUserHeartLog(userSeq);
+            FindAllHeartLogResponse userHeartLogList = profileService.findAllUserHeartLog(userSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, userHeartLogList));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));

@@ -2,21 +2,13 @@ package com.ssafysignal.api.profile.service;
 
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.profile.dto.request.ProfilePositionRegistRequest;
-import com.ssafysignal.api.profile.dto.response.HeartLogAllResponse;
-import com.ssafysignal.api.profile.dto.response.HeartLogResponse;
-import com.ssafysignal.api.profile.dto.response.ProfileBasicResponse;
+import com.ssafysignal.api.profile.dto.response.FindAllHeartLogResponse;
+import com.ssafysignal.api.profile.dto.response.BasicProfileResponse;
 import com.ssafysignal.api.profile.entity.*;
 import com.ssafysignal.api.profile.repository.*;
-import com.ssafysignal.api.signalweek.entity.Signalweek;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.engine.jdbc.Size;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +31,9 @@ public class ProfileService {
 
     // 프로필 조회
     @Transactional
-    public ProfileBasicResponse findProfile(Integer userSeq) throws RuntimeException {
+    public BasicProfileResponse findProfile(Integer userSeq) throws RuntimeException {
 
-        return ProfileBasicResponse.builder()
+        return BasicProfileResponse.builder()
                 .userCareerList(userCareerRepository.findByUserSeq(userSeq))
                 .userExpList(userExpRepository.findByUserSeq(userSeq))
                 .userPositionList(userPositionRepository.findByUserSeq(userSeq))
@@ -74,8 +66,8 @@ public class ProfileService {
 
     // 프로필 포지션 조회
     @Transactional()
-    public ProfileBasicResponse findAllPosition(Integer userSeq) throws RuntimeException {
-        return ProfileBasicResponse.builder()
+    public BasicProfileResponse findAllPosition(Integer userSeq) throws RuntimeException {
+        return BasicProfileResponse.builder()
                 .userPositionList(userPositionRepository.findByUserSeq(userSeq))
                 .build();
     }
@@ -110,8 +102,8 @@ public class ProfileService {
 
     // 프로필 기술스택 조회
     @Transactional
-    public ProfileBasicResponse findAllSkill(Integer userSeq) throws RuntimeException {
-        return ProfileBasicResponse.builder()
+    public BasicProfileResponse findAllSkill(Integer userSeq) throws RuntimeException {
+        return BasicProfileResponse.builder()
                 .userSkillList(userSkillRepository.findByUserSeq(userSeq).stream().map(UserSkill::fromEntity).collect(Collectors.toList()))
                 .build();
 
@@ -142,8 +134,8 @@ public class ProfileService {
     
     // 프로필 커리어 조회
     @Transactional
-    public ProfileBasicResponse findAllCareer(Integer userSeq) throws RuntimeException {
-        return ProfileBasicResponse.builder()
+    public BasicProfileResponse findAllCareer(Integer userSeq) throws RuntimeException {
+        return BasicProfileResponse.builder()
                 .userCareerList(userCareerRepository.findByUserSeq(userSeq))
                 .build();
     }
@@ -174,8 +166,8 @@ public class ProfileService {
 
     // 프로필 경험 조회
     @Transactional
-    public ProfileBasicResponse findAllExp(Integer userSeq) throws RuntimeException {
-        return ProfileBasicResponse.builder()
+    public BasicProfileResponse findAllExp(Integer userSeq) throws RuntimeException {
+        return BasicProfileResponse.builder()
                 .userExpList(userExpRepository.findByUserSeq(userSeq))
                 .build();
     }
@@ -221,9 +213,9 @@ public class ProfileService {
 
     // 하트 로그 조회
     @Transactional
-    public HeartLogAllResponse findAllUserHeartLog(Integer userSeq) {
+    public FindAllHeartLogResponse findAllUserHeartLog(Integer userSeq) {
         List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, Sort.by(Sort.Order.desc("regDt")));
-        return HeartLogAllResponse.fromEntity(userHeartLogList);
+        return FindAllHeartLogResponse.fromEntity(userHeartLogList);
     }
 
     @Transactional

@@ -1,7 +1,6 @@
 package com.ssafysignal.api.admin.controller;
 
-import com.ssafysignal.api.admin.dto.Request.BasicAdminSignalWeekRequest;
-import com.ssafysignal.api.admin.dto.Response.FindAdminSignalWeekResponse;
+import com.ssafysignal.api.admin.dto.request.BasicAdminSignalWeekRequest;
 import com.ssafysignal.api.admin.service.AdminSignalWeekService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
@@ -15,10 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor

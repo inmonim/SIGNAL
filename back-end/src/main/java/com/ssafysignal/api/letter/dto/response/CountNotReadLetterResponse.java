@@ -1,9 +1,11 @@
 package com.ssafysignal.api.letter.dto.response;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
+@Builder
 public class CountNotReadLetterResponse {
     private long count;
 

@@ -1,13 +1,10 @@
 package com.ssafysignal.api.board.controller;
 
-import com.ssafysignal.api.board.dto.request.QnaRegistRequest;
+import com.ssafysignal.api.board.dto.request.RegistQnaRequest;
 import com.ssafysignal.api.board.dto.response.FindAllQnaResponse;
-import com.ssafysignal.api.board.dto.response.FindQnaResponse;
 import com.ssafysignal.api.board.entity.Qna;
 import com.ssafysignal.api.board.service.QnaService;
-import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
-import com.ssafysignal.api.global.exception.UnAuthException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -54,11 +50,11 @@ public class QnaController {
     @Tag(name = "QnA")
     @Operation(summary = "QnA 등록", description = "QnA를 등록합니다.")
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registQna(@Parameter(description = "Qna 등록을 위한 정보") @RequestBody QnaRegistRequest qnaRegistRequest) {
+    private ResponseEntity<BasicResponse> registQna(@Parameter(description = "Qna 등록을 위한 정보") @RequestBody RegistQnaRequest registQnaRequest) {
         log.info("registQna - Call");
 
         try {
-            qnaService.registQna(qnaRegistRequest);
+            qnaService.registQna(registQnaRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
@@ -94,11 +90,11 @@ public class QnaController {
     @Operation(summary = "QnA 수정", description = "작성자의 QnA 수정")
     @PutMapping("/{qnaSeq}")
     private ResponseEntity<BasicResponse> modifyQna(@Parameter(name = "qnaSeq", description = "QnA Seq", required = true) @PathVariable Integer qnaSeq,
-                                                    @Parameter(description = "QnA 수정 정보", required = true) @RequestBody QnaRegistRequest qnaRegistRequest) {
+                                                    @Parameter(description = "QnA 수정 정보", required = true) @RequestBody RegistQnaRequest registQnaRequest) {
         log.info("modifyQna - Call");
 
         try {
-            qnaService.modifyQna(qnaSeq, qnaRegistRequest);
+            qnaService.modifyQna(qnaSeq, registQnaRequest);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));

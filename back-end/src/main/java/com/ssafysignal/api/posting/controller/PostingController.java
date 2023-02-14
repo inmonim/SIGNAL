@@ -4,8 +4,7 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
-import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
-import com.ssafysignal.api.posting.dto.response.FindAllPostingResponse;
+import com.ssafysignal.api.posting.dto.request.BasicPostingRequest;
 import com.ssafysignal.api.posting.dto.response.FindPostingResponse;
 import com.ssafysignal.api.posting.service.PostingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,7 +57,7 @@ public class PostingController {
             @ApiResponse(responseCode = "400", description = "공고 등록 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
     @PostMapping("")
-    private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingRegistRequest) {
+    private ResponseEntity<BasicResponse> registPosting(@Parameter(description = "공고 등록을 위한 정보") @RequestBody BasicPostingRequest postingRegistRequest) {
         log.info("registPosting - Call");
 
         System.out.println("postingRegistRequest = " + postingRegistRequest);
@@ -124,7 +123,7 @@ public class PostingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
     @PutMapping("/{postingSeq}")
     private ResponseEntity<BasicResponse> modifyPosting(@Parameter(name = "postingSeq", description = "공고 Seq") @PathVariable("postingSeq") Integer postingSeq,
-                                                        @Parameter(description = "공고 등록을 위한 정보") @RequestBody PostingBasicRequest postingModifyRequest){
+                                                        @Parameter(description = "공고 등록을 위한 정보") @RequestBody BasicPostingRequest postingModifyRequest){
         log.info("modifyPosting - Call");
 
         log.info(String.valueOf(postingSeq));
