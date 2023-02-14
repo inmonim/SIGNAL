@@ -97,9 +97,12 @@ function ProjectDocs({ projectSeq, mode }) {
   }
 
   const getNotionDoc = async (num, setValue) => {
-    await api.get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`).then((res) => {
-      setValue(res.data.body.url)
-    })
+    await api
+      .get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`)
+      .then((res) => {
+        setValue(res.data.body.url)
+      })
+      .catch(() => {})
   }
 
   return (
