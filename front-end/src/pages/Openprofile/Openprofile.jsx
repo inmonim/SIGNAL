@@ -7,17 +7,14 @@ import '../../assets/styles/posting.css'
 import Paging from 'components/Paging'
 import api from 'api/Api'
 import Openprofilecard from 'components/Openprofile/Openprofilecard'
-// import SkillList from 'components/Apply/SkillList'
-// import { useQuery } from 'react-query'
-// import { Input } from 'assets/styles/apply'
-// const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
+import Swal from 'sweetalert2'
 
 function Openprofile() {
   const [openList, setOpenList] = useState([])
-
+  const userSeq = sessionStorage.getItem('userSeq')
   const [page, setPage] = useState(1)
-  const [size] = useState(20)
-  const [count] = useState(0)
+  const [size] = useState(16)
+  const [count, setCount] = useState(0)
   const handleToPage = (page) => {
     setPage(page)
   }
@@ -25,8 +22,10 @@ function Openprofile() {
   const openProfileList = async () => {
     await api.get(process.env.REACT_APP_API_URL + `/openprofile?page=${page}&size=${size}`).then((res) => {
       setOpenList(res.data.body.openProfileList)
-      console.log(openList)
-      console.log(JSON.stringify(res.data.body.openProfileList))
+      setPage(res.data.body.totalPage)
+      setCount(res.data.body.totalNum)
+      // console.log(openList)
+      // console.log(JSON.stringify(res.data.body.openProfileList))
     })
   }
 
@@ -53,10 +52,16 @@ function Openprofile() {
           <button
             className="post-button"
             onClick={() => {
-              console.log('버튼누름')
+              api.post(process.env.REACT_APP_API_URL + '/openprofile/' + userSeq).then(() => {
+                Swal.fire({
+                  title: '프로픽 등록 완료',
+                  text: '오픈 프로필이 등록 되었습니다',
+                  icon: 'success',
+                })
+              })
             }}
           >
-            공고등록
+            프로필 등록
           </button>
         </Box>
         <OpenCardList>

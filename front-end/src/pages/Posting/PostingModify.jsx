@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router'
-import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
 import CareerList from '../../components/Apply/CareerList'
@@ -92,7 +91,7 @@ const PostingModify = () => {
   const postingSeq = location.state.postingSeq
 
   //   console.log(postingSeq)
-
+  const [subjectMo, setSubjectMo] = useState()
   const [posting, setPosting] = useState({
     userSeq: '',
     subject: '',
@@ -133,6 +132,7 @@ const PostingModify = () => {
     setDateList(resultMeeting)
     // setDeSkill(resultSkillde)
     addTag(resultSkillde)
+    setSubjectMo(post.subject)
     setPosting({
       ...posting,
       userSeq: sessionStorage.getItem('userSeq'),
@@ -373,9 +373,7 @@ const PostingModify = () => {
   useEffect(() => {
     handleqna()
   }, [qnaRedux])
-  useEffect(() => {
-    setPosting({ ...posting, postingMeetingList: DateList })
-  }, [DateList])
+
   useEffect(() => {
     skillPostFilter(arrayOfTags)
   }, [arrayOfTags])
@@ -386,14 +384,11 @@ const PostingModify = () => {
           <Title>공고 수정</Title>
           <button
             onClick={() => {
-              // console.log(posting)
-              // console.log(deSkill, 'dd')
-              // console.log(posting)
-              // console.log(arrayOfTags)
-              // console.log(tags)
+              console.log(posting)
+              console.log(posting.subject)
             }}
           >
-            dd
+            ddd
           </button>
         </div>
         <div>
@@ -404,13 +399,15 @@ const PostingModify = () => {
                 <Label>프로젝트 주제</Label>
               </div>
               <div style={{ width: '80%' }}>
-                <TextField
-                  sx={inputStyle}
-                  value={posting.subject}
-                  onChange={(e) => {
-                    setPosting({ ...posting, subject: e.target.value })
-                  }}
-                />
+                {subjectMo && (
+                  <TextField
+                    sx={inputStyle}
+                    defaultValue={subjectMo}
+                    onChange={(e) => {
+                      setPosting({ ...posting, subject: e.target.value })
+                    }}
+                  />
+                )}
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
@@ -559,6 +556,7 @@ const PostingModify = () => {
                       if (!DateList.includes(Daily) && Daily) {
                         const copy = [...DateList]
                         copy.push(Daily)
+                        setPosting({ ...posting, postingMeetingList: copy })
                         setDateList(copy)
                       }
                     }}
@@ -749,11 +747,9 @@ const PostingModify = () => {
         </div>
 
         <div className="submit-button">
-          <Link to={`/posting/${postingSeq}`}>
-            <button className="apply-button" onClick={handleApplySubmit}>
-              공고 수정
-            </button>
-          </Link>
+          <button className="apply-button" onClick={handleApplySubmit}>
+            공고 수정
+          </button>
         </div>
       </div>
     </Container>
