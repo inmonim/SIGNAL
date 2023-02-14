@@ -64,7 +64,7 @@ function MyProject() {
           {endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, i) => {
             return (
               <>
-                <Link to="/project" state={{ projectSeq: v.projectSeq }}>
+                <Link to="/endproject" state={{ projectSeq: v.projectSeq }}>
                   <div className="project-list-end" key={i}>
                     <div className="project-list-img">
                       <img
