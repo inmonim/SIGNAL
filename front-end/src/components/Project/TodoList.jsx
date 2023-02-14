@@ -13,6 +13,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
+import AlertModal from 'components/AlertModal'
 
 function TodoList({ projectSeq }) {
   const today = moment(new Date()).format('YYYY-MM-DD')
@@ -23,6 +24,7 @@ function TodoList({ projectSeq }) {
   const handleToClose = () => {
     setOpenTodoPlus(false)
     setTodoModifyOpen(false)
+    setComplAlertOpen(false)
   }
 
   function dateToString(value) {
@@ -116,22 +118,23 @@ function TodoList({ projectSeq }) {
   }
   AddArray()
 
-  // const [complAlertOpen, setComplAlertOpen] = useState(false)
-  // const handleToComplete = () => {
-  //   setComplAlertOpen(true)
-  // }
+  const [complAlertOpen, setComplAlertOpen] = useState(false)
+  const [todoId, setTodoId] = useState('')
+  const handleToComplAlert = (e) => {
+    setTodoId(e.target.id)
+    setComplAlertOpen(true)
+  }
 
-  const handleCompleteTodo = async (e) => {
-    if (e.target.checked === true) {
-      await api
-        .put(process.env.REACT_APP_API_URL + '/todo/state/' + e.target.id, true)
-        .then(() => {
-          setFlag(!flag)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
+  const handleCompleteTodo = async () => {
+    setComplAlertOpen(false)
+    await api
+      .put(process.env.REACT_APP_API_URL + '/todo/state/' + todoId, true)
+      .then(() => {
+        setFlag(!flag)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const [todoModifyOpen, setTodoModifyOpen] = useState(false)
@@ -170,6 +173,7 @@ function TodoList({ projectSeq }) {
                 }`}
                 onClick={() => {
                   setUserSeq(mem.userSeq)
+                  console.log('.', userSeq)
                 }}
               >
                 {mem.nickname}
@@ -202,7 +206,6 @@ function TodoList({ projectSeq }) {
         <div className="todo-todos-container">
           <div className="todo-todos-header">
             <div className="todo-todos-title">ToDos</div>
-            {console.log(userSeq === currentUser)}
             {(dateValue === today && userSeq === JSON.parse(currentUser)) || userSeq === currentUser ? (
               <div className="todo-todos-plus" onClick={handleToAlert}>
                 <img src={plusBtn} alt="" />
@@ -223,10 +226,10 @@ function TodoList({ projectSeq }) {
             {todoList.map((todo, index) => (
               <>
                 <div className="todo-todos-list-item" key={todo.todoSeq} id={todo.todoSeq}>
-                  {dateValue === today ? (
-                    userSeq === JSON.parse(currentUser) ? (
+                  {(dateValue === today && userSeq === JSON.parse(currentUser)) || userSeq === currentUser ? (
+                    <>
                       <FormControlLabel
-                        onChange={handleCompleteTodo}
+                        onChange={handleToComplAlert}
                         control={
                           <Checkbox
                             id={todo.todoSeq}
@@ -239,23 +242,13 @@ function TodoList({ projectSeq }) {
                           />
                         }
                       />
-                    ) : (
-                      <FormControlLabel
-                        onChange={handleCompleteTodo}
-                        control={
-                          <Checkbox
-                            id={todo.todoSeq}
-                            defaultChecked={false}
-                            sx={{
-                              '& .MuiSvgIcon-root': { fontSize: 30 },
-                              color: '#574B9F',
-                              '&.Mui-checked': { color: '#574B9F' },
-                            }}
-                          />
-                        }
-                        disabled
-                      />
-                    )
+                      <AlertModal
+                        open={complAlertOpen}
+                        onClick={handleCompleteTodo}
+                        onClose={handleToClose}
+                        msg="완료하셨습니까?"
+                      ></AlertModal>
+                    </>
                   ) : (
                     <WarningAmberIcon
                       sx={{

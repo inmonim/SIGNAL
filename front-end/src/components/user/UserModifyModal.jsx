@@ -12,7 +12,7 @@ import api from 'api/Api'
 function UserModifyModal({ open, onClose }) {
   const [inputs, setInputs] = useState([])
   const [data, setData] = useState([])
-  const [alertOpen, setAlertOpen] = useState('')
+  const [alertOpen, setAlertOpen] = useState(false)
   const [fileImage, setFileImage] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const fileInput = React.useRef(null)
@@ -46,6 +46,7 @@ function UserModifyModal({ open, onClose }) {
 
     setAlertOpen(false)
     onClose(onClose(true))
+    window.location.reload()
   }
 
   const handleToClose = () => {
