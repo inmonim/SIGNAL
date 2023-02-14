@@ -154,9 +154,10 @@ function App() {
               path="/teamBuilding"
               element={<PrivateRoute component={<TeamBuilding />} loginAuthenticated={token} />}
             />
-            {/* 
-                   
-            
+            <Route path="/qnaRegist" element={<PrivateRoute component={<QnaRegist />} loginAuthenticated={token} />} />
+            <Route path="/qnaModify" element={<PrivateRoute component={<QnaModify />} loginAuthenticated={token} />} />
+            {/*
+
             */}
             {/* 관리자 권한 필요 페이지 */}
             <Route
@@ -178,19 +179,12 @@ function App() {
             <Route
               path="/noticeRegist"
               element={<AdminRoute component={<NoticeRegist />} loginAuthenticated={token} adminAuthenticated={auth} />}
-            />{' '}
+            />
             <Route
               path="/noticeModify"
               element={<AdminRoute component={<NoticeModify />} loginAuthenticated={token} adminAuthenticated={auth} />}
             />
-            <Route
-              path="/qnaRegist"
-              element={<AdminRoute component={<QnaRegist />} loginAuthenticated={token} adminAuthenticated={auth} />}
-            />{' '}
-            <Route
-              path="/qnaModify"
-              element={<AdminRoute component={<QnaModify />} loginAuthenticated={token} adminAuthenticated={auth} />}
-            />
+
             {/* 
             
             
