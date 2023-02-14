@@ -39,11 +39,11 @@ function MyProject() {
         <div className="hr-sect">진행중인 프로젝트</div>
         <div className="project-list-container">
           {ingData &&
-            ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {
+            ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, index) => {
               return (
-                <>
+                <div key={index}>
                   <Link to="/project" state={{ projectSeq: v.projectSeq }}>
-                    <div className="project-list-ing" key={i}>
+                    <div className="project-list-ing" key={index}>
                       <div className="project-list-img">
                         <img
                           className="project-list-img-item"
@@ -54,7 +54,7 @@ function MyProject() {
                       <div className="project-list-subject">{v.subject}</div>
                     </div>
                   </Link>
-                </>
+                </div>
               )
             })}
         </div>
@@ -63,11 +63,11 @@ function MyProject() {
         <div className="hr-sect">진행했던 프로젝트</div>
         <div className="project-list-container">
           {endData &&
-            endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, i) => {
+            endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, index) => {
               return (
-                <>
+                <div key={index}>
                   <Link to="/endproject" state={{ projectSeq: v.projectSeq }}>
-                    <div className="project-list-end" key={i}>
+                    <div className="project-list-end">
                       <div className="project-list-img">
                         <img
                           className="project-list-img-item"
@@ -78,7 +78,7 @@ function MyProject() {
                       <div className="project-list-subject">{v.subject}</div>
                     </div>
                   </Link>
-                </>
+                </div>
               )
             })}
         </div>
