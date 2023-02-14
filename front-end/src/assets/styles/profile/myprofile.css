@@ -144,6 +144,21 @@
 .my-profile-top-skill-list {
   display: flex;
   padding-left: 10px;
+  width: 360px;
+  flex-wrap: wrap;
+  height: 180px;
+  overflow: auto;
+}
+
+.my-profile-top-skill-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-top-skill-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .my-profile-top-skill-list-item {
