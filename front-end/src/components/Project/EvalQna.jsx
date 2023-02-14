@@ -57,6 +57,7 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   return (
     <div className="eval-body">
+      {weekCnt !== tab ? <div className="last-eval">❗ 지난 평가입니다.</div> : <></>}
       <div className="eval-date">{nickname} 님 평가</div>
       <div className="eval-date">
         {tab}회차 {evaluationStartDt} ~ {evaluationEndDt}
