@@ -1,10 +1,10 @@
 package com.ssafysignal.api.apply.service;
 
 import com.ssafysignal.api.admin.Repository.BlackUserRepository;
-import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
-import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
-import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
-import com.ssafysignal.api.apply.dto.Response.ApplyWriterFindResponse;
+import com.ssafysignal.api.apply.dto.request.BasicApplyRequest;
+import com.ssafysignal.api.apply.dto.request.ApplyMemoRequest;
+import com.ssafysignal.api.apply.dto.response.ApplyFindResponse;
+import com.ssafysignal.api.apply.dto.response.ApplyWriterFindResponse;
 import com.ssafysignal.api.apply.entity.*;
 import com.ssafysignal.api.apply.repository.*;
 import com.ssafysignal.api.common.entity.CommonCode;
@@ -48,7 +48,7 @@ public class ApplyService {
     private final SecurityService securityService;
 
     @Transactional
-    public void registApply(ApplyBasicRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
+    public void registApply(BasicApplyRequest applyRegistRequest, Integer postingSeq) throws RuntimeException {
 
         User user = userRepository.findByUserSeq(applyRegistRequest.getUserSeq()).orElseThrow(
                 () -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
@@ -159,7 +159,7 @@ public class ApplyService {
                 .build();
     }
     @Transactional
-    public void modifyApply( ApplyBasicRequest applyModifyRequest,Integer applySeq) throws RuntimeException {
+    public void modifyApply(BasicApplyRequest applyModifyRequest, Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 

@@ -1,7 +1,7 @@
 package com.ssafysignal.api.admin.service;
 
-import com.ssafysignal.api.admin.dto.Response.FindAdminProjectResponse;
-import com.ssafysignal.api.admin.dto.Response.FindAllAdminProjectResponse;
+import com.ssafysignal.api.admin.dto.response.FindAdminProjectResponse;
+import com.ssafysignal.api.admin.dto.response.FindAllAdminProjectResponse;
 import com.ssafysignal.api.project.entity.Project;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

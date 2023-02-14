@@ -6,7 +6,7 @@ import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.posting.dto.request.ApplySelectConfirmRequest;
-import com.ssafysignal.api.posting.dto.request.PostingBasicRequest;
+import com.ssafysignal.api.posting.dto.request.BasicPostingRequest;
 import com.ssafysignal.api.posting.dto.response.FindAllPostingByUserSeqResponse;
 import com.ssafysignal.api.posting.dto.response.FindAllPostingResponse;
 import com.ssafysignal.api.posting.dto.response.FindPostingResponse;
@@ -54,7 +54,7 @@ public class PostingService {
     }
 
     @Transactional
-    public void registPosting(PostingBasicRequest postingRegistRequest) throws RuntimeException {
+    public void registPosting(BasicPostingRequest postingRegistRequest) throws RuntimeException {
 
         User user = userRepository.findByUserSeq(postingRegistRequest.getUserSeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
@@ -185,7 +185,7 @@ public class PostingService {
     }
 
     @Transactional
-    public void modifyPosting(Integer postingSeq, PostingBasicRequest postingModifyRequest) throws RuntimeException {
+    public void modifyPosting(Integer postingSeq, BasicPostingRequest postingModifyRequest) throws RuntimeException {
         // 공고 수정
         Posting posting = postingRepository.findById(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));

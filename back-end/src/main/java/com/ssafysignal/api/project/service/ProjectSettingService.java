@@ -9,10 +9,10 @@ import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectSettingFindResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectUserFindAllDto;
-import com.ssafysignal.api.project.dto.request.ProjectEvaluationRegistRequest;
-import com.ssafysignal.api.project.dto.request.ProjectSettingModifyRequest;
+import com.ssafysignal.api.project.dto.reponse.FindProjectSettingResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserDto;
+import com.ssafysignal.api.project.dto.request.RegistProjectEvaluationRequest;
+import com.ssafysignal.api.project.dto.request.ModifyProjectSettingRequest;
 import com.ssafysignal.api.project.entity.*;
 import com.ssafysignal.api.project.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -48,15 +48,15 @@ public class ProjectSettingService {
     @Value("${app.fileUpload.uploadPath.projectImage}")
     private String projectUploadPath;
     @Transactional(readOnly = true)
-    public ProjectSettingFindResponse findProjectSetting(Integer projectSeq) {
+    public FindProjectSettingResponse findProjectSetting(Integer projectSeq) {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        return ProjectSettingFindResponse.fromEntity(project);
+        return FindProjectSettingResponse.fromEntity(project);
     }
 
     @Transactional(readOnly = true)
-    public List<ProjectUserFindAllDto> findProjectUser(Integer projectSeq) {
+    public List<FindAllProjectUserDto> findProjectUser(Integer projectSeq) {
         Integer userSeq = securityService.currentUserSeq();
 
         List<ProjectUser> projectUserList = projectUserRepository.findByProjectSeq(projectSeq);
@@ -69,7 +69,7 @@ public class ProjectSettingService {
             }
         }
         return projectUserList.stream()
-                .map(ProjectUserFindAllDto::fromEntity)
+                .map(FindAllProjectUserDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class ProjectSettingService {
     }
 
     @Transactional
-    public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ProjectSettingModifyRequest projectSettingModifyRequest) throws RuntimeException, IOException {
+    public void modifyProjectSetting(Integer projectSeq, MultipartFile uploadImage, ModifyProjectSettingRequest modifyProjectSettingRequest) throws RuntimeException, IOException {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
@@ -112,20 +112,20 @@ public class ProjectSettingService {
             }
         }
 
-        if (projectSettingModifyRequest.getIsDelete()){
+        if (modifyProjectSettingRequest.getIsDelete()){
             fileService.deleteImageFile(uploadPath + project.getImageFile().getUrl());
             project.setProjectImageFileSeq(1);
         }
         /*
             프로젝트 설정 데이터 처리
          */
-        project.setSubject(projectSettingModifyRequest.getSubject());
-        project.setLocalCode(projectSettingModifyRequest.getLocalCode());
-        project.setFieldCode(projectSettingModifyRequest.getFieldCode());
-        project.setTerm(projectSettingModifyRequest.getTerm());
-        project.setContact(projectSettingModifyRequest.isContact());
-        project.setContent(projectSettingModifyRequest.getContent());
-        project.setGitUrl(projectSettingModifyRequest.getGitUrl());
+        project.setSubject(modifyProjectSettingRequest.getSubject());
+        project.setLocalCode(modifyProjectSettingRequest.getLocalCode());
+        project.setFieldCode(modifyProjectSettingRequest.getFieldCode());
+        project.setTerm(modifyProjectSettingRequest.getTerm());
+        project.setContact(modifyProjectSettingRequest.isContact());
+        project.setContent(modifyProjectSettingRequest.getContent());
+        project.setGitUrl(modifyProjectSettingRequest.getGitUrl());
         projectRepository.save(project);
     }
 
@@ -158,21 +158,21 @@ public class ProjectSettingService {
     }
 
     @Transactional
-    public void registProjectUserEvaluation(ProjectEvaluationRegistRequest projectEvaluationRegistRequest) throws RuntimeException {
+    public void registProjectUserEvaluation(RegistProjectEvaluationRequest registProjectEvaluationRequest) throws RuntimeException {
         // 이미 등록됬는지 확인
         if (projectEvaluationRepository.findAll(
                 ProjectSpecification.byFromUserSeqAndToUserSeq(
-                        projectEvaluationRegistRequest.getFromUserSeq(),
-                        projectEvaluationRegistRequest.getToUserSeq(),
-                        projectEvaluationRegistRequest.getWeekCnt())).isEmpty()){
+                        registProjectEvaluationRequest.getFromUserSeq(),
+                        registProjectEvaluationRequest.getToUserSeq(),
+                        registProjectEvaluationRequest.getWeekCnt())).isEmpty()){
 
-            for (Map<String, Integer> score : projectEvaluationRegistRequest.getScoreList()){
+            for (Map<String, Integer> score : registProjectEvaluationRequest.getScoreList()){
 
                 projectEvaluationRepository.save(ProjectEvaluation.builder()
-                        .projectSeq(projectEvaluationRegistRequest.getProjectSeq())
-                        .fromUserSeq(projectEvaluationRegistRequest.getFromUserSeq())
-                        .toUserSeq(projectEvaluationRegistRequest.getToUserSeq())
-                        .weekCnt(projectEvaluationRegistRequest.getWeekCnt())
+                        .projectSeq(registProjectEvaluationRequest.getProjectSeq())
+                        .fromUserSeq(registProjectEvaluationRequest.getFromUserSeq())
+                        .toUserSeq(registProjectEvaluationRequest.getToUserSeq())
+                        .weekCnt(registProjectEvaluationRequest.getWeekCnt())
                         .num(score.get("num"))
                         .score(score.get("score"))
                         .build());

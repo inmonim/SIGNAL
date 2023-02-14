@@ -1,11 +1,9 @@
 package com.ssafysignal.api.todolist.service;
 
-import com.ssafysignal.api.board.repository.NoticeRepository;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.todolist.dto.request.TodoModifyRequest;
-import com.ssafysignal.api.todolist.dto.request.TodoRegistRequest;
-import com.ssafysignal.api.todolist.dto.response.TodolistFindAllResponse;
+import com.ssafysignal.api.todolist.dto.request.ModifyTodoRequest;
+import com.ssafysignal.api.todolist.dto.request.RegistTodoRequest;
 import com.ssafysignal.api.todolist.dto.response.TodolistFindResponse;
 import com.ssafysignal.api.todolist.entity.Todolist;
 import com.ssafysignal.api.todolist.repository.TodolistRepository;
@@ -13,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,11 +22,11 @@ public class TodolistService{
     private final TodolistRepository todolistRepository;
 
     @Transactional
-    public void registTodo(TodoRegistRequest todoRegistRequest) {
+    public void registTodo(RegistTodoRequest registTodoRequest) {
         Todolist todo = Todolist.builder()
-                .projectSeq(todoRegistRequest.getProjectSeq())
-                .userSeq(todoRegistRequest.getUserSeq())
-                .content(todoRegistRequest.getContent())
+                .projectSeq(registTodoRequest.getProjectSeq())
+                .userSeq(registTodoRequest.getUserSeq())
+                .content(registTodoRequest.getContent())
                 .build();
         todolistRepository.save(todo);
     }
@@ -66,11 +61,11 @@ public class TodolistService{
     }
 
     @Transactional
-    public void modifyToDo(Integer toDoSeq, TodoModifyRequest todoModifyRequest) {
+    public void modifyToDo(Integer toDoSeq, ModifyTodoRequest modifyTodoRequest) {
         Todolist toDo = todolistRepository.findByProjectToDoSeq(toDoSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-        toDo.setContent(todoModifyRequest.getContent());
+        toDo.setContent(modifyTodoRequest.getContent());
 
         todolistRepository.save(toDo);
     }

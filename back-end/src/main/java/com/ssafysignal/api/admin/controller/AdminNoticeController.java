@@ -1,6 +1,6 @@
 package com.ssafysignal.api.admin.controller;
 
-import com.ssafysignal.api.admin.dto.Request.BasicAdminNoticeRequest;
+import com.ssafysignal.api.admin.dto.request.BasicAdminNoticeRequest;
 import com.ssafysignal.api.admin.service.AdminNoticeService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;

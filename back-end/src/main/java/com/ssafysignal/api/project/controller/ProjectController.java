@@ -3,9 +3,8 @@ package com.ssafysignal.api.project.controller;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectFindAllResponse;
-import com.ssafysignal.api.project.dto.reponse.ProjectFindResponse;
+import com.ssafysignal.api.project.dto.reponse.FindAllProjectResponse;
+import com.ssafysignal.api.project.dto.reponse.FindProjectResponse;
 import com.ssafysignal.api.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -65,8 +62,8 @@ public class ProjectController {
         log.info("findAllProject - Call");
 
         try {
-            ProjectFindAllResponse projectFindAllResponse = projectService.findAllProject(userSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectFindAllResponse));
+            FindAllProjectResponse findAllProjectResponse = projectService.findAllProject(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllProjectResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
@@ -84,8 +81,8 @@ public class ProjectController {
         log.info("findProject - Call");
 
         try {
-            ProjectFindResponse projectFindResponse = projectService.findProject(userSeq, projectSeq);
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, projectFindResponse));
+            FindProjectResponse findProjectResponse = projectService.findProject(userSeq, projectSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findProjectResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }

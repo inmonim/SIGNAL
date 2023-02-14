@@ -1,10 +1,10 @@
 package com.ssafysignal.api.apply.controller;
 
 
-import com.ssafysignal.api.apply.dto.Request.ApplyBasicRequest;
-import com.ssafysignal.api.apply.dto.Request.ApplyMemoRequest;
-import com.ssafysignal.api.apply.dto.Response.ApplyApplyerFindResponse;
-import com.ssafysignal.api.apply.dto.Response.ApplyFindResponse;
+import com.ssafysignal.api.apply.dto.request.BasicApplyRequest;
+import com.ssafysignal.api.apply.dto.request.ApplyMemoRequest;
+import com.ssafysignal.api.apply.dto.response.ApplyApplyerFindResponse;
+import com.ssafysignal.api.apply.dto.response.ApplyFindResponse;
 import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.apply.service.ApplyService;
 import com.ssafysignal.api.global.exception.NotFoundException;
@@ -40,7 +40,7 @@ public class ApplyController {
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
     @PostMapping("/{postingSeq}")
     private ResponseEntity<BasicResponse> registApply(@Parameter(name = "postingSeq", description = "공고 Seq", required = true) @PathVariable("postingSeq") Integer postingSeq,
-                                                      @Parameter(description = "지원서 작성을 위한 정보", required = true) @RequestBody ApplyBasicRequest applyRegistRequest) {
+                                                      @Parameter(description = "지원서 작성을 위한 정보", required = true) @RequestBody BasicApplyRequest applyRegistRequest) {
         log.info("regeistApply - Call");
 
         try {
@@ -61,11 +61,11 @@ public class ApplyController {
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @PutMapping("/{applySeq}")
     private ResponseEntity<BasicResponse> modifyApply(@Parameter(name = "applySeq", description = "지원서 Seq", required = true) @PathVariable(name = "applySeq") Integer applySeq,
-                                                      @Parameter(description = "지원서 수정 정보", required = true) @RequestBody ApplyBasicRequest applyBasicRequest) {
+                                                      @Parameter(description = "지원서 수정 정보", required = true) @RequestBody BasicApplyRequest basicApplyRequest) {
     	
         log.info("modifyApply - Call");
-        System.out.println(applyBasicRequest);
-        applyService.modifyApply(applyBasicRequest, applySeq);
+        System.out.println(basicApplyRequest);
+        applyService.modifyApply(basicApplyRequest, applySeq);
         try {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         }
