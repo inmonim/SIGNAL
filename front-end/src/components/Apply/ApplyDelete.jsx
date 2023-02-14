@@ -46,7 +46,7 @@ function ApplyDelete({ applySeq }) {
     try {
       const res = await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       console.log(res)
-      navigate('/')
+      navigate('/myprofile')
     } catch (error) {
       console.log(error)
     }
