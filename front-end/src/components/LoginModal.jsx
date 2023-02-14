@@ -14,7 +14,7 @@ import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import api from 'api/Api'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const style = {
   width: 727,
@@ -56,12 +56,12 @@ function LoginModal({ open, onClose }) {
   }
   const [msg, setMsg] = useState('')
   const [alertOpen, setAlertOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleToMain = async () => {
     console.log('click login')
     console.log('Email: ', inputEmail)
     console.log('Pwd: ', inputPwd)
-
     await api
       .post(
         process.env.REACT_APP_API_URL + '/auth/login',
@@ -84,6 +84,7 @@ function LoginModal({ open, onClose }) {
         sessionStorage.setItem('userSeq', response.data.body.userSeq)
         sessionStorage.setItem('admin', response.data.body.admin)
         onClose(onClose(true))
+        navigate('/')
       })
       .catch((e) => {
         console.log(e)
