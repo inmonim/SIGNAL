@@ -154,6 +154,31 @@
 .my-profile-bottom-career-list {
   padding-left: 10px;
   font-size: 22px;
+  overflow-wrap: break-word;
+  height: 190px;
+  overflow: auto;
+}
+
+.my-profile-bottom-exp-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-bottom-exp-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.my-profile-bottom-career-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-bottom-career-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .my-profile-bottom-exp-list-item,
