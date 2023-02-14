@@ -4,6 +4,7 @@ import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, Table
 import 'assets/styles/adminBlackList.css'
 import api from 'api/Api'
 import BlackListReleaseModal from 'components/Admin/BlackListReleaseModal'
+import Paging from 'components/Paging'
 
 function AdminBlackList() {
   const [blackList, setBlackList] = useState([])
@@ -11,22 +12,43 @@ function AdminBlackList() {
 
   const blackListFetch = async () => {
     try {
-      await api.get(process.env.REACT_APP_API_URL + '/admin/user').then((res) => {
+      await api.get(process.env.REACT_APP_API_URL + `/admin/user?page=${page}&size=${size}`).then((res) => {
         console.log(res.data.body)
-        setBlackList(res.data.body.userList)
+        setBlackList(res.data.body.blackUserList)
+        setCount(res.data.body.count)
       })
     } catch (error) {
       console.log(error)
     }
   }
 
+  const [size] = useState(8)
+  const [page, setPage] = useState(1)
+  const [count, setCount] = useState(0)
+
+  const handlePageChange = (page) => {
+    setPage(page)
+  }
+
+  useEffect(() => {
+    blackListFetch()
+  }, [page])
+
   const rows = []
   Array.from(blackList).forEach((item) => {
-    rows.push(item)
+    rows.push({
+      blackUserSeq: item.blackUserSeq,
+      userSeq: item.userSeq,
+      email: item.email,
+      nickname: item.nickname,
+      regDt: item.regDt,
+      projectSeq: item.projectSeq,
+    })
   })
+
   const rowLen = rows.length
-  if (rowLen !== 8 && rowLen !== 0) {
-    for (let i = 0; i < 8 - rowLen; i++)
+  if (rowLen !== size && rowLen !== 0) {
+    for (let i = 0; i < size - rowLen; i++)
       rows.push({
         blackUserSeq: ' ',
         userSeq: ' ',
@@ -53,10 +75,6 @@ function AdminBlackList() {
   const handleClose = () => {
     setOpen(false)
   }
-
-  useEffect(() => {
-    blackListFetch()
-  }, [])
 
   // 8개 checkbox default false
   const [checked, setChecked] = useState([false, false, false, false, false, false, false, false])
@@ -98,24 +116,24 @@ function AdminBlackList() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows &&
-                  rows.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell padding="checkbox">
-                        {row.userSeq === ' ' ? (
-                          ''
-                        ) : (
-                          <Checkbox color="primary" onChange={() => handleChecked(event, index)} />
-                        )}
-                      </TableCell>
-                      <TableCell align="center">{row.email}</TableCell>
-                      <TableCell align="center">{row.nickname}</TableCell>
-                      <TableCell align="center">{row.regDt}</TableCell>
-                    </TableRow>
-                  ))}
+                {rows.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell padding="checkbox">
+                      {row.userSeq === ' ' ? (
+                        ''
+                      ) : (
+                        <Checkbox color="primary" onChange={() => handleChecked(event, index)} />
+                      )}
+                    </TableCell>
+                    <TableCell align="center">{row.email}</TableCell>
+                    <TableCell align="center">{row.nickname}</TableCell>
+                    <TableCell align="center">{row.regDt}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
         </div>
       </div>
     </div>
