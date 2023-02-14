@@ -184,7 +184,7 @@ function ProjectMeeting() {
     // 클라이언트 입장에서 보내는 역할의 peerConnection 객체에서 수신한 answer 메시지(sender_offer의 응답받음)
     socket.on('get_sender_answer', (data) => {
       try {
-        console.log('get_sender_answer 받음')
+        // console.log('get_sender_answer 받음')
         sendPC[data.purpose].setRemoteDescription(new RTCSessionDescription(data.answer))
       } catch (error) {
         console.error(error)
@@ -294,7 +294,7 @@ function ProjectMeeting() {
 
     // 코드에디터 내용받아오기
     socket.on('get_editor', (data) => {
-      console.log('editor정보 받아옴')
+      // console.log('editor정보 받아옴')
       version = data.version
       codemirror.setValue(data.content)
     })
@@ -629,7 +629,7 @@ function ProjectMeeting() {
   // ============================================================================
 
   function shareCheck() {
-    console.log('shareCheck실행됨!!')
+    // console.log('shareCheck실행됨!!')
     if (shareUserName !== '') return
     socket.emit('share_check')
   }
@@ -708,16 +708,15 @@ function ProjectMeeting() {
 
   // 화면 공유 stream을 video에 넣음
   function shareOntrackHandler(stream, userName, senderSocketId) {
-    // ##################수정해서 쓰삼#######################
     const shareVideo = document.querySelector('.project-meeting-video-share > video')
-    console.log('shareVideo:', shareVideo)
+    // console.log('shareVideo:', shareVideo)
     shareVideo.srcObject = stream
   }
 
   // 페인트보드===================================================================================
   function stopPainting() {
     if (!isPainting) return
-    console.log('그리기 종료')
+    // console.log('그리기 종료')
     socket.emit('drawing', {
       size: drawingSize,
       color: drawingColor,
@@ -732,7 +731,7 @@ function ProjectMeeting() {
     isPainting = true
     drawingXYs = [[mx, my]]
     // console.log("색상:", drawingColor);
-    console.log('그리기 시작')
+    // console.log('그리기 시작')
   }
 
   function onMouseMove(event) {
@@ -847,7 +846,7 @@ function ProjectMeeting() {
   }
 
   useEffect(() => {
-    console.log('비디오 생성! streams :', streams)
+    // console.log('비디오 생성! streams :', streams)
 
     setUserVideo()
   }, [streams])
