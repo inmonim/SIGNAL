@@ -92,30 +92,15 @@ function TeamEval({ projectSeq }) {
             ))}
           </div>
           <div className="eval-qna-container">
-            {finishMember.includes(toUserSeq) ? (
-              // <div className="eval-body">
-              //   <div className="eval-end">{nickname} 님 평가 완료</div>
-              // </div>
-              <EvalQna
-                fromUserSeq={fromUserSeq}
-                toUserSeq={toUserSeq}
-                projectSeq={projectSeq}
-                tab={tab + 1}
-                nickname={nickname}
-                weekCnt={weekCnt}
-                setFlag={setFlag}
-              ></EvalQna>
-            ) : (
-              <EvalQna
-                fromUserSeq={fromUserSeq}
-                toUserSeq={toUserSeq}
-                projectSeq={projectSeq}
-                tab={tab + 1}
-                nickname={nickname}
-                weekCnt={weekCnt}
-                setFlag={setFlag}
-              ></EvalQna>
-            )}
+            <EvalQna
+              fromUserSeq={fromUserSeq}
+              toUserSeq={toUserSeq}
+              projectSeq={projectSeq}
+              tab={tab + 1}
+              nickname={nickname}
+              weekCnt={weekCnt}
+              setFlag={setFlag}
+            ></EvalQna>
           </div>
         </div>
       </div>

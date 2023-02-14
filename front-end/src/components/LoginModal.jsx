@@ -85,6 +85,7 @@ function LoginModal({ open, onClose }) {
         sessionStorage.setItem('admin', response.data.body.admin)
         onClose(onClose(true))
         navigate('/')
+        location.reload()
       })
       .catch((e) => {
         console.log(e)
