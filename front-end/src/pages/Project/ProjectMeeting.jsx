@@ -73,8 +73,8 @@ const themeOptions = [
 ]
 
 const projectMeetingSetting = () => {
-  // socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
+  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
   pcConfig = {
@@ -89,7 +89,7 @@ const projectMeetingSetting = () => {
       },
     ],
   }
-  /* const params = new URLSearchParams(location.search)
+  const params = new URLSearchParams(location.search)
 
   const nickname = params.get('nickname')
   const projectSeq = params.get('projectSeq')
@@ -100,9 +100,9 @@ const projectMeetingSetting = () => {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
       window.close()
     }
-  } */
-  myName = Math.random() + ''
-  roomId = 'a123'
+  }
+  // myName = Math.random() + ''
+  // roomId = 'a123'
 
   userNames = {} // userNames[socketId]="이름"
   socketIds = {} // socketIds["이름"]=socketId
@@ -310,8 +310,11 @@ function ProjectMeeting() {
     socket.on('rollback_editor', (data) => {
       version = data.version
       const content = data.content
-      console.log('rollback_editor', content)
-      console.log('cursor', codemirror.getCursor())
+      // console.log('rollback_editor', content)
+      // console.log('cursor', codemirror.getCursor())
+      const cursor = codemirror.getCursor()
+      codemirror.setValue(content)
+      codemirror.setCursor({ line: cursor.line, ch: cursor.ch })
     })
   }
 
@@ -359,15 +362,35 @@ function ProjectMeeting() {
         })
       })
       .catch((error) => {
-        console.error(error)
+        // console.error(error)
+        setStreams((streams) => {
+          const streams2 = { ...streams }
+          streams2[myName] = null
+          return streams2
+        })
+        socket.emit('join_room', {
+          roomId,
+          userName: myName,
+        })
+        socket.emit('noCam_enter', {
+          roomId,
+          userName: myName,
+        })
         if (error.name === 'NotFoundError') {
-          console.alert('더보기 구성 > 설정 > 개인정보 및 보안 > 사이트 설정에서 권한을 부여해주세요')
+          // alert('카메라 또는 마이크가 인식되지 않습니다.')
+          // window.close()
+        } else if (error.name === 'NotAllowedError') {
+          // alert(
+          //   '카메라 및 마이크 접근 권한이 없습니다. \n더보기 구성 > 설정 > 개인정보 및 보안 > 사이트 설정에서 접근 권한을 부여해주세요'
+          // )
+        } else {
+          console.log(error.name)
         }
-
-        if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
+        setMode(1)
+        /* if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
           // window.location = '..'
           // window.close()
-        }
+        } */
       })
   }
 
@@ -484,21 +507,28 @@ function ProjectMeeting() {
       for (let i = 0; i < len; i++) {
         const socketId = data.users[i].socketId
         const userName = data.users[i].userName
+        const isNoCam = data.users[i].isNoCam
 
         userNames[socketId] = userName
         socketIds[userName] = socketId
 
-        // 기존 유저들 영상을 받을 pc와 offer를 생성
-        const pc = createReceiverPeerConnection(socketId, userName, 'user')
-        const offer = await createReceiverOffer(pc)
+        if (!isNoCam) {
+          // 기존 유저들 영상을 받을 pc와 offer를 생성
+          const pc = createReceiverPeerConnection(socketId, userName, 'user')
+          const offer = await createReceiverOffer(pc)
 
-        // 수신 offer 보냄
-        await socket.emit('receiver_offer', {
-          offer,
-          receiverSocketId: socket.id,
-          senderSocketId: socketId,
-          purpose: 'user',
-        })
+          // 수신 offer 보냄
+          await socket.emit('receiver_offer', {
+            offer,
+            receiverSocketId: socket.id,
+            senderSocketId: socketId,
+            purpose: 'user',
+          })
+        } else {
+          // 노캠유저
+
+          userOntrackHandler(null, userName, socketId)
+        }
       }
     } catch (err) {
       console.error(err)
@@ -507,22 +537,28 @@ function ProjectMeeting() {
 
   // 누군가 들어왔을 때
   async function enterUserHandler(data) {
-    try {
-      const pc = createReceiverPeerConnection(data.socketId, data.userName, 'user')
-      const offer = await createReceiverOffer(pc)
+    userNames[data.socketId] = data.userName
+    socketIds[data.userName] = data.socketId
+    numOfUsers++
 
-      userNames[data.socketId] = data.userName
-      socketIds[data.userName] = data.socketId
-      numOfUsers++
+    // 일반유저 입장
+    if (!data.isNoCam) {
+      try {
+        const pc = createReceiverPeerConnection(data.socketId, data.userName, 'user')
+        const offer = await createReceiverOffer(pc)
 
-      await socket.emit('receiver_offer', {
-        offer,
-        receiverSocketId: socket.id,
-        senderSocketId: data.socketId,
-        purpose: 'user',
-      })
-    } catch (error) {
-      console.error(error)
+        await socket.emit('receiver_offer', {
+          offer,
+          receiverSocketId: socket.id,
+          senderSocketId: data.socketId,
+          purpose: 'user',
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      // 노캠유저 입장
+      userOntrackHandler(null, data.userName, data.socketId)
     }
   }
 
@@ -553,7 +589,9 @@ function ProjectMeeting() {
 
     setStreams((streams) => {
       const streams2 = { ...streams }
-      delete streams2[userName]
+      try {
+        delete streams2[userName]
+      } catch (e) {}
       return streams2
     })
   }
@@ -565,12 +603,20 @@ function ProjectMeeting() {
 
     numOfUsers--
     try {
-      delete userNames[socketId]
-      delete socketIds[userName]
+      try {
+        delete userNames[socketId]
+      } catch (e) {}
+      try {
+        delete socketIds[userName]
+      } catch (e) {}
 
       if (!receivePCs.user[socketId]) {
-        receivePCs.user[socketId].close()
-        delete receivePCs.user[socketId]
+        try {
+          receivePCs.user[socketId].close()
+        } catch (e) {}
+        try {
+          delete receivePCs.user[socketId]
+        } catch (e) {}
       }
 
       removeUserVideo(socketId, userName)
@@ -748,10 +794,18 @@ function ProjectMeeting() {
     for (let i = 0; i < personList.length; i++) {
       const video = videos[i]
       if (personList[i] === myName) {
-        if (selfStream !== undefined && selfStream !== null) video.srcObject = selfStream
+        if (selfStream !== undefined && selfStream !== null) {
+          video.srcObject = selfStream
+        } else {
+          video.srcObject = null
+        }
       } else {
-        if (streams[personList[i]] !== undefined && streams[personList[i]] !== null)
+        if (streams[personList[i]] !== undefined && streams[personList[i]] !== null) {
           video.srcObject = streams[personList[i]]
+        } else {
+          video.srcObject = null
+        }
+        // console.log(personList[i], ':', video.srcObject)
       }
     }
   }
@@ -778,22 +832,31 @@ function ProjectMeeting() {
   }
 
   const handleToVoice = () => {
-    myStream.getAudioTracks().forEach((track) => (track.enabled = !voice))
+    try {
+      myStream.getAudioTracks().forEach((track) => (track.enabled = !voice))
+    } catch (e) {}
+
     setVoice((voice) => !voice)
   }
 
   const handleToVideo = () => {
-    myStream.getVideoTracks().forEach((track) => (track.enabled = !video))
+    try {
+      myStream.getVideoTracks().forEach((track) => (track.enabled = !video))
+    } catch (e) {}
     setVideo((video) => !video)
   }
 
   useEffect(() => {
+    console.log('비디오 생성! streams :', streams)
+
     setUserVideo()
   }, [streams])
 
   useEffect(() => {
-    console.log(personList)
-  }, [voice])
+    // console.log('streams :', streams)
+
+    setUserVideo()
+  }, [mode])
 
   useEffect(() => {
     setPersonList((personList) => [...personList, myName])
@@ -807,7 +870,7 @@ function ProjectMeeting() {
 
     codemirror = Codemirror.fromTextArea(document.getElementById('realtimeEditor'), {
       mode: { name: 'javascript', json: true },
-      theme: 'dracula',
+      theme: 'monokai',
       autoCloseTags: true,
       autoCloseBrackets: true,
       lineNumbers: true,
@@ -816,9 +879,9 @@ function ProjectMeeting() {
     codemirror.on('change', (instance, changes) => {
       const { origin } = changes
       const content = instance.getValue()
-      console.log('변화 상태:', origin)
-      console.log('change:  ', changes)
-      // onCodeChange(code);
+      // console.log('변화 상태:', origin)
+      // console.log('change:  ', changes)
+
       // input이면 입력, setValue는 받음, delete삭제, 한글은 *compose
       if (origin !== undefined && origin !== 'setValue') {
         socket.emit('change_editor', {
@@ -844,7 +907,7 @@ function ProjectMeeting() {
 
   useEffect(() => {
     codemirror.setOption('theme', selectedTheme.value)
-    console.log(selectedTheme.value)
+    // console.log(selectedTheme.value)
   }, [selectedTheme])
 
   return (
