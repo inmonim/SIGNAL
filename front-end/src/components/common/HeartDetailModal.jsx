@@ -54,7 +54,7 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       }, [])
 
   // 하트 충전
-  const [inputHeart, setInputHeart] = useState(null)
+  const [inputHeart, setInputHeart] = useState(1)
   const [alertOpen, setAlertOpen] = useState(false)
   const [minusAlert, setMinusAlert] = useState(false)
 
@@ -65,7 +65,6 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
   }
   const handleInputHeart = (e) => {
     if (e.target.value <= 0) {
-      // setInputHeart(1)
       setMinusAlert(true)
     } else {
       setInputHeart(e.target.value)
