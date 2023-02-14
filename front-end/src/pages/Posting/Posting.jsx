@@ -185,6 +185,7 @@ function Posting() {
           style={{
             position: 'absolute',
             top: 0,
+            gap: '0px 60px',
             left: '50%',
             transform: 'translate(-50%, 0)',
             display: 'flex',
@@ -502,11 +503,12 @@ const Skillbtn = styled.div`
 `
 
 const PostList = styled.div`
+  margin-top: 3em;
   display: flex;
   flex-wrap: wrap;
   padding: 4px;
   gap: 10px;
-  justify-content: center;
+  justify-content: start;
   &:hover {
     $ .postcard {
       background: cornflowerblue;
