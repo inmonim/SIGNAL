@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -68,7 +69,7 @@ public class QnaController {
                                                      @Parameter(description = "size") Integer size) {
         log.info("findAllQna - Call");
 
-        Page<Qna> QnaList = qnaService.findAllQna(page, size);
+        List<Qna> QnaList = qnaService.findAllQna(page, size);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindAllQnaResponse.fromEntity(QnaList)));
     }
 

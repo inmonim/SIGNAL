@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminQnaService {
     private final QnaRepository qnaRepository;
     @Transactional
-    public void registFaq(Integer qnaSeq, boolean isTop) throws RuntimeException {
+    public void registFaq(Integer qnaSeq, Boolean isTop) throws RuntimeException {
         Qna qna = qnaRepository.findById(qnaSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 
