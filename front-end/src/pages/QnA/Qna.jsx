@@ -49,11 +49,6 @@ function Qna() {
 
   const navigate = useNavigate()
 
-  // const [faqAlertOpen, setFaqAlertOpen] = useState(false)
-  // const faqRegistAlert = () => {
-
-  // }
-
   return (
     <div className="qna-page-container">
       <div className="qna-container">
@@ -67,7 +62,6 @@ function Qna() {
                 sigfontsize="24px"
                 sigborderradius={14}
                 sigmargin="0px 0px 5px 0px"
-                variant="contained"
                 onClick={() => navigate(`/qnaRegist`)}
               >
                 등록
@@ -92,10 +86,7 @@ function Qna() {
                 {rows.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">{row.id}</TableCell>
-                    <TableCell
-                      align="left"
-                      //  onContextMenu={faqRegistAlert}
-                    >
+                    <TableCell align="left">
                       <Link to={`/qnaDetail`} state={{ id: row.id }}>
                         {row.title}
                       </Link>
