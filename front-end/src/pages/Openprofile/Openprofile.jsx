@@ -7,6 +7,7 @@ import '../../assets/styles/posting.css'
 import Paging from 'components/Paging'
 import api from 'api/Api'
 import Openprofilecard from 'components/Openprofile/Openprofilecard'
+import Swal from 'sweetalert2'
 
 function Openprofile() {
   const [openList, setOpenList] = useState([])
