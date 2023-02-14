@@ -6,7 +6,7 @@
   height: 858px;
   border-radius: 45px;
   right: 30px;
-  margin: 50px 0px;
+  /* margin: 50px 0px; */
   bottom: 120px;
   /* margin-bottom: 120px; */
 }
@@ -69,7 +69,7 @@
   background-color: white;
 }
 
-.chatting-receive-nickname{
+.chatting-receive-nickname {
   margin-right: 10px;
   margin-top: 23px;
 }

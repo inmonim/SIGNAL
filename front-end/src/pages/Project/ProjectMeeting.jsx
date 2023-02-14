@@ -862,8 +862,10 @@ function ProjectMeeting() {
         </VideoListSection>
 
         <CodeEditSection mode={mode}>
-          <Select options={modeOptions} onChange={handleMode} value={selectedMode} />
-          <Select options={themeOptions} onChange={handleTheme} value={selectedTheme} />
+          <div>
+            <Select options={modeOptions} onChange={handleMode} value={selectedMode} />
+            <Select options={themeOptions} onChange={handleTheme} value={selectedTheme} />
+          </div>
           <div style={{ width: '100%', height: '100%' }}>
             <textarea id="realtimeEditor"></textarea>
           </div>
@@ -878,11 +880,15 @@ function ProjectMeeting() {
               <div style={{ textAlign: 'center', margin: '30px' }}>
                 <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
               </div>
-              <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
-              <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+                <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+                <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
+              </div>
             </div>
           </div>
           {paletteOpen ? (

@@ -14,6 +14,7 @@ export default function Openprofilecard({ open }) {
     <Card
       sx={{
         minWidth: 275,
+        maxWidth: 275,
         mb: 2,
         mr: 2,
         '&:hover': {
@@ -26,7 +27,7 @@ export default function Openprofilecard({ open }) {
       }}
     >
       <CardContent sx={{ height: '100%' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '35%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '90px' }}>
           <div className="open-profile-card-box">
             <img
               className="open-profile-card-profile"

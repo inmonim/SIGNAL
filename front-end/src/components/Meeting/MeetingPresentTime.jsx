@@ -14,7 +14,7 @@ function MeetingPresentTime(props) {
       {props.personNum === undefined ? (
         <div className="meeting-time"> {moment(time).format('YYYY-MM-DD LT')} </div>
       ) : (
-        <div className="project-meeting-video-code-edit">
+        <div className="meeting-time">
           {moment(time).format('YYYY-MM-DD LT')} 접속 인원 : {props.personNum.length}명
         </div>
       )}

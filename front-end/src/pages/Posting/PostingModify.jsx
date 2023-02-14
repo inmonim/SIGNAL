@@ -32,6 +32,8 @@ import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
+import SignalBtn from 'components/common/SignalBtn'
+
 const Container = styled.section`
   padding: 130px 10em;
 `
@@ -545,11 +547,14 @@ const PostingModify = () => {
                 <Label>화상미팅 예약</Label>
               </div>
               <div style={{ width: '70%' }}>
-                <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <DateSelect setDate={setDaily} />
-                  <button
+                  <SignalBtn
+                    sigwidth="50px"
+                    sigfontsize="12px"
+                    sigborderradius={15}
+                    sigmargin="0px 20px"
                     className="post-button-modi"
-                    style={{ height: '10%' }}
                     onClick={() => {
                       if (!DateList.includes(Daily) && Daily) {
                         const copy = [...DateList]
@@ -559,7 +564,7 @@ const PostingModify = () => {
                     }}
                   >
                     시간 선택
-                  </button>
+                  </SignalBtn>
                 </Box>
               </div>
             </div>
@@ -570,7 +575,7 @@ const PostingModify = () => {
               <div style={{ width: '80%', margin: 0 }}>{tags && tags}</div>
             </div>
             <div>
-              <Stack direction="row" spacing={1} style={{ marginLeft: '3em', overflowX: 'scroll', width: '600px' }}>
+              <Stack direction="row" spacing={1} className="meeting-time-scroll">
                 {DateList.map((ele, i) => (
                   <Chip
                     key={i}

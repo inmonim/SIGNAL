@@ -2,6 +2,7 @@ import { Box, Modal, TextField } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import closeBtn from 'assets/image/x.png'
 import { DatePicker } from '@mui/x-date-pickers'
+import dayjs from 'dayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import SignalBtn from 'components/common/SignalBtn'
@@ -16,22 +17,10 @@ const getQuarter = (month) => {
 }
 
 function SignalWeekModal({ open, onClose, mode, defaultData, signalweekScheduleSeq }) {
-  const date = new Date()
-  const [openStartDt, setOpenStartDt] = useState(
-    defaultData.defaultOpenStartDt === null ? date : new Date(defaultData.defaultOpenStartDt)
-  )
-  const [openEndDt, setOpenEndDt] = useState(
-    defaultData.defaultOpenEndDt === null ? date : new Date(defaultData.defaultOpenEndDt)
-  )
-  const [voteStartDt, setVoteStartDt] = useState(
-    defaultData.defualtVoteStartDt === null ? date : new Date(defaultData.defualtVoteStartDt)
-  )
-  const [voteEndDt, setVoteEndDt] = useState(
-    defaultData.defualtVoteEndDt === null ? date : new Date(defaultData.defualtVoteEndDt)
-  )
-
-  console.log('openStartDt', openStartDt)
-  console.log('defaultData', defaultData)
+  const [openStartDt, setOpenStartDt] = useState(dayjs(defaultData.defaultOpenStartDt))
+  const [openEndDt, setOpenEndDt] = useState(dayjs(defaultData.defaultOpenEndDt))
+  const [voteStartDt, setVoteStartDt] = useState(dayjs(defaultData.defualtVoteStartDt))
+  const [voteEndDt, setVoteEndDt] = useState(dayjs(defaultData.defualtVoteEndDt))
 
   const handleSignalWeekRegist = async () => {
     try {
@@ -47,8 +36,8 @@ function SignalWeekModal({ open, onClose, mode, defaultData, signalweekScheduleS
         voteStartDt: moment(voteStartDt.$d).format('YYYY-MM-DD'),
         year,
       }
-      console.log(JSON.stringify(req))
       await api.post(process.env.REACT_APP_API_URL + '/admin/signalweek', JSON.stringify(req))
+      location.reload()
     } catch (error) {
       console.log(error)
     }
@@ -67,6 +56,7 @@ function SignalWeekModal({ open, onClose, mode, defaultData, signalweekScheduleS
         voteStartDt: moment(voteStartDt.$d).format('YYYY-MM-DD'),
         year,
       })
+      location.reload()
     } catch (error) {
       console.log(error)
     }
@@ -80,7 +70,12 @@ function SignalWeekModal({ open, onClose, mode, defaultData, signalweekScheduleS
     }
   }
 
-  useEffect(() => {}, [open])
+  useEffect(() => {
+    setOpenStartDt(dayjs(defaultData.defaultOpenStartDt))
+    setOpenEndDt(dayjs(defaultData.defaultOpenEndDt))
+    setVoteStartDt(dayjs(defaultData.defualtVoteStartDt))
+    setVoteEndDt(dayjs(defaultData.defualtVoteEndDt))
+  }, [open])
 
   return (
     <>
