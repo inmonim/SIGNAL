@@ -46,6 +46,7 @@ function UserModifyModal({ open, onClose }) {
 
     setAlertOpen(false)
     onClose(onClose(true))
+    window.location.reload()
   }
 
   const handleToClose = () => {

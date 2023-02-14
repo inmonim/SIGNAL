@@ -51,6 +51,13 @@ function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq, projectSeq })
       console.log(e)
     }
   }
+
+  const activeEnter = (e) => {
+    if (e.key === 'Enter') {
+      handleToAdd()
+    }
+  }
+
   return (
     <>
       <Modal open={open} onClose={onClose}>
@@ -79,6 +86,7 @@ function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq, projectSeq })
                 label="To Do"
                 sx={inputStyle}
                 onChange={handleInput}
+                onKeyDown={(e) => activeEnter(e)}
               />
             </div>
             <div className="user-profile-input-check-btn">

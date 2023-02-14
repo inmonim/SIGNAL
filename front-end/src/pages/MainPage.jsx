@@ -114,6 +114,7 @@ function MainPage() {
                     sigfontsize="44px"
                     sigborderradius={25}
                     sigmargin="50px auto"
+                    href="/myproject"
                   >
                     마이프로젝트
                   </SignalBtn>
@@ -129,7 +130,13 @@ function MainPage() {
                 <div className="text-item">여러분의 프로젝트를</div>
                 <div className="text-item">평가받아보세요</div>
                 <div className="btn-item">
-                  <SignalBtn sigwidth="322px" sigheight="121px" sigfontsize="44px" sigborderradius={25}>
+                  <SignalBtn
+                    sigwidth="322px"
+                    sigheight="121px"
+                    sigfontsize="44px"
+                    sigborderradius={25}
+                    href="/signal/rankMain"
+                  >
                     명예의 전당
                   </SignalBtn>
                 </div>
