@@ -39,7 +39,6 @@ function Profile(profile) {
     const arr = []
     changeSelectForm(await commonCodeListFetch('AI')).map((item) => arr.push(item))
     changeSelectForm(await commonCodeListFetch('DB')).map((item) => arr.push(item))
-    changeSelectForm(await commonCodeListFetch('FI')).map((item) => arr.push(item))
     changeSelectForm(await commonCodeListFetch('WE')).map((item) => arr.push(item))
     changeSelectForm(await commonCodeListFetch('PL')).map((item) => arr.push(item))
     setOptions(arr)

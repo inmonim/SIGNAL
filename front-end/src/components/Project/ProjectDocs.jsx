@@ -6,7 +6,7 @@ import InputUrlModal from './InputUrlModal'
 import Notion from './Notion'
 import api from 'api/Api'
 
-function ProjectDocs({ projectSeq }) {
+function ProjectDocs({ projectSeq, mode }) {
   const [inputOpen1, setInputOpen1] = useState(false)
   const [inputOpen2, setInputOpen2] = useState(false)
   const [inputOpen3, setInputOpen3] = useState(false)
@@ -97,9 +97,12 @@ function ProjectDocs({ projectSeq }) {
   }
 
   const getNotionDoc = async (num, setValue) => {
-    await api.get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`).then((res) => {
-      setValue(res.data.body.url)
-    })
+    await api
+      .get(process.env.REACT_APP_API_URL + `/notiondocs/${projectSeq}?num=${num}`)
+      .then((res) => {
+        setValue(res.data.body.url)
+      })
+      .catch(() => {})
   }
 
   return (
@@ -107,23 +110,31 @@ function ProjectDocs({ projectSeq }) {
       <div className="docs-header">
         <div className="docs-title">프로젝트 문서</div>
       </div>
-      <div className="docs-howto-container">
-        <div className="docs-howto">사용법</div>
-        <div className="docs-howto-arrow">
-          <InfoOutlinedIcon className="docs-howto-icon"></InfoOutlinedIcon>
-          <p className="arrow-box">
-            <div className="arrow-box-title">문서 사용법</div>
-            <div className="arrow-box-content">➿ 노션 문서의 공유 링크를 등록해주세요.</div>
-            <div className="arrow-box-content">➿ notion.site/ 뒤의 주소만 입력해주세요.</div>
-          </p>
+      {mode !== 'end' ? (
+        <div className="docs-howto-container">
+          <div className="docs-howto">사용법</div>
+          <div className="docs-howto-arrow">
+            <InfoOutlinedIcon className="docs-howto-icon"></InfoOutlinedIcon>
+            <p className="arrow-box">
+              <div className="arrow-box-title">문서 사용법</div>
+              <div className="arrow-box-content">❗ 노션 문서의 공유 링크를 등록해주세요.</div>
+              <div className="arrow-box-content">❗ notion.site/ 뒤의 주소만 입력해주세요.</div>
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
       <div className="docs-list">
         <div className="docs-list-item" onClick={handleDisplayNone1}>
           <div className="docs-list-item-title">Git Convention</div>
-          <div className="docs-list-item-plus" onClick={handleToInput1}>
-            <img src={plusBtn} alt="" />
-          </div>
+          {mode !== 'end' ? (
+            <div className="docs-list-item-plus" onClick={handleToInput1}>
+              <img src={plusBtn} alt="" />
+            </div>
+          ) : (
+            <></>
+          )}
           <InputUrlModal
             open={inputOpen1}
             onClose={handleToClose}
@@ -137,9 +148,13 @@ function ProjectDocs({ projectSeq }) {
         {}
         <div className="docs-list-item" onClick={handleDisplayNone2}>
           <div className="docs-list-item-title">Naming Convention</div>
-          <div className="docs-list-item-plus" onClick={handleToInput2}>
-            <img src={plusBtn} alt="" />
-          </div>
+          {mode !== 'end' ? (
+            <div className="docs-list-item-plus" onClick={handleToInput2}>
+              <img src={plusBtn} alt="" />
+            </div>
+          ) : (
+            <></>
+          )}
           <InputUrlModal
             open={inputOpen2}
             onClose={handleToClose}
@@ -153,9 +168,13 @@ function ProjectDocs({ projectSeq }) {
         {}
         <div className="docs-list-item" onClick={handleDisplayNone3}>
           <div className="docs-list-item-title">Branch Rule</div>
-          <div className="docs-list-item-plus" onClick={handleToInput3}>
-            <img src={plusBtn} alt="" />
-          </div>
+          {mode !== 'end' ? (
+            <div className="docs-list-item-plus" onClick={handleToInput3}>
+              <img src={plusBtn} alt="" />
+            </div>
+          ) : (
+            <></>
+          )}
           <InputUrlModal
             open={inputOpen3}
             onClose={handleToClose}
@@ -170,9 +189,13 @@ function ProjectDocs({ projectSeq }) {
       </div>
       <div className="docs-list-item" onClick={handleDisplayNone4}>
         <div className="docs-list-item-title">요구 사항 명세서</div>
-        <div className="docs-list-item-plus" onClick={handleToInput4}>
-          <img src={plusBtn} alt="" />
-        </div>
+        {mode !== 'end' ? (
+          <div className="docs-list-item-plus" onClick={handleToInput4}>
+            <img src={plusBtn} alt="" />
+          </div>
+        ) : (
+          <></>
+        )}
         <InputUrlModal
           open={inputOpen4}
           onClose={handleToClose}
@@ -186,9 +209,13 @@ function ProjectDocs({ projectSeq }) {
       {}
       <div className="docs-list-item" onClick={handleDisplayNone5}>
         <div className="docs-list-item-title">기능 명세서</div>
-        <div className="docs-list-item-plus" onClick={handleToInput5}>
-          <img src={plusBtn} alt="" />
-        </div>
+        {mode !== 'end' ? (
+          <div className="docs-list-item-plus" onClick={handleToInput5}>
+            <img src={plusBtn} alt="" />
+          </div>
+        ) : (
+          <></>
+        )}
         <InputUrlModal
           open={inputOpen5}
           onClose={handleToClose}
@@ -202,9 +229,13 @@ function ProjectDocs({ projectSeq }) {
       {}
       <div className="docs-list-item" onClick={handleDisplayNone6}>
         <div className="docs-list-item-title">와이어 프레임</div>
-        <div className="docs-list-item-plus" onClick={handleToInput6}>
-          <img src={plusBtn} alt="" />
-        </div>
+        {mode !== 'end' ? (
+          <div className="docs-list-item-plus" onClick={handleToInput6}>
+            <img src={plusBtn} alt="" />
+          </div>
+        ) : (
+          <></>
+        )}
         <InputUrlModal
           open={inputOpen6}
           onClose={handleToClose}

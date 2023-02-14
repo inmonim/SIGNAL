@@ -60,17 +60,20 @@ function signalDetail() {
   }
 
   useEffect(() => {
-    api.get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`).then((res) => {
-      setData(res.data.body)
-      setUcc(res.data.body.uccUrl)
-      setLiked(res.data.body.vote)
-      console.log(JSON.stringify(res.data.body))
-    })
+    api
+      .get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`, {
+        params: { userSeq },
+      })
+      .then((res) => {
+        setData(res.data.body)
+        setUcc(res.data.body.uccUrl)
+        setLiked(res.data.body.vote)
+        console.log(JSON.stringify(res.data.body))
+      })
   }, [])
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
-        <button>ddd</button>
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
         <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right', marginBottom: '1em' }}>
@@ -111,7 +114,7 @@ function signalDetail() {
                   <Page width={1126} height={720} pageNumber={pageNumber} />
                 </Document>
               </div>
-              <p
+              <div
                 style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}
               >
                 <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
@@ -123,7 +126,7 @@ function signalDetail() {
                 <SignalBtn onClick={() => (pageNumber < numPages ? setPageNumber(pageNumber + 1) : null)}>
                   &gt;
                 </SignalBtn>
-              </p>
+              </div>
             </div>
           ) : (
             <Label> PDF 파일이 없습니다</Label>

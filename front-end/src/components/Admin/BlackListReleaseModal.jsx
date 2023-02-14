@@ -3,6 +3,7 @@ import { Box } from '@mui/system'
 import api from 'api/Api'
 import closeBtn from 'assets/image/x.png'
 import SignalBtn from 'components/common/SignalBtn'
+import 'assets/styles/adminBlackList.css'
 
 import React, { useEffect } from 'react'
 

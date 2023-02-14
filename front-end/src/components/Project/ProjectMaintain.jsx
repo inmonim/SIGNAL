@@ -5,6 +5,7 @@ import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
 import AlertModal from 'components/AlertModal'
+import { useNavigate } from 'react-router'
 
 function ProjectMaintain({ projectSeq }) {
   const [mode, setMode] = useState(true)
@@ -122,12 +123,17 @@ function ProjectMaintain({ projectSeq }) {
     projectDataFetch()
   }, [mode])
 
+  const navigate = useNavigate()
+
   const [endAlertOpen, setEndAlertOpen] = useState(false)
   const handleToEndAlert = () => {
     setEndAlertOpen(true)
   }
   const handleToEnd = async () => {
-    await api.put(process.env.REACT_APP_API_URL + '/project/' + projectSeq).then((res) => setEndAlertOpen(false))
+    await api.put(process.env.REACT_APP_API_URL + '/project/' + projectSeq).then((res) => {
+      setEndAlertOpen(false)
+      navigate('/myproject')
+    })
   }
   const handleToClose = () => {
     setEndAlertOpen(false)

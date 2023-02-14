@@ -32,9 +32,8 @@ import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import SignalBtn from 'components/common/SignalBtn'
-
 const Container = styled.section`
-  width: '900px';
+  padding: 130px 10em;
 `
 // const skillStyle = {
 //   width: '100%',
@@ -330,18 +329,11 @@ const PostingRegister = () => {
   }, [arrayOfTags])
 
   return (
-    <Container className="posting-container">
+    <Container>
       <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
         </div>
-        {/* <button
-          onClick={() => {
-            console.log(posting)
-          }}
-        >
-          dd
-        </button> */}
         <div>
           {/* 여기는 주제, 기간 */}
           <div style={{ display: 'flex', marginBottom: '1em', marginLeft: '5em' }}>
@@ -550,8 +542,7 @@ const PostingRegister = () => {
           <div style={{ display: 'flex', marginBottom: '2em', marginLeft: '5em' }}>
             <div className="phone-section">
               <div style={{ width: '25%' }}>
-                <Label>포지션</Label>
-                <Label>인원</Label>
+                <Label>포지션 인원</Label>
               </div>
               <div style={{ width: '75%', display: 'flex', alignItems: 'center' }}>
                 <FilterSelect

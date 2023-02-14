@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import api from 'api/Api'
 import SignalWeekModal from 'components/Admin/SingnalWeekModal'
 import Paging from 'components/Paging'
+import moment from 'moment'
 
 function AdminSignalWeek() {
   const [singalWeekList, setSingalWeekListt] = useState([])
@@ -71,17 +72,17 @@ function AdminSignalWeek() {
     })
     setSignalweekScheduleSeq(row.signalweekScheduleSeq)
     setMode(false)
-    console.log(defaultData)
     handleOpen()
   }
 
   const handleRegistOpen = () => {
+    const presentDate = moment(new Date()).format('YYYY-MM-DD')
     setSignalweekScheduleSeq(null)
     setDefaultData({
-      defaultOpenStartDt: null,
-      defaultOpenEndDt: null,
-      defualtVoteStartDt: null,
-      defualtVoteEndDt: null,
+      defaultOpenStartDt: presentDate,
+      defaultOpenEndDt: presentDate,
+      defualtVoteStartDt: presentDate,
+      defualtVoteEndDt: presentDate,
     })
     setMode(true)
     handleOpen()
