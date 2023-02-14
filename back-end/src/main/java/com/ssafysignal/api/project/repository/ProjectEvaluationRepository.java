@@ -23,4 +23,5 @@ public interface ProjectEvaluationRepository extends JpaRepository<ProjectEvalua
             "WHERE week_cnt = (:weekCnt) \n" +
             "AND to_user_seq = (:toUserSeq);", nativeQuery = true)
     Integer avgScore(@Param("weekCnt") Integer weekCnt, @Param("toUserSeq") Integer toUserSeq);
+    List<ProjectEvaluation> findByFromUserSeqAndToUserSeqAndWeekCnt(Integer fromUserSeq, Integer toUserSeq, Integer weekCnt);
 }

@@ -7,8 +7,10 @@ import com.ssafysignal.api.posting.entity.*;
 import com.ssafysignal.api.project.entity.Project;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "PostingFindResponse", description = "공고 상세")
 public class FindPostingResponse {
     @Schema(description = "공고 Seq", example = "1", required = true)
@@ -39,7 +43,7 @@ public class FindPostingResponse {
     private Integer level;
     @Schema(description = "공고 기술 스택")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final List<PostingSkill> postingSkillList;
+    private List<PostingSkill> postingSkillList;
     @Schema(description = "공고 사전 미팅 시간")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<PostingMeeting> postingMeetingList;

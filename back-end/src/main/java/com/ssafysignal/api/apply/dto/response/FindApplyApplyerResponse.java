@@ -5,8 +5,10 @@ import com.ssafysignal.api.apply.entity.Apply;
 import com.ssafysignal.api.common.entity.CommonCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,8 +16,10 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "ApplyWriterFindResponse", description = "공고 지원자 기준 지원서 목록 항목")
-public class ApplyApplyerFindResponse {
+public class FindApplyApplyerResponse {
     @Schema(description = "지원서 Seq", example = "1")
     private Integer applySeq;
     @Schema(description = "프로젝트 주제", example = "프로젝트 팀 빌딩 서비스 시그널")
@@ -26,13 +30,13 @@ public class ApplyApplyerFindResponse {
     @Schema(description = "지원서의 진행 상황")
     private CommonCode stateCode;
 
-    public static List<ApplyApplyerFindResponse> toList(List<Apply> applyList){
+    public static List<FindApplyApplyerResponse> toList(List<Apply> applyList){
         return applyList.stream()
-                .map(ApplyApplyerFindResponse::fromEntity)
+                .map(FindApplyApplyerResponse::fromEntity)
                 .collect(Collectors.toList());
     }
-    public static ApplyApplyerFindResponse fromEntity(Apply apply){
-        return ApplyApplyerFindResponse.builder()
+    public static FindApplyApplyerResponse fromEntity(Apply apply){
+        return FindApplyApplyerResponse.builder()
                 .applySeq(apply.getApplySeq())
                 .subject(apply.getPosting().getProject().getSubject())
                 .meetingDt(apply.getPostingMeeting() != null ? apply.getPostingMeeting().getMeetingDt() : null)

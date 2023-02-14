@@ -18,7 +18,7 @@ public class FindAllQnaResponse {
         this.qnaList = qnaList;
     }
 
-    public static FindAllQnaResponse fromEntity(final Page<Qna> findQnaList) {
+    public static FindAllQnaResponse fromEntity(final List<Qna> findQnaList) {
         List<FindQnaResponse> qnaList = findQnaList.stream()
                 .map(FindQnaResponse::fromEntity)
                 .collect(Collectors.toList());

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class QnaService {
@@ -27,8 +29,10 @@ public class QnaService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Qna> findAllQna(Integer page, Integer size) {
-        Page<Qna> QnaList = qnaRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "qnaSeq"));
+    public List<Qna> findAllQna(Integer page, Integer size) {
+        System.out.println("limit = " + size);
+        System.out.println("offset = " + page * size);
+        List<Qna> QnaList = qnaRepository.findAllByIsTop(size, page * size);
         return QnaList;
     }
 

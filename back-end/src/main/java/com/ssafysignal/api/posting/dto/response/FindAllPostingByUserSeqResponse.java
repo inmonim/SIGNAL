@@ -7,11 +7,15 @@ import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.posting.entity.PostingMeeting;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "PostingFindAllByUserSeq", description = "작성한 공고, 지원한 공고 목록 정보")
 public class FindAllPostingByUserSeqResponse {
     @Schema(description = "공고 Seq")

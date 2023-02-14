@@ -11,6 +11,7 @@ import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.FindProjectSettingResponse;
 import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserDto;
+import com.ssafysignal.api.project.dto.reponse.FindProjectUserEvaluationHistoryResponse;
 import com.ssafysignal.api.project.dto.request.RegistProjectEvaluationRequest;
 import com.ssafysignal.api.project.dto.request.ModifyProjectSettingRequest;
 import com.ssafysignal.api.project.entity.*;
@@ -182,7 +183,6 @@ public class ProjectSettingService {
 
     @Transactional(readOnly = true)
     public FindEvaluationResponse findAllEvalution(Integer projectSeq) {
-
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
@@ -196,5 +196,11 @@ public class ProjectSettingService {
         Project project = projectRepository.findById(projectSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         return project.getWeekCnt();
+    }
+
+    @Transactional(readOnly = true)
+    public List<FindProjectUserEvaluationHistoryResponse> findProjectUserEvaluationHistory(Integer fromUserSeq, Integer toUserSeq, Integer weekCnt) {
+        List<ProjectEvaluation> projectEvaluationList = projectEvaluationRepository.findByFromUserSeqAndToUserSeqAndWeekCnt(fromUserSeq, toUserSeq, weekCnt);
+        return FindProjectUserEvaluationHistoryResponse.toList(projectEvaluationList);
     }
 }

@@ -43,14 +43,14 @@ class PostingMeetingRepositoryTest {
     @Test
     void modify() {
         PostingMeeting postingMeeting = postingMeetingRepository.findById(1).get();
-        postingMeeting.setToUser(12);
+        postingMeeting.setToUserSeq(12);
         postingMeetingRepository.save(postingMeeting);
 
         postingMeeting = postingMeetingRepository.findById(1).get();
         assertEquals(postingMeeting.getToUserSeq(), 1);
 
         postingMeeting = postingMeetingRepository.findById(1).get();
-        postingMeeting.setToUser(null);
+        postingMeeting.setToUserSeq(null);
         postingMeetingRepository.save(postingMeeting);
     }
 }

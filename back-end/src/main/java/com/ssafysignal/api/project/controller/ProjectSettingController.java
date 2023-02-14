@@ -6,12 +6,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
-import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
-import com.ssafysignal.api.project.dto.reponse.FindProjectSettingResponse;
-import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserDto;
+import com.ssafysignal.api.project.dto.reponse.*;
 import com.ssafysignal.api.project.dto.request.RegistProjectEvaluationRequest;
 import com.ssafysignal.api.project.dto.request.ModifyProjectSettingRequest;
-import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserHeartLogResponse;
 import com.ssafysignal.api.project.service.ProjectService;
 import com.ssafysignal.api.project.service.ProjectSettingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -151,7 +148,6 @@ public class ProjectSettingController {
         }
     }
 
-
     @Tag(name = "프로젝트")
     @Operation(summary = "팀원 평가 항목 조회", description = "팀원 평가 항목을 조회한다.")
     @ApiResponses({
@@ -217,6 +213,29 @@ public class ProjectSettingController {
         }
     }
 
+    @Tag(name = "프로젝트")
+    @Operation(summary = "프로젝트 평가 결과 확인", description = "프로젝트 평가 결과 확인한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로젝트 평가 결과 확인 완료"),
+            @ApiResponse(responseCode = "400", description = "프로젝트 평가 결과 확인 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/evaluation/history")
+    private ResponseEntity<BasicResponse> findProjectUserEvaluationHistory(@Parameter(name = "fromUserSeq", description = "평가 하는 팀원") @RequestParam Integer fromUserSeq,
+                                                                           @Parameter(name = "toUserSeq", description = "평가 당했던 팀원") @RequestParam Integer toUserSeq,
+                                                                           @Parameter(name = "weekCnt", description = "평가 회차") @RequestParam Integer weekCnt) {
+        log.info("findProjectUserEvaluationResult - Call");
+
+        try {
+            List<FindProjectUserEvaluationHistoryResponse> evaluationHistoryList = projectSettingService.findProjectUserEvaluationHistory(fromUserSeq, toUserSeq, weekCnt);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, evaluationHistoryList));
+        }  catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
 
     @Tag(name = "프로젝트")
     @Operation(summary = "프로젝트 유저 하트 로그 목록 조회", description = "프로젝트에 참여햔 유저의 하트 로그 목록을 조회한다")

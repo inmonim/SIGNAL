@@ -2,10 +2,7 @@ package com.ssafysignal.api.posting.entity;
 
 import com.ssafysignal.api.apply.entity.ApplyAnswer;
 import com.ssafysignal.api.common.entity.CommonCode;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,9 +11,12 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "posting_position")
 public class PostingPosition {
     @Id
@@ -32,13 +32,4 @@ public class PostingPosition {
     @OneToOne
     @JoinColumn(name = "position_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public PostingPosition(Integer postingPositionSeq, Integer postingSeq, String positionCode, Integer positionCnt, CommonCode code) {
-        this.postingPositionSeq = postingPositionSeq;
-        this.postingSeq = postingSeq;
-        this.positionCode = positionCode;
-        this.positionCnt = positionCnt;
-        this.code = code;
-    }
 }

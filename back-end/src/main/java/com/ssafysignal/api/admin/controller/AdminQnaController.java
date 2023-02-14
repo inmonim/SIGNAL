@@ -29,9 +29,9 @@ public class AdminQnaController {
             @ApiResponse(responseCode = "200", description = "Faq 등록 완료"),
             @ApiResponse(responseCode = "400", description = "Faq 등록 중 오류 발생"),
             @ApiResponse(responseCode = "401", description = "로그인 필요")})
-    @GetMapping("/{qnaSeq}")
+    @PutMapping("/faq/{qnaSeq}")
     private ResponseEntity<BasicResponse> registFaq(@Parameter(name = "qnaSeq", description = "Qna Seq", required = true) @PathVariable("qnaSeq") Integer qnaSeq,
-                                                    @Parameter(name = "isTop", description = "상단 고정 여부", required = true) @RequestParam Boolean isTop) {
+                                                    @Parameter(name = "isTop", description = "상단 고정 여부", required = true) @RequestBody Boolean isTop) {
         log.info("registFaq - Call");
 
         try {

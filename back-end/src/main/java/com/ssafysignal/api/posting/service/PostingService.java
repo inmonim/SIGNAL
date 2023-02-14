@@ -42,6 +42,7 @@ public class PostingService {
     private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;
     private final PostingSkillRepository postingSkillRepository;
+    private final PostingPositionRepository postingPositionRepository;
     private final ApplyRepository applyRepository;
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
@@ -205,19 +206,6 @@ public class PostingService {
         }
         posting.setPostingSkillList(postingSkillList);
 
-        // 사전 미팅
-        List<PostingMeeting> postingMeetingList = posting.getPostingMeetingList();
-        postingMeetingList.clear();
-        for (LocalDateTime meeting : postingModifyRequest.getPostingMeetingList()) {
-            postingMeetingList.add(PostingMeeting.builder()
-                    .postingSeq(postingSeq)
-                    .fromUserSeq(postingModifyRequest.getUserSeq())
-                    .meetingDt(meeting)
-                    .build()
-            );
-        }
-        posting.setPostingMeetingList(postingMeetingList);
-
         // 포지션
         List<PostingPosition> postingPositionList = posting.getPostingPositionList();
         postingPositionList.clear();
@@ -263,8 +251,25 @@ public class PostingService {
         posting.setPostingCode("PPS100");
 
         for (Apply apply : posting.getApplyList()) {
-            apply.setStateCode("PAS100");
-            apply.setApplyCode("AS104");
+            // 지원자 기준 공고 마감 상태로 변경
+            apply.setStateCode("PAS109");
+            // 작성자 기준 지원취소 상태로 변경
+            apply.setApplyCode("AS109");
+
+            // 합격자들 하트 반환
+            // 하트 반환 및 하트 로그 작성
+            if ("PAS101".equals(apply.getApplyCode())) {
+                User applyUser = apply.getUser();
+                applyUser.setHeartCnt(applyUser.getHeartCnt() + 100);
+                userRepository.save(applyUser);
+
+                UserHeartLog userHeartLog = UserHeartLog.builder()
+                        .userSeq(applyUser.getUserSeq())
+                        .heartCnt(100)
+                        .content(apply.getPosting().getProject().getSubject() + " 공고 취소로 인한 보증금 반환")
+                        .build();
+                userHeartLogRepository.save(userHeartLog);
+            }
         }
 
         postingRepository.save(posting);
@@ -286,36 +291,34 @@ public class PostingService {
         Apply apply = applyRepository.findById(applySelectConfirmRequest.getApplySeq())
                 .orElseThrow(() -> new NotFoundException(ResponseCode.MODIFY_NOT_FOUND));
 
-                if (applySelectConfirmRequest.isSelect()) {
-                    // 지원자 기준 '합격'상태로 변경
-                    apply.setStateCode("PAS101");
-                    // 작성자 기준 '확정'상태로 변경
-                    apply.setApplyCode("AS101");
+        if (applySelectConfirmRequest.isSelect()) {
+            // 지원자 기준 '합격'상태로 변경
+            apply.setStateCode("PAS101");
+            // 작성자 기준 '확정'상태로 변경
+            apply.setApplyCode("AS101");
 
-                    // 하트 차감 및 하트 로그 작성
-                    User applyUser = apply.getUser();
-                    applyUser.setHeartCnt(applyUser.getHeartCnt()-100);
-                    userRepository.save(applyUser);
+            // 하트 차감 및 하트 로그 작성
+            User applyUser = apply.getUser();
+            applyUser.setHeartCnt(applyUser.getHeartCnt() - 100);
+            userRepository.save(applyUser);
 
-                    UserHeartLog userHeartLog = UserHeartLog.builder()
-                            .userSeq(applyUser.getUserSeq())
-                            .heartCnt(-100)
-                            .content(apply.getPosting().getProject().getSubject()+"에 팀 등록 확정")
-                            .build();
-                    userHeartLogRepository.save(userHeartLog);
-
-                } else {
-                    // 지원자 기준 '지원취소'상태로 변경
-                    apply.setStateCode("PAS104");
-                    // 작성자 기준 '거절'상태로 변경
-                    apply.setApplyCode("AS102");
-                }
-            }
+            UserHeartLog userHeartLog = UserHeartLog.builder()
+                    .userSeq(applyUser.getUserSeq())
+                    .heartCnt(-100)
+                    .content(apply.getPosting().getProject().getSubject() + "에 팀 등록 확정")
+                    .build();
+            userHeartLogRepository.save(userHeartLog);
+        } else {
+            // 지원자 기준 '지원취소'상태로 변경
+            apply.setStateCode("PAS104");
+            // 작성자 기준 '거절'상태로 변경
+            apply.setApplyCode("AS102");
+        }
+    }
 
     @Transactional(readOnly = true)
     public List<FindAllPostingByUserSeqResponse> findAllApplyPosting(Integer userSeq){
         List<Apply> applyList = applyRepository.findByUserSeq(userSeq);
-        System.out.println("applyList.toString() = " + applyList.toString());
         return applyList.stream()
                 .map(FindAllPostingByUserSeqResponse::toApplyer)
                 .collect(Collectors.toList());
