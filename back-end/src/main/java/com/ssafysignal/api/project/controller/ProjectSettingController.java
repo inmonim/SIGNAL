@@ -221,13 +221,13 @@ public class ProjectSettingController {
             @ApiResponse(responseCode = "401", description = "로그인 필요"),
             @ApiResponse(responseCode = "403", description = "권한 없음")})
     @GetMapping("/evaluation/history")
-    private ResponseEntity<BasicResponse> findProjectUserEvaluationHistory(@Parameter(name = "toUserSeq", description = "평가 하는 팀원") @RequestParam Integer toUserSeq,
-                                                                           @Parameter(name = "fromUserSeq", description = "평가 당했던 팀원") @RequestParam Integer fromUserSeq,
+    private ResponseEntity<BasicResponse> findProjectUserEvaluationHistory(@Parameter(name = "fromUserSeq", description = "평가 하는 팀원") @RequestParam Integer fromUserSeq,
+                                                                           @Parameter(name = "toUserSeq", description = "평가 당했던 팀원") @RequestParam Integer toUserSeq,
                                                                            @Parameter(name = "weekCnt", description = "평가 회차") @RequestParam Integer weekCnt) {
         log.info("findProjectUserEvaluationResult - Call");
 
         try {
-            List<FindProjectUserEvaluationHistoryResponse> evaluationHistoryList = projectSettingService.findProjectUserEvaluationHistory(toUserSeq, fromUserSeq, weekCnt);
+            List<FindProjectUserEvaluationHistoryResponse> evaluationHistoryList = projectSettingService.findProjectUserEvaluationHistory(fromUserSeq, toUserSeq, weekCnt);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, evaluationHistoryList));
         }  catch (NotFoundException e){
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
