@@ -40,7 +40,7 @@ import SignalHonorList from 'pages/Signal/SignalHonorList'
 import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
 import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
-
+import OpenprofileDetail from 'pages/Openprofile/OpenprofileDetail'
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
 import Openprofile from 'pages/Openprofile/Openprofile'
 import Footer from 'components/Layout/Footer'
@@ -111,6 +111,7 @@ function App() {
             <Route path="/signal/rankMain" element={<SignalHonorMain />} />
             <Route path="/signal/ranklist" element={<SignalHonorList />} />
             <Route path="/openprofile" element={<Openprofile />}></Route>
+            <Route path="/openprofiledetail" element={<OpenprofileDetail />}></Route>
             <Route path="/adminblacklist" element={<AdminBalckList />} />
             <Route path="/adminproject" element={<AdminProject />} />
             <Route path="/adminsignalweek" element={<AdminSignalWeek />} />
