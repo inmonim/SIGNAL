@@ -32,7 +32,7 @@ function SignalHonorList() {
                 {honorList &&
                   honorList.map((item, index) => (
                     <TableRow key={index}>
-                      <TableCell align="center">1</TableCell>
+                      <TableCell align="center">{index + 1}</TableCell>
                       <TableCell align="left">
                         <Link to={`/signal/rank`} state={{ year: item.year, quarter: item.quarter }}>
                           {item.year}년 {item.quarter}분기 수상작

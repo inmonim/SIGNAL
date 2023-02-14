@@ -1,33 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import 'assets/styles/signalweekrank.css'
 import Lottie from 'react-lottie'
-import trophy from 'assets/lottie/trophy.json'
-import second from 'assets/lottie/2rd.json'
-import third from 'assets/lottie/3rd.json'
+import confetti from 'assets/lottie/confetti.json'
+import winner from 'assets/image/wMedal.PNG'
+import second from 'assets/image/sMedal.PNG'
+import third from 'assets/image/tMedal.png'
 import { useNavigate, useLocation } from 'react-router-dom'
 import api from 'api/Api'
 
 function SignalHonor() {
-  const firstOptions = {
+  const confettiOptions = {
     loop: true,
     autoplay: true,
-    animationData: trophy,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  }
-  const secondOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: second,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  }
-  const thirdOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: third,
+    animationData: confetti,
     rendererSettings: {
       preserveAspectRatio: 'xMidYMid slice',
     },
@@ -62,9 +47,12 @@ function SignalHonor() {
 
   return (
     <div className="signal-rank-page-container">
+      <div className="back-lottie-left">
+        <Lottie options={confettiOptions} height={1100} width={380} isClickToPauseDisabled={true} />
+      </div>
       <div className="signal-rank-container">
         <div className="signal-rank-header">
-          <div className="signal-rank-header-title">시그널 위크 수상작</div>
+          <div className="signal-rank-header-title">시그널위크 수상작</div>
           <div className="signal-rank-header-sub">
             <div className="signal-rank-header-now">
               {year}년 {quarter}분기
@@ -77,13 +65,13 @@ function SignalHonor() {
         <div className="signal-rank-img">
           <div className="signal-rank-1st-container">
             <div className="signal-rank-1st-lottie">
-              <Lottie options={firstOptions} height={150} width={150} isClickToPauseDisabled={true} />
+              <img src={winner} alt="" style={{ width: '150px', height: '140px' }} />
             </div>
             <div className="signal-rank-1st">
               <div className="signal-rank-1st-img">
                 <img
                   className="signal-rank-1st-img-item"
-                  src={winnerList[0] ? winnerList[0].projectImageUrl : ''}
+                  src={winnerList[0] ? process.env.REACT_APP_API_URL + winnerList[0].projectImageUrl : ''}
                   alt="signal"
                 />
               </div>
@@ -93,13 +81,13 @@ function SignalHonor() {
           <div className="signal-rank-under-container">
             <div className="signal-rank-1st-container">
               <div className="signal-rank-1st-lottie">
-                <Lottie options={secondOptions} height={100} width={100} isClickToPauseDisabled={true} />
+                <img src={second} alt="" style={{ width: '130px', height: '130px' }} />
               </div>
               <div className="signal-rank-1st">
                 <div className="signal-rank-1st-img">
                   <img
                     className="signal-rank-1st-img-item"
-                    src={winnerList[1] ? winnerList[1].projectImageUrl : ''}
+                    src={winnerList[1] ? process.env.REACT_APP_API_URL + winnerList[1].projectImageUrl : ''}
                     alt="signal"
                   />
                 </div>
@@ -108,13 +96,13 @@ function SignalHonor() {
             </div>
             <div className="signal-rank-1st-container">
               <div className="signal-rank-1st-lottie">
-                <Lottie options={thirdOptions} height={100} width={100} isClickToPauseDisabled={true} />
+                <img src={third} alt="" style={{ width: '120px', height: '130px' }} />
               </div>
               <div className="signal-rank-1st">
                 <div className="signal-rank-1st-img">
                   <img
                     className="signal-rank-1st-img-item"
-                    src={winnerList[2] ? winnerList[2].projectImageUrl : ''}
+                    src={winnerList[2] ? process.env.REACT_APP_API_URL + winnerList[2].projectImageUrl : ''}
                     alt="signal"
                   />
                 </div>
@@ -123,6 +111,9 @@ function SignalHonor() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="back-lottie-right">
+        <Lottie options={confettiOptions} height={1100} width={380} isClickToPauseDisabled={true} />
       </div>
     </div>
   )
