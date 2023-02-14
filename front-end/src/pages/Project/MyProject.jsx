@@ -38,47 +38,49 @@ function MyProject() {
       <div className="my-project-container">
         <div className="hr-sect">진행중인 프로젝트</div>
         <div className="project-list-container">
-          {ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {
-            return (
-              <>
-                <Link to="/project" state={{ projectSeq: v.projectSeq }}>
-                  <div className="project-list-ing" key={i}>
-                    <div className="project-list-img">
-                      <img
-                        className="project-list-img-item"
-                        src={process.env.REACT_APP_API_URL + v.projectImageUrl}
-                        alt="signal"
-                      />
+          {ingData &&
+            ingData.slice(size * (ingPage - 1), size * (ingPage - 1) + size).map((v, i) => {
+              return (
+                <>
+                  <Link to="/project" state={{ projectSeq: v.projectSeq }}>
+                    <div className="project-list-ing" key={i}>
+                      <div className="project-list-img">
+                        <img
+                          className="project-list-img-item"
+                          src={process.env.REACT_APP_API_URL + v.projectImageUrl}
+                          alt="signal"
+                        />
+                      </div>
+                      <div className="project-list-subject">{v.subject}</div>
                     </div>
-                    <div className="project-list-subject">{v.subject}</div>
-                  </div>
-                </Link>
-              </>
-            )
-          })}
+                  </Link>
+                </>
+              )
+            })}
         </div>
         <Paging page={ingPage} count={ingData.length} setPage={handleIngPageChange} size={size}></Paging>
         <hr />
         <div className="hr-sect">진행했던 프로젝트</div>
         <div className="project-list-container">
-          {endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, i) => {
-            return (
-              <>
-                <Link to="/endproject" state={{ projectSeq: v.projectSeq }}>
-                  <div className="project-list-end" key={i}>
-                    <div className="project-list-img">
-                      <img
-                        className="project-list-img-item"
-                        src={process.env.REACT_APP_API_URL + v.projectImageUrl}
-                        alt="signal"
-                      />
+          {endData &&
+            endData.slice(size * (endPage - 1), size * (endPage - 1) + size).map((v, i) => {
+              return (
+                <>
+                  <Link to="/endproject" state={{ projectSeq: v.projectSeq }}>
+                    <div className="project-list-end" key={i}>
+                      <div className="project-list-img">
+                        <img
+                          className="project-list-img-item"
+                          src={process.env.REACT_APP_API_URL + v.projectImageUrl}
+                          alt="signal"
+                        />
+                      </div>
+                      <div className="project-list-subject">{v.subject}</div>
                     </div>
-                    <div className="project-list-subject">{v.subject}</div>
-                  </div>
-                </Link>
-              </>
-            )
-          })}
+                  </Link>
+                </>
+              )
+            })}
         </div>
         <Paging page={endPage} count={endData.length} setPage={handleEndPageChange} size={size}></Paging>
         <hr />

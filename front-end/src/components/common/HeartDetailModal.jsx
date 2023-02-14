@@ -186,13 +186,15 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
               <div className="my-user-heart-modal-bottom-title">사용내역</div>
               <div className="my-user-heart-modal-bottom">
                 {mode === 'user'
-                  ? userHeartLog.map((item, index) => (
+                  ? userHeartLog &&
+                    userHeartLog.map((item, index) => (
                       <div key={index} className="my-user-heart-modal-bottom-content">
                         <div className="my-user-heart-modal-content-left">{item.content}</div>
                         <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
                       </div>
                     ))
-                  : projectHeartLog.map((item, index) => (
+                  : projectHeartLog &&
+                    projectHeartLog.map((item, index) => (
                       <div key={index} className="my-user-heart-modal-bottom-content">
                         <div className="my-user-heart-modal-content-left">{item.content}</div>
                         <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
