@@ -167,37 +167,36 @@ import java.util.Map;
     @Tag(name = "인증")
     @Operation(summary = "비밀번호 찾기", description = "비밀번호 변경을 위한 이메일을 인증한다.")
     @PostMapping ("/password")
-    private ResponseEntity<BasicResponse> findPassword(@Parameter(description = "이메일", required = true) @RequestBody Map<String, Object> param,
-                                                       HttpServletResponse response) {
+    private ResponseEntity<BasicResponse> findPassword(@Parameter(description = "이메일", required = true) @RequestBody Map<String, Object> param) {
         log.info("findPassword - Call");
 
         try {
             String email = String.valueOf(param.get("email"));
             authService.findPassword(email);
-            response.sendRedirect(host);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MAILSEND_FAIL, null));
-        } finally {
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         }
     }
 
     @Tag(name = "인증")
     @Operation(summary = "임시 비밀번호 받기", description = "authCode를 확인하고 해당되는 이메일로 임시비밀번호 생성해서 전송한다.")
     @GetMapping("/password/{authCode}")
-    private ResponseEntity<BasicResponse> getPasswordByEmail(@Parameter(description = "인증 코드", required = true) @PathVariable("authCode") String authCode) {
+    private ResponseEntity<BasicResponse> getPasswordByEmail(@Parameter(description = "인증 코드", required = true) @PathVariable("authCode") String authCode,
+                                                             HttpServletResponse response) {
         log.info("getPasswordByEmail - Call");
 
         try {
             authService.getPasswordByEmail(authCode);
+            response.sendRedirect(host);
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         } finally {
-            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         }
     }
 }
