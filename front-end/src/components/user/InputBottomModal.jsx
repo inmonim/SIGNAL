@@ -58,7 +58,7 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
       <div onClick={() => handleDelete(h)}>
         <img src={minusBtn} alt="" className="user-profile-input-chip-minus-img" />
       </div>
-      <div>{h.content}</div>
+      <div className="user-profile-input-chip-text">{h.content}</div>
     </div>
   ))
 
