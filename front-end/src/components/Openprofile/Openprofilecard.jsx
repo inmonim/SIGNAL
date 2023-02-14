@@ -6,10 +6,11 @@ import 'assets/styles/openprofilecar.css'
 import { Box } from '@mui/system'
 import { getPositionName } from 'data/Positiondata'
 import SignalBtn from 'components/common/SignalBtn'
+import { useNavigate } from 'react-router'
 // import { useNavigate } from 'react-router-dom'
 
 export default function Openprofilecard({ open }) {
-  //   const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <Card
       sx={{
@@ -23,7 +24,7 @@ export default function Openprofilecard({ open }) {
         },
       }}
       onClick={() => {
-        // navigate(`/posting/${post.postingSeq}`)
+        navigate('/openprofiledetail', { state: open })
       }}
     >
       <CardContent sx={{ height: '100%' }}>
