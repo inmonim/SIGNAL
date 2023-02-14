@@ -49,29 +49,30 @@ function TeamEval({ projectSeq }) {
     projectMemeberFetch()
   }, [flag, tab])
 
-  const weekTab = () => {
-    const result = []
-    for (let i = 0; i < weekCnt; i++) {
-      result.push(
-        <div
-          className={`eval-count-tab ${tab === { i } ? 'active' : ''}`}
-          key={i}
-          onClick={() => {
-            setTab(i)
-            // 몇회차인지 상태변경
-          }}
-        >
-          {i + 1}회차
-        </div>
-      )
-    }
-    return result
+  const cnt = []
+  for (let i = 0; i < weekCnt; i++) {
+    cnt.push(i)
   }
 
   return (
     <>
       <div className="eval-count-tab-container">
-        <div className="eval-count-tab-list">{weekTab()}</div>
+        <div className="eval-count-tab-list">
+          {cnt.map((i, index) => {
+            return (
+              <div
+                className={`eval-count-tab ${tab === i ? 'active' : ''}`}
+                key={index}
+                onClick={() => {
+                  setTab(i)
+                  // 몇회차인지 상태변경
+                }}
+              >
+                {i + 1}회차
+              </div>
+            )
+          })}
+        </div>
       </div>
       <div className="eval-container">
         <div className="eval-section">
@@ -92,9 +93,18 @@ function TeamEval({ projectSeq }) {
           </div>
           <div className="eval-qna-container">
             {finishMember.includes(toUserSeq) ? (
-              <div className="eval-body">
-                <div className="eval-end">{nickname} 님 평가 완료</div>
-              </div>
+              // <div className="eval-body">
+              //   <div className="eval-end">{nickname} 님 평가 완료</div>
+              // </div>
+              <EvalQna
+                fromUserSeq={fromUserSeq}
+                toUserSeq={toUserSeq}
+                projectSeq={projectSeq}
+                tab={tab + 1}
+                nickname={nickname}
+                weekCnt={weekCnt}
+                setFlag={setFlag}
+              ></EvalQna>
             ) : (
               <EvalQna
                 fromUserSeq={fromUserSeq}
