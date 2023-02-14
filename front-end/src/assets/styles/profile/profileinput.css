@@ -21,10 +21,21 @@
 }
 
 .user-profile-input-chip {
-  overflow: overlay;
+  overflow: auto;
   width: 400px;
   height: 200px;
   padding: 5px;
+}
+
+.user-profile-input-chip::-webkit-scrollbar {
+  width: 10px;
+}
+
+.user-profile-input-chip::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 .user-profile-input-check-btn {
@@ -33,10 +44,15 @@
 
 .user-profile-input-chip-item {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   font-size: 22px;
 }
 
 .user-profile-input-chip-minus-img {
   padding-right: 13px;
+}
+
+.user-profile-input-chip-text {
+  width: 310px;
+  overflow-wrap: break-word;
 }
