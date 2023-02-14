@@ -7,7 +7,7 @@ import api from 'api/Api.js'
 
 // import TeamProfile from 'components/Project/TeamProfile'
 
-function ProjectMaintainPage({ projectSeq }) {
+function ProjectMaintainPage({ projectSeq, setProjectMode }) {
   // const list = [1, 2, 3, 4, 5, 6]
   // const projectSeq = 458
 
@@ -41,7 +41,9 @@ function ProjectMaintainPage({ projectSeq }) {
 
   return (
     <div className="team-maintain-header">
-      <div className="team-maintain-title">{projectData.subject}</div>
+      <div className="team-maintain-title" onClick={() => setProjectMode('main')}>
+        {projectData.subject}
+      </div>
       <div className="team-maintain-menu">
         <SignalBtn
           sx={projectSubMenuStyle}

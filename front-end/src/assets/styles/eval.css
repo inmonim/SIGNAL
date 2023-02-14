@@ -1,20 +1,20 @@
 /* 평가 회차 탭 */
-.eval-count-tab-container{
-  width:1000px;
+.eval-count-tab-container {
+  width: 1000px;
   border-bottom: 2px solid black;
   margin: 30px;
 }
 
-.eval-count-tab-list{
+.eval-count-tab-list {
   display: flex;
   font-size: 24px;
   margin-left: 40px;
-  width: 900px
+  width: 900px;
 }
 
-.eval-count-tab{
+.eval-count-tab {
   background-color: white;
-  border:2px solid #796fb2;
+  border: 2px solid #796fb2;
   border-bottom: 0px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
@@ -26,7 +26,7 @@
   align-items: center;
 }
 
-.eval-count-tab.active{
+.eval-count-tab.active {
   background-color: #796fb2;
   color: #fff;
 }
@@ -66,23 +66,23 @@
   cursor: pointer;
 }
 
-.eval-member.active{
-  border: 2px solid #796FB2;
+.eval-member.active {
+  border: 2px solid #796fb2;
   color: #616161;
   text-decoration: line-through;
 }
 
-.eval-qna-container{
+.eval-qna-container {
   display: flex;
   justify-content: center;
 }
 
-.eval-body{
+.eval-body {
   width: 760px;
 }
 
-.eval-end{
-  background-color: #CCC;
+.eval-end {
+  background-color: #ccc;
   height: 100%;
   display: flex;
   align-items: center;
@@ -91,13 +91,19 @@
   border-radius: 15px;
 }
 
+.last-eval {
+  font-size: 44px;
+  color: red;
+  margin: 15px 0px;
+}
+
 .eval-date {
   color: #574b9f;
   font-size: 22px;
   margin-bottom: 22px;
 }
 
-.eval-question-body{
+.eval-question-body {
   margin: 21px 0px;
 }
 
@@ -117,6 +123,6 @@
   margin: 0px 20px 0px 20px;
 }
 
-.eval-radio-btn{
+.eval-radio-btn {
   margin-left: 50px;
 }
