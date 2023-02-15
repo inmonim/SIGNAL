@@ -8,22 +8,24 @@
 .back-lottie-left{
   position: absolute;
   object-fit: fill;
-  z-index: -1;
   left: 0;
 }
 
 .back-lottie-right{
   position: absolute;
   object-fit: fill;
-  z-index: -1;
   right: 0;
+}
+
+.signal-rank-back{
+  width: 100%;
+  height: 100%;
+  background-color: #272d41;
 }
 
 .signal-rank-container{
   width: 1125px;
-  height: 100%;
-  background-color: #272d41;
-  margin: 0px auto;
+  margin: auto;
 }
 
 .signal-rank-header{
@@ -115,6 +117,11 @@
   justify-content: space-between;
   margin: 100px;
 }
+
+.signal-rank-img{
+  margin-bottom: 30px;
+}
+
 /* 시그널 위크 수상작 리스트 */
 .signal-rank-list-container {
   width: 100%;
