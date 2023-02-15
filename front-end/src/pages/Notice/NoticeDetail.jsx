@@ -60,7 +60,17 @@ function NoticeDetail() {
             <span>{data.view}</span>
           </div>
         </div>
-        <div className="notice-detail-content">{data.content}</div>
+        <div className="notice-detail-content">
+          {data.content &&
+            data.content.split('\n').map((line, index) => {
+              return (
+                <span key={index}>
+                  {line}
+                  <br />
+                </span>
+              )
+            })}
+        </div>
       </div>
     </div>
   )

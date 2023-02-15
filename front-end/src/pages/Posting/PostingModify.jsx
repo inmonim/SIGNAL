@@ -267,7 +267,9 @@ const PostingModify = () => {
     if (
       subjectget !== '' &&
       contentget !== '' &&
+      postingSkillListget &&
       postingSkillListget.length !== 0 &&
+      postingPositionListget &&
       postingPositionListget.length !== 0 &&
       postingQuestionListget !== 0
     ) {
