@@ -7,8 +7,9 @@ import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 import api from 'api/Api'
+import AlertModal from 'components/AlertModal'
 
-function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, nickname }) {
+function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, nickname, flag, setMode }) {
   const [score, setScore] = useState([])
   const [evaluationStartDt, setEvaluationStartDt] = useState('')
   const [evaluationEndDt, setEvaluationEndDt] = useState('')
@@ -16,13 +17,26 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   const [evalHistory, setEvalHistory] = useState([])
 
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  const evaluationSubmit = () => {
+    if (score.length === 5) {
+      setMsg('평가를 완료하였습니다.')
+    } else {
+      setMsg('평가하지 않은 항목이 있습니다.')
+    }
+    setAlertOpen(true)
+  }
+  const handleToClose = () => setAlertOpen(false)
+
   const handleScoreChange = (e, index) => {
     const scoreArr = [...score]
     scoreArr.splice(e.target.name, 1, e.target.value)
     setScore(scoreArr)
   }
 
-  const evaluationSubmit = async () => {
+  const handleToEval = async () => {
     try {
       if (score.length === 5) {
         await api
@@ -34,14 +48,15 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
             toUserSeq,
           })
           .then(() => {
-            setFlag(true)
+            setFlag(!flag)
+            setAlertOpen(false)
           })
-        location.reload()
+        setMode(0)
       } else {
-        alert('평가하지 않은 항목이 있습니다.')
+        setMsg('평가하지 않은 항목이 있습니다.')
       }
     } catch (error) {
-      alert('이미 평가한 팀원 입니다.')
+      setMsg('이미 평가한 팀원 입니다.')
     }
   }
 
@@ -57,13 +72,10 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
         console.log(error)
       })
 
-    // 평가한 history 가져옴
-    // 평가한적없으면 length 0
-    // 평가한적있으면 [{num : 1, score :10 }...] length : 질문 수 만큼
     await api
       .get(
         process.env.REACT_APP_API_URL +
-          `/project/evaluation/history?toUserSeq=${toUserSeq}&fromUserSeq=${fromUserSeq}&weekCnt=${weekCnt}`
+          `/project/evaluation/history?toUserSeq=${toUserSeq}&fromUserSeq=${fromUserSeq}&weekCnt=${tab}`
       )
       .then((res) => {
         setEvalHistory(res.data.body)
@@ -77,7 +89,8 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   useEffect(() => {
     evaluationFetch()
-  }, [toUserSeq])
+    console.log(evalHistory)
+  }, [flag, toUserSeq, tab])
 
   return (
     <div className="eval-body">
@@ -214,19 +227,22 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
         </div>
       ))}
       {weekCnt === tab && evalHistory && evalHistory.length === 0 ? (
-        <SignalBtn
-          sigwidth="224px"
-          sigheight="52px"
-          sigborderradius={14}
-          sigfontsize="24px"
-          sigmargin="43px auto"
-          sx={BtnStyle}
-          onClick={() => {
-            evaluationSubmit()
-          }}
-        >
-          평가 완료
-        </SignalBtn>
+        <>
+          <SignalBtn
+            sigwidth="224px"
+            sigheight="52px"
+            sigborderradius={14}
+            sigfontsize="24px"
+            sigmargin="43px auto"
+            sx={BtnStyle}
+            onClick={() => {
+              evaluationSubmit()
+            }}
+          >
+            평가 완료
+          </SignalBtn>
+          <AlertModal msg={msg} open={alertOpen} onClick={handleToEval} onClose={handleToClose}></AlertModal>
+        </>
       ) : (
         <></>
       )}

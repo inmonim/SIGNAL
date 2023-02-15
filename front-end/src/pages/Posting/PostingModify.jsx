@@ -121,12 +121,10 @@ const PostingModify = () => {
   const [postingPositionListget, setPostingPositionListget] = useState([])
   const [postingQuestionListget, setPostingQuestionListget] = useState([])
 
-  // console.log(JSON.stringify(posting))
   // const [u]
   const postPutFetch = async () => {
     const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
-    console.log(post)
     setUserSeqget(sessionStorage.getItem('userSeq'))
     setSubjectget(post.subject)
     setLocalCodeget(post.localCode)
@@ -180,7 +178,6 @@ const PostingModify = () => {
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
   const handleSkillInput = (e) => {
-    console.log(e)
     if (e === null) return
     newTag({
       label: e.label,
@@ -230,19 +227,6 @@ const PostingModify = () => {
     setCareerList(careerList.filter((career) => career.seq !== key))
   }
 
-  // end >> handle career
-  // const handleDelete = (ele) => {
-  //   // console.log('함수')
-  //   setDateList(
-  //     DateList.filter((date) => {
-  //       // console.log(date, 'date')
-  //       // console.log(ele, 'ele')
-  //       return date !== ele
-  //     })
-  //   )
-  // }
-  // const getDateList = () => {
-
   const handleContentChange = (event) => {
     setContentget(event.target.value)
     // setPosting({ ...posting, content: event.target.value })
@@ -279,11 +263,13 @@ const PostingModify = () => {
       postingPositionList: postingPositionListget,
       postingQuestionList: postingQuestionListget,
     }
-    console.log(req)
+
     if (
       subjectget !== '' &&
       contentget !== '' &&
+      postingSkillListget &&
       postingSkillListget.length !== 0 &&
+      postingPositionListget &&
       postingPositionListget.length !== 0 &&
       postingQuestionListget !== 0
     ) {
@@ -297,6 +283,7 @@ const PostingModify = () => {
         .catch((err) => {
           console.log(err)
           console.log(numberOfTags)
+          console.log(posting)
         })
       navigate('/posting')
     } else {
@@ -309,7 +296,6 @@ const PostingModify = () => {
         button: '예',
       })
     }
-    // console.log('공고 post')
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
@@ -341,14 +327,6 @@ const PostingModify = () => {
       <div>
         <div>
           <Title>공고 수정</Title>
-          <button
-            onClick={() => {
-              console.log(posting)
-              console.log(posting.subject)
-            }}
-          >
-            ddd
-          </button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
@@ -361,10 +339,9 @@ const PostingModify = () => {
                 {1 && (
                   <TextField
                     sx={inputStyle}
-                    defaultValue={subjectget}
+                    value={subjectget}
                     onChange={(e) => {
                       setSubjectget(e.target.value)
-                      console.log(subjectget)
                       // setPosting({ ...posting, subject: e.target.value })
                     }}
                   />
@@ -422,9 +399,7 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setFieldCodeget(e.target.value)
-                    // setPosting({ ...posting, fieldCode: e.target.value })
                   }}
                   value={fieldCodeget}
                 >
@@ -446,7 +421,6 @@ const PostingModify = () => {
               <div style={{ width: '80%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     if (e.target.value === 'true') {
                       setIsContactget(true)
                       // setPosting({ ...posting, isContact: true })
@@ -504,28 +478,7 @@ const PostingModify = () => {
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>{/* <Label>화상미팅 예약</Label> */}</div>
-              <div style={{ width: '70%' }}>
-                {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <DateSelect setDate={setDaily} />
-                  <SignalBtn
-                    sigwidth="50px"
-                    sigfontsize="12px"
-                    sigborderradius={15}
-                    sigmargin="0px 20px"
-                    className="post-button-modi"
-                    onClick={() => {
-                      if (!DateList.includes(Daily) && Daily) {
-                        const copy = [...DateList]
-                        copy.push(Daily)
-                        setPosting({ ...posting, postingMeetingList: copy })
-                        setDateList(copy)
-                      }
-                    }}
-                  >
-                    시간 선택
-                  </SignalBtn>
-                </Box> */}
-              </div>
+              <div style={{ width: '70%' }}></div>
             </div>
           </div>
           <div style={{ display: 'flex', marginLeft: '5em' }}>
@@ -598,7 +551,6 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setLevelget(Number(e.target.value))
                     // setPosting({ ...posting, level: Number(e.target.value) })
                   }}
@@ -634,25 +586,7 @@ const PostingModify = () => {
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
               <div style={{ width: '30%' }}>{/* <Label>팀장 포지션</Label> */}</div>
-              <div style={{ width: '70%', display: 'flex' }}>
-                {/* <FilterSelect
-                  style={{ marginRight: '0px' }}
-                  className={errorBox && leaderPositionget ? 'active-warning' : ''}
-                  onChange={(e) => {
-                    // console.log(position.code)
-                    // console.log(e.target.value)
-                    setLeaderPositionget(e.target.value)
-                    // setPosting({ ...posting, leaderPosition: e.target.value })
-                  }}
-                  value={leaderPositionget && leaderPositionget}
-                >
-                  {positionData.map((ele, i) => (
-                    <option key={i} value={ele.code}>
-                      {ele.name}
-                    </option>
-                  ))}
-                </FilterSelect> */}
-              </div>
+              <div style={{ width: '70%', display: 'flex' }}></div>
             </div>
           </div>
 

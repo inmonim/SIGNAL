@@ -26,10 +26,6 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 function PostingDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  // console.log(id)
-  // const location = useLocation()
-  // const userSeq = location.state.userSeq
-  // const applySeq = location.state.applySeq
 
   const postingSeq = id
 
@@ -40,7 +36,6 @@ function PostingDetail() {
       const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       console.log(res.data.body)
-      // console.log('applyFetch', res.data.body)
     } catch (error) {
       console.log(error)
     }
@@ -147,17 +142,31 @@ function PostingDetail() {
 
               <div className="apply-detail-content-section">
                 <div className="apply-detail-label">프로젝트 소개</div>
-                <div className="apply-detail-content">{posting && posting.content}</div>
+                <div className="apply-detail-content">
+                  {posting &&
+                    posting.content.split('\n').map((line, index) => {
+                      return (
+                        <span key={index}>
+                          {line}
+                          <br />
+                        </span>
+                      )
+                    })}
+                </div>
               </div>
               <div className="apply-register-submit-button">
-                <SignalBtn
-                  style={{ width: '50%' }}
-                  onClick={() => {
-                    navigate('/applyregister', { state: { postingSeq: posting.postingSeq } })
-                  }}
-                >
-                  지원하기
-                </SignalBtn>
+                {posting && !posting.isMyPosting ? (
+                  <SignalBtn
+                    style={{ width: '50%' }}
+                    onClick={() => {
+                      navigate('/applyregister', { state: { postingSeq: posting.postingSeq } })
+                    }}
+                  >
+                    지원하기
+                  </SignalBtn>
+                ) : (
+                  <></>
+                )}
                 {/* 팀원 선택 페이지 ( 작성자용 ) */}
               </div>
             </div>
