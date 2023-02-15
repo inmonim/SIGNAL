@@ -158,7 +158,6 @@ hr {
   margin: auto;
   margin-top: 158px;
   margin-bottom: 70px;
-  height: 100vh;
 }
 
 .apply-detail-width-section {
@@ -263,7 +262,6 @@ hr {
 
 .apply-answer-content {
   padding: 15px;
-  height: 100px;
   background: #dddbec;
   border-radius: 8px;
   margin: 10px 0px;
