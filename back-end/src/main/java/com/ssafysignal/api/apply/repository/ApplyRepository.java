@@ -12,10 +12,8 @@ public interface ApplyRepository extends JpaRepository<Apply, Integer>{
     Integer countByPostingSeq(Integer postingSeq);
     Integer countByUserSeq(Integer userSeq);
     List<Apply> findAllByPostingSeq(Integer postingSeq, PageRequest pagenation);
-    Integer countByPostingSeqAndApplyCode(Integer postingSeq, String applyCode);
-    List<Apply> findByPostingSeqAndApplyCode(Integer postingSeq, String applyCode);
-//    List<Apply> findAllByUserSeqAndStateCodeIsNot(Integer userSeq, String stateCode, PageRequest pagenation);
     List<Apply> findAllByUserSeq(Integer userSeq, PageRequest pagenation);
     List<Apply> findByPostingSeqAndApplyCodeNot(Integer postingSeq, String applyCode);
     Optional<Apply> findTop1ByUserSeqAndPostingSeq(Integer userSeq, Integer postingSeq);
+    List<Apply> findByPostingSeq(Integer postingSeq);
 }
