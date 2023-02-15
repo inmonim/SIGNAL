@@ -97,8 +97,10 @@ function ProjectProgress({ projectSeq, setProjectMode }) {
           msg={'화상회의에 입장하시겠습니까?'}
           onClose={() => setMeetingOpen(false)}
         />
+      ) : mode === 3 ? (
+        <TeamEval projectSeq={projectSeq} setMode={setMode} />
       ) : (
-        <TeamEval projectSeq={projectSeq} />
+        <></>
       )}
       <div></div>
     </div>
