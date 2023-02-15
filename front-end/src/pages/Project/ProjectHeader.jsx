@@ -15,6 +15,7 @@ import noProfile from 'assets/image/noProfileImg.png'
 function ProjectHeader() {
   const location = useLocation()
   const [projectMode, setProjectMode] = useState('main')
+  const [isMyProject, setIsMyProject] = useState(false)
   const userSeq = sessionStorage.getItem('userSeq')
   const projectSeq = parseInt(location.state.projectSeq)
 
@@ -32,7 +33,8 @@ function ProjectHeader() {
     })
       .then((res) => {
         setProject(res.data.body)
-        console.log('project:', project)
+        setIsMyProject(res.data.body.isMyProject)
+        console.log(res.data.body)
       })
       .catch((e) => {
         console.log(e)
@@ -45,6 +47,7 @@ function ProjectHeader() {
       method: 'GET',
     })
       .then((res) => {
+        console.log(res)
         setMember(res.data.body.projectUserList)
       })
       .catch((e) => {
@@ -77,7 +80,11 @@ function ProjectHeader() {
     <div className="project-header-container">
       <div className="project-header-width">
         <div className="project-header-settings">
-          <img className="project-header-img-settings" src={settings} alt="" onClick={handleToSetting} />
+          {isMyProject ? (
+            <img className="project-header-img-settings" src={settings} alt="" onClick={handleToSetting} />
+          ) : (
+            <></>
+          )}
         </div>
         {projectMode === 'main' ? (
           <div className="project-detail-container">

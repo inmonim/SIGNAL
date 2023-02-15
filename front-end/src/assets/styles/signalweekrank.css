@@ -1,6 +1,26 @@
 .signal-rank-page-container{
-  margin: 108px 0px;
-  min-height: 100vh;
+  margin-top: 108px;
+  height: 100vh;
+  position: relative;
+  display: flex;
+}
+
+.back-lottie-left{
+  position: absolute;
+  object-fit: fill;
+  left: 0;
+}
+
+.back-lottie-right{
+  position: absolute;
+  object-fit: fill;
+  right: 0;
+}
+
+.signal-rank-back{
+  width: 100%;
+  height: 100%;
+  background-color: #272d41;
 }
 
 .signal-rank-container{
@@ -18,21 +38,32 @@
   font-size: 44px;
   display: flex;
   justify-content: center;
+  color: #272d41;
+  margin: 30px 0px;
+  background-color: #dddbec;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .signal-rank-header-sub{
   display: flex;
   justify-content: space-between;
   font-size: 24px;
-  margin: 30px;
+  margin: 30px 0px;
 }
 
 .signal-rank-header-now{
-  color: #574b9f;
+  color: #dddbec;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.signal-rank-header-menu{
+  color: #dddbec;
 }
 
 .signal-rank-header-menu:hover{
-  color: rgb(87, 75, 159);
+  color: #9A93C5;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   text-decoration: underline;
   cursor: pointer;
@@ -41,9 +72,6 @@
 .signal-rank-1st-container{
   display: flex;
   justify-content: center;
-}
-
-.signal-rank-1st-lottie{
 }
 
 .signal-rank-1st {
@@ -89,6 +117,11 @@
   justify-content: space-between;
   margin: 100px;
 }
+
+.signal-rank-img{
+  margin-bottom: 30px;
+}
+
 /* 시그널 위크 수상작 리스트 */
 .signal-rank-list-container {
   width: 100%;
@@ -109,6 +142,7 @@
   font-size: 44px;
   display: flex;
   justify-content: center;
+  padding: 30px 0px;
 }
 
 .signal-rank-list-table{

@@ -54,7 +54,7 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
       }, [])
 
   // 하트 충전
-  const [inputHeart, setInputHeart] = useState(null)
+  const [inputHeart, setInputHeart] = useState(1)
   const [alertOpen, setAlertOpen] = useState(false)
   const [minusAlert, setMinusAlert] = useState(false)
 
@@ -65,7 +65,6 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
   }
   const handleInputHeart = (e) => {
     if (e.target.value <= 0) {
-      // setInputHeart(1)
       setMinusAlert(true)
     } else {
       setInputHeart(e.target.value)
@@ -186,13 +185,15 @@ function HeartDetailModal({ open, onClose, mode, projectSeq }) {
               <div className="my-user-heart-modal-bottom-title">사용내역</div>
               <div className="my-user-heart-modal-bottom">
                 {mode === 'user'
-                  ? userHeartLog.map((item, index) => (
+                  ? userHeartLog &&
+                    userHeartLog.map((item, index) => (
                       <div key={index} className="my-user-heart-modal-bottom-content">
                         <div className="my-user-heart-modal-content-left">{item.content}</div>
                         <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
                       </div>
                     ))
-                  : projectHeartLog.map((item, index) => (
+                  : projectHeartLog &&
+                    projectHeartLog.map((item, index) => (
                       <div key={index} className="my-user-heart-modal-bottom-content">
                         <div className="my-user-heart-modal-content-left">{item.content}</div>
                         <div className="my-user-heart-modal-content-right">{item.heartCnt}</div>
