@@ -145,7 +145,7 @@ function ApplyDetail() {
                     <hr className="apply-detail-hr-small" />
                   </div>
                   <div style={{ display: 'flex' }}>
-                    <div style={{ width: '90%' }}>
+                    <div style={{ width: '90%', overflowWrap: 'break-word' }}>
                       {apply.careerList &&
                         apply.careerList.map((item) => (
                           <div className="apply-detail-career" key={item.applyCareerSeq}>
@@ -163,7 +163,7 @@ function ApplyDetail() {
                     <hr className="apply-detail-hr-small" />
                   </div>
                   <div style={{ display: 'flex' }}>
-                    <div style={{ width: '90%' }}>
+                    <div style={{ width: '90%', overflowWrap: 'break-word' }}>
                       {apply.expList &&
                         apply.expList.map((item) => (
                           <div className="apply-detail-exp" key={item.applyExpSeq}>
