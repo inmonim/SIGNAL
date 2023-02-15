@@ -13,8 +13,9 @@ export default function PostingCardItem({ post }) {
       sx={{
         minWidth: 275,
         maxWidth: 275,
+        ml: 1,
         mb: 2,
-        mr: 2,
+        mr: 1,
         '&:hover': {
           boxShadow: '0 0 0 2px #bcb7d9',
           cursor: 'pointer',
