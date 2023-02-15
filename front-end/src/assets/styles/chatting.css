@@ -3,23 +3,21 @@
   width: 477px;
   z-index: 1;
   position: absolute;
-  height: 858px;
   border-radius: 45px;
+  top: 20px;
+  bottom: 112px;
   right: 30px;
-  bottom: 10px;
 }
 
 .chatting-body {
-  height: 850px;
-  padding: 0px;
-  margin: 0px;
+  height: 100%;
 }
 
 .chatting-message-list {
   padding: 50px;
-  margin: 50px 5px 0px 5px;
   height: 84%;
   overflow: auto;
+  margin: 30px 5px 0px 5px;
 }
 .chatting-message-list::-webkit-scrollbar {
   width: 10px;
