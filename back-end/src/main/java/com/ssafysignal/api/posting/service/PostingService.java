@@ -42,7 +42,6 @@ public class PostingService {
     private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;
     private final PostingSkillRepository postingSkillRepository;
-    private final PostingPositionRepository postingPositionRepository;
     private final ApplyRepository applyRepository;
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
@@ -146,7 +145,7 @@ public class PostingService {
         projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
                 .projectUserSeq(projectUser.getProjectUserSeq())
                 .heartCnt(100)
-                .content("프로젝트 시작")
+                .content(project.getSubject() + " 프로젝트 시작")
                 .build());
     }
 

@@ -43,33 +43,22 @@ public class ProjectService {
         Project project = projectRepository.findByPostingSeq(postingSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 
-        // 대장 넣음
-        ProjectUser leader = projectUserRepository.findByProjectSeqAndUserSeq(project.getProjectSeq(), project.getPosting().getUserSeq())
-                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
-
-        // 유저 리스트 초기화
-        project.getProjectUserList().clear();
-        project.getProjectUserList().add(leader);
-
         // 해당 공고 미팅 일정 초기화
         for (PostingMeeting postingMeeting : project.getPosting().getPostingMeetingList()) {
             postingMeeting.setPostingMeetingCode("PM101");
         }
 
         // 나머지 지원자들 탈락 처리
-        List<Apply> failList = applyRepository.findByPostingSeqAndApplyCodeNot(postingSeq, "AS101");
-        for (Apply apply : failList) {
-//            apply.setStateCode("PAS102");
-//            apply.setApplyCode("AS104");
+        List<Apply> applyList = applyRepository.findByPostingSeq(postingSeq);
+        for (Apply apply : applyList) {
+            // 합격자
+            if (apply.getApplyCode().equals("AS101")){
+                project.getProjectUserList().add(ProjectUser.fromEntity(apply));
+            }
             apply.setStateCode("PAS109");
             apply.setApplyCode("AS109");
             applyRepository.save(apply);
         }
-
-        // 합격자들 합격 처리해서 프로젝트 유저로 이동 (AS101 = 합격)
-        List<Apply> pickList = applyRepository.findByPostingSeqAndApplyCode(postingSeq, "AS101");
-        List<Integer> oldUserList = project.getProjectUserList().stream().map(ProjectUser::getUserSeq).collect(Collectors.toList());
-        project.getProjectUserList().addAll(pickList.stream().filter((pick) -> !oldUserList.contains(pick.getUserSeq())).map(ProjectUser::fromEntity).collect(Collectors.toList()));
 
         // 프로젝트 포지션 별 인원 수 계산
         Map<String, Integer> positionCount = new HashMap<>();
@@ -100,11 +89,13 @@ public class ProjectService {
         projectRepository.save(project);
 
         for (ProjectUser projectUser : project.getProjectUserList()) {
-            projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
-                    .projectUserSeq(projectUser.getProjectUserSeq())
-                    .heartCnt(100)
-                    .content(project.getSubject() + " 프로젝트 시작")
-                    .build());
+            if (!projectUser.isLeader()) {
+                projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
+                        .projectUserSeq(projectUser.getProjectUserSeq())
+                        .heartCnt(100)
+                        .content(project.getSubject() + " 프로젝트 시작")
+                        .build());
+            }
         }
     }
 

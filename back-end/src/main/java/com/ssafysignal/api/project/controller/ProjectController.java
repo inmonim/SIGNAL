@@ -36,8 +36,6 @@ public class ProjectController {
     private ResponseEntity<BasicResponse> registProject(@Parameter(description = "프로젝트 생성을 위한 프로젝트 Seq") @PathVariable("postingSeq") Integer postingSeq) {
         log.info("registProject - Call");
 
-        System.out.println("postingSeq = " + postingSeq);
-
         try {
             projectService.registProject(postingSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
