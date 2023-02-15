@@ -128,26 +128,30 @@ function QnaDetail() {
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
             <div className="qna-detail-header-right">
-              {isTop === true ? (
-                <>
-                  <PushPinIcon className="qna-detail-faq" onClick={handleToQnaAlert}></PushPinIcon>
-                  <AlertModal
-                    open={qnaAlertOpen}
-                    onClick={handleToQna}
-                    onClose={handleToClose}
-                    msg="FAQ를 해지하시겠습니까?"
-                  ></AlertModal>
-                </>
+              {isAdmin === 'true' ? (
+                isTop === true ? (
+                  <>
+                    <PushPinIcon className="qna-detail-faq" onClick={handleToQnaAlert}></PushPinIcon>
+                    <AlertModal
+                      open={qnaAlertOpen}
+                      onClick={handleToQna}
+                      onClose={handleToClose}
+                      msg="FAQ를 해지하시겠습니까?"
+                    ></AlertModal>
+                  </>
+                ) : (
+                  <>
+                    <PushPinOutlinedIcon className="qna-detail-faq" onClick={handleToFaqAlert}></PushPinOutlinedIcon>
+                    <AlertModal
+                      open={faqAlertOpen}
+                      onClick={handleToFaq}
+                      onClose={handleToClose}
+                      msg="FAQ로 등록하시겠습니까?"
+                    ></AlertModal>
+                  </>
+                )
               ) : (
-                <>
-                  <PushPinOutlinedIcon className="qna-detail-faq" onClick={handleToFaqAlert}></PushPinOutlinedIcon>
-                  <AlertModal
-                    open={faqAlertOpen}
-                    onClick={handleToFaq}
-                    onClose={handleToClose}
-                    msg="FAQ로 등록하시겠습니까?"
-                  ></AlertModal>
-                </>
+                <></>
               )}
               {data.isMyQna ? (
                 <>
