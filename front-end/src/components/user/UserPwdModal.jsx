@@ -42,6 +42,7 @@ function UserPwdModal({ open, onClose }) {
       })
     setAlertOpen(false)
     onClose(true)
+    window.location.reload()
   }
 
   const handleToClose = () => {

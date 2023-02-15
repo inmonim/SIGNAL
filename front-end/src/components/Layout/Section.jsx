@@ -12,6 +12,7 @@ const Container = styled.div`
   justify-content: space-around;
   align-items: center;
   background-image: url('${({ isBg }) => (isBg ? gradient : null)}');
+  }
 `
 
 function Section({ children, isBg }) {
