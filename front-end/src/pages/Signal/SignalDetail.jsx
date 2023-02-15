@@ -106,17 +106,29 @@ function signalDetail() {
           <Label>PDF 파일</Label>
           {data.pptUrl ? (
             <div>
-              <div style={{ width: '1126px  ', height: '620px', overflow: 'hidden', marginTop: '1em' }}>
+              <div
+                style={{
+                  width: '1126px  ',
+                  height: '620px',
+                  overflow: 'hidden',
+                  marginTop: '1em',
+                  textAlign: 'center',
+                }}
+              >
                 <Document file={process.env.REACT_APP_API_URL + data.pptUrl} onLoadSuccess={onDocumentLoadSuccess}>
                   <Page width={1126} height={720} pageNumber={pageNumber} />
                 </Document>
               </div>
               <div
-                style={{ display: 'flex', justifyContent: 'center', marginTop: '1em', transform: 'translateX(-50px)' }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '1em',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                }}
               >
-                <SignalBtn sigwidth="48px" onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>
-                  &lt;
-                </SignalBtn>
+                <SignalBtn onClick={() => (pageNumber > 1 ? setPageNumber(pageNumber - 1) : null)}>&lt;</SignalBtn>
                 <div style={{ margin: '1em' }}>
                   Page {pageNumber} of {numPages}
                 </div>

@@ -42,6 +42,19 @@ function Signalregister() {
   const [file, setFile] = useState(null)
   const handleChangeFile = (event) => {
     setFile(event.target.files[0])
+    const maxFileSize = 100 * 1024 * 1024
+    const selectedFile = event.target.files[0]
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase()
+
+    if (selectedFile.size > maxFileSize) {
+      alert('파일 크기가 너무 큽니다.')
+      event.target.value = null // input 요소 초기화
+    } else if (fileExtension !== 'pdf') {
+      alert('PDF 파일만 업로드 가능합니다.')
+      event.target.value = null // input 요소 초기화
+    } else {
+      setFile(selectedFile)
+    }
   }
   const [file2, setFile2] = useState(null)
   const handleChangeFile2 = (event) => {
