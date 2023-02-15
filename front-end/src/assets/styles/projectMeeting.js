@@ -12,10 +12,10 @@ export const videoList = (props) => {
 export const codeEidt = (props) => {
   return css`
     display: ${props.mode === 1 ? 'block' : 'none'};
-    border: 1px solid black;
-    height: 95%;
-    width: 90%;
-    margin: auto;
+    /* border: 1px solid black; */
+    height: 100%;
+    width: 100%;
+    /* margin: auto; */
     /* font-family: 'D2coding' !important; */
   `
 }
