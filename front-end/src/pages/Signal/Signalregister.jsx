@@ -70,6 +70,7 @@ function Signalregister() {
         },
       })
       .then((res) => {
+        console.log(res)
         setAlertOpen(true)
       })
       .catch((res) => {
