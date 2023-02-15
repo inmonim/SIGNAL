@@ -54,15 +54,6 @@ const skillStyle = {
 }
 
 function Posting() {
-  // 카드 리스트 정보
-  // const { status, data, error, isFetching } = useQuery('postlist', async () => {
-  // const result = useQuery('postlist', () =>
-  //   axios.get(`http://www.ssafysignal.site:8080/posting?page=1&size=100&fieldCode=FI100`).then((a) => {
-  //     return a.data
-  //   })
-  // )
-  // `${process.env.REACT_APP_API_URL}/posting?page=1&size=200&subject=${Title}&localCode=${local}&fieldCode=${value}&postingSkillList=`
-  // console.log(result.data?.body?.postingList)
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -72,8 +63,6 @@ function Posting() {
     },
   }
 
-  // const userName = sessionStorage.getItem('username')
-  // console.log(userName)
   const navigate = useNavigate()
   const [postingList, setPostingList] = useState([])
   // result.data && setPostingList(result.data?.body?.postingList)
@@ -106,7 +95,7 @@ function Posting() {
 
   const handleChangeSkill = (value) => {
     const copy = value.map((ele) => ele.code)
-    console.log(copy)
+
     setSkillListauto(copy)
   }
   // 테이블 값적용
@@ -205,15 +194,6 @@ function Posting() {
       </div>
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}>
-          {/* <button
-            onClick={() => {
-              console.log(skillList, 'SkillList')
-              console.log(skillListauto, 'skillListauto')
-              console.log(skillaxios)
-            }}
-          >
-            ㅇ
-          </button> */}
           <TabContext value={value}>
             <Box sx={{ borderBottom: 2, color: '#574B9F' }}>
               <TabList
@@ -421,7 +401,6 @@ function Posting() {
             options={Skilldata}
             getOptionLabel={(option) => option.name}
             onChange={(event, newValue) => {
-              // console.log(newValue)
               handleChangeSkill(newValue)
             }}
             renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
@@ -505,10 +484,11 @@ const Skillbtn = styled.div`
 const PostList = styled.div`
   margin-top: 3em;
   display: flex;
+
+  align-items: center;
   flex-wrap: wrap;
   padding: 4px;
   gap: 10px;
-  justify-content: start;
   &:hover {
     $ .postcard {
       background: cornflowerblue;

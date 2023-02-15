@@ -18,7 +18,6 @@ function SignalList() {
   const [signalList, setSignalList] = useState([])
   const handlePageChange = (page) => {
     setPage(page)
-    console.log(page)
   }
   const signalListAxios = async () => {
     await api.get(process.env.REACT_APP_API_URL + `/signalweek?page=${page}&size=${size}`).then((res) => {
