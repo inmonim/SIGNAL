@@ -21,10 +21,12 @@ function QnaDetail() {
   const [ansAlertOpen, setAnsAlertOpen] = useState(false)
   const [ansModifyAlertOpen, setAnsModifyAlertOpen] = useState(false)
   const [ansDeleteAlertOpen, setAnsDeleteAlertOpen] = useState(false)
+  const [isTop, setIsTop] = useState(false)
 
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/board/qna/` + qnaSeq).then((res) => {
       setData(res.data.body)
+      setIsTop(res.data.body.isTop)
     })
   }, [])
 
@@ -101,16 +103,15 @@ function QnaDetail() {
 
   const [faqAlertOpen, setFaqAlertOpen] = useState(false)
   const [qnaAlertOpen, setQnaAlertOpen] = useState(false)
-  const [isTop, setIsTop] = useState(data.isTop)
   const handleToFaqAlert = () => setFaqAlertOpen(true)
   const handleToQnaAlert = () => setQnaAlertOpen(true)
   const handleToFaq = () => {
-    api.get(process.env.REACT_APP_API_URL + `/admin/qna/${qnaSeq}?isTop=true`)
+    api.put(process.env.REACT_APP_API_URL + `/admin/qna/faq/${qnaSeq}`, true)
     setFaqAlertOpen(false)
     setIsTop(true)
   }
   const handleToQna = () => {
-    api.get(process.env.REACT_APP_API_URL + `/admin/qna/${qnaSeq}?isTop=false`)
+    api.put(process.env.REACT_APP_API_URL + `/admin/qna/faq/${qnaSeq}`, false)
     setQnaAlertOpen(false)
     setIsTop(false)
   }
@@ -127,26 +128,30 @@ function QnaDetail() {
               <span className="qna-detail-data-title"> {data.title}</span>
             </div>
             <div className="qna-detail-header-right">
-              {isTop ? (
-                <>
-                  <PushPinIcon className="qna-detail-faq" onClick={handleToQnaAlert}></PushPinIcon>
-                  <AlertModal
-                    open={qnaAlertOpen}
-                    onClick={handleToQna}
-                    onClose={handleToClose}
-                    msg="FAQ를 해지하시겠습니까?"
-                  ></AlertModal>
-                </>
+              {isAdmin === 'true' ? (
+                isTop === true ? (
+                  <>
+                    <PushPinIcon className="qna-detail-faq" onClick={handleToQnaAlert}></PushPinIcon>
+                    <AlertModal
+                      open={qnaAlertOpen}
+                      onClick={handleToQna}
+                      onClose={handleToClose}
+                      msg="FAQ를 해지하시겠습니까?"
+                    ></AlertModal>
+                  </>
+                ) : (
+                  <>
+                    <PushPinOutlinedIcon className="qna-detail-faq" onClick={handleToFaqAlert}></PushPinOutlinedIcon>
+                    <AlertModal
+                      open={faqAlertOpen}
+                      onClick={handleToFaq}
+                      onClose={handleToClose}
+                      msg="FAQ로 등록하시겠습니까?"
+                    ></AlertModal>
+                  </>
+                )
               ) : (
-                <>
-                  <PushPinOutlinedIcon className="qna-detail-faq" onClick={handleToFaqAlert}></PushPinOutlinedIcon>
-                  <AlertModal
-                    open={faqAlertOpen}
-                    onClick={handleToFaq}
-                    onClose={handleToClose}
-                    msg="FAQ로 등록하시겠습니까?"
-                  ></AlertModal>
-                </>
+                <></>
               )}
               {data.isMyQna ? (
                 <>

@@ -79,8 +79,7 @@ const contactList = [
   { name: '대면', status: true },
   { name: '비대면', status: false },
 ]
-const a = ['2']
-console.log(a === [])
+
 const PostingRegister = () => {
   const dispatch = useDispatch()
   // start >> useState
@@ -119,22 +118,9 @@ const PostingRegister = () => {
   }
   const [careerList, setCareerList] = useState([])
 
-  // const profileFetch = async () => {
-  //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
-  //     setProfile(res.data.body)
-  //     console.log(res.data.body)
-  //     console.log(profile)
-  //     careerFetchFilter(res.data.body.userCareerList)
-  //     expFetchFilter(res.data.body.userExpList)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
   const handleSkillInput = (e) => {
-    console.log(e)
     if (e === null) return
     newTag({
       label: e.label,
@@ -142,7 +128,6 @@ const PostingRegister = () => {
     })
   }
   const newTag = (tag) => {
-    console.log(tag)
     const set = arrayOfTags.concat(tag)
     const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
     setNumberOfTags(uniqueTags.length)
@@ -210,11 +195,8 @@ const PostingRegister = () => {
 
   // end >> handle career
   const handleDelete = (ele) => {
-    // console.log('함수')
     setDateList(
       DateList.filter((date) => {
-        // console.log(date, 'date')
-        // console.log(ele, 'ele')
         return date !== ele
       })
     )
@@ -243,16 +225,6 @@ const PostingRegister = () => {
   function onReset() {
     setTodolist({ text: '' })
   }
-  // start >> handle qna
-
-  // const handleQnAChange = (value, key) => {
-  //   const qnaArr = [...qnaList]
-  //   qnaArr.splice(key, 1, value)
-  //   setQnaList(qnaArr)
-  //   console.log(qnaList)
-  // }
-
-  // end >> handle qna
 
   const handleApplySubmit = async (event) => {
     if (
@@ -312,8 +284,6 @@ const PostingRegister = () => {
     // postingFetch()
     // profileFetch()
     handlePositon()
-
-    // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
   useEffect(() => {
     handleqna()
@@ -325,7 +295,6 @@ const PostingRegister = () => {
   useEffect(() => {
     setPosting({ ...posting, postingMeetingList: DateList })
     skillPostFilter(arrayOfTags)
-    console.log(arrayOfTags)
   }, [arrayOfTags])
 
   return (
@@ -346,10 +315,8 @@ const PostingRegister = () => {
                   error={errorBox && !posting.subject}
                   sx={inputStyle}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setSubject(e.target.value)
                     setPosting({ ...posting, subject: e.target.value })
-                    // console.log(subject)
                   }}
                 />
               </div>
@@ -384,7 +351,6 @@ const PostingRegister = () => {
               <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    console.log(e.target.value)
                     setPosting({ ...posting, localCode: e.target.value })
                   }}
                 >
@@ -403,7 +369,6 @@ const PostingRegister = () => {
               <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, fieldCode: e.target.value })
                   }}
                 >
@@ -425,14 +390,11 @@ const PostingRegister = () => {
               <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     if (e.target.value === 'true') {
                       setPosting({ ...posting, isContact: true })
                     } else {
                       setPosting({ ...posting, isContact: false })
                     }
-                    // console.log(typeof e.target.value)
-                    // console.log(range(10, 3))
                   }}
                 >
                   {contactList.map((ele, i) => (
@@ -450,7 +412,6 @@ const PostingRegister = () => {
               <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, term: Number(e.target.value) })
                   }}
                 >
@@ -548,7 +509,6 @@ const PostingRegister = () => {
                 <FilterSelect
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
                     setPosi({ code: position.code, name: position.name })
                   }}
@@ -614,10 +574,8 @@ const PostingRegister = () => {
               <div style={{ width: '75%', display: 'flex' }}>
                 <FilterSelect
                   style={{ marginRight: '0px' }}
-                  // className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     const position = JSON.parse(e.target.value)
-                    console.log(position.code)
                     setPosting({ ...posting, leaderPosition: position.code })
                   }}
                 >

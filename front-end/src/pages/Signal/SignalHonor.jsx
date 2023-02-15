@@ -48,72 +48,74 @@ function SignalHonor() {
   return (
     <div className="signal-rank-page-container">
       <div className="back-lottie-left">
-        <Lottie options={confettiOptions} height={1100} width={380} isClickToPauseDisabled={true} />
+        <Lottie options={confettiOptions} height="100%" width={380} isClickToPauseDisabled={true} />
       </div>
-      <div className="signal-rank-container">
-        <div className="signal-rank-header">
-          <div className="signal-rank-header-title">시그널위크 수상작</div>
-          <div className="signal-rank-header-sub">
-            <div className="signal-rank-header-now">
-              {year}년 {quarter}분기
-            </div>
-            <div className="signal-rank-header-menu" onClick={handleToList}>
-              &gt; 역대 수상작 보러가기
-            </div>
-          </div>
-        </div>
-        <div className="signal-rank-img">
-          <div className="signal-rank-1st-container">
-            <div className="signal-rank-1st-lottie">
-              <img src={winner} alt="" style={{ width: '150px', height: '140px' }} />
-            </div>
-            <div className="signal-rank-1st">
-              <div className="signal-rank-1st-img">
-                <img
-                  className="signal-rank-1st-img-item"
-                  src={winnerList[0] ? process.env.REACT_APP_API_URL + winnerList[0].projectImageUrl : ''}
-                  alt="signal"
-                />
+      <div className="signal-rank-back">
+        <div className="signal-rank-container">
+          <div className="signal-rank-header">
+            <div className="signal-rank-header-title">시그널위크 수상작</div>
+            <div className="signal-rank-header-sub">
+              <div className="signal-rank-header-now">
+                {year}년 {quarter}분기
               </div>
-              <div className="signal-rank-1st-subject">{winnerList[0] ? winnerList[0].subject : ''}</div>
+              <div className="signal-rank-header-menu" onClick={handleToList}>
+                &gt; 역대 수상작 보러가기
+              </div>
             </div>
           </div>
-          <div className="signal-rank-under-container">
+          <div className="signal-rank-img">
             <div className="signal-rank-1st-container">
               <div className="signal-rank-1st-lottie">
-                <img src={second} alt="" style={{ width: '130px', height: '130px' }} />
+                <img src={winner} alt="" style={{ width: '150px', height: '140px' }} />
               </div>
               <div className="signal-rank-1st">
                 <div className="signal-rank-1st-img">
                   <img
                     className="signal-rank-1st-img-item"
-                    src={winnerList[1] ? process.env.REACT_APP_API_URL + winnerList[1].projectImageUrl : ''}
+                    src={winnerList[0] ? process.env.REACT_APP_API_URL + winnerList[0].projectImageUrl : ''}
                     alt="signal"
                   />
                 </div>
-                <div className="signal-rank-1st-subject">{winnerList[1] ? winnerList[1].subject : ''}</div>
+                <div className="signal-rank-1st-subject">{winnerList[0] ? winnerList[0].subject : ''}</div>
               </div>
             </div>
-            <div className="signal-rank-1st-container">
-              <div className="signal-rank-1st-lottie">
-                <img src={third} alt="" style={{ width: '120px', height: '130px' }} />
-              </div>
-              <div className="signal-rank-1st">
-                <div className="signal-rank-1st-img">
-                  <img
-                    className="signal-rank-1st-img-item"
-                    src={winnerList[2] ? process.env.REACT_APP_API_URL + winnerList[2].projectImageUrl : ''}
-                    alt="signal"
-                  />
+            <div className="signal-rank-under-container">
+              <div className="signal-rank-1st-container">
+                <div className="signal-rank-1st-lottie">
+                  <img src={second} alt="" style={{ width: '130px', height: '130px' }} />
                 </div>
-                <div className="signal-rank-1st-subject">{winnerList[2] ? winnerList[2].subject : ''}</div>
+                <div className="signal-rank-1st">
+                  <div className="signal-rank-1st-img">
+                    <img
+                      className="signal-rank-1st-img-item"
+                      src={winnerList[1] ? process.env.REACT_APP_API_URL + winnerList[1].projectImageUrl : ''}
+                      alt="signal"
+                    />
+                  </div>
+                  <div className="signal-rank-1st-subject">{winnerList[1] ? winnerList[1].subject : ''}</div>
+                </div>
+              </div>
+              <div className="signal-rank-1st-container">
+                <div className="signal-rank-1st-lottie">
+                  <img src={third} alt="" style={{ width: '120px', height: '130px' }} />
+                </div>
+                <div className="signal-rank-1st">
+                  <div className="signal-rank-1st-img">
+                    <img
+                      className="signal-rank-1st-img-item"
+                      src={winnerList[2] ? process.env.REACT_APP_API_URL + winnerList[2].projectImageUrl : ''}
+                      alt="signal"
+                    />
+                  </div>
+                  <div className="signal-rank-1st-subject">{winnerList[2] ? winnerList[2].subject : ''}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="back-lottie-right">
-        <Lottie options={confettiOptions} height={1100} width={380} isClickToPauseDisabled={true} />
+        <Lottie options={confettiOptions} height="100%" width={380} isClickToPauseDisabled={true} />
       </div>
     </div>
   )

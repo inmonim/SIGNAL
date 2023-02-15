@@ -13,7 +13,6 @@ function DateSelect(props) {
       onChange={(date) => {
         setStartDate(date)
         props.setDate(moment(date).format('YYYY-MM-DD HH:mm:ss.SSS'))
-        // console.log(moment(date).format('YYYY-MM-DD HH:mm:ss.SSS'))
       }}
       locale={ko}
       showTimeSelect

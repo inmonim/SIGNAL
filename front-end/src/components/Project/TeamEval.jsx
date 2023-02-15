@@ -3,7 +3,7 @@ import 'assets/styles/eval.css'
 import api from 'api/Api'
 import EvalQna from 'components/Project/EvalQna'
 
-function TeamEval({ projectSeq }) {
+function TeamEval({ projectSeq, setMode }) {
   const userSeq = sessionStorage.getItem('userSeq')
   const [member, setMember] = useState([])
   const [finishMember, setFinishMember] = useState([])
@@ -22,8 +22,10 @@ function TeamEval({ projectSeq }) {
         const fromUser = res.data.body.projectUserList.find((element) => element.userSeq === parseInt(userSeq))
         setMember(memberList)
         setFromUserSeq(fromUser.projectUserSeq)
-        setNickname(memberList[0].nickname)
-        setToUserSeq(memberList[0].projectUserSeq)
+        if (nickname === '' && toUserSeq === '') {
+          setNickname(memberList[0].nickname)
+          setToUserSeq(memberList[0].projectUserSeq)
+        }
 
         // 평가한 팀원
         await api
@@ -45,7 +47,7 @@ function TeamEval({ projectSeq }) {
   }
 
   useEffect(() => {
-    setFlag(false)
+    // setFlag(false)
     projectMemeberFetch()
   }, [flag, tab])
 
@@ -82,9 +84,10 @@ function TeamEval({ projectSeq }) {
                 className={`eval-member ${finishMember.includes(item.projectUserSeq) ? 'active' : ''}`}
                 key={index}
                 onClick={() => {
-                  // 평가 완료하면 end만 true로 바꿔주면 ui 알아서 바뀜여 ~~
                   setToUserSeq(item.projectUserSeq)
                   setNickname(item.nickname)
+                  setFlag(!flag)
+                  console.log(nickname)
                 }}
               >
                 <div className="eval-member-name">{item.nickname}</div>
@@ -99,7 +102,9 @@ function TeamEval({ projectSeq }) {
               tab={tab + 1}
               nickname={nickname}
               weekCnt={weekCnt}
+              flag={flag}
               setFlag={setFlag}
+              setMode={setMode}
             ></EvalQna>
           </div>
         </div>

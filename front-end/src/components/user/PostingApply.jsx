@@ -8,6 +8,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { useNavigate } from 'react-router-dom'
 import 'assets/styles/table.css'
 import Swal from 'sweetalert2'
+import moment from 'moment'
 
 function PostingApply() {
   const navigate = useNavigate()
@@ -77,7 +78,7 @@ function PostingApply() {
       applySeq: item.applySeq,
       state: item.stateCode.name,
       subject: item.subject,
-      meetingDt: item.meetingDt.split(' ', 1),
+      meetingDt: moment(item.meetingDt).format('YYYY-MM-DD HH:mm'),
     })
   })
   const applyRowLen = applyRows.length
@@ -336,7 +337,7 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject === ' ' || row.state === '모집 취소' ? (
+                        {row.subject === ' ' || row.state === '모집 취소' || row.state === '모집 마감' ? (
                           ''
                         ) : (
                           <SignalBtn

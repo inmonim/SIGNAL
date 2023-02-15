@@ -99,7 +99,7 @@ function Notice() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
+          <Paging page={page || 0} count={count || 0} setPage={handlePageChange} size={size || 0} />
         </div>
       </div>
     </div>
