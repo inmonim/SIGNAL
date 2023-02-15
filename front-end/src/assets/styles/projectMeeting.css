@@ -1,5 +1,3 @@
-@import 'assets/font/font.css';
-
 .project-meeting-container {
   width: 100%;
   height: 998px;
@@ -7,8 +5,8 @@
 }
 
 .project-meeting-main {
-  margin: 0px 30px;
-  height: 100vh;
+  padding: 20px 50px 100px 50px;
+  height: 938px;
   display: flex;
   position: relative;
 }
@@ -145,7 +143,6 @@
   height: 95%;
   width: 90%;
   margin: auto;
-  font-family: 'D2coding' !important;
 }
 
 .project-meeting-video-share {
@@ -240,4 +237,22 @@
 .cm-s-monokai.CodeMirror {
   width: 100%;
   height: 100%;
+}
+
+.cm-s-default.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
+.project-meeting-code-edit-select-box {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin: 10px 0px;
+}
+
+.project-meeting-code-edit-box {
+  width: 100%;
+  height: 100%;
+  border: 1px solid;
 }

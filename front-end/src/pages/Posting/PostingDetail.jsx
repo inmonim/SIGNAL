@@ -26,10 +26,6 @@ const ApplyModify = styled(Button)(({ theme }) => ({
 function PostingDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  // console.log(id)
-  // const location = useLocation()
-  // const userSeq = location.state.userSeq
-  // const applySeq = location.state.applySeq
 
   const postingSeq = id
 
@@ -40,7 +36,6 @@ function PostingDetail() {
       const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
       console.log(res.data.body)
-      // console.log('applyFetch', res.data.body)
     } catch (error) {
       console.log(error)
     }

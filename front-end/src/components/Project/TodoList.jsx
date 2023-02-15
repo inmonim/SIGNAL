@@ -156,7 +156,7 @@ function TodoList({ projectSeq }) {
     alertOpen()
   }
   const alertOpen = () => {
-    setTodoModifyOpen(true)
+    if (userSeq === JSON.parse(currentUser)) setTodoModifyOpen(true)
   }
 
   return (

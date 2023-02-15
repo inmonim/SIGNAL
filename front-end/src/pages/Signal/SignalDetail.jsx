@@ -13,7 +13,6 @@ function signalDetail() {
   const location = useLocation()
   const signalSeq = parseInt(location.state)
   const userSeq = sessionStorage.getItem('userSeq')
-  console.log(signalSeq)
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   // const [pdfDocument] = useState()
@@ -29,7 +28,6 @@ function signalDetail() {
   const [ucc, setUcc] = useState()
   // const aaaa = 'https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL'
   const handleClick = async () => {
-    console.log(22)
     api.post(process.env.REACT_APP_API_URL + '/signalweek/vote', {
       signalweekSeq: signalSeq,
       userSeq,
@@ -68,7 +66,6 @@ function signalDetail() {
         setData(res.data.body)
         setUcc(res.data.body.uccUrl)
         setLiked(res.data.body.vote)
-        console.log(JSON.stringify(res.data.body))
       })
   }, [])
   return (

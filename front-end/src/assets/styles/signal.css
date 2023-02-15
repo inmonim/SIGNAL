@@ -147,7 +147,6 @@ a {
 /* signalRegist */
 .signal-regist-container {
   width: 1125px;
-  height: 650px;
   margin: 70px auto;
 }
 .signal-regist-header {
@@ -161,4 +160,7 @@ a {
 .signal-regist-main {
   padding: 55px;
   font-size: 24px;
+}
+.signal-regist-title {
+  font-size: 44px;
 }
