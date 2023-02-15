@@ -52,7 +52,6 @@ public class SignalweekService {
     private final SignalweekRankRepository signalweekRankRepository;
     private final UserHeartLogRepository userHeartLogRepository;
 
-
     // 등록
     @Transactional
     public void registSinalweek(HashMap<String, Object> signalweekRegistRequest, MultipartFile pptFile, MultipartFile readmeFile) throws IOException {
@@ -136,8 +135,6 @@ public class SignalweekService {
             signalweekRepository.save(signalweek);
         }
     }
-
-
     // 목록 조회
     @Transactional(readOnly = true)
     public FindAllSignalweekResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
@@ -147,7 +144,6 @@ public class SignalweekService {
 
         return findAllSignalweekResponse;
     }
-    
     // 상세 조회
     @Transactional(readOnly = true)
     public FindSignalweekResponse findSignalweek(Integer signalweekSeq, Integer userSeq) {
@@ -166,10 +162,7 @@ public class SignalweekService {
                 .vote(vote)
                 .build();
     }
-
-
     // 투표
-
     @Transactional
     public boolean registSignalweekVote(RegistSignalweekVoteRequest registSignalweekVoteRequest) {
         boolean res = false;
@@ -193,8 +186,7 @@ public class SignalweekService {
         }
         return res;
     }
-
-//     띵예의 전당
+    // 띵예의 전당
     @Transactional(readOnly = true)
     public List<FindSignalweekRankResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
         List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
@@ -216,9 +208,6 @@ public class SignalweekService {
 
         return responseSignalweekRank;
     }
-
-
-
     // 시그널 위크 엔딩 정산
     @Transactional
     public void endSignalweek() {

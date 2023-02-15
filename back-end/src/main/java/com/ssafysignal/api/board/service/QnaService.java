@@ -30,9 +30,7 @@ public class QnaService {
 
     @Transactional(readOnly = true)
     public List<Qna> findAllQna(Integer page, Integer size) {
-        System.out.println("limit = " + size);
-        System.out.println("offset = " + page * size);
-        List<Qna> QnaList = qnaRepository.findAllByIsTop(size, page * size);
+        List<Qna> QnaList = qnaRepository.findAllByIsTop(size, (page - 1) * size);
         return QnaList;
     }
 

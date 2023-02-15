@@ -212,8 +212,7 @@ public class ApplyService {
 
         Integer newPostingMeetingSeq = applyModifyRequest.getPostingMeetingSeq();
         Integer curPostingMeetingSeq = apply.getPostingMeetingSeq();
-        System.out.println(curPostingMeetingSeq+", "+newPostingMeetingSeq);
-        if(newPostingMeetingSeq != curPostingMeetingSeq) {	
+        if(!newPostingMeetingSeq.equals(curPostingMeetingSeq)) {
         	PostingMeeting newPostingmeeting = postingMeetingRepository.findById(newPostingMeetingSeq).get();
         	if(!newPostingmeeting.getPostingMeetingCode().equals("PM102")) 
         		throw new DuplicateKeyException("이미 선택된 사전미팅시간");
