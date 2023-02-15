@@ -337,7 +337,7 @@ function PostingApply() {
                         )}
                       </TableCell>
                       <TableCell align="center">
-                        {row.subject === ' ' || row.state === '모집 취소' ? (
+                        {row.subject === ' ' || row.state === '모집 취소' || row.state === '모집 마감' ? (
                           ''
                         ) : (
                           <SignalBtn

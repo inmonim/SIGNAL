@@ -142,17 +142,31 @@ function PostingDetail() {
 
               <div className="apply-detail-content-section">
                 <div className="apply-detail-label">프로젝트 소개</div>
-                <div className="apply-detail-content">{posting && posting.content}</div>
+                <div className="apply-detail-content">
+                  {posting &&
+                    posting.content.split('\n').map((line, index) => {
+                      return (
+                        <span key={index}>
+                          {line}
+                          <br />
+                        </span>
+                      )
+                    })}
+                </div>
               </div>
               <div className="apply-register-submit-button">
-                <SignalBtn
-                  style={{ width: '50%' }}
-                  onClick={() => {
-                    navigate('/applyregister', { state: { postingSeq: posting.postingSeq } })
-                  }}
-                >
-                  지원하기
-                </SignalBtn>
+                {posting && !posting.isMyPosting ? (
+                  <SignalBtn
+                    style={{ width: '50%' }}
+                    onClick={() => {
+                      navigate('/applyregister', { state: { postingSeq: posting.postingSeq } })
+                    }}
+                  >
+                    지원하기
+                  </SignalBtn>
+                ) : (
+                  <></>
+                )}
                 {/* 팀원 선택 페이지 ( 작성자용 ) */}
               </div>
             </div>
