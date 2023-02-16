@@ -47,10 +47,8 @@ import java.util.Map;
             LoginResponse loginResponse = authService.login(email, password);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (NotFoundException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
@@ -65,13 +63,10 @@ import java.util.Map;
             LoginResponse loginResponse = authService.reissue(refreshToken);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, loginResponse));
         } catch (UnAuthException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
@@ -87,13 +82,10 @@ import java.util.Map;
             authService.logout(TokenInfo.of(accessToken, refreshToken), email);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, true));
         } catch (UnAuthException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         } catch (NotFoundException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), false));
         } catch (RuntimeException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.UNAUTHORIZED, null));
         }
     }
