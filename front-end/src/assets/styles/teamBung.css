@@ -22,6 +22,7 @@
   justify-content: space-around;
   position: absolute;
 }
+
 .team-bung-title {
   width: 100%;
   display: flex;
@@ -31,6 +32,10 @@
   font-size: 64px;
   margin-top: 50px;
   justify-content: center;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #dddbec;
+  text-shadow: 0px 5px 3px rgba(0, 0, 0, 0.5);
 }
 
 .team-bung-item {
@@ -42,8 +47,9 @@
   background-size: contain;
   border-radius: 50px;
   text-align: center;
-  box-shadow: 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec;
-  box-shadow: 0px 4px 4px rgba(129, 129, 129, 0.5);
+  /* box-shadow: 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec; */
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
 
 .team-bung-item {
@@ -88,15 +94,41 @@
   filter: brightness(70%);
 }
 
-/* .team-bung-github img{
+.team-bung-github{
   display: none;
-  width: 70%;
-  height: 50%;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 15%;
+  object-fit: contain;
   border-radius: 50%;
   margin-top: 30px;
-  box-shadow: 0 4px 4px rgba(129, 129, 129, 0.5);
 }
 
-.team-bung-item:hover + div.team-bung-github img{
+.team-bung-github-img{
+  height: 100%;
+}
+
+.team-bung-item p{
+  display: none;
+}
+
+.team-bung-item:hover p{
   display: block;
-} */
+  animation-name: gitItem;
+  animation-duration: 2s;
+  animation-delay: 0.1s;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); /* 수치변형함수 */
+  animation-fill-mode: both;
+}
+
+@keyframes gitItem {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-30px);
+  }
+}

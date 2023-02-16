@@ -3,7 +3,7 @@ import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/qna.css'
 import { useLocation, useNavigate } from 'react-router-dom'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const inputStyle = {
@@ -25,7 +25,6 @@ function QnaModify() {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
   const location = useLocation()
   const seq = parseInt(location.state.qnaSeq)

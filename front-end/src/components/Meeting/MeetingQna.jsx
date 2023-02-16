@@ -12,11 +12,9 @@ function MeetingQna({ open, onClose, applySeq, postingSeq }) {
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq).then((res) => {
       setAnswerList(res.data.body.answerList)
-      console.log(answerList)
     })
     api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq).then((res) => {
       setQuestionList(res.data.body.postingQuestionList)
-      console.log(questionList)
     })
   }, [open])
 

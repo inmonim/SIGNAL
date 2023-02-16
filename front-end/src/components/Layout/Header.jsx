@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from 'assets/image/Navlogo.png'
-import 'components/Layout/Header.css'
+import 'assets/styles/Header.css'
 import useDetectClose from 'hooks/useDetectClose'
-import LoginModal from 'components/LoginModal'
+import LoginModal from 'components/user/LoginModal'
 import LetterModal from 'components/Letter/LetterModal'
 import * as D from './DropDownStyle'
 import Badge from '@mui/material/Badge'
@@ -80,8 +80,6 @@ function Header() {
         }
       )
       .then((data) => {
-        console.log('로그아웃 성공')
-        console.log(data)
         sessionStorage.removeItem('accessToken')
         sessionStorage.removeItem('refreshToken')
         sessionStorage.removeItem('userEmail')
@@ -91,7 +89,6 @@ function Header() {
         sessionStorage.removeItem('admin')
         localStorage.removeItem('refreshToken')
         setIsLogin(false)
-        // setIsAdmin('false')
         navigate(`/`)
       })
       .catch((e) => {

@@ -37,7 +37,6 @@ const TeamSelectBtn = styled(Button)(({ theme, state, valid }) => ({
 
 function ProjectTeamSelectConfirmModal(props) {
   const [open, setOpen] = useState(false)
-  console.log(props)
 
   const handleOpen = (e) => {
     setOpen(true)
@@ -47,7 +46,6 @@ function ProjectTeamSelectConfirmModal(props) {
     setOpen(false)
   }
   const handleTeamSelect = async (e) => {
-    console.log(props.valid)
     if (props.valid) {
       const applySeq = props.apply.applySeq
       const adminSeq = sessionStorage.getItem('userSeq')
@@ -59,9 +57,6 @@ function ProjectTeamSelectConfirmModal(props) {
           .catch((err) => {
             console.log(err)
           })
-
-        console.log('팀원선택 put')
-        console.log(props.postingSeq)
 
         const letterContent = `<div>팀원으로 선정되셨습니다!! 마이페이지를 확인해주세요 (ง˙∇˙)ว</div>
 <br>

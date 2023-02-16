@@ -7,7 +7,6 @@ import FromLetter from 'components/Letter/FromLetter'
 import ToLetter from 'components/Letter/ToLetter'
 import TrashLetter from 'components/Letter/TrashLetter'
 import WriteLetter from 'components/Letter/WriteLetter'
-// import Divider from '@mui/material/Divider'
 
 import closeBtn from 'assets/image/x.png'
 import fromimg from 'assets/image/FromLetterImg.png'
@@ -86,7 +85,6 @@ function LetterModal({ open, onClose }) {
                   onClick={() => {
                     setSelectedListIndex(0)
                     setView(0)
-                    console.log(view)
                   }}
                 >
                   <ListItemIcon>

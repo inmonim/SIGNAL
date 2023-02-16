@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { TextField } from '@mui/material'
 import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import './WriteLetter.css'
-import AlertModal from 'components/AlertModal'
+import 'assets/styles/WriteLetter.css'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const inputStyle = {
@@ -49,22 +49,16 @@ function WriteLetter({ handleMenuListItemClick }) {
 
   const handleInput = (e) => {
     const { name, value } = e.target
-    console.log('e.target: ', e.target)
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
 
   const handleWrite = async () => {
-    await api
-      .post(process.env.REACT_APP_API_URL + '/letter', JSON.stringify(inputs), {
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        console.log(`data: ${JSON.stringify(res.data)}`)
-      })
+    await api.post(process.env.REACT_APP_API_URL + '/letter', JSON.stringify(inputs), {
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
   }
 
   const handleAlert = (e) => {

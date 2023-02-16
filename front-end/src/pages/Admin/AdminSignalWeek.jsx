@@ -5,7 +5,7 @@ import 'assets/styles/adminSignalWeek.css'
 import EditIcon from '@mui/icons-material/Edit'
 import api from 'api/Api'
 import SignalWeekModal from 'components/Admin/SingnalWeekModal'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import moment from 'moment'
 
 function AdminSignalWeek() {

@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import SignalBtn from 'components/common/SignalBtn'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 import { useNavigate } from 'react-router'
 
@@ -84,7 +84,6 @@ function Regist() {
   async function emailDupCheck() {
     const email = inputs.email
     return await api.get(process.env.REACT_APP_API_URL + `/auth/email/${email}`).then((response) => {
-      console.log(response)
       if (response.data.body === true) {
         return true
       } else {
@@ -106,7 +105,6 @@ function Regist() {
   async function nicknameDupCheck() {
     const nickname = inputs.nickname
     return await api.get(process.env.REACT_APP_API_URL + `/auth/nickname/${nickname}`).then((response) => {
-      console.log(response)
       if (response.data.body === true) {
         return true
       } else {
@@ -116,33 +114,24 @@ function Regist() {
   }
 
   function registUser() {
-    api.post(process.env.REACT_APP_API_URL + '/user', JSON.stringify(inputs)).then((response) => {
-      console.log(`data: ${JSON.stringify(response.data)}`)
-    })
+    api.post(process.env.REACT_APP_API_URL + '/user', JSON.stringify(inputs)).then((response) => {})
   }
 
   async function regist() {
     const emailDup = await emailDupCheck()
-    console.log('이메일 검사 중')
     if (emailDup) {
-      console.log('이메일 검사 걸림')
       setMsg1('중복된 이메일입니다.')
       return false
     }
     const nicknameDup = await nicknameDupCheck()
-    console.log('닉네임 검사중')
     if (nicknameDup) {
-      console.log('닉네임 검사에서 함 걸림')
       setMsg4('중복된 닉네임입니다.')
       return false
     }
     const registSuccess = registUser()
-    console.log('등록중')
     if (registSuccess === false) {
-      console.log('등록 실패')
       return false
     }
-    console.log('등록에 성공하셨습니다')
     return true
   }
 
@@ -192,7 +181,6 @@ function Regist() {
   const handleToCheck = () => {
     const nextCheck = check
     setCheck(!nextCheck)
-    console.log(check)
   }
 
   const navigate = useNavigate()

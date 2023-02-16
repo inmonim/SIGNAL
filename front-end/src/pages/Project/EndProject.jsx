@@ -20,12 +20,10 @@ function EndProject() {
       params: {
         userSeq,
         projectSeq,
-        // userSeq: sessionStorage.getItem('userSeq'),
       },
     })
       .then((res) => {
         setProject(res.data.body)
-        console.log('project:', project)
       })
       .catch((e) => {
         console.log(e)
@@ -52,7 +50,6 @@ function EndProject() {
       profileImageUrl: item.profileImageUrl,
     })
   })
-  console.log(memberList)
 
   useEffect(() => {
     getProject()

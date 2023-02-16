@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from '@emotion/styled'
-// import JavaScript from '../../assets/image/Skilltest'
 import PostingCardItem from 'components/Posting/PostingCardItem'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
@@ -13,15 +12,12 @@ import TextField from '@mui/material/TextField'
 import { Skilldata, Skilldatabtn } from 'data/Skilldata'
 import '../../assets/styles/posting.css'
 import { useNavigate } from 'react-router-dom'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import api from 'api/Api'
 import Lottie from 'react-lottie'
 import searchani from 'assets/lottie/searchani'
 import { Typography } from '@mui/material'
-// import SkillList from 'components/Apply/SkillList'
-// import { useQuery } from 'react-query'
-// import { Input } from 'assets/styles/apply'
-// const SERVER_URL = 'http://tableminpark.iptime.org:8080/posting'
+
 const Tab2 = styled(Tab)(({ theme }) => ({
   fontSize: '21px',
   fontcolor: '#000000',
@@ -65,11 +61,7 @@ function Posting() {
 
   const navigate = useNavigate()
   const [postingList, setPostingList] = useState([])
-  // result.data && setPostingList(result.data?.body?.postingList)
-  // 테이블 코드 state Field 코드
   const [value, setValue] = React.useState('')
-  // 버튼 색 변경
-  // console.log(...skillBtnList)
   const [local, setLocal] = useState('')
   const [skillImgIs, setSkillImgIst] = useState({
     0: false,
@@ -87,8 +79,8 @@ function Posting() {
     const copy = { ...skillImgIs }
     copy[index] = !copy[index]
     setSkillImgIst(copy)
-  } // 클릭했을때 async 요청보내는 리액트 코드
-  // 버튼 누르면 데이터 담기게 state
+  }
+
   const [skillList, setSkillList] = useState([])
   const [skillListauto, setSkillListauto] = useState([])
   const [skillaxios, setSkillAxios] = useState([])
@@ -98,14 +90,14 @@ function Posting() {
 
     setSkillListauto(copy)
   }
-  // 테이블 값적용
+
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
   const handleChangeLocal = (e) => {
     setLocal(e.target.value)
   }
-  // search from
+
   const debounceFuntion = (callack, delay) => {
     let timer
     return (...args) => {
@@ -120,7 +112,6 @@ function Posting() {
   )
   const handleChangeTitle = (e) => {
     printValue(e.target.value)
-    // setTitle(e.target.value)
   }
 
   const [page, setPage] = useState(1)
@@ -144,8 +135,6 @@ function Posting() {
     )
     setCount(res.data.body.count)
     setPostingList(res.data.body.postingList)
-
-    // console.log(Title)/
   }
   useEffect(() => {
     postList()
@@ -153,12 +142,6 @@ function Posting() {
   useEffect(() => {
     btnClickAxios()
   }, [value, local, Title, skillaxios, page])
-  // useEffect(() => {
-  //   btnClickAxios()
-  // }, [local])
-  // useEffect(() => {
-  //   btnClickAxios()
-  // }, [Title])
   useEffect(() => {
     const copy = [...skillList, ...skillListauto]
     const set = new Set(copy)
@@ -168,7 +151,6 @@ function Posting() {
   return (
     <div>
       <Banner style={{ height: '110px' }} />
-      {/* <Box sx={{ width: '100ox', height: '110px' }}></Box> */}
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '100%' }}>
         <div
           style={{

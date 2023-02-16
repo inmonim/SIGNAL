@@ -1,4 +1,4 @@
-.admin-project-page-container{
+.admin-project-page-container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -8,20 +8,20 @@
   padding-top: 108px;
 }
 
-.admin-project-container{
+.admin-project-container {
   width: 1125px;
   margin: auto;
 }
 
-.admin-project-header{
+.admin-project-header {
   justify-content: center;
   align-items: center;
   margin-top: 50px;
 }
 
-.admin-project-title{
+.admin-project-title {
   font-size: 44px;
   display: flex;
   justify-content: center;
+  margin-bottom: 65px;
 }
-

@@ -7,7 +7,7 @@ import heart from 'assets/image/heart.png'
 import 'assets/styles/profile/heart.css'
 import SignalBtn from 'components/common/SignalBtn'
 import { TextField } from '@mui/material'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import axios from 'axios'
 
 function HeartDetailModal({ open, onClose, mode, projectSeq }) {

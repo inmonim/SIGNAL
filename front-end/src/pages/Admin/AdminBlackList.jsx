@@ -4,7 +4,7 @@ import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, Table
 import 'assets/styles/adminBlackList.css'
 import api from 'api/Api'
 import BlackListReleaseModal from 'components/Admin/BlackListReleaseModal'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 
 function AdminBlackList() {
   const [blackList, setBlackList] = useState([])
@@ -13,7 +13,6 @@ function AdminBlackList() {
   const blackListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + `/admin/user?page=${page}&size=${size}`).then((res) => {
-        console.log(res.data.body)
         setBlackList(res.data.body.blackUserList)
         setCount(res.data.body.count)
       })
