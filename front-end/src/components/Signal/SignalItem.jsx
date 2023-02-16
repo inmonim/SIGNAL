@@ -12,8 +12,10 @@ export default function SignalItem({ signal }) {
         navigate('/signalDetail', { state: signal.singalweekSeq })
       }}
       sx={{
-        minWidth: 275,
-        m: 2,
+        width: '22.5%',
+        ml: 1.5,
+        mb: 2,
+        mr: 1,
         '&:hover': {
           boxShadow: '0 0 0 2px #bcb7d9',
           cursor: 'pointer',
@@ -31,12 +33,40 @@ export default function SignalItem({ signal }) {
           }}
         />
 
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
+        <Typography
+          sx={{
+            fontSize: 20,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+            display: '-webkit-box',
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: 'vertical',
+            lineHeight: 1.5,
+          }}
+          color="black"
+          gutterBottom
+        >
           {signal.subject}
         </Typography>
         {/* 여기는 스킬아이콘 */}
         <hr />
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
+        <Typography
+          sx={{
+            fontSize: 20,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal',
+            wordBreak: 'break-word',
+            display: '-webkit-box',
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: 'vertical',
+            lineHeight: 1.5,
+          }}
+          color="black"
+          gutterBottom
+        >
           {signal.subject}
         </Typography>
       </CardContent>
