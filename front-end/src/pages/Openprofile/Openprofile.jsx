@@ -8,7 +8,9 @@ import Paging from 'components/Paging'
 import api from 'api/Api'
 import Openprofilecard from 'components/Openprofile/Openprofilecard'
 import Swal from 'sweetalert2'
-
+import Lottie from 'react-lottie'
+import open from 'assets/lottie/open.json'
+import { Typography } from '@mui/material'
 function Openprofile() {
   const [openList, setOpenList] = useState([])
   const userSeq = sessionStorage.getItem('userSeq')
@@ -18,7 +20,14 @@ function Openprofile() {
   const handleToPage = (page) => {
     setPage(page)
   }
-
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: open,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
   const openProfileList = async () => {
     await api.get(process.env.REACT_APP_API_URL + `/openprofile?page=${page}&size=${size}`).then((res) => {
       setOpenList(res.data.body.openProfileList)
@@ -44,7 +53,28 @@ function Openprofile() {
 
   return (
     <div>
-      <Banner />
+      <Banner style={{ height: '110px' }} />
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '100%' }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            gap: '0px 60px',
+            left: '50%',
+            transform: 'translate(-50%, 0)',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: ' center' }}>
+            <Typography fontSize={40} style={{ whiteSpace: 'nowrap' }}>
+              오픈 프로필을 확인해보세요
+            </Typography>
+          </div>
+          <Lottie options={defaultOptions} height={300} width={400} />
+        </div>
+        <Banner />
+      </div>
       <Container>
         <Box sx={{ width: '100%', mb: 2 }}></Box>
 
