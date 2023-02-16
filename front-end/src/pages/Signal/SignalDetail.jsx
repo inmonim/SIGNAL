@@ -172,7 +172,17 @@ function signalDetail() {
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <Label>Readme</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            {mdFile !== '' ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown> : <></>}
+            {mdFile !== '' ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {markdown
+                  .replace(/\n\s\n\s/gi, '\n\n&nbsp;\n\n')
+                  .replace(/\*\*/gi, '@$_%!^')
+                  .replace(/@\$_%!\^/gi, '**')
+                  .replace(/<\/?u>/gi, '*')}
+              </ReactMarkdown>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
