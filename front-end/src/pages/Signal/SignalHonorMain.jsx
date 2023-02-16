@@ -29,10 +29,10 @@ function SignalHonorMain() {
   const [winnerList, setWinnerList] = useState([])
 
   const getHonor = async () => {
-    await api.get(process.env.REACT_APP_API_URL + '/signalweek/signalweekschedule').then(async (res) => {
+    await api.get(process.env.REACT_APP_API_URL + '/signalweek/signalweekmain').then(async (res) => {
       if (res.data.body) {
-        const nowYear = res.data.body[0].year
-        const nowQuarter = res.data.body[0].quarter
+        const nowYear = res.data.body.year
+        const nowQuarter = res.data.body.quarter
         setYear(nowYear)
         setQuarter(nowQuarter)
 

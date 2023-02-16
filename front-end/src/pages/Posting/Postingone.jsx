@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
 import { Box, TextField, Button } from '@mui/material'
@@ -30,6 +29,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
+import api from 'api/Api'
 
 const Container = styled.section`
   padding: 130px 10em;
@@ -108,7 +108,7 @@ const PostingModify = () => {
   })
   // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
-    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+    const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
     console.log(post)
 
@@ -152,7 +152,7 @@ const PostingModify = () => {
   const navigate = useNavigate()
   // const profileFetch = async () => {
   //   try {
-  //     const res = await axios.get('http://www.ssafysignal.site:8080/profile/1')
+  //     const res = await api.get('http://www.ssafysignal.site:8080/profile/1')
   //     setProfile(res.data.body)
   //     console.log(res.data.body)
   //     console.log(profile)
@@ -280,7 +280,7 @@ const PostingModify = () => {
     ) {
       const config = { 'Content-Type': 'application/json' }
 
-      await axios
+      await api
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
         .then((res) => {
           console.log(res)
