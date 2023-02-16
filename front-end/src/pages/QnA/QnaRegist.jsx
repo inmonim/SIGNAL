@@ -31,7 +31,6 @@ function QnaRegist() {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
   const handleQnaRegist = () => {
     api.post(process.env.REACT_APP_API_URL + '/board/qna', JSON.stringify(inputs)).then((res) => setAlertOpen(true))

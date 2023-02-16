@@ -97,7 +97,6 @@ function TeamSelect() {
 
   const handleAlertOpen = (applySeq) => {
     setAlertOpen(true)
-    console.log(applySeq)
     setMeetingApplySeq(applySeq)
   }
 
@@ -130,7 +129,6 @@ function TeamSelect() {
   const handleToMeeting = (e) => {
     setAlertOpen(false)
     // 팀빌딩 입장은 팀장
-    console.log(meetingApplySeq)
     window.open(
       `/beforemeeting?nickname=${sessionStorage.getItem(
         'nickname'

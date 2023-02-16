@@ -3,7 +3,6 @@ import Section from 'components/Layout/Section'
 import 'assets/font/font.css'
 import 'pages/Main.css'
 import logo from 'assets/image/Mainlogo.png'
-// import logo from 'assets/image/Signal.gif'npm i react-lottie
 import projectimg from 'assets/image/Projectpic.png'
 import signalweek from 'assets/image/Signalweek.png'
 import SignalBtn from 'components/common/SignalBtn'

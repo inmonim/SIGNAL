@@ -45,8 +45,6 @@ function AdminNotice() {
       })
   }
 
-  console.log(size - rows.length)
-
   return (
     <div className="notice-page-container">
       <div className="notice-container">

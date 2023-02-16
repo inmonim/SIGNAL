@@ -13,7 +13,6 @@ function AdminBlackList() {
   const blackListFetch = async () => {
     try {
       await api.get(process.env.REACT_APP_API_URL + `/admin/user?page=${page}&size=${size}`).then((res) => {
-        console.log(res.data.body)
         setBlackList(res.data.body.blackUserList)
         setCount(res.data.body.count)
       })

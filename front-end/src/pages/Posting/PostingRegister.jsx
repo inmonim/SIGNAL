@@ -9,22 +9,17 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-// import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from 'react-router-dom'
-// import { ko } from 'date-fns/esm/locale'
-// import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
-// import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
 import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
-// import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
@@ -35,23 +30,7 @@ import SignalBtn from 'components/common/SignalBtn'
 const Container = styled.section`
   padding: 130px 10em;
 `
-// const skillStyle = {
-//   width: '100%',
-//   height: '60px',
-//   padding: '0 14px',
-//   border: '1px solid #d7e2eb',
-//   borderradius: '4px',
-//   boxsizing: 'border-box',
-//   backgroundcolor: '#fbfbfd',
-//   fontsize: '16px',
-//   fontweight: '500',
-//   lineheight: '1.6',
-//   color: '#263747',
-//   '& : hover': {
-//     border: '1px solid #3396f4',
-//     boxshadow: 'inset 0 0 0 1px#3396f4',
-//   },
-// }
+
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -82,9 +61,6 @@ const contactList = [
 
 const PostingRegister = () => {
   const dispatch = useDispatch()
-  // start >> useState
-  // console.log(JSON.stringify(Skilldata))
-  // const today = dateNow.toISOString().slice(0, 10)
   const navigate = useNavigate()
   const [datevalue, setDateValue] = useState(humjaetime)
   const [subject, setSubject] = useState('')
@@ -104,12 +80,9 @@ const PostingRegister = () => {
     postingPositionList: [],
     postingQuestionList: [],
   })
-  // const [profile, setProfile] = useState([])
-  // const [heart, setHeart] = useState(0)
 
   const checkHeart = () => {
     api.get(process.env.REACT_APP_API_URL + `/profile/heartCnt/${sessionStorage.getItem('userSeq')}`).then((res) => {
-      // setHeart(res.data.body)
       if (res.data.body < 100) {
         alert('하트가 부족해양')
         navigate('/posting')
@@ -148,30 +121,15 @@ const PostingRegister = () => {
     list.map((item) => skillArr.push(item.value))
     setPosting({ ...posting, postingSkillList: skillArr })
   }
-  // end >> Fetch
 
-  // start >> Data filter
   const [Daily, setDaily] = useState('')
   const [DateList, setDateList] = useState([])
   const [errorBox, setErrorBox] = useState(false)
-  // end >> Data filter
 
-  // start >> handle position
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
   const [positionReduxlen, setPositionReduxlen] = useState(0)
-  // end >> handle position
-
-  // end >> skill filter
-  // end >> handle skill
-
-  // start >> handle career
-  // const handleChangeSkill = (value) => {
-  //   const copy = value.map((ele) => ele.code)
-  //   setPosting({ ...posting, postingSkillList: copy })
-  // }
-  // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
     const careerArr = [...careerList]
@@ -193,7 +151,6 @@ const PostingRegister = () => {
     setCareerList(careerList.filter((career) => career.seq !== key))
   }
 
-  // end >> handle career
   const handleDelete = (ele) => {
     setDateList(
       DateList.filter((date) => {
@@ -201,18 +158,11 @@ const PostingRegister = () => {
       })
     )
   }
-  // const [startDate, setStartDate] = useState(new Date())
-  // start >> handle exp
-
-  // end >> handle exp
-
-  // start >> handle content
 
   const handleContentChange = (event) => {
     setPosting({ ...posting, content: event.target.value })
   }
 
-  // end >> handle content
   const [todolist, setTodolist] = useState({
     id: 0,
     text: '',
@@ -240,17 +190,11 @@ const PostingRegister = () => {
 
       await api
         .post(process.env.REACT_APP_API_URL + '/posting', posting, config)
-        .then((res) => {
-          // console.log(res)
-          // console.log(1)
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err)
-          // console.log(posting)
-          // console.log(JSON.stringify(posting))
         })
       navigate('/posting')
-      // console.log('공고 post')
     } else {
       setErrorBox(true)
       Swal.fire({
@@ -281,8 +225,6 @@ const PostingRegister = () => {
   }, [])
 
   useEffect(() => {
-    // postingFetch()
-    // profileFetch()
     handlePositon()
   }, [positionRedux])
   useEffect(() => {
@@ -537,7 +479,6 @@ const PostingRegister = () => {
               <div style={{ width: '75%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                 >

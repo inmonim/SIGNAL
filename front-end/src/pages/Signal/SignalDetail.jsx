@@ -18,7 +18,6 @@ function signalDetail() {
   const userSeq = sessionStorage.getItem('userSeq')
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
-  // const [pdfDocument] = useState()
 
   const [mdFile, setMdFile] = useState('')
 
@@ -26,12 +25,10 @@ function signalDetail() {
     setNumPages(numPages)
   }
 
-  // const signaldetailSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
 
   const [liked, setLiked] = useState(false)
   const [ucc, setUcc] = useState()
-  // const aaaa = 'https://www.youtube.com/watch?v=ai6EZ9oBHmE&ab_channel=maplestorybgmSECONDCHANNEL'
   const handleClick = async () => {
     api.post(process.env.REACT_APP_API_URL + '/signalweek/vote', {
       signalweekSeq: signalSeq,
@@ -39,22 +36,12 @@ function signalDetail() {
     })
     if (!liked) {
       try {
-        // Make a POST request to your API to add a like
-        // const response = await fetch(`/api/posts/${postId}/likes`, {
-        //   method: "POST",
-        // });
-        // const data = await response.json();
         setLiked(true)
       } catch (error) {
         console.error(error)
       }
     } else {
       try {
-        // Make a DELETE request to your API to remove a like
-        // const response = await fetch(`/api/posts/${postId}/likes`, {
-        //   method: "DELETE",
-        // });
-        // const data = await response.json();
         setLiked(false)
       } catch (error) {
         console.error(error)
@@ -90,7 +77,6 @@ function signalDetail() {
       .then((r) => r.text())
       .then((text) => {
         setMarkdown(text)
-        console.log(text)
       })
   }
 
