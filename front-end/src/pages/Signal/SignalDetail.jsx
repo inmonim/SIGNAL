@@ -10,6 +10,7 @@ import SignalBtn from 'components/common/SignalBtn'
 import styled from '@emotion/styled'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import moment from 'moment'
 
 function signalDetail() {
   const location = useLocation()
@@ -63,6 +64,10 @@ function signalDetail() {
 
   const [markdown, setMarkdown] = useState('')
 
+  const [signalweekDate, setSignalweekDate] = useState('')
+
+  const now = new Date()
+
   const getData = async () => {
     await api
       .get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`, {
@@ -74,6 +79,10 @@ function signalDetail() {
         setLiked(res.data.body.vote)
         setMdFile(process.env.REACT_APP_API_URL + res.data.body.readmeUrl)
       })
+
+    await api.get(process.env.REACT_APP_API_URL + `/signalweek/signalweekdate`).then((res) => {
+      setSignalweekDate(res.data.body)
+    })
   }
 
   const mdToText = () => {
@@ -92,16 +101,23 @@ function signalDetail() {
     }
   }, [mdFile])
 
+  useEffect(() => {}, [signalweekDate])
+
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
-        <div className="signal-regist-title" style={{ marginTop: '0.5em', float: 'right', marginBottom: '0.5em' }}>
-          <IconButton size="medium" onClick={handleClick}>
-            <ThumbUpIcon fontSize="large" color={liked ? 'secondary' : 'action'} />
-          </IconButton>
-        </div>
+        {new Date(signalweekDate.voteStartDt) <= new Date(moment(now).format('YYYY-MM-DD')) &&
+        new Date(signalweekDate.voteEndDt) >= new Date(moment(now).format('YYYY-MM-DD')) ? (
+          <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right', marginBottom: '1em' }}>
+            <IconButton size="medium" onClick={handleClick}>
+              <ThumbUpIcon fontSize="large" color={liked ? 'secondary' : 'action'} />
+            </IconButton>
+          </div>
+        ) : (
+          ''
+        )}
         <div className="player-wrapper">
           <ReactPlayer
             className="react-player"
