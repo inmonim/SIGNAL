@@ -28,13 +28,11 @@ function ProjectHeader() {
       params: {
         userSeq,
         projectSeq,
-        // userSeq: sessionStorage.getItem('userSeq'),
       },
     })
       .then((res) => {
         setProject(res.data.body)
         setIsMyProject(res.data.body.isMyProject)
-        console.log(res.data.body)
       })
       .catch((e) => {
         console.log(e)
@@ -47,7 +45,6 @@ function ProjectHeader() {
       method: 'GET',
     })
       .then((res) => {
-        console.log(res)
         setMember(res.data.body.projectUserList)
       })
       .catch((e) => {
@@ -62,7 +59,6 @@ function ProjectHeader() {
       profileImageUrl: item.profileImageUrl,
     })
   })
-  console.log(memberList)
 
   useEffect(() => {
     getProject()

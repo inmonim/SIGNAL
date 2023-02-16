@@ -31,7 +31,6 @@ function NoticeRegist() {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
   const handleNoticeRegist = () => {
     api.post(process.env.REACT_APP_API_URL + '/admin/notice', JSON.stringify(inputs)).then((res) => setAlertOpen(true))

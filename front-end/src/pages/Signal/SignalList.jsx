@@ -11,8 +11,6 @@ import signaltitle from 'assets/lottie/signaltitle.json'
 import Lottie from 'react-lottie'
 import moment from 'moment'
 function SignalList() {
-  // const [data, setData] = useState([])
-
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const [size] = useState(16)
@@ -52,10 +50,6 @@ function SignalList() {
   }
   // 시그널 위크 분기 구분
 
-  // // 날짜 구분을 위해 하루 앞당겨서 계산
-  // const validNow = new Date().setDay(new Date().getDate() + 1)
-  // console.log('validNow', validNow)
-
   // 시그널 로티
   const defaultOptions = {
     loop: true,
@@ -89,8 +83,6 @@ function SignalList() {
         </div>
         {new Date(signalweekDate.openStartDt) <= new Date(moment(now).format('YYYY-MM-DD')) ? (
           <>
-            {console.log('openEndDt', new Date(signalweekDate.openEndDt))}
-            {console.log('now', new Date(moment(now).format('YYYY-MM-DD')))}
             {new Date(signalweekDate.openEndDt) >= new Date(moment(now).format('YYYY-MM-DD')) ? (
               <SignalBtn
                 sigwidth="84px"

@@ -25,7 +25,6 @@ function NoticeModify() {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
   const location = useLocation()
   const seq = parseInt(location.state.noticeSeq)

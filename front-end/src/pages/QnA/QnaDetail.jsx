@@ -13,7 +13,6 @@ import api from 'api/Api.js'
 
 function QnaDetail() {
   const isAdmin = sessionStorage.getItem('admin')
-  console.log('admin: ', isAdmin)
   const location = useLocation()
   const qnaSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
@@ -46,8 +45,6 @@ function QnaDetail() {
   const handleToModify = () => {
     navigate(`/qnaModify`, { state: { qnaSeq: data.qnaSeq, title: data.title, content: data.content } })
   }
-
-  // 댓글
 
   const [answer, setAnswer] = useState('')
 

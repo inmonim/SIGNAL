@@ -9,21 +9,14 @@ import styled from 'styled-components'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-// import Autocomplete from '@mui/material/Autocomplete'
 import PositionTodo from 'components/Posting/PositionTodo'
 import { FilterInput } from './Posting'
-// import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
-// import Stack from '@mui/material/Stack'
-// import { ko } from 'date-fns/esm/locale'
-// import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
-// import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
 import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
-// import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
@@ -31,29 +24,10 @@ import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import api from 'api/Api'
-// import SignalBtn from 'components/common/SignalBtn'
 
 const Container = styled.section`
   padding: 130px 10em;
 `
-// const skillStyle = {
-//   width: '100%',
-//   maxwidth: '378px',
-//   height: '42px',
-//   padding: '0 14px',
-//   border: '1px solid #d7e2eb',
-//   borderradius: '4px',
-//   boxsizing: 'border-box',
-//   backgroundcolor: '#fbfbfd',
-//   fontsize: '16px',
-//   fontweight: '500',
-//   lineheight: '1.6',
-//   color: '#263747',
-//   '& : hover': {
-//     border: '1px solid #3396f4',
-//     boxshadow: 'inset 0 0 0 1px#3396f4',
-//   },
-// }
 const Title = styled.h1`
   font-size: 2.5em;
   font-weight: bold;
@@ -90,7 +64,6 @@ const PostingModify = () => {
   const location = useLocation()
   const postingSeq = location.state.postingSeq
 
-  //   console.log(postingSeq)
   const [posting] = useState({
     userSeq: '',
     subject: '',
@@ -106,22 +79,20 @@ const PostingModify = () => {
     postingPositionList: [],
     postingQuestionList: [],
   })
+
   const [userSeqget, setUserSeqget] = useState('')
   const [subjectget, setSubjectget] = useState('')
   const [localCodeget, setLocalCodeget] = useState('')
   const [fieldCodeget, setFieldCodeget] = useState('')
-  // const [leaderPositionget, setLeaderPositionget] = useState('')
   const [isContactget, setIsContactget] = useState('')
   const [termget, setTermget] = useState(3)
   const [contentget, setContentget] = useState('')
   const [postingEndDtget, setPostingEndDtget] = useState('')
   const [levelget, setLevelget] = useState(1)
   const [postingSkillListget, setPostingSkillListget] = useState([])
-  // const [postingMeetingListget, setPostingMeetingListget] = useState([])
   const [postingPositionListget, setPostingPositionListget] = useState([])
   const [postingQuestionListget, setPostingQuestionListget] = useState([])
 
-  // const [u]
   const postPutFetch = async () => {
     const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
@@ -129,19 +100,15 @@ const PostingModify = () => {
     setSubjectget(post.subject)
     setLocalCodeget(post.localCode)
     setFieldCodeget(post.fieldCode)
-    // setLeaderPositionget(post.leaderPosition)
     setIsContactget(post.isContact)
     setTermget(post.term)
     setContentget(post.content)
     setPostingEndDtget(post.postingEndDt)
     setLevelget(post.level)
-    // 스킬
+
     const resultSkill = post.postingSkillList.map((e) => e.skillCode)
     setPostingSkillListget(resultSkill)
-    // 미팅
-    // const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
-    // setPostingMeetingListget(resultMeeting)
-    //
+
     const resultPosition = post.postingPositionList.map((e) => ({
       code: e.positionCode,
       name: e.code.name,
@@ -156,24 +123,15 @@ const PostingModify = () => {
 
     resultPosition.forEach((e) => dispatch(add(e)))
     resultQuestion.forEach((e) => dispatch(addQnaF(e)))
-    // setDateList(resultMeeting)
     addTag(resultSkillde)
   }
-  // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
   const navigate = useNavigate()
 
-  // const [Daily, setDaily] = useState('')
-  // const [DateList, setDateList] = useState([])
-  // const [errorBox, setErrorBox] = useState(false)
-  // end >> Data filter
-
-  // start >> handle position
   const [posi, setPosi] = useState({ code: 'PO100', name: 'frontend' })
   const positionRedux = useSelector((state) => state.positionTodo)
   const qnaRedux = useSelector((state) => state.qnaTodo)
-  // const [positionReduxlen, setPositionReduxlen] = useState(0)
 
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
@@ -204,7 +162,6 @@ const PostingModify = () => {
     const skillArr = []
     list.map((item) => skillArr.push(item.value))
     setPostingSkillListget(skillArr)
-    // setPosting({ ...posting, postingSkillList: skillArr })
   }
   const handleDeleteSkill = (h) => {
     addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.label !== h.label))
@@ -229,7 +186,6 @@ const PostingModify = () => {
 
   const handleContentChange = (event) => {
     setContentget(event.target.value)
-    // setPosting({ ...posting, content: event.target.value })
   }
 
   // end >> handle content
@@ -277,9 +233,7 @@ const PostingModify = () => {
 
       await api
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, req, config)
-        .then((res) => {
-          console.log(res)
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err)
           console.log(numberOfTags)
@@ -287,7 +241,6 @@ const PostingModify = () => {
         })
       navigate('/posting')
     } else {
-      // setErrorBox(true)
       window.scrollTo(0, 0)
       Swal.fire({
         title: '등록 실패',
@@ -299,15 +252,11 @@ const PostingModify = () => {
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
-    // const countSum = copy.reduce((accumulator, currentValue) => accumulator + currentValue.positionCnt, 0)
-    // setPositionReduxlen(countSum)
     setPostingPositionListget(copy)
-    // setPosting({ ...posting, postingPositionList: copy })
   }
   const handleqna = () => {
     const copy = qnaRedux.map((ele, i) => ({ num: i + 1, content: ele.text }))
     setPostingQuestionListget(copy)
-    // setPosting({ ...posting, postingQuestionList: copy })
   }
   useEffect(() => {
     postPutFetch()
@@ -342,7 +291,6 @@ const PostingModify = () => {
                     value={subjectget}
                     onChange={(e) => {
                       setSubjectget(e.target.value)
-                      // setPosting({ ...posting, subject: e.target.value })
                     }}
                   />
                 )}
@@ -360,7 +308,6 @@ const PostingModify = () => {
                     onChange={(newValue) => {
                       const time = moment(newValue.$d).format('YYYY-MM-DD HH:mm:ss.SSS')
                       setPostingEndDtget(time)
-                      // setPosting({ ...posting, postingEndDt: time })
                     }}
                     renderInput={(params) => <TextField {...params} style={{ width: '100%' }} />}
                     minDate={hunjae}
@@ -379,9 +326,7 @@ const PostingModify = () => {
                 <FilterSelect
                   value={localCodeget}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setLocalCodeget(e.target.value)
-                    // setPosting({ ...posting, localCode: e.target.value })
                   }}
                 >
                   {Object.keys(Localdata).map((ele, i) => (
@@ -423,10 +368,8 @@ const PostingModify = () => {
                   onChange={(e) => {
                     if (e.target.value === 'true') {
                       setIsContactget(true)
-                      // setPosting({ ...posting, isContact: true })
                     } else {
                       setIsContactget(false)
-                      // setPosting({ ...posting, isContact: false })
                     }
                   }}
                   value={isContactget}
@@ -447,7 +390,6 @@ const PostingModify = () => {
                 <FilterSelect
                   onChange={(e) => {
                     setTermget(Number(e.target.value))
-                    // setPosting({ ...posting, term: Number(e.target.value) })
                   }}
                   value={termget}
                 >
@@ -487,25 +429,6 @@ const PostingModify = () => {
               <div style={{ width: '80%', margin: 0 }}>{tags && tags}</div>
             </div>
             <div>
-              {/* <Stack direction="row" spacing={1} className="meeting-time-scroll">
-                {DateList.map((ele, i) => (
-                  <Chip
-                    key={i}
-                    label={ele.slice(5, 16)}
-                    onDelete={() => {
-                      handleDelete(ele)
-                    }}
-                  />
-                ))}
-              </Stack> */}
-              {/* <p style={{ marginTop: '1em', color: '#574b9f' }} className="meeting-time-scroll">
-                <span className={errorBox && DateList.length < positionReduxlen ? 'active-warning-span' : ''}>
-                  미팅예약은 포지션인원수의 최소값 만큼 설정해야합니다.
-                </span>{' '}
-                (<span style={{ color: DateList.length < positionReduxlen ? 'red' : '' }}>{DateList.length}</span>
-                {' / '}
-                <span>{positionReduxlen}</span>)
-              </p> */}
               <div className="email-section" style={{ marginLeft: '3em' }}>
                 <div style={{ width: '30%' }}></div>
                 <div style={{ width: '70%' }}></div>
@@ -520,9 +443,7 @@ const PostingModify = () => {
               </div>
               <div style={{ width: '80%', display: 'flex' }}>
                 <FilterSelect
-                  // className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
                     setPosi({ code: position.code, name: position.name })
                   }}
@@ -552,7 +473,6 @@ const PostingModify = () => {
                 <FilterSelect
                   onChange={(e) => {
                     setLevelget(Number(e.target.value))
-                    // setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={levelget}
                 >

@@ -12,7 +12,6 @@ import api from 'api/Api'
 import Localdata from 'data/Localdata'
 import { Box } from '@mui/system'
 import SignalBtn from 'components/common/SignalBtn'
-// import { useLocation } from 'react-router'
 
 const ApplyModify = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
@@ -35,7 +34,6 @@ function PostingDetail() {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
       setPosting(res.data.body)
-      console.log(res.data.body)
     } catch (error) {
       console.log(error)
     }

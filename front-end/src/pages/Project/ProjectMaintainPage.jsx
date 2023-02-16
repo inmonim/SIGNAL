@@ -5,12 +5,7 @@ import TeamMaintain from '../../components/Project/TeamMaintain'
 import ProjectMaintain from '../../components/Project/ProjectMaintain'
 import api from 'api/Api.js'
 
-// import TeamProfile from 'components/Project/TeamProfile'
-
 function ProjectMaintainPage({ projectSeq, setProjectMode }) {
-  // const list = [1, 2, 3, 4, 5, 6]
-  // const projectSeq = 458
-
   const [memberList, setMemberList] = useState([])
   const [projectData, setProjectData] = useState([])
 
@@ -26,7 +21,6 @@ function ProjectMaintainPage({ projectSeq, setProjectMode }) {
         url: process.env.REACT_APP_API_URL + `/project/setting/${projectSeq}`,
         method: 'GET',
       })
-      console.log(res)
       setProjectData(res.data.body)
     } catch (error) {
       console.log(error)

@@ -12,17 +12,12 @@ const Container = styled.section`
 function MyProject() {
   const [endData, setEndData] = useState([])
   const [ingData, setIngData] = useState([])
-  // const [img, setImg] = useState('')
   useEffect(() => {
-    console.log(sessionStorage.getItem('useSeq'))
     api.get(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`).then((res) => {
       setEndData(res.data.body.endProjectList)
       setIngData(res.data.body.ingProjectList)
-      // setImg(res.body.endProjectList.projectImageUrl)
     })
   }, [])
-  // console.log(img)
-  console.log(endData)
   const [size] = useState(4)
   const [endPage, setEndPage] = useState(1)
   const handleEndPageChange = (page) => {

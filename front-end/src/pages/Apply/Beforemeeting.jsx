@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
 import 'assets/styles/beforemeeting.css'
 import MeetingMemoModal from 'components/Memo/MeetingMemoModal'
-// import MeetingQna from 'components/Meeting/MeetingQna'
 import io from 'socket.io-client'
 import noProfileImg from 'assets/image/noProfileImg.png'
 import MeetingPresentTime from 'components/Meeting/MeetingPresentTime'
@@ -30,10 +29,6 @@ let postingSeq
 
 const prevMeetingSetting = () => {
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
-  console.log('사전 미팅 소켓 통신 시작!')
-
-  // console.log(params.get('userSeq'))
 
   pcConfig = {
     iceServers: [
@@ -52,9 +47,7 @@ const prevMeetingSetting = () => {
   roomId = 'prev' + params.get('applySeq')
   myName = sessionStorage.getItem('nickname')
   isOwner = params.get('owner')
-  console.log(isOwner, params.get('applySeq'))
 
-  // 공고 질문 얻기 위한 postingSeq 파람 추가
   postingSeq = params.get('postingSeq')
 
   if (myName !== params.get('nickname')) {
@@ -63,16 +56,14 @@ const prevMeetingSetting = () => {
     }
   }
 
-  userNames = {} // userNames[socketId]="이름"
-  socketIds = {} // socketIds["이름"]=socketId
+  userNames = {}
+  socketIds = {}
 
   sendPC = {
-    // sendPC[purpose]=pc
-    user: {}, // 유저 얼굴
-    share: {}, // 화면공유
+    user: {},
+    share: {},
   }
   receivePCs = {
-    // receivePCs[purpose][socketId]=pc
     user: {},
     share: {},
   }
@@ -92,7 +83,6 @@ function Beforemeeting() {
     // 기존 방의 유저수와 방장이름 얻어옴
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
-      console.log(numOfUsers, '명이 이미 접속해있음')
 
       if (data.isDup === true) {
         if (!alert('중복접속입니다.!!')) {
@@ -118,14 +108,12 @@ function Beforemeeting() {
 
     // 처음 방에 접속했을 때, 이미 방안에 들어와있던 user들의 정보를 받음
     socket.on('all_users', (data) => {
-      console.log('all_users : ', data.users)
       allUsersHandler(data) // 미리 접속한 유저들의 영상을 받기위한 pc, offer 생성
     })
 
     // 클라이언트 입장에서 보내는 역할의 peerConnection 객체에서 수신한 answer 메시지(sender_offer의 응답받음)
     socket.on('get_sender_answer', (data) => {
       try {
-        console.log('get_sender_answer 받음')
         sendPC[data.purpose].setRemoteDescription(new RTCSessionDescription(data.answer))
       } catch (error) {
         console.error(error)
@@ -175,7 +163,6 @@ function Beforemeeting() {
 
   // const now = ''
   // const today = ''
-  console.log('랜더링')
 
   // const [now, setNow] = useState('00:00:00')
   // const dateNow = new Date()
@@ -198,7 +185,6 @@ function Beforemeeting() {
   // startTimer()
 
   function meetingStart() {
-    console.log('meetingStart 실행')
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -246,9 +232,7 @@ function Beforemeeting() {
   function createSenderPeerConnection(stream, purpose, isAudioTrue = 1) {
     const pc = new RTCPeerConnection(pcConfig)
 
-    pc.oniceconnectionstatechange = (e) => {
-      // console.log(e);
-    }
+    pc.oniceconnectionstatechange = (e) => {}
 
     pc.onicecandidate = (e) => {
       if (e.candidate) {
@@ -263,7 +247,6 @@ function Beforemeeting() {
       const videoTrack = stream.getVideoTracks()[0]
       const audioTrack = stream.getAudioTracks()[0]
       pc.addTrack(videoTrack, stream)
-      // console.log("audio:",is_audio_true)
       if (isAudioTrue !== 0)
         // 나중에 수정하기
         pc.addTrack(audioTrack, stream)
@@ -278,9 +261,7 @@ function Beforemeeting() {
   function createReceiverPeerConnection(senderSocketId, userName, purpose) {
     const pc = new RTCPeerConnection(pcConfig)
     receivePCs[purpose][senderSocketId] = pc
-    pc.oniceconnectionstatechange = (e) => {
-      // console.log(e);
-    }
+    pc.oniceconnectionstatechange = (e) => {}
 
     pc.onicecandidate = (e) => {
       if (e.candidate) {
@@ -303,7 +284,6 @@ function Beforemeeting() {
         if (purpose === 'user') {
           userOntrackHandler(e.streams[0], userName, senderSocketId)
         }
-        // console.log('한번만 나오는지')
       }
       once += 1
     }
@@ -320,8 +300,6 @@ function Beforemeeting() {
         offerToReceiveVideo: false,
       })
       await pc.setLocalDescription(new RTCSessionDescription(offer))
-
-      // console.log("send offer:",offer);
 
       return offer
     } catch (error) {
@@ -402,7 +380,6 @@ function Beforemeeting() {
     video.autoplay = true
     video.playsinline = true
     video.srcObject = stream
-    console.log('접속자 이름:', userName)
     setOtherName(userName)
   }
 
@@ -429,7 +406,6 @@ function Beforemeeting() {
 
       removeUserVideo(socketId, userName)
       setOtherName('부재중')
-      console.log('나간사람 이름:', userName)
     } catch (e) {
       console.error(e)
     }
@@ -465,13 +441,9 @@ function Beforemeeting() {
   }
 
   const [otherName, setOtherName] = useState('부재중')
-  useLayoutEffect(() => {
-    console.log('한번만')
-  }, [])
+  useLayoutEffect(() => {}, [])
 
-  useEffect(() => {
-    console.log('voice : ' + voice + '// video : ' + video, '//otherName', otherName)
-  }, [voice, video])
+  useEffect(() => {}, [voice, video])
   return (
     <div className="before-meeting-container">
       <div className="before-meeting-center">
