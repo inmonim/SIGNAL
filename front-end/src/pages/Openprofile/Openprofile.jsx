@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styled from '@emotion/styled'
-// import JavaScript from '../../assets/image/Skilltest'
-// import PostingCardItem from 'components/Posting/PostingCardItem'
 import Box from '@mui/material/Box'
 import '../../assets/styles/posting.css'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import api from 'api/Api'
 import Openprofilecard from 'components/Openprofile/Openprofilecard'
 import Swal from 'sweetalert2'
@@ -33,16 +31,12 @@ function Openprofile() {
       setOpenList(res.data.body.openProfileList)
       setPage(res.data.body.totalPage)
       setCount(res.data.body.totalNum)
-      // console.log(openList)
-      // console.log(JSON.stringify(res.data.body.openProfileList))
     })
   }
 
   const btnClickAxios = async () => {
     const res = await api.get(process.env.REACT_APP_API_URL + `/openprofile?page=${page}&size=${size}`)
     setOpenList(res.data.body.openProfileList)
-
-    // console.log(Title)/
   }
   useEffect(() => {
     openProfileList()

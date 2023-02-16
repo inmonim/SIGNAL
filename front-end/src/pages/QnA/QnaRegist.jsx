@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router-dom'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import 'assets/styles/qna.css'
 import api from 'api/Api'
 
@@ -31,7 +31,6 @@ function QnaRegist() {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
   const handleQnaRegist = () => {
     api.post(process.env.REACT_APP_API_URL + '/board/qna', JSON.stringify(inputs)).then((res) => setAlertOpen(true))

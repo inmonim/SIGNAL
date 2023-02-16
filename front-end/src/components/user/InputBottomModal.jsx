@@ -15,7 +15,6 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
   const [arrayOfTags, addTag] = useState([])
 
   const handleDelete = async (h) => {
-    console.log(h)
     addTag((arrayOfTags) => arrayOfTags.filter((tag) => tag.chipseq !== h.chipseq))
 
     if (inputTopTitle === '경험') {
@@ -38,7 +37,6 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
   }
   const newTag = async () => {
     setNumberOfTags(numberOfTags + 1)
-    console.log(tag)
     if (inputTopTitle === '경험') {
       await api.post(process.env.REACT_APP_API_URL + `/profile/exp/${userSeq}`, {
         content: tag,
@@ -75,7 +73,6 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
         )
         addTag(form)
         setNumberOfTags(form.length)
-        console.log(form)
       } catch (error) {
         console.log(error)
       }
@@ -180,7 +177,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   display: 'flex',
   justifyContent: 'center',
-  // overflow: 'hidden',
 }
 
 const inputStyle = {

@@ -56,9 +56,7 @@ function ApplyRegister() {
   const [meetingSeq, setMeetingSeq] = useState('')
   const [numberOfTags, setNumberOfTags] = useState(0)
   const [arrayOfTags, addTag] = useState([])
-  // const [tag, setTag] = useState('')
-
-  // ene >> useState
+  // end >> useState
 
   // start >> Fetch
   const dataFetch = async () => {
@@ -142,7 +140,6 @@ function ApplyRegister() {
     })
 
     setMeetingList(meetingDtArr)
-    console.log('meetingDtArr', meetingDtArr)
   }
 
   const careerPostFilter = (list) => {
@@ -173,7 +170,6 @@ function ApplyRegister() {
   // start >> handle skill
 
   const handleSkillInput = (e) => {
-    console.log(e)
     if (e === null) return
     newTag({
       label: e.label,
@@ -182,7 +178,6 @@ function ApplyRegister() {
   }
 
   const newTag = (tag) => {
-    console.log(tag)
     const set = arrayOfTags.concat(tag)
     const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
     setNumberOfTags(uniqueTags.length)
@@ -291,18 +286,9 @@ function ApplyRegister() {
     setAnswerList(answerArr)
   }
 
-  // end >> handle qna
-
-  // start >> handle meeting
-
   const handleMeetingDtChange = (key) => {
     setMeetingSeq(key)
-    console.log(key)
   }
-
-  // end >> handle meeting
-
-  // start >> post
 
   const handleApplySubmit = async () => {
     try {
@@ -330,27 +316,17 @@ function ApplyRegister() {
         throw new Error('미팅시간 선택안함')
       }
 
-      console.log(JSON.stringify(applyReq))
-
       await api
         .post(process.env.REACT_APP_API_URL + '/apply/' + postingSeq, applyReq)
         .then((res) => {
-          console.log('지원서 post')
           navigate('/myprofile')
         })
         .catch((error) => {
           if (error.response) {
-            // 요청이 이루어졌으며 서버가 2xx의 범위를 벗어나는 상태 코드로 응답했습니다.
-            // REGIST_ALREADY("402", "이미 등록된 정보"),
-            // REGIST_FAIL("403", "등록 실패"),
-            // REGIST_BLACK("405", "블랙리스트에 등록된 유저"),
-            // REGIST_DUPLICATE("406", "중복된 지원 등록"),
-            // REGIST_LACK_HEART("407", "지원에 필요한 하트 부족"),
-            console.log(error.response.data.header.code)
             if (error.response.data.header.code === '402' || error.response.data.header.code === '403') {
               Swal.fire(error.response.data.header.message, '관리자에게 문의해주세요', 'warning')
             } else if (error.response.data.header.code === '405') {
-              Swal.fire(error.response.data.header.message, '꺼져 블랙리스트야', 'error')
+              Swal.fire(error.response.data.header.message, '블랙리스트에 등록된 유저입니다', 'error')
             } else if (error.response.data.header.code === '406') {
               Swal.fire(error.response.data.header.message, '마이페이지를 확인해주세요', 'warning')
             } else if (error.response.data.header.code === '407') {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router-dom'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import 'assets/styles/signal.css'
 import api from 'api/Api'
 import styled from 'styled-components'
@@ -83,12 +83,9 @@ function Signalregister() {
         },
       })
       .then((res) => {
-        console.log(res)
         setAlertOpen(true)
       })
-      .catch((res) => {
-        console.log(formData)
-      })
+      .catch((res) => {})
   }
   const handleAlert = (e) => {
     setAlertOpen(false)
@@ -114,23 +111,11 @@ function Signalregister() {
         <div className="signal-regist-main">
           <div className="signal-regist-title">
             <label>프로젝트 제목 </label>
-            {/* <button
-              onClick={() => {
-                console.log(inputs)
-              }}
-            >
-              dfdf
-            </button> */}
             <TextField id="filled-multiline-flexible" name="title" multiline sx={inputStyle} onChange={handleInput} />
           </div>
           <div className="signal-regist-title">
             <label>프로젝트 리스트</label>
-            <FilterSelect
-              style={inputStyle2}
-              // className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
-              onChange={handleInput}
-              name="projectSeq"
-            >
+            <FilterSelect style={inputStyle2} onChange={handleInput} name="projectSeq">
               {userProjectList &&
                 userProjectList.map((ele, i) => (
                   <option key={i} value={ele.projectSeq}>
@@ -138,7 +123,6 @@ function Signalregister() {
                   </option>
                 ))}
             </FilterSelect>
-            {/* <TextField id="filled-multiline-flexible" name="title" multiline sx={inputStyle} onChange={handleInput} /> */}
           </div>
           <div className="signal-regist-title">
             <label>UCC(YouTube 주소)</label>

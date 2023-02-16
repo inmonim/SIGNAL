@@ -22,14 +22,12 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
     if (inputTopTitle === '포지션') {
       try {
         await api.delete(process.env.REACT_APP_API_URL + `/profile/position/${h.chipseq}`)
-        console.log('포지션 삭제')
       } catch (error) {
         console.log(error)
       }
     } else {
       try {
         await api.delete(process.env.REACT_APP_API_URL + `/profile/skill/${h.chipseq}`)
-        console.log('스킬 삭제')
       } catch (error) {
         console.log(error)
       }
@@ -53,7 +51,6 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
           })
         )
         addTag(form)
-        console.log(form)
 
         setNumberOfTags(form.length)
       } catch (error) {
@@ -79,10 +76,6 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
   }
 
   const newTag = async () => {
-    // const set = new Set(arrayOfTags.concat(tag))
-    // setNumberOfTags(set.size)
-    // const uniqueTags = Array.from(set)
-    // addTag(uniqueTags)
     const set = arrayOfTags.concat(tag)
     const uniqueTags = set.filter((arr, index, callback) => index === callback.findIndex((t) => t.label === arr.label))
     setNumberOfTags(uniqueTags.length)
@@ -93,7 +86,6 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
         await api.post(process.env.REACT_APP_API_URL + `/profile/position/${userSeq}`, {
           positionCode: tag.value,
         })
-        console.log('포지션 등록')
       } catch (error) {
         console.log(error)
       }
@@ -102,7 +94,6 @@ function InputTopModal({ open, onClose, inputTopTitle, Options }) {
         await api.post(process.env.REACT_APP_API_URL + `/profile/skill/${userSeq}`, {
           skillCode: tag.value,
         })
-        console.log('스킬 등록')
       } catch (error) {
         console.log(error)
       }
@@ -229,20 +220,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   display: 'flex',
   justifyContent: 'center',
-  // overflow: 'hidden',
 }
-
-// const inputStyle = {
-//   backgroundColor: '#DDDBEC',
-//   width: '300px',
-//   '& label.Mui-focused': {
-//     color: '#574b9f',
-//   },
-//   '& .MuiOutlinedInput-root': {
-//     '&.Mui-focused fieldset': {
-//       borderColor: '#574b9f',
-//     },
-//   },
-// }
 
 export default InputTopModal

@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-// import { useNavigate } from 'react-router-dom'
 import api from 'api/Api'
 
 function UserInfo2({ state }) {
   const [userInfo, setUserInfo] = useState([])
   const userSeq = state.userSeq
-
-  // console.log(JSON.stringify(state.nickname), '이건 스테이트')
-  // console.log(JSON.stringify(state), '이건 스테이트')
-  // console.log(JSON.stringify(state), '이건 스테이트')
-  // console.log(JSON.stringify(state), '이건 스테이트')
 
   const userFetch = async () => {
     try {

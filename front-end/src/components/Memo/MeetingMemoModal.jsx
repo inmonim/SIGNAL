@@ -37,7 +37,6 @@ function MeetingMemoModal({ open, onClose, applySeq }) {
   // const [open, setOpen] = useState(false)
 
   const [memo, setMemo] = useState('')
-  console.log(typeof applySeq)
 
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + '/apply/memo/' + applySeq).then((res) => {
@@ -46,18 +45,12 @@ function MeetingMemoModal({ open, onClose, applySeq }) {
     console.log('메모 get')
   }, [open])
 
-  // const handleClose = () => {
-  //   console.log('닫는다')
-  //   close()
-  // }
-
   const handleClose = async () => {
     try {
       await api.put(process.env.REACT_APP_API_URL + '/apply/memo', {
         applySeq,
         memo,
       })
-      console.log('메모 변경')
     } catch (error) {
       console.log(error)
     }
@@ -72,7 +65,6 @@ function MeetingMemoModal({ open, onClose, applySeq }) {
         </Typography>
         <img src={cancleButton} alt="plusButton" style={cancleButtonStyle} onClick={handleClose} />
         <Box sx={innerStlye}>
-          {/* <div>{memo}</div> */}
           <textarea
             cols="10"
             rows="15"
@@ -81,15 +73,6 @@ function MeetingMemoModal({ open, onClose, applySeq }) {
             value={memo}
             style={{
               width: '100%',
-              // '::-webkit-scrollbar': {
-              //   width: '50px',
-              // },
-              // '::-webkit-scrollbar-thumb': {
-              //   backgroundColor: '#9A93C5',
-              //   borderRadius: '10px',
-              //   backgroundClip: 'padding-box',
-              //   border: '2px solid transparent',
-              // },
             }}
           />
         </Box>

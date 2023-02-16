@@ -12,7 +12,3 @@ function SkillList({ skillList, onRemove }) {
 }
 
 export default SkillList
-// if (!posting.postingMeetingList.includes(Date)) {
-//   const copy = [...posting.postingMeetingList]
-//   copy.push(Date)
-//   setPosting({ ...posting, postingMeetingList: copy })
