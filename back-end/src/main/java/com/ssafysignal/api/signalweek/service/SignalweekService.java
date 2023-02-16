@@ -150,7 +150,7 @@ public class SignalweekService {
         return findAllSignalweekResponse;
     }
     // 상세 조회
-    @Transactional(readOnly = true)
+    @Transactional
     public FindSignalweekResponse findSignalweek(Integer signalweekSeq, Integer userSeq) {
         Signalweek signalweek = signalweekRepository.findBySignalweekSeq(signalweekSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
