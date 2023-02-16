@@ -79,8 +79,6 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
       )
       .then((res) => {
         setEvalHistory(res.data.body)
-        console.log('toUserSeq', toUserSeq, 'fromUserSeq', fromUserSeq, 'weekCnt', weekCnt)
-        console.log(evalHistory)
       })
       .catch((error) => {
         console.log(error)
@@ -89,7 +87,6 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   useEffect(() => {
     evaluationFetch()
-    console.log(evalHistory)
   }, [flag, toUserSeq, tab])
 
   return (

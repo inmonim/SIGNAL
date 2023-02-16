@@ -53,7 +53,6 @@ function UserInfo() {
           sessionStorage.removeItem('userEmail')
           sessionStorage.removeItem('username')
           sessionStorage.removeItem('userSeq')
-          console.log(res)
           navigate('/')
           window.location.reload()
         })

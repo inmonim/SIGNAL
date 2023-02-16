@@ -41,7 +41,6 @@ function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq, projectSeq })
           },
         })
         .then((res) => {
-          console.log(res)
           setAlert(true)
         })
         .catch((err) => {

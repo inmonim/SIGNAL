@@ -18,7 +18,6 @@ function UserPwdModal({ open, onClose }) {
     const { name, value } = e.target
     const nextInputs = { ...inputs, [name]: value }
     setInputs(nextInputs)
-    console.log(nextInputs)
   }
 
   const [alertOpen, setAlertOpen] = useState(false)
@@ -29,17 +28,13 @@ function UserPwdModal({ open, onClose }) {
 
   const handleToProfile = async () => {
     // 비밀번호 유효성 검사
-    await api
-      .put(
-        process.env.REACT_APP_API_URL + '/user/password/' + sessionStorage.getItem('userSeq'),
-        JSON.stringify({
-          password: inputs.password,
-          newPassword: inputs.newpwd,
-        })
-      )
-      .then((res) => {
-        console.log(res.data)
+    await api.put(
+      process.env.REACT_APP_API_URL + '/user/password/' + sessionStorage.getItem('userSeq'),
+      JSON.stringify({
+        password: inputs.password,
+        newPassword: inputs.newpwd,
       })
+    )
     setAlertOpen(false)
     onClose(true)
     window.location.reload()

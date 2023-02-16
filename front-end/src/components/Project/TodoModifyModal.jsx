@@ -43,7 +43,6 @@ function TodoModifyModal({ open, onClose, flag, handleFlag, todoSeq, content }) 
   const handleToDelete = () => {
     try {
       api.delete(process.env.REACT_APP_API_URL + '/todo/' + todoSeq).then((res) => {
-        console.log(res)
         handleFlag(!flag)
       })
     } catch (e) {

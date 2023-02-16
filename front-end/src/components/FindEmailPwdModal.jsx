@@ -48,9 +48,6 @@ function FindEmailPwdModal({ open, onClose }) {
   const [alertOpen, setAlertOpen] = useState(false)
 
   const handleFindEmail = () => {
-    console.log('click Find')
-    console.log('Name: ', inputName)
-    console.log('PhoneNumber: ', inputPhone)
     fetch(process.env.REACT_APP_API_URL + '/auth/email', {
       method: 'POST',
       headers: {
@@ -71,7 +68,6 @@ function FindEmailPwdModal({ open, onClose }) {
       .then((data) => {
         setEmailMsg(data.body.email)
         setEmailAlertOpen(true)
-        console.log(data.body.email)
       })
       .catch((e) => {
         setAlertOpen(true)
@@ -90,8 +86,6 @@ function FindEmailPwdModal({ open, onClose }) {
     onClose(true)
   }
   const handleFindPwd = () => {
-    console.log('click Find Pwd')
-    console.log('Email: ', inputEmail)
     setAlertOpen(true)
     fetch(process.env.REACT_APP_API_URL + '/auth/password', {
       method: 'POST',
