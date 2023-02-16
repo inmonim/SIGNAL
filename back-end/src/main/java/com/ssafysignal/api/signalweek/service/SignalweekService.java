@@ -12,14 +12,8 @@ import com.ssafysignal.api.project.entity.ProjectUser;
 import com.ssafysignal.api.project.repository.ProjectRepository;
 import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
 import com.ssafysignal.api.signalweek.dto.response.*;
-import com.ssafysignal.api.signalweek.entity.Signalweek;
-import com.ssafysignal.api.signalweek.entity.SignalweekRank;
-import com.ssafysignal.api.signalweek.entity.SignalweekSchedule;
-import com.ssafysignal.api.signalweek.entity.SignalweekVote;
-import com.ssafysignal.api.signalweek.repository.SignalweekRankRepository;
-import com.ssafysignal.api.signalweek.repository.SignalweekRepository;
-import com.ssafysignal.api.signalweek.repository.SignalweekScheduleRepository;
-import com.ssafysignal.api.signalweek.repository.SignalweekVoteRepository;
+import com.ssafysignal.api.signalweek.entity.*;
+import com.ssafysignal.api.signalweek.repository.*;
 import com.ssafysignal.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +40,7 @@ public class SignalweekService {
     private final SignalweekVoteRepository signalweekVoteRepository;
     private final ProjectRepository projectRepository;
     private final FileService fileService;
+    private final SignalweekVoteHistoryRepository signalweekVoteHistoryRepository;
 
     @Value("${app.fileUpload.uploadPath.ppt}")
     private String pptUploadDir;
@@ -158,11 +153,13 @@ public class SignalweekService {
         boolean vote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(signalweekSeq, userSeq).isPresent();
 
         //조회수 증가
-        Integer view = signalweek.getView()+1;
-        signalweek.setView(view);
-        signalweekRepository.save(signalweek);
+        if (!signalweekVoteHistoryRepository.findBySignalweekSeqAndUserSeq(signalweekSeq, userSeq).isPresent()){
+            signalweekVoteHistoryRepository.save(SignalweekVoteHistory.builder().signalweekSeq(signalweekSeq).userSeq(userSeq).build());
+            Integer view = signalweek.getView()+1;
+            signalweek.setView(view);
+            signalweekRepository.save(signalweek);
+        }
 
-        
         return FindSignalweekResponse.builder()
                 .title(signalweek.getTitle())
                 .pptUrl(signalweek.getPptFile().getUrl())
