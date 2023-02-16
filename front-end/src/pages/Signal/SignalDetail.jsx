@@ -97,7 +97,7 @@ function signalDetail() {
       <div className="signaldetail-detail-container">
         <div className="signaldetail-detail-title">{data.title}</div>
         {/* <div className="signaldetail-detail-middle">ddd</div> */}
-        <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right', marginBottom: '1em' }}>
+        <div className="signal-regist-title" style={{ marginTop: '0.5em', float: 'right', marginBottom: '0.5em' }}>
           <IconButton size="medium" onClick={handleClick}>
             <ThumbUpIcon fontSize="large" color={liked ? 'secondary' : 'action'} />
           </IconButton>
@@ -108,6 +108,7 @@ function signalDetail() {
             url={ucc} // 플레이어 url
             playing={true} // 자동 재생 on
             width="100%"
+            height="500px"
             muted={true} // 자동 재생 on
             controls={true} // 플레이어 컨트롤 노출 여부
             light={false} // 플레이어 모드
@@ -120,7 +121,7 @@ function signalDetail() {
             <a href={data.deployUrl}>{data.deployUrl}</a>
           </div>
         </div> */}
-        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
+        <div className="signal-regist-title" style={{ marginTop: '100px' }}>
           <Label>배포 주소</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
             <a href={data.deployUrl}>{data.deployUrl}</a>
@@ -172,7 +173,17 @@ function signalDetail() {
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <Label>Readme</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            {mdFile !== '' ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown> : <></>}
+            {mdFile !== '' ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {markdown
+                  .replace(/\n\s\n\s/gi, '\n\n&nbsp;\n\n')
+                  .replace(/\*\*/gi, '@$_%!^')
+                  .replace(/@\$_%!\^/gi, '**')
+                  .replace(/<\/?u>/gi, '*')}
+              </ReactMarkdown>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
@@ -181,7 +192,7 @@ function signalDetail() {
 }
 
 const Label = styled.h1`
-  font-size: 20px;
+  font-size: 27px;
   margin-right: 20px;
   display: flex;
   align-items: center;
