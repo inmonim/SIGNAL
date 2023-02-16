@@ -19,6 +19,7 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/clike/clike.js'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/python/python'
+import { SketchPicker } from 'react-color'
 
 // ============================================
 let myStream
@@ -73,6 +74,7 @@ const themeOptions = [
 ]
 
 const projectMeetingSetting = () => {
+  // socket = io('https://sfsad', { secure: true, cors: { origin: '*' } })
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
@@ -773,6 +775,7 @@ function ProjectMeeting() {
   }
 
   function changeColor(selectedColor) {
+    console.log(selectedColor)
     MODE = DRAWING
     setColor(selectedColor)
     drawingColor = selectedColor
@@ -924,27 +927,39 @@ function ProjectMeeting() {
         </VideoListSection>
 
         <CodeEditSection mode={mode}>
-          <div>
-            <Select options={modeOptions} onChange={handleMode} value={selectedMode} />
-            <Select options={themeOptions} onChange={handleTheme} value={selectedTheme} />
+          <div className="project-meeting-code-edit-select-box">
+            <Select
+              options={modeOptions}
+              onChange={handleMode}
+              value={selectedMode}
+              styles={{
+                control: (baseStyles) => ({
+                  ...baseStyles,
+                  width: '300px',
+                  margin: '0px 5px',
+                }),
+              }}
+            />
+            <Select
+              options={themeOptions}
+              onChange={handleTheme}
+              value={selectedTheme}
+              styles={{
+                control: (baseStyles) => ({
+                  ...baseStyles,
+                  width: '300px',
+                }),
+              }}
+            />
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <textarea id="realtimeEditor"></textarea>
           </div>
         </CodeEditSection>
 
-        <ShareSection className="project-meeting-video-share-section" mode={mode}>
-          <div className="project-meeting-video-share-palette">
-            <div className="project-meeting-video-share-palette2">
-              <div style={{ margin: '30px auto' }}>
-                <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
-              </div>
-              <div style={{ textAlign: 'center', margin: '30px' }}>
-                <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-                <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
-              </div>
+        <ShareSection mode={mode}>
+          <div>
+            <div>
               <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
               </div>
@@ -952,13 +967,24 @@ function ProjectMeeting() {
                 <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
               </div>
             </div>
+            <div className="project-meeting-video-share-palette">
+              <div className="project-meeting-video-share-palette2">
+                <div style={{ margin: '30px auto' }}>
+                  <SelectedColor color={color} onClick={() => setPaletteOpen(!paletteOpen)}></SelectedColor>
+                </div>
+                <div style={{ textAlign: 'center', margin: '30px' }}>
+                  <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+                  <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
+                </div>
+              </div>
+            </div>
           </div>
+
           {paletteOpen ? (
-            <div className="project-meeting-video-share-color-palette">
-              <Color onClick={() => changeColor('black')} color={'black'}></Color>
-              <Color onClick={() => changeColor('white')} color={'white'}></Color>
-              <Color onClick={() => changeColor('red')} color={'red'}></Color>
-              <Color onClick={() => changeColor('blue')} color={'blue'}></Color>
+            <div style={{ margin: '10px' }}>
+              <SketchPicker color={color} onChangeComplete={(color) => changeColor(color.hex)} />
             </div>
           ) : (
             ''
@@ -1031,67 +1057,17 @@ function ProjectMeeting() {
 export default ProjectMeeting
 
 const videobox = (props) => {
-  if (props.size === 1) {
-    return css`
-      margin: 15px 15px;
-      border: 1px solid black;
-      width: 1200px;
-      height: 650px;
-      border-radius: 25px;
-    `
-  } else if (props.size === 2) {
-    return css`
-      margin: auto;
-      border: 1px solid black;
-      width: 700px;
-      height: 650px;
-      border-radius: 25px;
-    `
-  } else if (props.size === 3) {
-    return css`
-      margin: 100px 50px 50px 50px;
-      border: 1px solid black;
-      width: 550px;
-      height: 500px;
-      border-radius: 25px;
-    `
-  } else {
-    return css`
-      margin: 15px 15px;
-      border: 1px solid black;
-      width: 500px;
-      height: 330px;
-      border-radius: 25px;
-    `
-  }
+  return css`
+    margin: 10px;
+    border: 1px solid black;
+    width: 455px;
+    height: 320px;
+    border-radius: 25px;
+  `
 }
 
 const VideoBox = styled.div`
   ${videobox};
-`
-
-const colorBox = (props) => {
-  const color = props.color
-  return css`
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: ${color === 'white' ? '1px solid black' : ''};
-    margin: 15px 0px;
-    background-color: ${color === 'black'
-      ? '#000'
-      : color === 'white'
-      ? '#fff'
-      : color === 'red'
-      ? '#FF3333'
-      : '#0075FF'};
-    :hover {
-      cursor: pointer;
-    }
-  `
-}
-const Color = styled.div`
-  ${colorBox}
 `
 
 const selectedColor = (props) => {
