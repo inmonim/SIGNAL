@@ -8,7 +8,6 @@ const inputStyle = {
 
 function Exp({ exp, onRemove, onChange, id }) {
   const handleExpChange = (event) => {
-    console.log(event.target.value)
     onChange(event.target.value, id)
   }
   return (

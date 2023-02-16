@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import api from 'api/Api'
 import SignalBtn from 'components/common/SignalBtn'
 import TaskAltIcon from '@mui/icons-material/TaskAlt'
@@ -13,8 +13,6 @@ import moment from 'moment'
 function PostingApply() {
   const navigate = useNavigate()
   const userSeq = sessionStorage.getItem('userSeq')
-  // const [data, setData] = useState([])
-  // const [rows, setRows] = useState([])
 
   const [size] = useState(6)
   const [applyPage, setApplyPage] = useState(1)
@@ -35,11 +33,8 @@ function PostingApply() {
       await api
         .get(process.env.REACT_APP_API_URL + '/apply/applyer/' + userSeq + '?page=' + applyPage + '&size=' + size)
         .then((res) => {
-          // setData(res.data.body)
-          // console.log('applyListFetch', res.data.body)
           setRowsApplyForm(res.data.body)
         })
-      // console.log('apply', applyCount)
     } catch (error) {
       console.log(error)
     }
@@ -49,13 +44,10 @@ function PostingApply() {
     try {
       await api.get(process.env.REACT_APP_API_URL + '/posting/post/count/' + userSeq).then((res) => {
         setPostingCount(res.data.body.count)
-        // console.log('posting', postingCount)
       })
       await api
         .get(process.env.REACT_APP_API_URL + '/posting/post/' + userSeq + '?page=' + postingPage + '&size=' + size)
         .then((res) => {
-          // setData(res.data.body)
-          // console.log('postingListFetch', res.data.body)
           setRowsPostingForm(res.data.body.postingList)
         })
     } catch (error) {
@@ -73,7 +65,6 @@ function PostingApply() {
   const applyRows = []
   Array.from(rowsApplyForm).forEach((item) => {
     applyRows.push({
-      // state: item.stateCode.name,
       userSeq: item.userSeq,
       applySeq: item.applySeq,
       state: item.stateCode.name,
@@ -82,7 +73,6 @@ function PostingApply() {
     })
   })
   const applyRowLen = applyRows.length
-  // console.log(applyRowLen)
 
   if (applyRowLen !== size && applyRowLen !== 0) {
     for (let i = 0; i < size - applyRowLen; i++)
@@ -114,13 +104,11 @@ function PostingApply() {
   }
 
   const handleProjectAccept = async (applySeq) => {
-    console.log(applySeq)
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
         select: true,
       })
-      console.log('지원서 확정')
       setChange(!change)
       location.reload()
     } catch (error) {
@@ -129,14 +117,11 @@ function PostingApply() {
   }
 
   const handleProjectRefuse = async (applySeq) => {
-    console.log(applySeq)
-
     try {
       await api.put(process.env.REACT_APP_API_URL + '/posting/member/confirm', {
         applySeq,
         select: false,
       })
-      console.log('지원서 거절')
       setChange(!change)
       location.reload()
     } catch (error) {
@@ -144,19 +129,9 @@ function PostingApply() {
     }
   }
 
-  // const handleApplyDelete = async (applySeq) => {
-  //   try {
-  //     await api.delete(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
-  //     console.log('지원 취소')
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const handlePostingDelete = async (postingSeq) => {
     try {
       await api.delete(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
-      // console.log('공고 취소')
     } catch (error) {
       console.log(error)
     }

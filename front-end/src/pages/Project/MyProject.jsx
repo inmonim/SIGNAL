@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import 'assets/styles/myproject.css'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import api from 'api/Api'
 import { Link } from 'react-router-dom'
 

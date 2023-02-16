@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import api from 'api/Api.js'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import 'assets/styles/notice.css'
 import EditIcon from '@mui/icons-material/Edit'
 import trashcan from 'assets/image/TrashLetter.png'

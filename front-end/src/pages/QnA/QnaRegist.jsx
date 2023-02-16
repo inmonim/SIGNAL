@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router-dom'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import 'assets/styles/qna.css'
 import api from 'api/Api'
 

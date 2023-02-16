@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
 import { PatternFormat } from 'react-number-format'
 import SignalBtn from 'components/common/SignalBtn'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import 'assets/styles/profile/usermodify.css'
 import api from 'api/Api'
@@ -22,17 +22,10 @@ function UserModifyModal({ open, onClose }) {
   }
 
   const handleToProfile = async () => {
-    console.log(inputs.nickname)
-    console.log(inputs.phone)
-
     const formData = new FormData()
     formData.append('profileImageFile ', fileImage)
     formData.append('nickname ', inputs.nickname)
     formData.append('phone ', inputs.phone)
-    console.log(formData)
-    console.log(JSON.stringify(formData))
-    console.log(fileImage)
-    console.log(JSON.stringify(fileImage))
     await api
       .post(process.env.REACT_APP_API_URL + '/user/' + data.userSeq, formData, {
         headers: {
@@ -40,7 +33,6 @@ function UserModifyModal({ open, onClose }) {
         },
       })
       .then((res) => {
-        console.log('.', res)
         sessionStorage.setItem('nickname', inputs.nickname)
       })
 
@@ -72,7 +64,6 @@ function UserModifyModal({ open, onClose }) {
         setData(res.data.body)
         setInputs(res.data.body)
         setImageUrl(process.env.REACT_APP_API_URL + res.data.body.userImageUrl)
-        console.log(res.data.body)
       })
     } catch (e) {
       console.log(e)

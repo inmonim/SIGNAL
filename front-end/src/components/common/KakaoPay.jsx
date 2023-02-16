@@ -8,8 +8,6 @@ function KakaoPay() {
   const { search } = useLocation()
   const userSeq = search.split('=')[1].split('&')[0]
   const pgToken = search.split('=')[2]
-  console.log(userSeq)
-  console.log(pgToken)
 
   const [payState] = useState({
     next_redirect_pc_url: '',
@@ -35,7 +33,6 @@ function KakaoPay() {
       params,
     }).then((response) => {
       localStorage.removeItem('tid')
-      console.log(response)
       if (response.status === 200) {
         const heartCnt = response.data.amount.total / 100
         api
@@ -43,7 +40,6 @@ function KakaoPay() {
             heartCnt: parseInt(heartCnt),
           })
           .then((response) => {
-            console.log(response.data)
             opener.parent.location.reload()
             window.close()
           })
@@ -55,7 +51,6 @@ function KakaoPay() {
   }
 
   useEffect(() => {
-    console.log(status)
     if (status === 'success') {
       payApprove()
     } else {

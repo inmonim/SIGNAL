@@ -14,7 +14,6 @@ function Video(size) {
 export default Video
 
 const videobox = (props) => {
-  console.log()
   return css`
     margin: 15px 15px;
     border: 1px solid black;

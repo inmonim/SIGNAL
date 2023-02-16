@@ -6,9 +6,9 @@ import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import 'assets/font/font.css'
-import SignalBtn from './common/SignalBtn'
+import SignalBtn from '../common/SignalBtn'
 import FindModal from './FindEmailPwdModal'
-import AlertModal from './AlertModal'
+import AlertModal from '../common/AlertModal'
 
 import modalLogo from 'assets/image/Mainlogo.png'
 import closeBtn from 'assets/image/x.png'
@@ -59,9 +59,6 @@ function LoginModal({ open, onClose }) {
   const navigate = useNavigate()
 
   const handleToMain = async () => {
-    console.log('click login')
-    console.log('Email: ', inputEmail)
-    console.log('Pwd: ', inputPwd)
     await api
       .post(
         process.env.REACT_APP_API_URL + '/auth/login',
@@ -71,7 +68,6 @@ function LoginModal({ open, onClose }) {
         })
       )
       .then((response) => {
-        console.log(response.data.body)
         // 자동로그인 체크했을 때 로컬스토리지에 refresh 토큰 저장
         if (isAutoLogin) {
           localStorage.setItem('refreshToken', response.data.body.refreshToken)

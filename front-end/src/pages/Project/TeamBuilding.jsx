@@ -10,7 +10,7 @@ import MemoModal from '../../components/Memo/MemoModal'
 import { Experimental_CssVarsProvider as CssVarsProviderm, styled } from '@mui/material/styles'
 import moment from 'moment'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import { Button } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import { StateCode } from 'components/common/TeamSelectStateCode'
@@ -23,7 +23,7 @@ import cancleButton from '../../assets/image/x.png'
 import Swal from 'sweetalert2'
 import api from 'api/Api.js'
 import LaptopIcon from '@mui/icons-material/Laptop'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 
 const ImageButton = styled(Button)(({ theme }) => ({
   backgroundColor: '#574B9F',
