@@ -204,8 +204,8 @@ public class SignalweekService {
     // 띵예의 전당
     @Transactional(readOnly = true)
     public List<FindSignalweekRankResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
-       List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
-        Integer signalweekScheduleSeq = signalweekScheduleList.get(0).getSignalweekScheduleSeq();
+       SignalweekSchedule signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
+        Integer signalweekScheduleSeq = signalweekScheduleList.getSignalweekScheduleSeq();
 
         List<SignalweekRank> signalweekRankList = signalweekRankRepository.findAllBySignalweekScheduleSeq(signalweekScheduleSeq);
 
