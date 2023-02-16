@@ -33,7 +33,7 @@ function UserModifyModal({ open, onClose }) {
     console.log(JSON.stringify(formData))
     console.log(fileImage)
     console.log(JSON.stringify(fileImage))
-    api
+    await api
       .post(process.env.REACT_APP_API_URL + '/user/' + data.userSeq, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
