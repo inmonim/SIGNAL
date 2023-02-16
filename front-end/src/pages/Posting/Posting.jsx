@@ -484,9 +484,11 @@ const Skillbtn = styled.div`
 const PostList = styled.div`
   margin-top: 3em;
   display: flex;
-
-  align-items: center;
+  margin-left: 1em;
+  margin-right: 1em;
   flex-wrap: wrap;
+  justify-content: space-around;
+  text-items: center;
   padding: 4px;
   gap: 10px;
   &:hover {
