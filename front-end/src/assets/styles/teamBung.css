@@ -14,19 +14,89 @@
   object-fit: fill;
 }
 
-.team-bung-item {
-  width: 300px;
-  height: 300px;
-  background-color: white;
-  border-radius: 50%;
+.team-bung-item-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   position: absolute;
+}
+.team-bung-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  color: white;
+  font-size: 64px;
+  margin-top: 50px;
+  justify-content: center;
+}
+
+.team-bung-item {
+  width: 16%;
+  height: 50%;
+  background-color: #dddbec;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 50px;
   text-align: center;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec, 0 0 2px #dddbec;
+  box-shadow: 0px 4px 4px rgba(129, 129, 129, 0.5);
+}
+
+.team-bung-item {
+  animation-name: bungItem;
+  animation-duration: 5s;
+  animation-delay: 1s;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); /* 수치변형함수 */
+  animation-fill-mode: both;
+}
+
+@keyframes bungItem {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
 }
 
 .team-bung-item-img {
-  width: 200px;
-  height: 200px;
+  width: 70%;
+  height: 50%;
   border-radius: 50%;
   margin-top: 30px;
+  box-shadow: 0 4px 4px rgba(129, 129, 129, 0.5);
 }
+
+.team-bung-item-name {
+  font-size: 2.2vw;
+  font-weight: bold;
+  margin-top: 40px;
+}
+
+.team-bung-item-position {
+  font-size: 1.35vw;
+  color: #616161;
+}
+
+.team-bung-item:hover {
+  filter: brightness(70%);
+}
+
+/* .team-bung-github img{
+  display: none;
+  width: 70%;
+  height: 50%;
+  border-radius: 50%;
+  margin-top: 30px;
+  box-shadow: 0 4px 4px rgba(129, 129, 129, 0.5);
+}
+
+.team-bung-item:hover + div.team-bung-github img{
+  display: block;
+} */
