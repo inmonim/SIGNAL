@@ -157,6 +157,12 @@ public class SignalweekService {
 
         boolean vote = signalweekVoteRepository.findBySignalweekSeqAndFromUserSeq(signalweekSeq, userSeq).isPresent();
 
+        //조회수 증가
+        Integer view = signalweek.getView()+1;
+        signalweek.setView(view);
+        signalweekRepository.save(signalweek);
+
+        
         return FindSignalweekResponse.builder()
                 .title(signalweek.getTitle())
                 .pptUrl(signalweek.getPptFile().getUrl())
@@ -181,9 +187,13 @@ public class SignalweekService {
             signalweekVoteRepository.delete(signalweekVote);
 
         } else {
+            int signalweekSeq = registSignalweekVoteRequest.getSignalweekSeq();
+            Signalweek signalweek = signalweekRepository.findById(signalweekSeq).get();
+
             SignalweekVote signalweekVote = SignalweekVote.builder()
-                    .signalweekSeq(registSignalweekVoteRequest.getSignalweekSeq())
+                    .signalweekSeq(signalweekSeq)
                     .fromUserSeq(registSignalweekVoteRequest.getUserSeq())
+                    .signalweekScheduleSeq(signalweek.getSignalweekScheduleSeq())
                     .build();
 
             res = true;
@@ -194,8 +204,8 @@ public class SignalweekService {
     // 띵예의 전당
     @Transactional(readOnly = true)
     public List<FindSignalweekRankResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
-        List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
-        Integer signalweekScheduleSeq = signalweekScheduleList.get(0).getSignalweekScheduleSeq();
+       SignalweekSchedule signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
+        Integer signalweekScheduleSeq = signalweekScheduleList.getSignalweekScheduleSeq();
 
         List<SignalweekRank> signalweekRankList = signalweekRankRepository.findAllBySignalweekScheduleSeq(signalweekScheduleSeq);
 
