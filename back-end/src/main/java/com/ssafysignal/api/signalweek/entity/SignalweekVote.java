@@ -1,12 +1,10 @@
 package com.ssafysignal.api.signalweek.entity;
 
-
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,16 +14,23 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @Builder
 @AllArgsConstructor
-@Table(name = "signalweek_vote")
-public class SignalweekVote {
+@Table(name = "signalweek_rank")
+public class SignalweekRank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "signalweek_vote_seq")
-    private Integer signalweekVoteSeq;
+    @Column(name = "signalweek_rank_seq")
+    private Integer signalweekRankSeq;
+
+    @Column(name = "signalweek_schedule_seq")
+    private Integer signalweekScheduleSeq;
+
+    @Column(name = "ranking")
+    private Integer ranking;
+
     @Column(name = "signalweek_seq")
     private Integer signalweekSeq;
-    @Column(name = "from_user_seq")
-    private Integer fromUserSeq;
-    @Column(name = "reg_dt")
-    private LocalDateTime regDt;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "signalweek_seq", insertable = false, updatable = false)
+    private Signalweek signalweek;
 }
