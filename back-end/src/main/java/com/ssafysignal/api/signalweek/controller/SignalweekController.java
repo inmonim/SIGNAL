@@ -1,5 +1,6 @@
 package com.ssafysignal.api.signalweek.controller;
 
+import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
@@ -79,6 +80,8 @@ public class SignalweekController {
         try {
             FindSignalweekResponse signalweek = signalweekService.findSignalweek(signalweekSeq, userSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, signalweek));
+        } catch (NotFoundException e){
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
@@ -149,6 +152,20 @@ public class SignalweekController {
 
         try {
             FindSignalweekDateResponse findSignalweekDateResponse = signalweekService.findSignalweekSchedule();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findSignalweekDateResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "시그널 위크 이전 분기", description = "시그널 위크 이전 분기")
+    @GetMapping("signalweekmain")
+    private ResponseEntity<BasicResponse> findSignalweekScheduleMain() {
+        log.info("findSignalweekScheduleMain - Call");
+
+        try {
+            FindSignalweekDateResponse findSignalweekDateResponse = signalweekService.findSignalweekScheduleMain();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findSignalweekDateResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
