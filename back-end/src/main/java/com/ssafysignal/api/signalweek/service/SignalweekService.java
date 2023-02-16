@@ -254,6 +254,11 @@ public class SignalweekService {
         Page<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year"))));
         return FindAllSignalweekScheduleResponse.builder()
                 .signalweekList(signalweekScheduleList.stream()
+                        .filter(signalweekSchedule -> {
+                            // 현재 투표 기간 중이면
+                            if (signalweekSchedule.getVoteEndDt().compareTo(LocalDate.now()) >= 0) return false;
+                            return true;
+                        })
                         .map(FindAllSignalweekScheduleResponseItem::fromEntity)
                         .collect(Collectors.toList()))
                 .count(signalweekScheduleList.getTotalElements()).build();
