@@ -3,10 +3,7 @@ package com.ssafysignal.api.signalweek.controller;
 import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.signalweek.dto.request.RegistSignalweekVoteRequest;
-import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindSignalweekResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindSignalweekRankResponse;
-import com.ssafysignal.api.signalweek.dto.response.FindAllSignalweekScheduleResponse;
+import com.ssafysignal.api.signalweek.dto.response.*;
 import com.ssafysignal.api.signalweek.service.SignalweekService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -134,13 +131,27 @@ public class SignalweekController {
     @GetMapping("signalweekschedule")
     private ResponseEntity<BasicResponse> findAllSignalweekSchedule(@Parameter(description = "page", required = true) Integer page,
                                                                     @Parameter(description = "size", required = true) Integer size) {
-        log.info("quarterEndSignalweek - Call");
+        log.info("findAllSignalweekSchedule - Call");
 
         try {
             FindAllSignalweekScheduleResponse findAllSignalweekScheduleResponse = signalweekService.findAllSignalweekSchedule(page, size);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findAllSignalweekScheduleResponse));
         } catch (RuntimeException e) {
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
+
+    @Tag(name = "시그널 위크")
+    @Operation(summary = "시그널 위크 기간 조회", description = "시그널 위크 기간 조회")
+    @GetMapping("signalweekdate")
+    private ResponseEntity<BasicResponse> findSignalweekSchedule() {
+        log.info("findSignalweekSchedule - Call");
+
+        try {
+            FindSignalweekDateResponse findSignalweekDateResponse = signalweekService.findSignalweekSchedule();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findSignalweekDateResponse));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
 }

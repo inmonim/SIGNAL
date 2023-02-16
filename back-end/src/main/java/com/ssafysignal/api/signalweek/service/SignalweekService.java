@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,7 +60,6 @@ public class SignalweekService {
         Project project = projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq")).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         // 이미 있던 경우
         if (signalweekRepository.findByProject(project).isPresent()) {
-            System.out.println("이미 있던 경우로 넘어옴");
             Signalweek signalweek = signalweekRepository.findByProject(project).get();
             if (!pptFile.isEmpty()) {
                 // 피피티올리고
@@ -104,22 +105,20 @@ public class SignalweekService {
 
             // 처음 생성인 경우
         } else {
-            System.out.println("처음 생성으로 넘어옴");
             ProjectFile registPptFile = null;
-            if (pptFile.getSize() >= 1) {
+            if (pptFile != null && pptFile.getSize() > 0) {
                 registPptFile = fileService.registFile(pptFile, pptUploadDir);
                 projectfileRepository.save(registPptFile);
             }
 
             ProjectFile registReadmeFile = null;
-            if (readmeFile.getSize() >= 1) {
+            if (readmeFile != null && readmeFile.getSize() > 0) {
                 registReadmeFile = fileService.registFile(readmeFile, readmeUploadDir);
                 projectfileRepository.save(registReadmeFile);
             }
 
-
-            List<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findTop1ByOrderByRegDtAsc();
-            SignalweekSchedule signalweekSchedule = signalweekScheduleList.get(0);
+            LocalDate now = LocalDate.now();
+            SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
 
             Signalweek signalweek = Signalweek.builder()
                     .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
@@ -138,7 +137,11 @@ public class SignalweekService {
     // 목록 조회
     @Transactional(readOnly = true)
     public FindAllSignalweekResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
-        Page<Signalweek> signalweekList = signalweekRepository.findByTitleContaining(searchKeyword, PageRequest.of(page - 1, size, Sort.Direction.ASC, "signalweekSeq"));
+
+        LocalDate now = LocalDate.now();
+        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
+
+        Page<Signalweek> signalweekList = signalweekRepository.findByTitleContainingAndSignalweekScheduleSeq(searchKeyword, signalweekSchedule.getSignalweekScheduleSeq(), PageRequest.of(page - 1, size, Sort.Direction.ASC, "signalweekSeq"));
 
         FindAllSignalweekResponse findAllSignalweekResponse = FindAllSignalweekResponse.fromEntity(signalweekList);
 
@@ -252,5 +255,12 @@ public class SignalweekService {
                         .map(FindAllSignalweekScheduleResponseItem::fromEntity)
                         .collect(Collectors.toList()))
                 .count(signalweekScheduleList.getTotalElements()).build();
+    }
+
+    @Transactional(readOnly = true)
+    public FindSignalweekDateResponse findSignalweekSchedule() {
+        LocalDate now = LocalDate.now();
+        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
+        return FindSignalweekDateResponse.fromEntity(signalweekSchedule);
     }
 }
