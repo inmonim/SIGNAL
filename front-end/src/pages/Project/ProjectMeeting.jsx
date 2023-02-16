@@ -74,8 +74,8 @@ const themeOptions = [
 ]
 
 const projectMeetingSetting = () => {
-  // socket = io('https://sfsad', { secure: true, cors: { origin: '*' } })
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  console.log(process.env.MEDIA_SERVER_URL)
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
@@ -97,7 +97,7 @@ const projectMeetingSetting = () => {
   const projectSeq = params.get('projectSeq')
   roomId = 'project' + projectSeq
   myName = sessionStorage.getItem('nickname')
-  console.log(roomId, myName)
+  // console.log(roomId, myName)
   if (myName !== nickname) {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
       window.close()
@@ -789,6 +789,11 @@ function ProjectMeeting() {
     chatting.current.getMessage(data)
   }
 
+  function handleSliderChange(value) {
+    value = value / 10
+    drawingSize = value
+  }
+
   // =============================================================================================
   function setUserVideo() {
     const videos = document.querySelectorAll('.project-meeting-video')
@@ -1007,9 +1012,12 @@ function ProjectMeeting() {
                 <div style={{ margin: '0px 30px' }}>
                   <div style={{ marginLeft: '10px', fontSize: '22px' }}>펜 굵기</div>
                   <Slider
-                    defaultValue={50}
+                    defaultValue={25}
                     aria-label="Default"
                     valueLabelDisplay="auto"
+                    min={10}
+                    max={50}
+                    onChange={(event, value) => handleSliderChange(value)}
                     style={{ color: '#574B9F' }}
                   />
                   <SketchPicker color={color} onChangeComplete={(color) => changeColor(color.hex)} />
