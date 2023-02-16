@@ -61,7 +61,7 @@ public class SecurityConfig {
 
                 .antMatchers("/letter","/letter/**").hasAnyAuthority("USER","ADMIN")
 
-                .antMatchers("/signalweek","/signalweek/rank").permitAll()
+                .antMatchers("/signalweek","/signalweek/rank", "/signalweek/signalweekmain", "/signalweek/signalweekdate", "/signalweek/signalweekschedule").permitAll()
                 .antMatchers("/signalweek/**").hasAnyAuthority("USER","ADMIN")
 
 

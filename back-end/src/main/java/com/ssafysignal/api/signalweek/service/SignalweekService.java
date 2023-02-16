@@ -118,7 +118,8 @@ public class SignalweekService {
             }
 
             LocalDate now = LocalDate.now();
-            SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
+            SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now)
+                    .orElseThrow(() -> new NotFoundException(ResponseCode.REGIST_NOT_FOUNT));
 
             Signalweek signalweek = Signalweek.builder()
                     .signalweekScheduleSeq(signalweekSchedule.getSignalweekScheduleSeq())
@@ -139,7 +140,8 @@ public class SignalweekService {
     public FindAllSignalweekResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
 
         LocalDate now = LocalDate.now();
-        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
+        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.LIST_NOT_FOUND));
 
         Page<Signalweek> signalweekList = signalweekRepository.findByTitleContainingAndSignalweekScheduleSeq(searchKeyword, signalweekSchedule.getSignalweekScheduleSeq(), PageRequest.of(page - 1, size, Sort.Direction.ASC, "signalweekSeq"));
 
@@ -252,6 +254,11 @@ public class SignalweekService {
         Page<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year"))));
         return FindAllSignalweekScheduleResponse.builder()
                 .signalweekList(signalweekScheduleList.stream()
+                        .filter(signalweekSchedule -> {
+                            // 현재 투표 기간 중이면
+                            if (signalweekSchedule.getVoteEndDt().compareTo(LocalDate.now()) >= 0) return false;
+                            return true;
+                        })
                         .map(FindAllSignalweekScheduleResponseItem::fromEntity)
                         .collect(Collectors.toList()))
                 .count(signalweekScheduleList.getTotalElements()).build();
@@ -260,7 +267,16 @@ public class SignalweekService {
     @Transactional(readOnly = true)
     public FindSignalweekDateResponse findSignalweekSchedule() {
         LocalDate now = LocalDate.now();
-        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now);
+        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByDate(now)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+        return FindSignalweekDateResponse.fromEntity(signalweekSchedule);
+    }
+
+    @Transactional(readOnly = true)
+    public FindSignalweekDateResponse findSignalweekScheduleMain() {
+        LocalDate now = LocalDate.now();
+        SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findByPastDate(now)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
         return FindSignalweekDateResponse.fromEntity(signalweekSchedule);
     }
 }
