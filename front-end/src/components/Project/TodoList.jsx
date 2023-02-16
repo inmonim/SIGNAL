@@ -13,7 +13,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 
 function TodoList({ projectSeq }) {
   const today = moment(new Date()).format('YYYY-MM-DD')

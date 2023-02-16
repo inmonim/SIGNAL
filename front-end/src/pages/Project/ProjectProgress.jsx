@@ -3,7 +3,7 @@ import 'assets/styles/projectProgress.css'
 import SignalBtn from 'components/common/SignalBtn'
 import TodoList from 'components/Project/TodoList'
 import ProjectDocs from 'components/Project/ProjectDocs'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import TeamEval from 'components/Project/TeamEval'
 import api from 'api/Api.js'
 

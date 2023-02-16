@@ -7,7 +7,7 @@ import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 import api from 'api/Api'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 
 function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, nickname, flag, setMode }) {
   const [score, setScore] = useState([])

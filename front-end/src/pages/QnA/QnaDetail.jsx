@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import 'assets/styles/notice.css'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import SignalBtn from 'components/common/SignalBtn'
 import view from 'assets/image/view.png'
 import commentimg from 'assets/image/comment.png'

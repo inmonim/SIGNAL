@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Divider } from '@mui/material'
 import trashcan from 'assets/image/TrashLetter.png'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const detailStyle = {

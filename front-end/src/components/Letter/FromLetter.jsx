@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import LetterDetail from './LetterDetail'
 import trashcan from 'assets/image/TrashLetter.png'
-import AlertModal from '../AlertModal'
+import AlertModal from '../common/AlertModal'
 import api from 'api/Api'
 
 function FromLetter({ handleChangeView, view, handleMenuListItemClick }) {

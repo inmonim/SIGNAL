@@ -3,7 +3,7 @@ import { TextField } from '@mui/material'
 import Btn from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import 'assets/styles/WriteLetter.css'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const inputStyle = {

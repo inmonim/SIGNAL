@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import { Link } from 'react-router-dom'
 import 'assets/styles/notice.css'
 import 'assets/styles/table.css'

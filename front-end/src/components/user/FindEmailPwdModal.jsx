@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
-import SignalBtn from './common/SignalBtn'
+import SignalBtn from '../common/SignalBtn'
 import { PatternFormat } from 'react-number-format'
-import AlertFindEmail from './AlertFindEmail'
+import AlertFindEmail from '../common/AlertFindEmail'
 
 import closeBtn from 'assets/image/x.png'
 import 'assets/font/font.css'
 import 'assets/styles/findmodal.css'
-import AlertModal from './AlertModal'
+import AlertModal from '../common/AlertModal'
 
 const style = {
   width: 727,

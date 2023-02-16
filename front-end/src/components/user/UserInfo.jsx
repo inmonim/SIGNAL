@@ -4,7 +4,7 @@ import heart from 'assets/image/heart.png'
 import HeartDetailModal from '../common/HeartDetailModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import { useNavigate } from 'react-router-dom'
 import api from 'api/Api'
 
