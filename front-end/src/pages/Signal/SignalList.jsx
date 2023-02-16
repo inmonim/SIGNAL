@@ -7,7 +7,8 @@ import 'assets/styles/signal.css'
 import SignalItem from 'components/Signal/SignalItem'
 import api from 'api/Api.js'
 import { Box } from '@mui/material'
-
+import signaltitle from 'assets/lottie/signaltitle.json'
+import Lottie from 'react-lottie'
 function SignalList() {
   // const [data, setData] = useState([])
 
@@ -25,8 +26,35 @@ function SignalList() {
       setCount(res.data.body.signalweekTotalElement)
     })
   }
+  // 시그널 위크 분기 구분
+  const now = new Date()
+  const month = now.getMonth() + 1
+
+  let message = ''
+  if (month >= 1 && month <= 3) {
+    message = '1분기 시그널위크 프로젝트'
+  } else if (month >= 4 && month <= 6) {
+    message = '2분기 시그널위크 프로젝트'
+  } else if (month >= 7 && month <= 9) {
+    message = '3분기 시그널위크 프로젝트'
+  } else {
+    message = '4분기 시그널위크 프로젝트'
+  }
+  // 시그널 위크 분기 구분
+
+  // 시그널 로티
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: signaltitle,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  }
+  // 시그널 로티
+
   useEffect(() => {
-    // signalListAxios()
+    signalListAxios()
   }, [])
   useEffect(() => {
     signalListAxios()
@@ -36,7 +64,15 @@ function SignalList() {
     <div className="signal-page-container">
       <div className="signal-container">
         <Box sx={{ width: '100%', height: '60px' }}></Box>
-        <div className="signal-header-title">시그널위크 프로젝트</div>
+        <div style={{ display: 'flex', alignItems: ' center', justifyContent: 'center' }}>
+          <div className="signal-header-title">{message}</div>
+          <Lottie
+            options={defaultOptions}
+            width={'25%'}
+            height={'20%'}
+            style={{ marginLeft: '1em ', marginRight: '0px' }}
+          />
+        </div>
         <SignalBtn
           sigwidth="84px"
           sigheight="45px"
@@ -74,7 +110,7 @@ const Signal = styled.div`
   flex-wrap: wrap;
   padding: 4px;
   gap: 10px;
-  justify-content: center;
+  justify-content: start;
   &:hover {
     $ .postcard {
       background: cornflowerblue;
