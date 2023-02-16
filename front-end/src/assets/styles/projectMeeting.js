@@ -4,8 +4,19 @@ export const videoList = (props) => {
   return css`
     display: ${props.mode === 0 ? 'flex' : 'none'};
     flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    overflow: auto;
+    margin-top: 30px;
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #9a93c5;
+      border-radius: 10px;
+      background-clip: padding-box;
+      border: 2px solid transparent;
+    }
   `
 }
 

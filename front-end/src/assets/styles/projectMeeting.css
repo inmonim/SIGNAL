@@ -154,7 +154,7 @@
   height: 780px;
   width: 1350px;
   top: 20px;
-  left: 330px;
+  left: 400px;
 }
 
 .project-meeting-video-share-paint {
@@ -164,7 +164,7 @@
   height: 780px;
   width: 1350px;
   top: 20px;
-  left: 330px;
+  left: 400px;
 }
 
 .project-meeting-video-share-palette {
@@ -203,20 +203,19 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 10px;
   border-radius: 25px;
+  margin: 0px 10px;
 }
 
 .project-meeting-person-name {
-  width: 234px;
-  height: 84px;
+  width: 200px;
+  height: 50px;
   position: absolute;
-  top: 550px;
-  right: 10px;
+  right: 0px;
+  bottom: 10px;
   background-color: #fff;
   border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 44px;
+  text-align: center;
 }
 
 .CodeMirror-sizer {
@@ -229,7 +228,7 @@
   background-color: #f7f7f7 !important;
 }
 .project-meeting-person {
-  overflow: hidden;
+  /* overflow: hidden; */
   position: relative;
 }
 
@@ -252,7 +251,7 @@
 .project-meeting-code-edit-select-box {
   width: 100%;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin: 10px 0px;
 }
 
