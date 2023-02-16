@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface SignalweekRepository extends JpaRepository<Signalweek, Integer> {
     Optional<Signalweek> findBySignalweekSeq(Integer signalweekSeq);
     Optional<Signalweek> findByProject(Project project);
-    Page<Signalweek> findByTitleContaining(String keyword, PageRequest signalweekSeq);
+    Page<Signalweek> findByTitleContainingAndSignalweekScheduleSeq(String keyword, Integer signalweekScheduleSeq, PageRequest signalweekSeq);
 }
