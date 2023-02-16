@@ -9,6 +9,7 @@ import api from 'api/Api.js'
 import { Box } from '@mui/material'
 import signaltitle from 'assets/lottie/signaltitle.json'
 import Lottie from 'react-lottie'
+import moment from 'moment'
 function SignalList() {
   // const [data, setData] = useState([])
 
@@ -17,14 +18,23 @@ function SignalList() {
   const [size] = useState(16)
   const [count, setCount] = useState(20)
   const [signalList, setSignalList] = useState([])
+
+  const [signalweekDate, setSignalweekDate] = useState('')
   const handlePageChange = (page) => {
     setPage(page)
   }
   const signalListAxios = async () => {
-    await api.get(process.env.REACT_APP_API_URL + `/signalweek?page=${page}&size=${size}`).then((res) => {
-      setSignalList(res.data.body.signalweekList)
-      setCount(res.data.body.signalweekTotalElement)
-    })
+    try {
+      await api.get(process.env.REACT_APP_API_URL + `/signalweek?page=${page}&size=${size}`).then((res) => {
+        setSignalList(res.data.body.signalweekList)
+        setCount(res.data.body.signalweekTotalElement)
+      })
+      await api.get(process.env.REACT_APP_API_URL + `/signalweek/signalweekdate`).then((res) => {
+        setSignalweekDate(res.data.body)
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
   // 시그널 위크 분기 구분
   const now = new Date()
@@ -32,15 +42,19 @@ function SignalList() {
 
   let message = ''
   if (month >= 1 && month <= 3) {
-    message = '1분기 시그널위크 프로젝트'
+    message = `${now.getFullYear()}년 1분기 시그널위크 프로젝트`
   } else if (month >= 4 && month <= 6) {
-    message = '2분기 시그널위크 프로젝트'
+    message = `${now.getFullYear()}년 2분기 시그널위크 프로젝트`
   } else if (month >= 7 && month <= 9) {
-    message = '3분기 시그널위크 프로젝트'
+    message = `${now.getFullYear()}년 3분기 시그널위크 프로젝트`
   } else {
-    message = '4분기 시그널위크 프로젝트'
+    message = `${now.getFullYear()}년 4분기 시그널위크 프로젝트`
   }
   // 시그널 위크 분기 구분
+
+  // // 날짜 구분을 위해 하루 앞당겨서 계산
+  // const validNow = new Date().setDay(new Date().getDate() + 1)
+  // console.log('validNow', validNow)
 
   // 시그널 로티
   const defaultOptions = {
@@ -73,31 +87,46 @@ function SignalList() {
             style={{ marginLeft: '1em ', marginRight: '0px' }}
           />
         </div>
-        <SignalBtn
-          sigwidth="84px"
-          sigheight="45px"
-          sigfontsize="24px"
-          sigborderradius={14}
-          sigmargin="0px 0px 5px 0px"
-          variant="contained"
-          onClick={() => navigate(`/signalregister`)}
-          style={{ float: 'right' }}
-        >
-          등록
-        </SignalBtn>
-        <div className="signal-header">
-          <div className="signal-header-regist"></div>
-        </div>
-        <div className="signal-table">
-          <Box sx={{ width: '10%', height: '40px' }}></Box>
-          <Signal>
-            {signalList.map((signal, i) => (
-              <SignalItem key={i} signal={signal} />
-            ))}
-          </Signal>
-          <hr style={{ marginBottom: '30px  ' }} />
-          <Paging page={page} count={count} setPage={handlePageChange} size={size} />
-        </div>
+        {new Date(signalweekDate.openStartDt) <= new Date(moment(now).format('YYYY-MM-DD')) ? (
+          <>
+            {console.log('openEndDt', new Date(signalweekDate.openEndDt))}
+            {console.log('now', new Date(moment(now).format('YYYY-MM-DD')))}
+            {new Date(signalweekDate.openEndDt) >= new Date(moment(now).format('YYYY-MM-DD')) ? (
+              <SignalBtn
+                sigwidth="84px"
+                sigheight="45px"
+                sigfontsize="24px"
+                sigborderradius={14}
+                sigmargin="0px 0px 5px 0px"
+                variant="contained"
+                onClick={() => navigate(`/signalregister`)}
+                style={{ float: 'right' }}
+              >
+                등록
+              </SignalBtn>
+            ) : (
+              ''
+            )}
+
+            <div className="signal-header">
+              <div className="signal-header-regist"></div>
+            </div>
+            <div className="signal-table">
+              <Box sx={{ width: '10%', height: '40px' }}></Box>
+              <Signal>
+                {signalList.map((signal, i) => (
+                  <SignalItem key={i} signal={signal} />
+                ))}
+              </Signal>
+              <hr style={{ marginBottom: '30px  ' }} />
+              <Paging page={page} count={count} setPage={handlePageChange} size={size} />
+            </div>
+          </>
+        ) : (
+          <div className="signal-term-valid-box">
+            <div style={{ textAlign: 'center', fontSize: '27px' }}>아직 시그널 위크가 개설되지 않았습니다</div>
+          </div>
+        )}
       </div>
     </div>
   )
