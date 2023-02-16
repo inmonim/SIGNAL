@@ -14,7 +14,6 @@ function BlackListReleaseModal({ open, onClose, rows }) {
       req.push(parseInt(row.blackUserSeq))
     })
 
-    console.log(req)
     try {
       await api.delete(process.env.REACT_APP_API_URL + '/admin/user', { data: req })
     } catch (error) {

@@ -4,7 +4,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import { useNavigate } from 'react-router'
 
 function ProjectMaintain({ projectSeq }) {

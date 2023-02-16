@@ -30,6 +30,10 @@
   float: right;
 }
 
+.qna-list-faq.active{
+  background-color: #dddbec;
+}
+
 /* qnaDetail */
 .qna-detail-container {
   width: 1125px;

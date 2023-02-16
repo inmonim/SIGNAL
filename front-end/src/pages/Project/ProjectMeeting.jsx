@@ -20,7 +20,7 @@ import 'codemirror/mode/clike/clike.js'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/python/python'
 import { SketchPicker } from 'react-color'
-
+import Slider from '@mui/material/Slider'
 // ============================================
 let myStream
 
@@ -958,13 +958,29 @@ function ProjectMeeting() {
         </CodeEditSection>
 
         <ShareSection mode={mode}>
-          <div>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-                <SignalBtn onClick={() => shareCheck()}>화면공유시작</SignalBtn>
+          <div style={{ marginTop: '100px' }}>
+            <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '0px 10px' }}>
+                <SignalBtn
+                  sigwidth="120px"
+                  sigheight="60px"
+                  sigfontsize="20px"
+                  sigborderradius="25px"
+                  onClick={() => shareCheck()}
+                >
+                  화면공유시작
+                </SignalBtn>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-                <SignalBtn onClick={() => shareStop()}>화면공유중지</SignalBtn>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '0px 10px' }}>
+                <SignalBtn
+                  sigwidth="120px"
+                  sigheight="60px"
+                  sigfontsize="20px"
+                  sigborderradius="25px"
+                  onClick={() => shareStop()}
+                >
+                  화면공유중지
+                </SignalBtn>
               </div>
             </div>
             <div className="project-meeting-video-share-palette">
@@ -976,19 +992,34 @@ function ProjectMeeting() {
                   <img src={Eraser} onClick={() => erase()} alt="" className="project-meeting-video-share-eraser" />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-                  <SignalBtn onClick={() => clear()}>모두지우기</SignalBtn>
+                  <SignalBtn
+                    sigwidth="100px"
+                    sigheight="60px"
+                    sigfontsize="20px"
+                    sigborderradius="25px"
+                    onClick={() => clear()}
+                  >
+                    모두지우기
+                  </SignalBtn>
                 </div>
               </div>
+              {paletteOpen ? (
+                <div style={{ margin: '0px 30px' }}>
+                  <div style={{ marginLeft: '10px', fontSize: '22px' }}>펜 굵기</div>
+                  <Slider
+                    defaultValue={50}
+                    aria-label="Default"
+                    valueLabelDisplay="auto"
+                    style={{ color: '#574B9F' }}
+                  />
+                  <SketchPicker color={color} onChangeComplete={(color) => changeColor(color.hex)} />
+                </div>
+              ) : (
+                ''
+              )}
             </div>
           </div>
 
-          {paletteOpen ? (
-            <div style={{ margin: '10px' }}>
-              <SketchPicker color={color} onChangeComplete={(color) => changeColor(color.hex)} />
-            </div>
-          ) : (
-            ''
-          )}
           <div className="project-meeting-video-share">
             <video style={{ width: '100%', height: '100%', borderRadius: '25px' }} autoPlay playsInline>
               비디오

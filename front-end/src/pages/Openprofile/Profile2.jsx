@@ -3,7 +3,6 @@ import Chip from '@mui/material/Chip'
 import { Avatar } from '@mui/material'
 import { getPositionName } from 'data/Positiondata'
 function Profile2({ state }) {
-  console.log(state)
   const userPositionList = state.userPositionList
   const userSkillList = state.userSkillList
   const userExpList = state.userExpList

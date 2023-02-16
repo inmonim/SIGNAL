@@ -16,15 +16,11 @@ import { FilterInput } from './Posting'
 import DateSelect from 'components/Posting/DateSelect'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
-// import { ko } from 'date-fns/esm/locale'
-// import  DatePicker as DateTimePicker  from 'react-datepicker'
 import AddIcon from '@mui/icons-material/Add'
-// import { positionData } from 'data/Positiondata'
 import Localdata from 'data/Localdata'
 import { Fielddata2 } from 'data/Fielddata'
 import { Skilldata } from 'data/Skilldata'
 import { positionData } from 'data/Positiondata'
-// import QnAList from 'components/Apply/QnaList'
 import { useDispatch, useSelector } from 'react-redux'
 import { add, addQna, addQnaF } from 'store/redux'
 import QnaTodo from 'components/Posting/QnaTodo'
@@ -88,8 +84,6 @@ const PostingModify = () => {
   const location = useLocation()
   const postingSeq = location.state.postingSeq
 
-  //   console.log(postingSeq)
-
   const [posting, setPosting] = useState({
     userSeq: '',
     subject: '',
@@ -106,11 +100,9 @@ const PostingModify = () => {
     postingPositionList: [],
     postingQuestionList: [],
   })
-  // console.log(JSON.stringify(posting))
   const postPutFetch = async () => {
     const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
-    console.log(post)
 
     const resultMeeting = post.postingMeetingList.map((e) => e.meetingDt)
     const resultPosition = post.postingPositionList.map((e) => ({
@@ -146,22 +138,9 @@ const PostingModify = () => {
       postingQuestionList: post.postingQuestionList,
     })
   }
-  // const [profile, setProfile] = useState([])
 
   const [careerList, setCareerList] = useState([])
   const navigate = useNavigate()
-  // const profileFetch = async () => {
-  //   try {
-  //     const res = await api.get('http://www.ssafysignal.site:8080/profile/1')
-  //     setProfile(res.data.body)
-  //     console.log(res.data.body)
-  //     console.log(profile)
-  //     careerFetchFilter(res.data.body.userCareerList)
-  //     expFetchFilter(res.data.body.userExpList)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
   // end >> Fetch
   const [deSkill, setDeSkill] = useState([])
@@ -185,7 +164,6 @@ const PostingModify = () => {
     const copy = value.map((ele) => ele.code)
     setPosting({ ...posting, postingSkillList: copy })
   }
-  // ...copy 이런거로 나오게 해서 const 22 = map 써서 return 으로 넣자
 
   const handleCareerChange = (value, key) => {
     const careerArr = [...careerList]
@@ -206,24 +184,12 @@ const PostingModify = () => {
 
   // end >> handle career
   const handleDelete = (ele) => {
-    // console.log('함수')
     setDateList(
       DateList.filter((date) => {
-        // console.log(date, 'date')
-        // console.log(ele, 'ele')
         return date !== ele
       })
     )
   }
-  // const getDateList = () => {
-  //   DateList.push()
-  // }
-  // const [startDate, setStartDate] = useState(new Date())
-  // start >> handle exp
-
-  // end >> handle exp
-
-  // start >> handle content
 
   const handleContentChange = (event) => {
     setPosting({ ...posting, content: event.target.value })
@@ -244,14 +210,9 @@ const PostingModify = () => {
   }
   // start >> handle qna
   function getMatchingValues(postingSkillList, Skilldata) {
-    console.log('실행')
-    console.log(postingSkillList)
-    console.log(Skilldata)
     const result = []
     for (let i = 0; i < postingSkillList.length; i++) {
       for (let j = 0; j < Skilldata.length; j++) {
-        console.log(postingSkillList[i])
-        console.log(Skilldata[j].code)
         if (postingSkillList[i] === Skilldata[j].code) {
           result.push(Skilldata[j])
           break
@@ -260,12 +221,6 @@ const PostingModify = () => {
     }
     return result
   }
-  // const handleQnAChange = (value, key) => {
-  //   const qnaArr = [...qnaList]
-  //   qnaArr.splice(key, 1, value)
-  //   setQnaList(qnaArr)
-  //   console.log(qnaList)
-  // }
 
   // end >> handle qna
 
@@ -282,15 +237,9 @@ const PostingModify = () => {
 
       await api
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, posting, config)
-        .then((res) => {
-          console.log(res)
-          // console.log(JSON.stringify(posting))
-        })
+        .then((res) => {})
         .catch((err) => {
           console.log(err)
-          // console.log(JSON.stringify(posting))
-          // console.log(posting)
-          // console.log(JSON.stringify(posting))
         })
       navigate('/posting')
     } else {
@@ -303,7 +252,6 @@ const PostingModify = () => {
         button: '예',
       })
     }
-    // console.log('공고 post')
   }
   const handlePositon = () => {
     const copy = positionRedux.map((ele) => ({ positionCode: ele.id, positionCnt: ele.count }))
@@ -317,11 +265,7 @@ const PostingModify = () => {
     postPutFetch()
   }, [])
   useEffect(() => {
-    // postingFetch()
-    // profileFetch()
     handlePositon()
-
-    // console.log(JSON.stringify(positionRedux))
   }, [positionRedux])
   useEffect(() => {
     handleqna()
@@ -335,14 +279,7 @@ const PostingModify = () => {
       <div>
         <div>
           <Title>공고 수정</Title>
-          <button
-            onClick={() => {
-              console.log(posting)
-              console.log(deSkill, 'dd')
-            }}
-          >
-            dd
-          </button>
+          <button onClick={() => {}}>dd</button>
         </div>
         <div>
           {/* 여기는 주제, 기간 */}
@@ -392,7 +329,6 @@ const PostingModify = () => {
                 <FilterSelect
                   value={posting.localCode}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, localCode: e.target.value })
                   }}
                 >
@@ -411,7 +347,6 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, fieldCode: e.target.value })
                   }}
                   value={posting.fieldCode}
@@ -434,14 +369,11 @@ const PostingModify = () => {
               <div style={{ width: '80%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     if (e.target.value === 'true') {
                       setPosting({ ...posting, isContact: true })
                     } else {
                       setPosting({ ...posting, isContact: false })
                     }
-                    // console.log(typeof e.target.value)
-                    // console.log(range(10, 3))
                   }}
                   value={posting.isContact}
                 >
@@ -460,7 +392,6 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, term: Number(e.target.value) })
                   }}
                   value={posting.term}
@@ -493,8 +424,6 @@ const PostingModify = () => {
                       return e.name
                     })}
                     onChange={(event, newValue) => {
-                      // console.log(newValue)
-                      // console.log(event.target)
                       handleChangeSkill(newValue)
                     }}
                     renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
@@ -560,7 +489,6 @@ const PostingModify = () => {
                 <FilterSelect
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     const position = JSON.parse(e.target.value)
                     setPosi({ code: position.code, name: position.name })
                   }}
@@ -589,7 +517,6 @@ const PostingModify = () => {
               <div style={{ width: '70%' }}>
                 <FilterSelect
                   onChange={(e) => {
-                    // console.log(e.target.value)
                     setPosting({ ...posting, level: Number(e.target.value) })
                   }}
                   value={posting.level}
@@ -632,7 +559,6 @@ const PostingModify = () => {
                   className={errorBox && posting.postingPositionList.length === 0 ? 'active-warning' : ''}
                   onChange={(e) => {
                     const position = JSON.parse(e.target.value)
-                    console.log(position.code)
                     setPosting({ ...posting, leaderPosition: position.code })
                   }}
                   value={posting.leaderPosition && posting.leaderPosition}

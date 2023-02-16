@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import 'assets/styles/myproject.css'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import api from 'api/Api'
 import { Link } from 'react-router-dom'
 
@@ -12,17 +12,12 @@ const Container = styled.section`
 function MyProject() {
   const [endData, setEndData] = useState([])
   const [ingData, setIngData] = useState([])
-  // const [img, setImg] = useState('')
   useEffect(() => {
-    console.log(sessionStorage.getItem('useSeq'))
     api.get(process.env.REACT_APP_API_URL + `/project/${sessionStorage.getItem('userSeq')}`).then((res) => {
       setEndData(res.data.body.endProjectList)
       setIngData(res.data.body.ingProjectList)
-      // setImg(res.body.endProjectList.projectImageUrl)
     })
   }, [])
-  // console.log(img)
-  console.log(endData)
   const [size] = useState(4)
   const [endPage, setEndPage] = useState(1)
   const handleEndPageChange = (page) => {

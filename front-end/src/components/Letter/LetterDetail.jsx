@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Divider } from '@mui/material'
 import trashcan from 'assets/image/TrashLetter.png'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const detailStyle = {
@@ -16,19 +16,14 @@ function LetterDetail({ handleChangeView, view, fromto, handleMenuListItemClick 
   const [alertOpen, setAlertOpen] = useState(false)
   const letterSeq = view
   const fromtoCheck = fromto
-  console.log(fromtoCheck)
-  console.log('view_Detail: ', view)
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + '/letter/' + letterSeq).then((res) => {
-      console.log(res.data.body)
-      console.log(res.data.body.regDt)
       setData(res.data.body)
     })
   }, [])
 
   const handleToTrash = () => {
     api.delete(process.env.REACT_APP_API_URL + '/letter/' + letterSeq).then((res) => {
-      console.log(res.data.body)
       setAlertOpen(true)
     })
   }

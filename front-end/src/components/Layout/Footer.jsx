@@ -1,5 +1,5 @@
 import React from 'react'
-import 'components/Layout/Footer.css'
+import 'assets/styles/Footer.css'
 import { Link } from 'react-router-dom'
 import logo from 'assets/image/Navlogo.png'
 import gitlabLogo from 'assets/image/gitlab-logo.png'

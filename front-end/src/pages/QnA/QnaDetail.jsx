@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import 'assets/styles/notice.css'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import SignalBtn from 'components/common/SignalBtn'
 import view from 'assets/image/view.png'
 import commentimg from 'assets/image/comment.png'
@@ -13,7 +13,6 @@ import api from 'api/Api.js'
 
 function QnaDetail() {
   const isAdmin = sessionStorage.getItem('admin')
-  console.log('admin: ', isAdmin)
   const location = useLocation()
   const qnaSeq = parseInt(location.state.id)
   const [data, setData] = useState([])
@@ -46,8 +45,6 @@ function QnaDetail() {
   const handleToModify = () => {
     navigate(`/qnaModify`, { state: { qnaSeq: data.qnaSeq, title: data.title, content: data.content } })
   }
-
-  // 댓글
 
   const [answer, setAnswer] = useState('')
 

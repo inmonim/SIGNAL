@@ -7,7 +7,6 @@ function TrashLetter({ handleChangeView, view }) {
   const [data, setData] = useState([])
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + `/letter/trash/${sessionStorage.getItem('userSeq')}`).then((res) => {
-      console.log(res.data.body)
       setData(res.data.body)
     })
   }, [])
@@ -30,7 +29,6 @@ function TrashLetter({ handleChangeView, view }) {
     const rowId = e.id
     const nextViewDetail = { ...view, rowId }
     handleChangeView(nextViewDetail.rowId)
-    console.log(nextViewDetail.rowId)
   }
   return (
     <>

@@ -87,7 +87,6 @@ function TeamEval({ projectSeq, setMode }) {
                   setToUserSeq(item.projectUserSeq)
                   setNickname(item.nickname)
                   setFlag(!flag)
-                  console.log(nickname)
                 }}
               >
                 <div className="eval-member-name">{item.nickname}</div>

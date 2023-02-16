@@ -12,10 +12,8 @@ function MyProfile() {
 
   const dataFetch = async () => {
     try {
-      // profile get
       await api.get(process.env.REACT_APP_API_URL + '/profile/' + userSeq).then((res) => {
         setProfile(res.data.body)
-        console.log('myprofile', res.data.body)
       })
     } catch (error) {
       console.log(error)

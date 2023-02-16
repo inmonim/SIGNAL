@@ -7,7 +7,6 @@ import { Button } from '@mui/material'
 import { Experimental_CssVarsProvider as CssVarsProvider, styled } from '@mui/material/styles'
 import ModeEditIcon from '@mui/icons-material/ModeEdit'
 import SignalBtn from 'components/common/SignalBtn'
-// import { Link, useLocation } from 'react-router-dom'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import api from 'api/Api.js'
 
@@ -48,12 +47,10 @@ function ApplyDetail() {
     try {
       const res = await api.get(process.env.REACT_APP_API_URL + '/apply/' + applySeq)
       setApply(res.data.body)
-      console.log('detail', res.data.body)
       setPosition(getPositionName(res.data.body.position.code))
 
       await api.get(process.env.REACT_APP_API_URL + '/posting/' + res.data.body.postingSeq).then((res) => {
         setPosting(res.data.body)
-        console.log(posting)
       })
 
       await api.get(process.env.REACT_APP_API_URL + '/user/' + res.data.body.userSeq).then((res) => {
