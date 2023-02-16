@@ -210,12 +210,15 @@
   width: 200px;
   height: 50px;
   position: absolute;
-  right: 0px;
+  right: 10px;
   bottom: 10px;
   background-color: #fff;
   border-radius: 15px;
-  font-size: 44px;
+  font-size: 33px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .CodeMirror-sizer {
@@ -227,10 +230,10 @@
   border-right: 1px solid #ddd !important;
   background-color: #f7f7f7 !important;
 }
-.project-meeting-person {
-  /* overflow: hidden; */
+/* .project-meeting-person {
   position: relative;
-}
+  overflow: hidden;
+} */
 
 .project-meeting-video {
   width: 100%;

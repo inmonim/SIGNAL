@@ -917,7 +917,7 @@ function ProjectMeeting() {
       <div className="project-meeting-main">
         <VideoListSection className="project-meeting-video-list" mode={mode}>
           {personList.map((item, index) => (
-            <VideoBox key={index} className="project-meeting-person" size={personList.length}>
+            <VideoBox key={index} size={personList.length}>
               <video className="project-meeting-video" alt="나" autoPlay playsInline />
               <div className="project-meeting-person-name">
                 <div>{item}</div>
@@ -1063,6 +1063,8 @@ const videobox = (props) => {
     width: 455px;
     height: 320px;
     border-radius: 25px;
+    position: relative;
+    overflow: hidden;
   `
 }
 
