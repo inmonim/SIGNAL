@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router'
 import { Box, TextField, Button } from '@mui/material'
 import plusButton from '../../assets/image/plusButton.png'
@@ -31,6 +30,7 @@ import QnaTodo from 'components/Posting/QnaTodo'
 import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
+import api from 'api/Api'
 // import SignalBtn from 'components/common/SignalBtn'
 
 const Container = styled.section`
@@ -123,7 +123,7 @@ const PostingModify = () => {
 
   // const [u]
   const postPutFetch = async () => {
-    const res = await axios.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
+    const res = await api.get(process.env.REACT_APP_API_URL + '/posting/' + postingSeq)
     const post = res.data.body
     setUserSeqget(sessionStorage.getItem('userSeq'))
     setSubjectget(post.subject)
@@ -275,7 +275,7 @@ const PostingModify = () => {
     ) {
       const config = { 'Content-Type': 'application/json' }
 
-      await axios
+      await api
         .put(process.env.REACT_APP_API_URL + '/posting/' + postingSeq, req, config)
         .then((res) => {
           console.log(res)

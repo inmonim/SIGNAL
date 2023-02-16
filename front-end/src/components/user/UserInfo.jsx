@@ -5,7 +5,6 @@ import HeartDetailModal from '../common/HeartDetailModal'
 import UserModifyModal from 'components/user/UserModifyModal'
 import UserPwdModal from 'components/user/UserPwdModal'
 import AlertModal from 'components/AlertModal'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import api from 'api/Api'
 
@@ -46,7 +45,7 @@ function UserInfo() {
     const userSeq = sessionStorage.getItem('userSeq')
     setAlertOpen(false)
     try {
-      await axios
+      await api
         .delete(process.env.REACT_APP_API_URL + '/user/' + userSeq)
         .then((res) => {
           sessionStorage.removeItem('accessToken')
