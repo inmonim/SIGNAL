@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import 'assets/styles/adminProject.css'
 import api from 'api/Api'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import moment from 'moment'
 
 function AdminProject() {

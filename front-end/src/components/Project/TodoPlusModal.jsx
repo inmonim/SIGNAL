@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal'
 import { TextField } from '@mui/material'
 import 'assets/styles/profile/profileinput.css'
 import SignalBtn from 'components/common/SignalBtn'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import closeBtn from 'assets/image/x.png'
 import api from 'api/Api'
 
@@ -41,7 +41,6 @@ function TodoPlusModal({ open, onClose, handleFlag, flag, userSeq, projectSeq })
           },
         })
         .then((res) => {
-          console.log(res)
           setAlert(true)
         })
         .catch((err) => {

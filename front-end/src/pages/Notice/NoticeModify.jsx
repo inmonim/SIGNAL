@@ -3,7 +3,7 @@ import { TextField } from '@mui/material'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/notice.css'
 import { useLocation, useNavigate } from 'react-router-dom'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 import api from 'api/Api'
 
 const inputStyle = {

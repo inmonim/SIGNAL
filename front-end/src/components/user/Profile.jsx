@@ -17,7 +17,6 @@ function Profile(profile) {
   const [options, setOptions] = useState([])
 
   const data = profile.profile
-  console.log(data)
 
   const handleToClose = () => {
     setOpenInputPositionModal(false)

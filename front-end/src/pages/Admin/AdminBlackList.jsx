@@ -4,7 +4,7 @@ import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, Table
 import 'assets/styles/adminBlackList.css'
 import api from 'api/Api'
 import BlackListReleaseModal from 'components/Admin/BlackListReleaseModal'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 
 function AdminBlackList() {
   const [blackList, setBlackList] = useState([])

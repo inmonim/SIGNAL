@@ -7,7 +7,7 @@ import QuestionIcon from 'assets/image/question-icon.png'
 import SignalBtn from 'components/common/SignalBtn'
 import 'assets/styles/eval.css'
 import api from 'api/Api'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 
 function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, nickname, flag, setMode }) {
   const [score, setScore] = useState([])
@@ -79,8 +79,6 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
       )
       .then((res) => {
         setEvalHistory(res.data.body)
-        console.log('toUserSeq', toUserSeq, 'fromUserSeq', fromUserSeq, 'weekCnt', weekCnt)
-        console.log(evalHistory)
       })
       .catch((error) => {
         console.log(error)
@@ -89,7 +87,6 @@ function EvalQna({ fromUserSeq, toUserSeq, projectSeq, tab, weekCnt, setFlag, ni
 
   useEffect(() => {
     evaluationFetch()
-    console.log(evalHistory)
   }, [flag, toUserSeq, tab])
 
   return (

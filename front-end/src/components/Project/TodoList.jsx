@@ -13,7 +13,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import plusBtn from 'assets/image/plusButton.png'
 import api from 'api/Api'
 import moment from 'moment'
-import AlertModal from 'components/AlertModal'
+import AlertModal from 'components/common/AlertModal'
 
 function TodoList({ projectSeq }) {
   const today = moment(new Date()).format('YYYY-MM-DD')
@@ -64,7 +64,6 @@ function TodoList({ projectSeq }) {
       nickname: item.nickname,
     })
   )
-  console.log(memberList)
 
   useEffect(() => {
     MemberFetch()
@@ -92,8 +91,6 @@ function TodoList({ projectSeq }) {
       method: 'GET',
       params: { userSeq, projectSeq, regDt },
     }).then((res) => {
-      console.log(res.data.body)
-      console.log('userSeq:', userSeq)
       setData(res.data.body)
     })
   }, [flag, userSeq])
@@ -144,11 +141,9 @@ function TodoList({ projectSeq }) {
     const { id } = e.target
     const nextSeq = { ...todoSeq, id }
     setTodoSeq(nextSeq.id)
-    console.log('.', nextSeq.id)
     try {
       await api.get(process.env.REACT_APP_API_URL + '/todo/' + e.target.id).then((res) => {
         setContent(res.data.body.content)
-        console.log(res.data.body.content)
       })
     } catch (e) {
       console.log(e)
@@ -173,7 +168,6 @@ function TodoList({ projectSeq }) {
                 }`}
                 onClick={() => {
                   setUserSeq(mem.userSeq)
-                  console.log('.', userSeq)
                 }}
               >
                 {mem.nickname}
@@ -198,7 +192,6 @@ function TodoList({ projectSeq }) {
                 />
               )}
             />
-            {console.log(dateValue)}
           </LocalizationProvider>
         </div>
       </div>

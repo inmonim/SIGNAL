@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import api from 'api/Api'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Link } from 'react-router-dom'
-import Paging from 'components/Paging'
+import Paging from 'components/common/Paging'
 import 'assets/styles/signalweekrank.css'
 
 function SignalHonorList() {
