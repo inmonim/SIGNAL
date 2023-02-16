@@ -11,9 +11,9 @@ export default function PostingCardItem({ post }) {
   return (
     <Card
       sx={{
-        minWidth: 275,
+        minWidth: 300,
         maxWidth: 275,
-        ml: 1,
+        ml: 1.5,
         mb: 2,
         mr: 1,
         '&:hover': {
