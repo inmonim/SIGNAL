@@ -10,6 +10,8 @@ import SignalBtn from 'components/common/SignalBtn'
 import styled from '@emotion/styled'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+// import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 function signalDetail() {
   const location = useLocation()
@@ -78,7 +80,10 @@ function signalDetail() {
 
   const mdToText = () => {
     fetch(mdFile)
-      .then((r) => r.text())
+      .then((r) => {
+        r.text()
+        console.log(r)
+      })
       .then((text) => {
         setMarkdown(text)
         console.log(text)
@@ -172,7 +177,29 @@ function signalDetail() {
         <div className="signal-regist-title" style={{ marginTop: '1em' }}>
           <Label>Readme</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            {mdFile !== '' ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown> : <></>}
+            {mdFile !== '' ? (
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                // components={{
+                //   code({ node, inline, className, children, ...props }) {
+                //     const match = /language-(\w+)/.exec(className || '')
+                //     return !inline && match ? (
+                //       <SyntaxHighlighter style={a11yDark} language={match[1]} PreTag="div" {...props}>
+                //         {String(children).replace(/\n$/, '')}
+                //       </SyntaxHighlighter>
+                //     ) : (
+                //       <code className={className} {...props}>
+                //         {children}
+                //       </code>
+                //     )
+                //   },
+                // }}
+              >
+                {markdown}
+              </ReactMarkdown>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
