@@ -48,6 +48,7 @@ import Footer from 'components/Layout/Footer'
 import Fourzerofour from 'pages/fourzerofour'
 import PrivateRoute from 'components/Auth/PrivateRoute'
 import AdminRoute from 'components/Auth/AuthRoute'
+import TeamBung from 'pages/TeamBung'
 
 // const Posting = lazy(() => import('./pages/Posting/Posting'))
 // const MyProject = lazy(() => import('./pages/Project/MyProject'))
@@ -101,6 +102,7 @@ function App() {
             <Route path="/signal/ranklist" element={<SignalHonorList />} />
             <Route path="/openprofile" element={<Openprofile />} />
             <Route path="/openprofiledetail" element={<OpenprofileDetail />} />
+            <Route path="/teamBung" element={<TeamBung />} />
             {/* <Route path="/applymodify" element={<ApplyModify />} /> */}
             {/* <Route path="/postingmodify" element={<PostingModify />} /> */}
             {/* <Route path="/applyregister" element={<ApplyRegister />} /> */}

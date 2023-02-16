@@ -61,6 +61,7 @@ function ProjectProfile({ Data }) {
         title: '퇴출 완료',
         text: '팀원이 퇴출되었습니다',
       })
+      window.location.reload()
     } catch (error) {
       console.log(error)
 
