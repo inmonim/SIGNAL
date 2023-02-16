@@ -86,7 +86,11 @@ function Notice() {
               <TableBody>
                 {rows.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell align="center">{row.id}</TableCell>
+                    {row.title !== ' ' ? (
+                      <TableCell align="center">{index + 1}</TableCell>
+                    ) : (
+                      <TableCell align="center"></TableCell>
+                    )}
                     <TableCell align="left">
                       <Link to={`/noticeDetail`} state={{ id: row.id }}>
                         {row.title}

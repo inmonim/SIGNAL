@@ -34,6 +34,7 @@ function Qna() {
       title: item.title,
       regDt: item.regDt.split(' ', 1),
       view: item.view,
+      isTop: item.isTop,
     })
   })
   const rowLen = rows.length
@@ -84,8 +85,12 @@ function Qna() {
               </TableHead>
               <TableBody>
                 {rows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.id}</TableCell>
+                  <TableRow key={index} className={`qna-list-faq ${row.isTop === true ? 'active' : ''}`}>
+                    {row.title !== ' ' ? (
+                      <TableCell align="center">{index + 1}</TableCell>
+                    ) : (
+                      <TableCell align="center"></TableCell>
+                    )}
                     <TableCell align="left">
                       <Link to={`/qnaDetail`} state={{ id: row.id }}>
                         {row.title}
