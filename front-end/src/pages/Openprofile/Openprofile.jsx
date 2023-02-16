@@ -59,6 +59,7 @@ function Openprofile() {
                   icon: 'success',
                 })
               })
+              window.location.reload()
             }}
           >
             프로필 등록

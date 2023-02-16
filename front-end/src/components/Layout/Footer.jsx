@@ -16,14 +16,14 @@ function Footer() {
           </Link>
         </div>
         <div className="footer-link-wrap">
-          <a href="https://lab.ssafy.com/s08-webmobile1-sub2/S08P12E207" target="_nblank">
+          <Link to="https://lab.ssafy.com/s08-webmobile1-sub2/S08P12E207" target="_nblank">
             <img className="footer-link-logo" src={gitlabLogo} alt="logo" />
-          </a>
+          </Link>
         </div>
         <div className="footer-link-wrap">
-          <a href="https://www.notion.so/2-f929dd7b709a407099007eeeba245589" target="_nblank">
+          <Link to="https://www.notion.so/2-f929dd7b709a407099007eeeba245589" target="_nblank">
             <img className="footer-link-logo-sm" src={notionLogo} alt="logo" />
-          </a>
+          </Link>
         </div>
         <div className="footer-link-wrap">
           <div className="footer-logo">
