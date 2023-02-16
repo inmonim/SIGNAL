@@ -38,6 +38,8 @@
     "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-video": "^1.5.3",
     "remark-gfm": "^3.0.1",
     "socket.io-client": "^4.5.4",
     "styled-components": "^5.3.6",

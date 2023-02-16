@@ -55,4 +55,6 @@
 .user-profile-input-chip-text {
   width: 310px;
   overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
 }

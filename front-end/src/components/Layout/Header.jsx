@@ -8,6 +8,7 @@ import LetterModal from 'components/Letter/LetterModal'
 import * as D from './DropDownStyle'
 import Badge from '@mui/material/Badge'
 import EmailIcon from '@mui/icons-material/Email'
+import teamlogo from 'assets/image/fish-bread-logo2.png'
 import api from 'api/Api'
 
 function Header() {
@@ -26,8 +27,6 @@ function Header() {
   const [letterCnt, setLetterCnt] = useState(0)
   const [isLogin, setIsLogin] = useState(false)
   const isAdmin = sessionStorage.getItem('admin')
-  // const [isAdmin, setIsAdmin] = useState(sessionStorage.getItem('admin'))
-  console.log(isAdmin)
 
   useEffect(() => {
     // 로컬 스토리지에 refreshToken 이 존재하고 로그인 상태가 아니면 한번 쫘악 긁어옴 (= 자동로그인 상태)
@@ -168,6 +167,11 @@ function Header() {
                   </D.Down>
                 </D.DropdownContainer>
               </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/teamBung">
+                  <img src={teamlogo} alt="" style={{ width: '50px', height: '30px' }} />
+                </Link>
+              </li>
             </ul>
           ) : (
             // 관리자 헤더
@@ -195,6 +199,11 @@ function Header() {
               <li>
                 <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/qna">
                   Q & A
+                </Link>
+              </li>
+              <li>
+                <Link style={{ margin: '0px 20px' }} className="header-nav-item" to="/teamBung">
+                  <img src={teamlogo} alt="" style={{ width: '50px', height: '30px' }} />
                 </Link>
               </li>
             </ul>
