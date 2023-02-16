@@ -1,49 +1,81 @@
 package com.ssafysignal.api.apply.entity;
 
+import com.ssafysignal.api.common.entity.CommonCode;
+import com.ssafysignal.api.posting.entity.Posting;
+import com.ssafysignal.api.posting.entity.PostingMeeting;
 import com.ssafysignal.api.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "apply")
 public class Apply {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "apply_seq")
     private Integer applySeq;
+    @Column(name = "user_seq")
+    private Integer userSeq;
+    @Column(name = "posting_seq")
+    private Integer postingSeq;
+    @Column(name = "posting_meeting_seq")
+    private Integer postingMeetingSeq;
+    @Column(name = "content")
     private String content;
-    private String memo;
-    private boolean isSelect;
-    private Date regDt;
+    @Column(name = "position_code")
     private String positionCode;
+    @Column(name = "memo")
+    private String memo;
+    @Column(name = "state_code")
+    private String stateCode;
+    @Column(name = "apply_code")
     private String applyCode;
-//    @OneToOne
-//    private User user;
-//    @OneToOne
-//    private Posting posting;
-//    @OneToMany
-//    private List<ApplyAnswer> applyAnswerList;
-//    @OneToMany
-//    private List<ApplyCareer> applyCareerList;
-//    @OneToMany
-//    private List<ApplyExp> applyExpList;
-//    @OneToMany
-//    private List<ApplySkill> applySkillList;
+    @Column(name = "reg_dt")
+    private LocalDateTime regDt;
+    
+    // 1 : 1 관계
+    @OneToOne
+    @JoinColumn(name = "apply_code", insertable = false, updatable = false)
+    private CommonCode code;
+    @OneToOne
+    @JoinColumn(name = "state_code", insertable = false, updatable = false)
+    private CommonCode state;
+    @OneToOne
+    @JoinColumn(name = "position_code", insertable = false, updatable = false)
+    private CommonCode position;
+    @OneToOne
+    @JoinColumn(name = "posting_seq", insertable = false, updatable = false)
+    private Posting posting;
+    @OneToOne
+    @JoinColumn(name = "user_seq", insertable = false, updatable = false)
+    private User user;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "posting_meeting_seq", insertable = false, updatable = false)
+    private PostingMeeting postingMeeting;
 
-    @Builder
-    public Apply(final Integer applySeq, final User user, final String content, final String memo, final boolean isSelect, final Date regDt
-//                 final String positionCode, final String applyCode, final Posting posting,
-//                 final List<ApplyAnswer> applyAnswerList, List<ApplyCareer> applyCareerList, List<ApplyExp> applyExpList, List<ApplySkill> applySkillList
-    ) {
-        this.applySeq = applySeq;
-//        this.user = user;
-        this.content = content;
-        this.isSelect = isSelect;
-        this.regDt = regDt;
-    }
+    // 1 : N 관계
+    @OneToMany(targetEntity = ApplyCareer.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "apply_seq")
+    private List<ApplyCareer> applyCareerList;
+    @OneToMany(targetEntity = ApplyExp.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "apply_seq")
+    private List<ApplyExp> applyExpList;
+    @OneToMany(targetEntity = ApplySkill.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "apply_seq")
+    private List<ApplySkill> applySkillList;
+    @OneToMany(targetEntity = ApplyAnswer.class, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "apply_seq")
+    private List<ApplyAnswer> applyAnswerList;
 }
