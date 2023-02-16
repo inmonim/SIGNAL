@@ -86,3 +86,8 @@
 .player-wrapper {
   padding-top: 7%; /* Player ratio: 100 / (1280 / 720) */
 }
+
+
+.signal-detail-title{
+  font-size: 44px;
+}
