@@ -134,7 +134,7 @@ function signalDetail() {
                 style={{
                   width: '1126px  ',
                   height: '620px',
-                  overflowX: 'hidden',
+                  overflow: 'hidden',
                   marginTop: '1em',
                   textAlign: 'center',
                 }}
