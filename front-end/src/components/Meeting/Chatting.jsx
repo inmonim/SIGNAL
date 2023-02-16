@@ -60,7 +60,7 @@ const Chatting = forwardRef((props, ref) => {
           {chatList.map((item, index) => {
             if (item.flag) {
               return (
-                <div key={index} style={{ position: 'relative', marginBottom: '25px' }}>
+                <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <div
                       style={{
@@ -70,7 +70,7 @@ const Chatting = forwardRef((props, ref) => {
                         borderRadius: '25px',
                         minHeight: '60px',
                         padding: '20px 20px 20px 20px',
-                        boxShadow: '0 3px 1px  rgba(0,0,0,0.25)',
+                        boxShadow: '0 3px 5px  rgba(0,0,0,0.25)',
                         wordWrap: 'break-word',
                       }}
                     >
@@ -86,7 +86,7 @@ const Chatting = forwardRef((props, ref) => {
               )
             } else {
               return (
-                <div key={index} style={{ position: 'relative', marginBottom: '25px' }}>
+                <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <div className="chatting-receive-nickname">{item.nickname}</div>
                     <div>
@@ -106,7 +106,7 @@ const Chatting = forwardRef((props, ref) => {
                           minHeight: '60px',
                           padding: '20px 20px 20px 20px',
                           marginLeft: '30px',
-                          boxShadow: '0 3px 1px  rgba(0,0,0,0.25)',
+                          boxShadow: '0 3px 5px  rgba(0,0,0,0.25)',
                         }}
                       >
                         {item.message}
