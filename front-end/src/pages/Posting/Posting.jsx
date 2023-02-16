@@ -449,6 +449,7 @@ const Container = styled.div`
   border-radius: 4px;
   flex-direction: column; 
   }
+  margin-bottom: 50px;
 `
 const Banner = styled.div`
   width: 100%;
@@ -487,7 +488,7 @@ const PostList = styled.div`
   margin-left: 1em;
   margin-right: 1em;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: start;
   text-items: center;
   padding: 4px;
   gap: 10px;
