@@ -8,6 +8,8 @@ import com.ssafysignal.api.common.service.FileService;
 import com.ssafysignal.api.common.service.SecurityService;
 import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.letter.entity.Letter;
+import com.ssafysignal.api.letter.repository.LetterRepository;
 import com.ssafysignal.api.project.dto.reponse.FindEvaluationResponse;
 import com.ssafysignal.api.project.dto.reponse.FindProjectSettingResponse;
 import com.ssafysignal.api.project.dto.reponse.FindAllProjectUserDto;
@@ -41,7 +43,7 @@ public class ProjectSettingService {
     private final ImageFileRepository imageFileRepository;
     private final FileService fileService;
     private final SecurityService securityService;
-    private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
+    private final LetterRepository letterRepository;
 
     @Value("${app.fileUpload.uploadPath}")
     private String uploadPath;
@@ -135,18 +137,21 @@ public class ProjectSettingService {
         ProjectUser projectUser = projectUserRepository.findById(projectUserSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
 
+        Project project = projectRepository.findById(projectUser.getProjectSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
+
+        letterRepository.save(Letter.builder()
+                    .fromUserSeq(0)
+                    .toUserSeq(projectUser.getUserSeq())
+                    .title("프로젝트 퇴출 안내")
+                    .content("<div>경고 "+ projectUser.getWarningCnt()  + " 번으로 팀장에 의해 " +  project.getSubject() + " 프로젝트에서 퇴출 되었습니다.</div><br> <div>보증금 " + projectUser.getHeartCnt() + "개의 하트는 소멸되었음을 알려드립니다.</div><br>")
+                    .build());
+
         // 블랙리스트 등록
         blackUserRepository.save(BlackUser.builder()
                         .userSeq(projectUser.getUserSeq())
                         .projectSeq(projectUser.getProjectSeq())
                         .build());
-
-        // 현재 프로젝트 인원에서 제거
-        projectUserHeartLogRepository.save(ProjectUserHeartLog.builder()
-                .projectUserSeq(projectUserSeq)
-                .heartCnt(-projectUser.getHeartCnt())
-                .content("팀 퇴출로 인한 보증금 몰수")
-                .build());
 
         // 현재 프로젝트 인원에서 제거
         projectUserRepository.deleteById(projectUserSeq);
@@ -156,6 +161,7 @@ public class ProjectSettingService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
         projectPosition.setPositionCnt(projectPosition.getPositionCnt() - 1);
         projectPositionRepository.save(projectPosition);
+
     }
 
     @Transactional

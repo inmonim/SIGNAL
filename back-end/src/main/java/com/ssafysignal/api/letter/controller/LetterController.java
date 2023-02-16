@@ -46,7 +46,6 @@ public class LetterController {
                 .content(sendLetter.getContent())
                 .build();
         Letter ret = letterService.registLetter(letter);
-        //System.out.println(ret);
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, ret));
     }
 
