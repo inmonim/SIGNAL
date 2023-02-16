@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface SignalweekVoteRepository extends JpaRepository<SignalweekVote, Integer> {
     Optional<SignalweekVote> findBySignalweekSeqAndFromUserSeq(Integer signalweekSeq, Integer fromUserSeq);
+    
+    int countBySignalweekSeq(int siganlweekSeq);
 }
