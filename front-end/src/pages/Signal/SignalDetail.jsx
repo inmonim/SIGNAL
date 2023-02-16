@@ -8,6 +8,8 @@ import api from 'api/Api.js'
 import { Document, Page } from 'react-pdf'
 import SignalBtn from 'components/common/SignalBtn'
 import styled from '@emotion/styled'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 function signalDetail() {
   const location = useLocation()
@@ -16,6 +18,8 @@ function signalDetail() {
   const [numPages, setNumPages] = useState(null)
   const [pageNumber, setPageNumber] = useState(1)
   // const [pdfDocument] = useState()
+
+  const [mdFile, setMdFile] = useState('')
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages)
@@ -57,8 +61,10 @@ function signalDetail() {
     }
   }
 
-  useEffect(() => {
-    api
+  const [markdown, setMarkdown] = useState('')
+
+  const getData = async () => {
+    await api
       .get(process.env.REACT_APP_API_URL + `/signalweek/${signalSeq}/`, {
         params: { userSeq },
       })
@@ -66,8 +72,26 @@ function signalDetail() {
         setData(res.data.body)
         setUcc(res.data.body.uccUrl)
         setLiked(res.data.body.vote)
+        setMdFile(process.env.REACT_APP_API_URL + res.data.body.readmeUrl)
       })
-  }, [])
+  }
+
+  const mdToText = () => {
+    fetch(mdFile)
+      .then((r) => r.text())
+      .then((text) => {
+        setMarkdown(text)
+        console.log(text)
+      })
+  }
+
+  useEffect(() => {
+    getData()
+    if (mdFile !== '') {
+      mdToText()
+    }
+  }, [mdFile])
+
   return (
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
@@ -144,6 +168,12 @@ function signalDetail() {
         <div className="apply-detail-content-section">
           <Label>내용</Label>
           <div className="apply-detail-content">{data.content}</div>
+        </div>
+        <div className="signal-regist-title" style={{ marginTop: '1em' }}>
+          <Label>Readme</Label>
+          <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
+            {mdFile !== '' ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown> : <></>}
+          </div>
         </div>
       </div>
     </div>
