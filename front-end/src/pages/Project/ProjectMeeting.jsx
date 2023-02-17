@@ -76,8 +76,7 @@ const themeOptions = [
 // ===================================================
 
 const projectMeetingSetting = () => {
-  socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
-  // console.log(process.env.MEDIA_SERVER_URL)
+  socket = io(process.env.REACT_APP_MEDIA_SERVER_URL, { secure: true, cors: { origin: '*' } })
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
