@@ -38,7 +38,7 @@ let selfStream
 
 let numOfUsers
 let socket
-// ======================================
+// ===================================================
 let canvas
 let ctx
 
@@ -57,7 +57,7 @@ let drawingSize
 
 let mx, my, isPainting
 
-// ==================================
+// ===================================================
 let codemirror, version
 
 const modeOptions = [
@@ -73,9 +73,11 @@ const themeOptions = [
   { value: 'default', label: '라이트 모드' },
 ]
 
+// ===================================================
+
 const projectMeetingSetting = () => {
-  // socket = io('https://sfsad', { secure: true, cors: { origin: '*' } })
   socket = io('https://meeting.ssafysignal.site', { secure: true, cors: { origin: '*' } })
+  // console.log(process.env.MEDIA_SERVER_URL)
   // socket = io('https://localhost:443', { secure: true, cors: { origin: '*' } })
   console.log('프로젝트 미팅 소켓 통신 시작!')
 
@@ -95,9 +97,15 @@ const projectMeetingSetting = () => {
 
   const nickname = params.get('nickname')
   const projectSeq = params.get('projectSeq')
+  if (nickname === null || projectSeq === null) {
+    if (!alert('비정상적인 접속입니다.')) {
+      window.close()
+      window.location = '..'
+    }
+  }
   roomId = 'project' + projectSeq
   myName = sessionStorage.getItem('nickname')
-  console.log(roomId, myName)
+  // console.log(roomId, myName)
   if (myName !== nickname) {
     if (!alert('권한이 없습니다. 다시 로그인하세요')) {
       window.close()
@@ -128,7 +136,7 @@ const projectMeetingSetting = () => {
   })
 }
 
-function startPaint() {
+function paintSetting() {
   canvas = document.querySelector('.canvas')
   ctx = canvas.getContext('2d')
   ctx.globalAlpha = 1
@@ -158,7 +166,7 @@ function ProjectMeeting() {
     // 기존 방의 유저수와 방장이름 얻어옴
     socket.on('room_info', (data) => {
       numOfUsers = data.numOfUsers + 1
-      console.log(numOfUsers, '명이 접속해있음')
+      console.log(numOfUsers, '명') // 지우지 마세요ㅠ
 
       if (data.isDup === true) {
         if (!alert('중복접속입니다.!!')) {
@@ -176,7 +184,7 @@ function ProjectMeeting() {
 
     // 처음 방에 접속했을 때, 이미 방안에 들어와있던 user들의 정보를 받음
     socket.on('all_users', (data) => {
-      console.log('all_users : ', data.users)
+      // console.log('all_users : ', data.users)
       allUsersHandler(data) // 미리 접속한 유저들의 영상을 받기위한 pc, offer 생성
 
       // 이미 해당 방이 화면 공유 중이면 화면 공유 받음
@@ -235,14 +243,14 @@ function ProjectMeeting() {
 
     // 화면 공유 가능하다는 허락받음
     socket.on('share_ok', (data) => {
-      console.log('화면 공유 가능')
+      // console.log('화면 공유 가능')
       shareStart()
     })
 
     // 다른 유저가 화면공유를 시작함
     socket.on('share_request', (data) => {
       shareRequestHandler(data)
-      console.log('공유 request 받음!!', data)
+      // console.log('공유 request 받음!!', data)
     })
 
     // 다른 유저가 화면공유 중지함
@@ -255,7 +263,7 @@ function ProjectMeeting() {
       removeShareVideo()
     })
 
-    // 페인트보드 =========================================================================================
+    // ================================================ 페인트보드 =========================================
     // 다른 사람이 그리거나 지움
     socket.on('drawing', function (data) {
       const xys = data.xys
@@ -289,11 +297,13 @@ function ProjectMeeting() {
       ctx.clearRect(0, 0, CANVAS_W, CANVAS_H)
     })
 
+    // ================================================ 메시지 =========================================
     // 메시지받음
     socket.on('get_message', (data) => {
       getMessage(data)
     })
 
+    // ================================================ 코드에디터 =========================================
     // 코드에디터 내용받아오기
     socket.on('get_editor', (data) => {
       // console.log('editor정보 받아옴')
@@ -323,7 +333,7 @@ function ProjectMeeting() {
   // =============================================================================================
 
   function meetingStart() {
-    console.log('meetingStart 실행')
+    // console.log('meetingStart 실행')
 
     navigator.mediaDevices
       .getUserMedia({
@@ -379,20 +389,13 @@ function ProjectMeeting() {
           userName: myName,
         })
         if (error.name === 'NotFoundError') {
-          // alert('카메라 또는 마이크가 인식되지 않습니다.')
-          // window.close()
+          console.log('카메라 또는 마이크가 인식되지 않습니다.')
         } else if (error.name === 'NotAllowedError') {
-          // alert(
-          //   '카메라 및 마이크 접근 권한이 없습니다. \n더보기 구성 > 설정 > 개인정보 및 보안 > 사이트 설정에서 접근 권한을 부여해주세요'
-          // )
+          console.log('카메라 및 마이크 접근 권한이 없습니다.')
         } else {
           console.log(error.name)
         }
         setMode(1)
-        /* if (!alert('카메라(또는 마이크)가 없거나 권한이 없습니다')) {
-          // window.location = '..'
-          // window.close()
-        } */
       })
   }
 
@@ -566,7 +569,7 @@ function ProjectMeeting() {
 
   // 유저별 stream을 video에 넣어줌(화면에 영상 띄움)
   function userOntrackHandler(stream, userName, senderSocketId) {
-    console.log('접속자 이름:', userName)
+    // console.log('접속자 이름:', userName)
     setPersonList((personList) => [...personList, userName])
 
     setStreams((streams) => {
@@ -623,12 +626,34 @@ function ProjectMeeting() {
 
       removeUserVideo(socketId, userName)
 
-      console.log('나간사람 이름:', userName)
+      // console.log('나간사람 이름:', userName)
     } catch (e) {
       console.error(e)
     }
   }
-  // ============================================================================
+
+  function setUserVideo() {
+    const videos = document.querySelectorAll('.project-meeting-video')
+    // console.log('personList:', personList, 'streams:', streams)
+    for (let i = 0; i < personList.length; i++) {
+      const video = videos[i]
+      if (personList[i] === myName) {
+        if (selfStream !== undefined && selfStream !== null) {
+          video.srcObject = selfStream
+        } else {
+          video.srcObject = null
+        }
+      } else {
+        if (streams[personList[i]] !== undefined && streams[personList[i]] !== null) {
+          video.srcObject = streams[personList[i]]
+        } else {
+          video.srcObject = null
+        }
+        // console.log(personList[i], ':', video.srcObject)
+      }
+    }
+  }
+  // ================================================ 화면공유 =========================================
 
   function shareCheck() {
     // console.log('shareCheck실행됨!!')
@@ -715,7 +740,7 @@ function ProjectMeeting() {
     shareVideo.srcObject = stream
   }
 
-  // 페인트보드===================================================================================
+  // ================================================ 페인트보드 =========================================
   function stopPainting() {
     if (!isPainting) return
     // console.log('그리기 종료')
@@ -781,6 +806,13 @@ function ProjectMeeting() {
     drawingColor = selectedColor
     ctx.strokeStyle = selectedColor
   }
+
+  function handleSliderChange(value) {
+    value = value / 10
+    drawingSize = value
+  }
+
+  // ================================================ 메시지 =========================================
   function sendMessage(message) {
     socket.emit('send_message', { userName: myName, message })
   }
@@ -788,29 +820,7 @@ function ProjectMeeting() {
   function getMessage(data) {
     chatting.current.getMessage(data)
   }
-
   // =============================================================================================
-  function setUserVideo() {
-    const videos = document.querySelectorAll('.project-meeting-video')
-    // console.log('personList:', personList, 'streams:', streams)
-    for (let i = 0; i < personList.length; i++) {
-      const video = videos[i]
-      if (personList[i] === myName) {
-        if (selfStream !== undefined && selfStream !== null) {
-          video.srcObject = selfStream
-        } else {
-          video.srcObject = null
-        }
-      } else {
-        if (streams[personList[i]] !== undefined && streams[personList[i]] !== null) {
-          video.srcObject = streams[personList[i]]
-        } else {
-          video.srcObject = null
-        }
-        // console.log(personList[i], ':', video.srcObject)
-      }
-    }
-  }
 
   const [voice, setVoice] = useState(false)
   const [video, setVideo] = useState(false)
@@ -862,7 +872,7 @@ function ProjectMeeting() {
 
   useEffect(() => {
     setPersonList((personList) => [...personList, myName])
-    startPaint()
+    paintSetting()
     canvas.addEventListener('mousemove', onMouseMove)
     canvas.addEventListener('mousedown', startPainting)
     canvas.addEventListener('mouseup', stopPainting)
@@ -1007,9 +1017,12 @@ function ProjectMeeting() {
                 <div style={{ margin: '0px 30px' }}>
                   <div style={{ marginLeft: '10px', fontSize: '22px' }}>펜 굵기</div>
                   <Slider
-                    defaultValue={50}
+                    defaultValue={25}
                     aria-label="Default"
                     valueLabelDisplay="auto"
+                    min={10}
+                    max={50}
+                    onChange={(event, value) => handleSliderChange(value)}
                     style={{ color: '#574B9F' }}
                   />
                   <SketchPicker color={color} onChangeComplete={(color) => changeColor(color.hex)} />
