@@ -33,9 +33,6 @@
 }
 
 .todo-date-container{
-  /* position: absolute;
-  right: 50px;
-  top: 260px; */
   width: 1100px;
   display: flex;
   justify-content: flex-end;

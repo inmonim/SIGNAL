@@ -505,7 +505,6 @@ function Beforemeeting() {
             <div className="before-meeting-btn-door"></div>
             <div className="before-meeting-btn-name">종료</div>
           </div>
-          {/* <div className="before-meeting-footer-right-chat"></div> */}
         </div>
       </div>
     </div>

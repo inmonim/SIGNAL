@@ -388,7 +388,6 @@ function Posting() {
             renderInput={(params) => <TextField {...params} label="기술 스택 검색" placeholder="Skill" />}
             sx={{ skillStyle, width: 1 / 3, mb: 3, backgroundColor: '#fbfbfd' }}
           />
-          {/* <div style={{ width: '50%' }}>dd</div> */}
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <SearchForms sx={{ flexGrow: 1 }}>

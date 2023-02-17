@@ -87,7 +87,6 @@ function PostingApply() {
   const postingRows = []
   Array.from(rowsPostingForm).forEach((item) => {
     postingRows.push({
-      // state: item.stateCode.name,
       postingSeq: item.postingSeq,
       state: item.postingCode.name,
       subject: item.subject,

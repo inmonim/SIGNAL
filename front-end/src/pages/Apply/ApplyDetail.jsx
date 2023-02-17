@@ -127,7 +127,6 @@ function ApplyDetail() {
                             alt="skillImage"
                             className="apply-detail-skill-image"
                           />
-                          {/* <span>{skill.name}</span> */}
                         </div>
                       </div>
                     </div>

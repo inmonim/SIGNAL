@@ -1,9 +1,3 @@
-// const fruit: FruitOption = {
-//   apple: { color: 'red', size: 'small' },
-//   banana: { color: 'yellow', size: 'medium' },
-//   grape: { color: 'purple', size: 'large' },
-// }
-// object.keys(fruit) --> ['apple', 'banana', 'grape']
 const Localdata = {
   11: {
     name: '서울특별시',
