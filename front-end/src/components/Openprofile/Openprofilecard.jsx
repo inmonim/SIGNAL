@@ -7,7 +7,6 @@ import { Box } from '@mui/system'
 import { getPositionName } from 'data/Positiondata'
 import SignalBtn from 'components/common/SignalBtn'
 import { useNavigate } from 'react-router'
-// import { useNavigate } from 'react-router-dom'
 
 export default function Openprofilecard({ open }) {
   const navigate = useNavigate()
@@ -31,12 +30,7 @@ export default function Openprofilecard({ open }) {
       <CardContent sx={{ height: '100%' }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', height: '90px' }}>
           <div className="open-profile-card-box">
-            <img
-              className="open-profile-card-profile"
-              src={process.env.REACT_APP_API_URL + open.imageUrl}
-              alt=""
-              // style={{ width: '100px', height: '100px' }}
-            />
+            <img className="open-profile-card-profile" src={process.env.REACT_APP_API_URL + open.imageUrl} alt="" />
           </div>
           <Box sx={{ width: 1 / 3, alignItems: 'center', whiteSpace: 'nowrap', overflow: 'hidden' }}>
             <Typography variant="h6">{open.nickname}</Typography>
@@ -47,9 +41,7 @@ export default function Openprofilecard({ open }) {
             ))}
           </Box>
         </Box>
-        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom>
-          {/* {post.subject} */}
-        </Typography>
+        <Typography sx={{ fontSize: 20 }} color="black" gutterBottom></Typography>
 
         {/* 여기는 스킬아이콘 */}
         <hr />

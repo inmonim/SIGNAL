@@ -111,12 +111,10 @@ function LoginModal({ open, onClose }) {
   }
   const handleInputPwd = (e) => {
     setInputPwd(e.target.value)
-    console.log(e.target.value)
   }
   const handleIsAutoLogin = () => {
     const nextIsAutoLogin = isAutoLogin
     setIsAutoLogin(!nextIsAutoLogin)
-    console.log(nextIsAutoLogin)
   }
 
   const [showPassword, setShowPassword] = useState(false)

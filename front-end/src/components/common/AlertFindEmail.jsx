@@ -1,5 +1,4 @@
 import React from 'react'
-// import Box from '@mui/material/Box'
 import { Dialog, DialogActions, Button, DialogTitle } from '@mui/material'
 
 function AlertFindEmail({ open, onClick, msg, name }) {

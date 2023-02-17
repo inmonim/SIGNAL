@@ -30,8 +30,6 @@ const positionCode = createSlice({
   reducers: {
     async fetchPostionCode() {
       const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=PO')
-      console.log('redux positionCode')
-      console.log(res.data.body)
       return res.data.body
     },
   },
@@ -42,29 +40,21 @@ export const { fetchPostionCode } = positionCode.actions
 // getSkillCommonCode //
 const getWESkill = async () => {
   const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=WE')
-  console.log('redux skillCode')
-  console.log(res.data.body)
   return res.data.body
 }
 
 const getAISkill = async () => {
   const res = await axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=AI')
-  console.log('redux skillCode')
-  console.log(res.data.body)
   return res.data.body
 }
 
 const getDBSkill = async () => {
   const res = axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=DB')
-  console.log('redux skillCode')
-  console.log(res.data.body)
   return res.data.body
 }
 
 const getPLSkill = async () => {
   const res = axios.get('http://tableminpark.iptime.org:8080/commoncode?groupCode=PL')
-  console.log('redux skillCode')
-  console.log(res.data.body)
   return res.data.body
 }
 
@@ -77,7 +67,6 @@ const skillCode = createSlice({
       state.push(getAISkill)
       state.push(getDBSkill())
       state.push(getPLSkill())
-      console.log(state)
       return state
     },
   },
@@ -118,7 +107,6 @@ export const positionTodo = createSlice({
   initialState: [],
   reducers: {
     add: (state, action) => {
-      // console.log(action)
       const dic = {
         id: action.payload.code,
         text: action.payload.name,
@@ -134,7 +122,6 @@ export const positionTodo = createSlice({
         return ele.id === action.payload
       })
       const sum = state.reduce((acc, cur) => acc + cur.count, 0)
-      // console.log(sum)
       if (sum < 8) {
         state[idex].count++
       }
@@ -164,7 +151,6 @@ export const qnaTodo = createSlice({
       })
     },
     addQnaF: (state, action) => {
-      // console.log(action)
       const dic = {
         id: action.payload.id,
         text: action.payload.text,

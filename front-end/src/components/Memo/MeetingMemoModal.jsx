@@ -34,15 +34,12 @@ const innerStlye = {
 }
 
 function MeetingMemoModal({ open, onClose, applySeq }) {
-  // const [open, setOpen] = useState(false)
-
   const [memo, setMemo] = useState('')
 
   useEffect(() => {
     api.get(process.env.REACT_APP_API_URL + '/apply/memo/' + applySeq).then((res) => {
       setMemo(res.data.body.memo)
     })
-    console.log('메모 get')
   }, [open])
 
   const handleClose = async () => {

@@ -93,7 +93,6 @@ function signalDetail() {
     <div className="signaldetail-page-container">
       <div className="signaldetail-detail-container">
         <div className="signaldetail-detail-title">{data.title}</div>
-        {/* <div className="signaldetail-detail-middle">ddd</div> */}
         {new Date(signalweekDate.voteStartDt) <= new Date(moment(now).format('YYYY-MM-DD')) &&
         new Date(signalweekDate.voteEndDt) >= new Date(moment(now).format('YYYY-MM-DD')) ? (
           <div className="signal-regist-title" style={{ marginTop: '1em', float: 'right', marginBottom: '1em' }}>
@@ -117,12 +116,6 @@ function signalDetail() {
             pip={true} // pip 모드 설정 여부
           />
         </div>
-        {/* <div className="signal-regist-title" style={{ marginTop: '1em' }}>
-          <Label>Git 주소</Label>
-          <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
-            <a href={data.deployUrl}>{data.deployUrl}</a>
-          </div>
-        </div> */}
         <div className="signal-regist-title" style={{ marginTop: '100px' }}>
           <Label>배포 주소</Label>
           <div style={{ marginTop: '1em' }} className="signaldetail-detail-content">
