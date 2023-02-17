@@ -1,0 +1,143 @@
+.project-header-container {
+  width: 1200px;
+  font-size: 20px;
+  margin: auto;
+  margin-top: 158px;
+}
+.project-header-width {
+  background-color: #dddbec;
+  border-radius: 150px 150px 0px 0px;
+  min-height: 1200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-header-settings {
+  position: absolute;
+  top: 60px;
+  right: 100px;
+}
+
+.project-header-img-settings {
+  width: 50px;
+  cursor: pointer;
+}
+
+/* 프로젝트 상세 */
+.project-detail-container {
+  display: flex;
+  justify-content: center;
+}
+
+.project-detail-img-proejct-background-1 {
+  position: absolute;
+  top: 45px;
+  left: 30px;
+  width: 230px;
+}
+
+.project-detail-img-proejct-background-2 {
+  position: absolute;
+  width: 405px;
+  bottom: 63px;
+  right: 103px;
+}
+
+.project-detail-content-header {
+  padding: 54px 270px;
+}
+
+.project-detail-my-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px;
+  font-size: 18px;
+}
+
+.project-detail-my-warning-section {
+  display: flex;
+  align-items: center;
+  background-color: #574b9f;
+  padding: 5px 15px;
+  border-radius: 10px;
+  justify-content: center;
+  width: 140px;
+  height: 30px;
+  color: #ffffff;
+}
+
+.project-detail-my-heart-section {
+  display: flex;
+  align-items: center;
+  background-color: #9a93c5;
+  padding: 5px 15px;
+  border-radius: 10px;
+  justify-content: center;
+  width: 170px;
+  height: 30px;
+  color: #ffffff;
+}
+
+.project-detail-project-title {
+  font-size: 44px;
+  width: 650px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.project-detail-body-section {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.project-detail-content {
+  width: 700px;
+  font-size: 27px;
+  padding: 30px;
+  line-height: initial;
+}
+
+.project-detail-enter-progress {
+  display: flex;
+  align-items: flex-start;
+}
+
+.project-detail-enter-progress-btn {
+  font-size: 44px;
+  text-decoration: underline;
+  color: #574b9f;
+  cursor: pointer;
+  padding: 30px;
+}
+
+.project-detail-enter-progress-btn:hover {
+  color: #fff;
+  -webkit-text-stroke: 2px #574b9f;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.project-detail-team-detail-list {
+  display: flex;
+  justify-content: center;
+  padding: auto;
+}
+
+.project-detail-team {
+  text-align: center;
+  margin: 0px 20px;
+}
+
+.project-detail-team > img {
+  border-radius: 100%;
+  border: 3px solid #574b9f;
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+}
+
+.project-end-docs-list {
+  display: flex;
+  justify-content: center;
+}

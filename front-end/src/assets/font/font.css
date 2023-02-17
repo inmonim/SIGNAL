@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Yeonsung';
+  src: url('YeonSung-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'himelody';
+  src: url('HiMelody-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'dohyeon';
+  src: url('DoHyeon-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'D2coding';
+  font-style: normal;
+  font-weight: 400;
+  src: url('d2coding.eot');
+  src: local('※'), local('D2Coding'), url('d2coding.eot?#iefix') format('embedded-opentype'),
+    url('d2coding.woff') format('woff'), url('d2coding.ttf') format('truetype');
+}

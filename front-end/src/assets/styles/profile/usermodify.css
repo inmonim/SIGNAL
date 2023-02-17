@@ -1,0 +1,71 @@
+.user-modify-main {
+  text-align: center;
+}
+
+.user-modify-title {
+  text-align: center;
+  font-size: 47px;
+  font-weight: bold;
+  padding: 50px 0px;
+}
+
+.user-modify-img {
+  border-radius: 50%;
+  width: 195px;
+  height: 195px;
+  object-fit: contain;
+}
+.user-modify-img-hover {
+  border-radius: 50%;
+}
+.user-modify-img-container {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.user-modify-img:hover {
+  opacity: 80%;
+  border: 2px solid #dddbec;
+}
+
+.user-modify-img-container:after,
+.user-modify-img-container:hover > .user-modify-img-hover {
+  display: block;
+}
+
+.user-modify-img-container:after,
+.user-modify-img-hover {
+  display: none;
+}
+
+.user-modify-img-container:after {
+  position: absolute;
+}
+
+.user-modify-img-hover {
+  position: absolute;
+  top: 150px;
+  left: 50px;
+  color: #dddbec;
+  z-index: 20;
+  font-weight: bold;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.user-modify-input-container {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.user-modify-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.user-modify-input-label {
+  margin-right: 10px;
+}

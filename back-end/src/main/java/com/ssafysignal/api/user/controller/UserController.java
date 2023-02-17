@@ -1,7 +1,11 @@
 package com.ssafysignal.api.user.controller;
 
-import com.ssafysignal.api.user.dto.Response.UserFindAllResponse;
-import com.ssafysignal.api.user.entity.FindUserRes;
+import com.ssafysignal.api.global.exception.NotFoundException;
+import com.ssafysignal.api.global.response.BasicResponse;
+import com.ssafysignal.api.global.response.ResponseCode;
+import com.ssafysignal.api.user.dto.request.ModifyUserRequest;
+import com.ssafysignal.api.user.dto.request.RegistUserRequest;
+import com.ssafysignal.api.user.dto.response.FindUserResponse;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,12 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,33 +25,96 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     private final UserService userService;
-    /*
-    @Operation(summary = "전체 회원 조회", description = "페이지와 사이즈 기준으로 페이지 네이션을 통해 전체 회원 목록을 조회한다.")
-    @GetMapping("")
-    private ResponseEntity<UserFindAllResponse> findAllUsers(int page, int size) {
+    @Tag(name = "회원")
+    @Operation(summary = "회원 가입", description = "입력된 정보로 회원가입한다.")
+    @PostMapping("")
+    private ResponseEntity<BasicResponse> registUser(@Parameter(description = "회원 가입 정보", required = true) @RequestBody RegistUserRequest registUserRequest) {
+        log.info("registUser - Call");
 
-        log.info("findAllUsers - Call");
-
-        return ResponseEntity.ok().body(userService.findAllUsers(page, size));
-    }*/
-
-    @Operation(summary = "특정 회원 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
-    @GetMapping("/{userSeq}")
-    private ResponseEntity<FindUserRes> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq) {
-        log.info("findUser - Call");
-        FindUserRes dto= userService.findUser(userSeq);
-        System.out.println(dto);
-        return ResponseEntity.ok().body(dto);
+        try {
+            log.info(registUserRequest.toString());
+            userService.registUser(registUserRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
     }
+    @Tag(name = "회원")
+    @Operation(summary = "회원 상세 조회", description = "userSeq를 기준으로 특정 회원을 조회한다.")
+    @GetMapping("/{userSeq}")
+    private ResponseEntity<BasicResponse> findUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq) {
+        log.info("findUser - Call");
 
-    @Operation(summary = "회원가입", description = "입력된 정보로 회원가입한다.")
-    @PostMapping("")   //실제로는 이메일 인증 url로 가입하도록 하기!!
-    private ResponseEntity<User> joinUser(@RequestBody User user) {
-        log.info("joinUser - Call");
-        User dto= userService.joinUser(user);
-        
-        return ResponseEntity.ok().body(user);
+        try {
+            User user = userService.findUser(userSeq);
+            FindUserResponse findUserResponse = FindUserResponse.builder()
+                    .userSeq(user.getUserSeq())
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .phone(user.getPhone())
+                    .heartCnt(user.getHeartCnt())
+                    .userImageUrl(user.getImageFile().getUrl())
+                    .build();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, findUserResponse));
+        } catch (NotFoundException e) {
+            return ResponseEntity.ok().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch(RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+    @Tag(name = "회원")
+    @Operation(summary = "회원 탈퇴", description = "회원의 권한을 탈퇴자로 변경.")
+    @DeleteMapping("/{userSeq}")
+    private ResponseEntity<BasicResponse> deleteUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq) {
+        log.info("deleteUser - Call");
+
+        try {
+            userService.deleteUser(userSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
+        } catch (RuntimeException e){
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
+        }
+    }
+    @Tag(name = "회원")
+    @Operation(summary = "회원 수정", description = "회원의 정보 변경.")
+    @PostMapping("/{userSeq}")
+    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable int userSeq,
+                                                     @Parameter(description = "닉네임", required = true)  @RequestParam String nickname,
+                                                     @Parameter(description = "전화번호", required = true)  @RequestParam String phone,
+                                                     @Parameter(description = "회원 정보", required = true) @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
+        log.info("modifyUser - Call");
+
+        ModifyUserRequest modifyUserRequest = ModifyUserRequest.builder()
+                .nickname(nickname)
+                .phone(phone)
+                .profileImageFile(profileImageFile)
+                .build();
+
+        try {
+            userService.modifyUser(userSeq, modifyUserRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
+    }
+    @Tag(name = "회원")
+    @Operation(summary = "비밀번호 변경", description = "회원의 비밀번호 변경.")
+    @PutMapping("/password/{userSeq}")
+    private ResponseEntity<BasicResponse> modifyUser(@Parameter(description = "회원 Seq", required = true) @PathVariable Integer userSeq,
+                                                     @Parameter(description = "비밀번호", required = true)  @RequestBody Map<String,String> info){
+        log.info("modifyPassword - Call");
+
+        String password = info.get("password");
+        String newPassword = info.get("newPassword");
+        try {
+            userService.modifyPassword(userSeq, password, newPassword);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
+        }
     }
 }

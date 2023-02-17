@@ -1,0 +1,198 @@
+.team-progress-header{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.team-progress-title {
+  font-size: 44px;
+  text-align: center;
+  padding: 56px 200px;
+  cursor: pointer;
+}
+
+.team-progress-menu {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.team-maintain-profile-image > img {
+text-align: center;
+border-radius: 100%;
+border: 3px solid #574b9f;
+width: 66px;
+}
+
+.team-maintain-profile-image {
+padding: 5px 0px;
+}
+
+.team-maintain-profile {
+border: 2px solid #574b9f;
+border-radius: 20px;
+width: 320px;
+height: 200px;
+display: flex;
+justify-content: space-between;
+margin: 25px 0px;
+background-color: rgba(256, 256, 256, 0.5);
+}
+
+.team-maintain-profile:hover {
+box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
+transition-duration: 0.3s;
+cursor: pointer;
+}
+
+.team-maintain-warning-section {
+margin: auto;
+}
+.team-maintain-warning-section > div {
+padding: 7px 0px;
+}
+
+.team-maintain-warning {
+font-size: 33px;
+}
+
+.team-maintain-ban {
+margin: auto;
+}
+
+.team-maintain-profile-section {
+margin: auto;
+padding-left: 15px;
+}
+
+.team-maintain-body {
+width: 1000px;
+margin: auto;
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+}
+
+.team-maintain-profile-text > div {
+margin: 5px 5px 0px 5px;
+}
+
+.project-maintain-hr {
+border: 1px solid #463c7f;
+}
+
+
+.project-maintain-container{
+margin: auto;
+width: 80%;
+}
+
+.poject-maintain-width{
+margin: 35px 0px;
+}
+
+.project-maintain-title-section{
+font-size: 44px;
+margin: 0px 20px;
+display: flex;  
+justify-content: space-between;
+}
+
+.project-maintain-body{
+width: 88%;
+margin: auto;
+}
+
+.project-maintain-label{
+font-size: 27px;
+margin-bottom: 13px;
+}
+
+.project-maintain-text{
+padding: 15px 15px;
+font-size: 24px;
+background-color: white;
+border-radius: 10px;
+}
+
+.project-maintain-text-area{
+padding: 15px 15px;
+font-size: 24px;
+background-color: white;
+border-radius: 10px;
+overflow-wrap: break-word;
+}
+
+.project-maintain-subject-section,
+.project-maintain-detail-section,
+.project-maintain-gitUrl-section,
+.project-maintain-imgUrl-section,
+.project-maintain-field-seciton,
+.project-maintain-local-section,
+.project-maintain-contatct-section,
+.project-maintain-term-section,
+.project-maintain-poition-section{
+margin: 25px 0px;
+}
+
+.project-maintain-term-field-local-contact-position-section{
+display: flex;
+justify-content: space-between;
+flex-wrap: wrap;
+width: 500px;
+}
+
+.project-maintain-term-section,
+.project-maintain-field-seciton,
+.project-maintain-local-section,
+.project-maintain-contatct-section{
+width: 200px;
+margin:auto;
+}
+
+.project-maintain-imageUrl{
+width: 300px;
+height: 300px;
+background-color: white;
+border-radius: 50px;
+}
+
+.project-maintain-imgUrl-section{
+margin: 20px auto;
+}
+
+.project-maintain-position-item{
+padding: 10px 25px;
+font-size: 24px;
+background-color: white;
+border-radius: 10px;
+width: 200px;
+display: flex;
+justify-content: space-between;
+margin-right: 10px;
+}
+
+.project-maintain-poition-list{
+display: flex;
+}
+
+.project-maintain-position-cnt{
+background-color: #dddbec;
+width: 35px;
+height: 35px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+color: black;
+}
+
+.project-maintain-position-name{
+margin: auto;
+}
+
+.project-maintain-imgUrl-modify{
+display: flex;
+justify-content: space-evenly;
+margin-top: 10px;
+}

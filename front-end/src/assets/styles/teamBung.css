@@ -1,0 +1,133 @@
+.team-bung-container {
+  height: 100vh;
+}
+
+.team-bung-body {
+  margin-top: 108px;
+  position: relative;
+}
+
+.team-bung-body video {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  object-fit: fill;
+}
+
+.team-bung-item-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+}
+
+.team-bung-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  color: white;
+  font-size: 64px;
+  margin-top: 50px;
+  justify-content: center;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #dddbec;
+  text-shadow: 0px 5px 3px rgba(0, 0, 0, 0.5);
+}
+
+.team-bung-item {
+  width: 16%;
+  height: 50%;
+  background-color: #dddbec;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.team-bung-item {
+  animation-name: bungItem;
+  animation-duration: 5s;
+  animation-delay: 1s;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); /* 수치변형함수 */
+  animation-fill-mode: both;
+}
+
+@keyframes bungItem {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+}
+
+.team-bung-item-img {
+  width: 70%;
+  height: 50%;
+  border-radius: 50%;
+  margin-top: 30px;
+  box-shadow: 0 4px 4px rgba(129, 129, 129, 0.5);
+}
+
+.team-bung-item-name {
+  font-size: 2.2vw;
+  font-weight: bold;
+  margin-top: 40px;
+}
+
+.team-bung-item-position {
+  font-size: 1.35vw;
+  color: #616161;
+}
+
+.team-bung-item:hover {
+  filter: brightness(70%);
+}
+
+.team-bung-github{
+  display: none;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 15%;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-top: 30px;
+}
+
+.team-bung-github-img{
+  height: 100%;
+}
+
+.team-bung-item p{
+  display: none;
+}
+
+.team-bung-item:hover p{
+  display: block;
+  animation-name: gitItem;
+  animation-duration: 2s;
+  animation-delay: 0.1s;
+  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); /* 수치변형함수 */
+  animation-fill-mode: both;
+}
+
+@keyframes gitItem {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-30px);
+  }
+}

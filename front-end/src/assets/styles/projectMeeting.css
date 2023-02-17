@@ -1,0 +1,246 @@
+.project-meeting-container {
+  width: 100%;
+  height: 100%;
+  background-color: #ffff;
+}
+
+.project-meeting-main {
+  height: 100%;
+  display: flex;
+  position: relative;
+  padding: 20px 50px 200px 50px;
+}
+
+.project-meeting-footer {
+  width: 100%;
+  height: 102px;
+  background-color: #9a93c5;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 64px;
+}
+
+.project-meeting-btn {
+  display: flex;
+  width: 450px;
+  justify-content: space-between;
+}
+
+.project-meeting-footer-right {
+  display: flex;
+  width: 200px;
+  justify-content: space-between;
+}
+
+.project-meeting-footer-right-voice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/micBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.project-meeting-footer-right-novoice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/nomicBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.project-meeting-footer-right-video {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/videoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.project-meeting-footer-right-novideo {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/novideoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.project-meeting-footer-right-chat {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/chatBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.project-meeting-time {
+  width: 450px;
+  height: 57px;
+  background-color: #fff;
+  border-radius: 10px;
+  opacity: 0.5;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-meeting-person-vide-box {
+  width: 300px;
+  height: 250px;
+  border-radius: 25px;
+}
+
+.project-meeting-btn-code-edit-container,
+.project-meeting-btn-meeting-container,
+.project-meeting-btn-share-container,
+.project-meeting-btn-close-container {
+  width: 76px;
+  height: 76px;
+  text-align: center;
+  background-color: white;
+  border-radius: 50%;
+  border: 4px solid #574b9f;
+  padding: 10px;
+}
+
+.project-meeting-btn-code-edit-container:hover,
+.project-meeting-btn-meeting-container:hover,
+.project-meeting-btn-share-container:hover,
+.project-meeting-btn-close-container:hover {
+  cursor: pointer;
+}
+
+.project-meeting-btn-code-edit-container > img,
+.project-meeting-btn-meeting-container > img,
+.project-meeting-btn-share-container > img,
+.project-meeting-btn-close-container > img {
+  width: 30px;
+}
+
+.project-meeting-video-code-edit {
+  border: 1px solid black;
+  border-radius: 25px;
+  height: 95%;
+  width: 90%;
+  margin: auto;
+}
+
+.project-meeting-video-share {
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 25px;
+  height: 780px;
+  width: 1200px;
+  top: 20px;
+  left: 470px;
+}
+
+.project-meeting-video-share-paint {
+  position: absolute;
+  border-radius: 25px;
+  height: 780px;
+  width: 1200px;
+  top: 20px;
+  left: 470px;
+}
+
+.project-meeting-video-share-palette {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+}
+
+.project-meeting-video-share-palette2 {
+  border-radius: 25px;
+  background-color: #dddbec;
+  padding: 60px 0px;
+}
+
+.project-meeting-btn-code-edit,
+.project-meeting-btn-share {
+  font-size: 14px;
+}
+
+.project-meeting-video-share-eraser {
+  background-color: white;
+  border-radius: 20px;
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.project-meeting-video-share-color-palette {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 10px;
+  border-radius: 25px;
+  margin: 0px 10px;
+}
+
+.project-meeting-person-name {
+  width: 200px;
+  height: 50px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: #fff;
+  border-radius: 15px;
+  font-size: 33px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.CodeMirror-sizer {
+  margin-left: 30px !important;
+}
+
+.CodeMirror-gutters {
+  width: 29px !important;
+  border-right: 1px solid #ddd !important;
+  background-color: #f7f7f7 !important;
+}
+
+.project-meeting-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cm-s-monokai.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
+.cm-s-default.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
+.project-meeting-code-edit-select-box {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0px;
+}
+
+.project-meeting-code-edit-box {
+  width: 100%;
+  height: 100%;
+  border: 1px solid;
+}

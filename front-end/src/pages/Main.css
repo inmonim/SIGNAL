@@ -1,0 +1,107 @@
+.MainPage {
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  padding-top: 150px;
+}
+
+.right {
+  display: flex;
+  padding-top: 150px;
+}
+
+.img-wrap {
+  padding-bottom: 140px;
+}
+
+.sinal-img {
+  z-index: 1;
+  left: 300px;
+}
+.fanfare-img {
+  position: absolute;
+  z-index: 1;
+  transform: rotate(45deg);
+  top: 1050px;
+  left: 460px;
+}
+.sparkle-img {
+  position: absolute;
+  right: 30px;
+}
+
+img.main-2-img {
+  animation: target_image 2s;
+
+  animation-iteration-count: infinite;
+  transform-origin: 25% 100%;
+}
+
+@keyframes target_image {
+  0% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(-10deg);
+  }
+}
+
+.main-2-img {
+  position: relative;
+  width: 654px;
+  height: 540px;
+}
+
+.text-item {
+  font-size: 4.948vw;
+  text-align: center;
+  letter-spacing: 10px;
+  padding: 17px 0px;
+}
+
+.btn-item {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.slide-navigation button:nth-child(1) {
+  display: none;
+}
+
+.slide-navigation button:nth-last-child(1) {
+  display: none;
+}
+
+.slide-navigation button {
+  cursor: pointer;
+  width: 40px; /* 사이즈 */
+  height: 40px; /* 사이즈 */
+  border-top: 5px solid #000; /* 선 두께 */
+  border-right: 5px solid #000; /* 선 두께 */
+  border-bottom: 0px;
+  border-left: 0px;
+  transform: rotate(135deg); /* 각도 */
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 0px;
+  opacity: 70%;
+}
+
+.slide-navigation {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  bottom: 50px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slide-navigation button:disabled {
+  border-top: 5px solid #796fb2; /* 선 두께 */
+  border-right: 5px solid #796fb2; /* 선 두께 */
+}

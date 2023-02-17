@@ -1,0 +1,128 @@
+/* 평가 회차 탭 */
+.eval-count-tab-container {
+  width: 1000px;
+  border-bottom: 2px solid black;
+  margin: 30px;
+}
+
+.eval-count-tab-list {
+  display: flex;
+  font-size: 24px;
+  margin-left: 40px;
+  width: 900px;
+}
+
+.eval-count-tab {
+  background-color: white;
+  border: 2px solid #796fb2;
+  border-bottom: 0px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  width: 120px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+}
+
+.eval-count-tab.active {
+  background-color: #796fb2;
+  color: #fff;
+}
+
+.eval-container {
+  width: 1110px;
+  margin-top: 30px;
+}
+
+.eval-section {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.eval-member-bar {
+  width: 100px;
+  height: 500px;
+  padding: 20px 60px;
+}
+
+.eval-member {
+  font-size: 22px;
+  border: 2px solid #574b9f;
+  width: 70px;
+  height: 70px;
+  border-radius: 50px;
+  justify-content: center;
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.eval-member:hover {
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.22);
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.eval-member.active {
+  border: 2px solid #796fb2;
+  color: #616161;
+  text-decoration: line-through;
+}
+
+.eval-qna-container {
+  display: flex;
+  justify-content: center;
+}
+
+.eval-body {
+  width: 760px;
+}
+
+.eval-end {
+  background-color: #ccc;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  border-radius: 15px;
+}
+
+.last-eval {
+  font-size: 44px;
+  color: red;
+  margin: 15px 0px;
+}
+
+.eval-date {
+  color: #574b9f;
+  font-size: 22px;
+  margin-bottom: 22px;
+}
+
+.eval-question-body {
+  margin: 21px 0px;
+}
+
+.eval-question {
+  background-color: white;
+  border: 0.5px solid #574b9f;
+  border-radius: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  font-size: 27px;
+  margin-bottom: 21px;
+}
+
+.eval-question > img {
+  margin: 0px 20px 0px 20px;
+}
+
+.eval-radio-btn {
+  margin-left: 50px;
+}
