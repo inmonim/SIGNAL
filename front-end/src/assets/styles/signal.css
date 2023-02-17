@@ -1,0 +1,176 @@
+.signal-page-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 108px;
+}
+
+.signal-container {
+  width: 1125px;
+}
+
+.signal-header {
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.signal-header-title {
+  font-size: 44px;
+  display: flex;
+  justify-content: center;
+  margin-right: 2em;
+}
+
+.signal-header-regist {
+  display: block;
+  float: right;
+}
+
+/* 테이블 헤더  */
+thead.MuiTableHead-root {
+  border-bottom: 2px solid #796fb2;
+}
+
+th.MuiTableCell-root {
+  font-size: 24px;
+}
+
+/* 테이블 바디 */
+td.MuiTableCell-root {
+  font-size: 20px;
+}
+
+tbody.MuiTableBody-root {
+  height: 496px;
+  border-top: 2px solid #796fb2;
+  border-bottom: 2px solid #796fb2;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+/* signalDetail */
+.signal-detail-container {
+  width: 1125px;
+  height: 535px;
+  border-top: 2px solid #796fb2;
+}
+
+.signal-detail-comment-container {
+  border-bottom: 2px solid #796fb2;
+}
+
+.signal-detail-header {
+  height: 109px;
+  padding: 55px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #796fb2;
+}
+
+.signal-detail-title {
+  font-size: 44px;
+}
+
+.signal-detail-signalnum {
+  color: #463c7f;
+}
+
+.signal-detail-signalSeq {
+  font-size: 24px;
+}
+
+.signal-detail-modify {
+  cursor: pointer;
+  width: 26px;
+  margin: 0px 10px;
+}
+
+.signal-detail-delete {
+  cursor: pointer;
+  width: 26px;
+  margin: 0px 10px;
+}
+
+.signal-detail-middle {
+  height: 52px;
+  padding: 0px 45px;
+  border-bottom: 1px solid #796fb2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signal-detail-middle-view {
+  display: flex;
+  align-items: center;
+}
+
+.signal-detail-viewimg {
+  margin-right: 10px;
+}
+
+.signal-detail-content {
+  padding: 55px;
+  font-size: 24px;
+}
+
+.signal-detail-comment {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.signal-detail-comment-left {
+  font-size: 44px;
+  margin-left: 20px;
+}
+
+.signal-detail-comment-right {
+  position: relative;
+}
+
+.signal-detail-comment-answer {
+  position: absolute;
+  top: 40px;
+  left: 150px;
+  font-size: 24px;
+}
+
+/* signalRegist */
+.signal-regist-container {
+  width: 1125px;
+  margin: 70px auto;
+}
+.signal-regist-header {
+  font-size: 44px;
+  height: 67px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #796fb2;
+}
+
+.signal-regist-main {
+  padding: 55px;
+  font-size: 24px;
+}
+.signal-regist-title {
+  font-size: 44px;
+}
+
+.signal-term-valid-box {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(221, 219, 236, 0.6);
+  border-radius: 25px;
+  margin: 20px;
+}

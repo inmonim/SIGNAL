@@ -1,0 +1,91 @@
+.signaldetail-page-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 108px;
+  margin-bottom: 30px;
+}
+
+.signaldetail-container {
+  width: 1125px;
+  margin: auto;
+}
+
+.signaldetail-header {
+  font-size: 44px;
+  display: flex;
+  justify-content: center;
+}
+
+/* signaldetailDetail */
+.signaldetail-detail-container {
+  width: 1125px;
+  border-top: 2px solid #796fb2;
+  margin-top: 50px;
+}
+
+.signaldetail-detail-title {
+  justify-content: center;
+  font-size: 44px;
+  height: 109px;
+  padding: 55px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #796fb2;
+}
+
+.signaldetail-detail-middle {
+  height: 10px;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signaldetail-detail-middle-view {
+  display: flex;
+  align-items: center;
+}
+
+.signaldetail-detail-content {
+  padding: 55px;
+  font-size: 24px;
+  border: 2px solid #796fb2;
+  border-radius: 14px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.signaldetail-detail-content h1 {
+  font-size: 34px;
+  font-weight: bold;
+  padding: 15px 0px;
+}
+.signaldetail-detail-content h2 {
+  font-size: 30px;
+  font-weight: bold;
+  padding: 10px 0px;
+}
+.signaldetail-detail-content h3 {
+  font-size: 27px;
+  font-weight: bold;
+  padding: 5px 0px;
+}
+.signaldetail-detail-content p {
+  font-size: 22px;
+}
+
+.signaldetail-detail-content a {
+  text-decoration: underline;
+  color: #796fb2;
+}
+.player-wrapper {
+  padding-top: 7%; /* Player ratio: 100 / (1280 / 720) */
+}
+
+
+.signal-detail-title{
+  font-size: 44px;
+}

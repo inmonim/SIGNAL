@@ -1,0 +1,272 @@
+.before-meeting-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #dddbec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.before-meeting-center {
+  padding-bottom: 80px;
+}
+
+.before-meeting-main {
+  display: flex;
+  width: 100%;
+}
+
+.before-meeting-left-person {
+  width: 1164px;
+  height: 701px;
+  border: 2px solid #574b9f;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  margin: auto 50px;
+}
+
+.before-meeting-left-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.before-meeting-left-person-name {
+  width: 234px;
+  height: 84px;
+  position: absolute;
+  top: 576px;
+  left: 869px;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+}
+
+.before-meeting-right-person {
+  width: 412px;
+  height: 298px;
+  border: 2px solid #574b9f;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  margin: 0px 50px;
+}
+
+.before-meeting-right-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.before-meeting-right-person-name {
+  width: 90px;
+  height: 46px;
+  position: absolute;
+  top: 232px;
+  left: 305px;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.before-meeting-footer {
+  width: 100%;
+  height: 102px;
+  background-color: #9a93c5;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 64px;
+}
+
+.before-meeting-time {
+  width: 299px;
+  height: 57px;
+  background-color: #fff;
+  border-radius: 10px;
+  opacity: 0.5;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.before-meeting-btn {
+  display: flex;
+  width: 170px;
+  justify-content: space-between;
+}
+
+.before-meeting-btn-memo-container {
+  text-align: center;
+}
+
+.before-meeting-btn-memo {
+  width: 59px;
+  height: 59px;
+  border: 3px solid #574b9f;
+  border-radius: 50%;
+  background-color: #dddbec;
+  overflow: hidden;
+  background-image: url(assets/image/pencil1.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0px 6px 4px 0px rgba(1, 1, 1, 0.25);
+}
+
+.before-meeting-btn-qna {
+  width: 59px;
+  height: 59px;
+  border: 3px solid #574b9f;
+  border-radius: 50%;
+  background-color: #dddbec;
+  overflow: hidden;
+  background-image: url(assets/image/qa2.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0px 6px 4px 0px rgba(1, 1, 1, 0.25);
+}
+
+.before-meeting-btn-door-container {
+  text-align: center;
+}
+
+.before-meeting-btn-door {
+  width: 59px;
+  height: 59px;
+  border: 3px solid #574b9f;
+  border-radius: 50%;
+  background-color: #dddbec;
+  background-image: url(assets/image/exit.png);
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  box-shadow: 0px 6px 4px 0px rgba(1, 1, 1, 0.25);
+}
+
+.before-meeting-btn-name {
+  padding: 5px;
+}
+
+.before-meeting-footer-right {
+  display: flex;
+  width: 200px;
+  justify-content: space-between;
+}
+
+.before-meeting-footer-right-voice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/micBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.before-meeting-footer-right-novoice {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/nomicBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.before-meeting-footer-right-video {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/videoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.before-meeting-footer-right-novideo {
+  width: 53px;
+  height: 52px;
+  overflow: hidden;
+  background-image: url(assets/image/novideoBtn.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.before-meeting-qna-section {
+  position: absolute;
+  top: 400px;
+  left: 73%;
+  width: 22%;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 25px;
+  height: 400px;
+  font-size: 33px;
+}
+
+.before-meeting-qna-cancel-btn:hover {
+  cursor: pointer;
+}
+
+.before-meeting-body {
+  font-size: 17px;
+  padding: 10px;
+}
+
+.before-meeting-qna-heade {
+  height: 70px;
+}
+
+.before-meeting-qna-title {
+  text-align: center;
+  margin: auto;
+  position: relative;
+  top: 27px;
+}
+
+.before-meeting-qna-cancel-btn {
+  position: relative;
+  top: -20px;
+  left: 80%;
+}
+
+.before-meeting-qusetion {
+  margin: 20px 0px;
+}
+
+.before-meeting-answer {
+  background-color: white;
+  border-radius: 15px;
+  border: 1px solid #574b9f;
+  padding: 10px;
+  margin: 20px 0px;
+}
+
+.before-meeting-memo-content{
+  resize: none;
+}
+
+.before-meeting-memo-content::-webkit-scrollbar
+ {
+  width: 10px;
+}
+
+.before-meeting-memo-content::-webkit-scrollbar-thumb {
+  background-color: #9A93C5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}

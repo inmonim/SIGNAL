@@ -1,0 +1,72 @@
+.user-heart-modal-container {
+}
+
+.my-user-heart-modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-user-heart-modal {
+  width: 122px;
+  height: 103px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-user-heart-modal-charge {
+  display: flex;
+  align-items: center;
+}
+
+.my-user-heart-modal-img {
+  width: 100px;
+  height: 100px;
+}
+
+.my-user-heart-modal-cnt {
+  font-size: 44px;
+  color: #574b9f;
+  margin-left: 10px;
+}
+
+.my-user-heart-modal-bottom-container {
+  width: 500px;
+  height: 270px;
+  margin: 30px auto;
+}
+.my-user-heart-modal-bottom {
+  height: 200px;
+  overflow-y: scroll;
+}
+
+.my-user-heart-modal-bottom::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-user-heart-modal-bottom::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.my-user-heart-modal-bottom-title {
+  font-size: 34px;
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
+}
+
+.my-user-heart-modal-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  padding: 8px 5px;
+}
+
+.my-user-heart-modal-content-right {
+  color: #574b9f;
+}

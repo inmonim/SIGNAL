@@ -1,0 +1,155 @@
+.signal-rank-page-container{
+  margin-top: 108px;
+  height: 100vh;
+  position: relative;
+  display: flex;
+}
+
+.back-lottie-left{
+  position: absolute;
+  object-fit: fill;
+  left: 0;
+}
+
+.back-lottie-right{
+  position: absolute;
+  object-fit: fill;
+  right: 0;
+}
+
+.signal-rank-back{
+  width: 100%;
+  height: 100%;
+  background-color: #272d41;
+}
+
+.signal-rank-container{
+  width: 1125px;
+  margin: auto;
+  z-index: 3;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.signal-rank-header{
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.signal-rank-header-title{
+  font-size: 44px;
+  display: flex;
+  justify-content: center;
+  color: #272d41;
+  margin: 30px 0px;
+  background-color: #dddbec;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.signal-rank-header-sub{
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  margin: 30px 0px;
+}
+
+.signal-rank-header-now{
+  color: #dddbec;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.signal-rank-header-menu{
+  color: #dddbec;
+}
+
+.signal-rank-header-menu:hover{
+  color: #9A93C5;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.signal-rank-1st-container{
+  display: flex;
+  justify-content: center;
+}
+
+.signal-rank-1st {
+  border-radius: 8px;
+  background-color: #dddbec;
+  box-shadow: 0px 4px 4px 0px rgba(1, 1, 1, 0.25);
+  display: flex;
+  width: 281px;
+  height: 223px;
+  padding: 15px 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.signal-rank-1st-img {
+  width: 252px;
+  height: 125px;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signal-rank-1st-img-item {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 5px;
+}
+
+.signal-rank-1st-subject {
+  width: 252px;
+  height: 56px;
+  font-size: 27px;
+  display: flex;
+  align-items: center;
+  margin: auto 0px;
+}
+
+.signal-rank-under-container{
+  display: flex;
+  justify-content: space-between;
+  margin: 100px;
+}
+
+.signal-rank-img{
+  margin-bottom: 30px;
+}
+
+/* 시그널 위크 수상작 리스트 */
+.signal-rank-list-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 108px;
+}
+
+.signal-rank-list-container {
+  width: 1125px;
+  margin: auto;
+}
+
+.signal-rank-list-header {
+  font-size: 44px;
+  display: flex;
+  justify-content: center;
+  padding: 30px 0px;
+}
+
+.signal-rank-list-table{
+  width: 100%;
+}

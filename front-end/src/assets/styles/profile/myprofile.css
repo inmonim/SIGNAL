@@ -1,0 +1,233 @@
+.my-container {
+  width: 1152px;
+  background-color: #dddbec;
+  margin: 108px auto 0px auto;
+}
+
+.my-main {
+  width: 100%;
+  min-height: 1200px;
+  overflow: hidden;
+  background-image: url('assets/image/myprofile-back.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+/* 회원정보 부분 */
+
+.my-user {
+  padding: 111px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-user-img {
+  border-radius: 50%;
+  width: 195px;
+  height: 195px;
+  object-fit: contain;
+}
+
+.my-user-nickname {
+  font-size: 44px;
+  color: #463c7f;
+  margin: 8px 0px;
+}
+
+.my-user-email {
+  font-size: 24px;
+  color: #616161;
+  margin: 8px 0px;
+}
+
+.my-user-heart {
+  width: 122px;
+  height: 103px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-user-heart-img {
+  width: 50px;
+  height: 50px;
+}
+
+.my-user-heart-cnt {
+  font-size: 24px;
+}
+
+.my-user-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 150px;
+  margin-left: 50px;
+}
+
+/* 프로필 부분 */
+
+.my-profile {
+  padding: 0px 25px;
+  display: flex;
+}
+
+.my-profile-container {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+.my-profile-four,
+.my-posting-apply {
+  margin: 107px 95px;
+}
+
+.my-profile-top,
+.my-profile-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.my-profile-top-position,
+.my-profile-top-skill {
+  width: 353px;
+  height: 233px;
+}
+.my-profile-bottom-exp,
+.my-profile-bottom-career {
+  width: 353px;
+}
+
+.my-profile-plus-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.my-profile-plus-btn-img {
+  width: 20px;
+  height: 20px;
+}
+
+.my-profile-top-position-title,
+.my-profile-top-skill-title,
+.my-profile-bottom-exp-title,
+.my-profile-bottom-career-title {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  font-size: 27px;
+  padding-bottom: 20px;
+}
+
+.my-profile-top-position-title::after,
+.my-profile-top-skill-title::after,
+.my-profile-bottom-exp-title::after,
+.my-profile-bottom-career-title::after {
+  content: '';
+  flex-grow: 1;
+  border: 3px solid #796fb2;
+  margin-left: 20px;
+}
+
+.my-profile-top-skill-list {
+  display: flex;
+  padding-left: 10px;
+  width: 360px;
+  flex-wrap: wrap;
+  height: 180px;
+  overflow: auto;
+}
+
+.my-profile-top-skill-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-top-skill-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.my-profile-top-skill-list-item {
+  margin: 5px;
+}
+
+.my-profile-bottom-exp-list,
+.my-profile-bottom-career-list {
+  padding-left: 10px;
+  font-size: 22px;
+  overflow-wrap: break-word;
+  height: 190px;
+  overflow: auto;
+}
+
+.my-profile-bottom-exp-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-bottom-exp-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.my-profile-bottom-career-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+.my-profile-bottom-career-list::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.my-profile-bottom-exp-list-item,
+.my-profile-bottom-career-list-item {
+  margin: 5px 0px;
+}
+
+.my-profile-table {
+  border-top: 2px solid #796fb2;
+}
+
+.my-profile-tab-list {
+  display: flex;
+  font-size: 27px;
+}
+
+.my-profile-tab {
+  background-color: white;
+  border: 2px solid #796fb2;
+  border-bottom: 0px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 12px 12px;
+  cursor: pointer;
+}
+.my-profile-tab.active {
+  background-color: #796fb2;
+  color: #fff;
+}
+
+.my-profile-no-table-container {
+  height: 604px;
+  border-bottom: 2px solid #796fb2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.my-profile-no-table {
+  font-size: 44px;
+  padding: 30px;
+}

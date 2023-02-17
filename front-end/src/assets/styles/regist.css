@@ -1,0 +1,82 @@
+.regist-back {
+  min-height: 1400px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 108px;
+  background-image: url('assets/image/myprofile-back.png');
+  background-color: #dddbec;
+}
+.regist-container {
+  width: 850px;
+  margin: auto;
+}
+
+.regist-main {
+  width: 100%;
+  overflow: hidden;
+  background-color: white;
+  opacity: 80%;
+  border-radius: 15px;
+}
+
+.regist-title {
+  text-align: center;
+  font-size: 47px;
+  margin: 40px auto;
+}
+
+.regist-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.regist-input-item {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.regist-input-label {
+  font-size: 24px;
+  margin-right: 20px;
+}
+
+.regist-terms-container {
+  margin-top: 40px;
+  width: 700px;
+  height: 150px;
+  border: 2px solid #616161;
+  border-radius: 5px;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.regist-terms-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.regist-terms-container::-webkit-scrollbar-thumb {
+  background-color: #9a93c5;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.regist-terms {
+  font-size: 18px;
+  color: #616161;
+}
+
+.regist-terms-agree {
+  margin-top: 10px;
+}
+
+.regist-terms-agree-msg{
+  text-align: center;
+  font-size: 27px;
+  color: red;
+}
