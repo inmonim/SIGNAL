@@ -47,7 +47,6 @@ function TeamEval({ projectSeq, setMode }) {
   }
 
   useEffect(() => {
-    // setFlag(false)
     projectMemeberFetch()
   }, [flag, tab])
 

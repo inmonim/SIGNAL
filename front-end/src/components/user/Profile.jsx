@@ -4,7 +4,6 @@ import Chip from '@mui/material/Chip'
 import InputTopModal from 'components/user/InputTopModal'
 import InputBottomModal from 'components/user/InputBottomModal'
 import { Avatar } from '@mui/material'
-// import skillimg from 'assets/image/Skilltest/React.png'
 import { commonCodeListFetch } from 'utils/commonCodeFetch'
 import { changeSelectForm } from 'utils/changeForm'
 import { getPositionName } from 'data/Positiondata'
@@ -24,8 +23,6 @@ function Profile(profile) {
     setOpenInputExpModal(false)
     setOpenInputCareerModal(false)
   }
-
-  // const [data, setData] = useState([])
 
   const handleToInputPositionModal = async () => {
     setInputTopTitle('포지션')

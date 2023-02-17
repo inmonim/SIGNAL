@@ -32,7 +32,6 @@ function InputBottomModal({ open, onClose, inputTopTitle }) {
     }
   }
   const handleHashtagChange = (event) => {
-    // handleToSetTag(event.target.value)
     setTag(event.target.value)
   }
   const newTag = async () => {

@@ -30,10 +30,6 @@
   object-fit: contain;
 }
 
-/* .my-user-info{
-  padding-right: ;
-} */
-
 .my-user-nickname {
   font-size: 44px;
   color: #463c7f;
@@ -89,7 +85,6 @@
 
 .my-profile-four,
 .my-posting-apply {
-  /* border: 1px solid black; */
   margin: 107px 95px;
 }
 

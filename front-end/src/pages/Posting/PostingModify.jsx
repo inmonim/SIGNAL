@@ -419,7 +419,7 @@ const PostingModify = () => {
               </div>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>{/* <Label>화상미팅 예약</Label> */}</div>
+              <div style={{ width: '30%' }}></div>
               <div style={{ width: '70%' }}></div>
             </div>
           </div>
@@ -505,7 +505,7 @@ const PostingModify = () => {
               ></CareerList>
             </div>
             <div className="email-section" style={{ marginLeft: '3em' }}>
-              <div style={{ width: '30%' }}>{/* <Label>팀장 포지션</Label> */}</div>
+              <div style={{ width: '30%' }}></div>
               <div style={{ width: '70%', display: 'flex' }}></div>
             </div>
           </div>

@@ -9,24 +9,15 @@ const Chatting = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     // 받은 메시지 표시하기
     getMessage(data) {
-      console.log('보낸사람이름:', data.userName)
       const chattArr = [...chatList]
       chattArr.push({
         flag: false,
-        // message: '[' + data.userName + '] : ' + data.message,
         message: data.message,
         nickname: data.userName,
       })
       setChatList(chattArr)
     },
   }))
-
-  // const userProfileFetch = async () => {
-  //   try {
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
 
   // true 보낸거, false 받은거
   const [chatList, setChatList] = useState([])

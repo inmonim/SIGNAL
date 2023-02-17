@@ -25,7 +25,6 @@ const StateCode = styled.div`
 `
 
 const teamSelectBtn = (props) => {
-  console.log('dffdㅇ랸애런ㅁㅇ러', props)
   return css`
     visibility: ${props.state === '미선택' ? 'visible' : 'hidden'};
     background-color: white;
