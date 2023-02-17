@@ -1,5 +1,3 @@
-// 라우터 관리
-// React-Router
 import React from 'react'
 import Header from 'components/Layout/Header'
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
@@ -27,8 +25,6 @@ import PostingModify from 'pages/Posting/PostingModify'
 import Beforemeeting from 'pages/Apply/Beforemeeting'
 import ProjectHeader from './pages/Project/ProjectHeader'
 import EndProject from './pages/Project/EndProject'
-// import TeamMaintain from 'components/Project/TeamMaintain'
-// import ProjectMaintain from 'components/Project/ProjectMaintain'
 import ScrollTop from 'components/common/ScrollTop'
 import SignalList from 'pages/Signal/SignalList'
 import Signalregister from 'pages/Signal/Signalregister'
@@ -36,7 +32,6 @@ import SignalDetail from 'pages/Signal/SignalDetail'
 import SignalHonor from 'pages/Signal/SignalHonor'
 import SignalHonorMain from 'pages/Signal/SignalHonorMain'
 import SignalHonorList from 'pages/Signal/SignalHonorList'
-
 import AdminBalckList from 'pages/Admin/AdminBlackList'
 import AdminProject from 'pages/Admin/AdminProject'
 import AdminSignalWeek from 'pages/Admin/AdminSignalWeek'
@@ -44,18 +39,10 @@ import OpenprofileDetail from 'pages/Openprofile/OpenprofileDetail'
 import ProjectMeeting from 'pages/Project/ProjectMeeting'
 import Openprofile from 'pages/Openprofile/Openprofile'
 import Footer from 'components/Layout/Footer'
-
 import Fourzerofour from 'pages/fourzerofour'
 import PrivateRoute from 'components/Auth/PrivateRoute'
 import AdminRoute from 'components/Auth/AuthRoute'
 import TeamBung from 'pages/TeamBung'
-
-// const Posting = lazy(() => import('./pages/Posting/Posting'))
-// const MyProject = lazy(() => import('./pages/Project/MyProject'))
-// const PostingDetail = lazy(() => import('./pages/Posting/PostingDetail'))
-// const PostingRegister = lazy(() => import('./pages/Posting/PostingRegister'))
-// usenavigate lazy 안되는듯 ?// const Board = lazy(() => import('./pages/Board/Board'))
-// const Qna = lazy(() => import('./pages/QnA/Qna'))
 
 const MainLayout = () => {
   return (
@@ -103,20 +90,6 @@ function App() {
             <Route path="/openprofile" element={<Openprofile />} />
             <Route path="/openprofiledetail" element={<OpenprofileDetail />} />
             <Route path="/teamBung" element={<TeamBung />} />
-            {/* <Route path="/applymodify" element={<ApplyModify />} /> */}
-            {/* <Route path="/postingmodify" element={<PostingModify />} /> */}
-            {/* <Route path="/applyregister" element={<ApplyRegister />} /> */}
-            {/* <Route path="/postingregister" element={<PostingRegister />} /> */}
-            {/* <Route path="/posting/:id" element={<PostingDetail />} /> */}
-            {/* <Route path="/teamMaintain" element={<TeamMaintain />} /> */}
-            {/* <Route path="/projectMaintain" element={<ProjectMaintain />} /> */}
-            {/* <Route path="/myproject" element={<MyProject />} /> */}
-            {/* <Route path="/noticeRegist" element={<NoticeRegist />} /> */}
-            {/* <Route path="/noticeModify" element={<NoticeModify />} /> */}
-            {/* <Route path="/qnaRegist" element={<QnaRegist />} /> */}
-            {/* <Route path="/qnaModify" element={<QnaModify />} /> */}
-            {/* <Route path="/myprofile" element={<MyProfile />} /> */}
-            {/* <Route path="/signalregister" element={<Signalregister />} /> */}
             {/* 
             
             

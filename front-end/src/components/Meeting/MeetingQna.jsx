@@ -1,4 +1,3 @@
-// import api from 'api/Api'
 import React, { useState, useEffect } from 'react'
 import cancleButton from 'assets/image/x.png'
 import 'assets/styles/beforemeeting.css'

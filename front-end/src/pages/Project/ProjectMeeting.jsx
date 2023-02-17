@@ -461,7 +461,6 @@ function ProjectMeeting() {
         } else if (purpose === 'share') {
           shareOntrackHandler(e.streams[0], userName, senderSocketId)
         }
-        // console.log('한번만 나오는지')
       }
       once += 1
     }

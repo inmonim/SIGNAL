@@ -51,7 +51,6 @@ export default function PostingCardItem({ post }) {
           {post.postingSkillList.map((ele) => {
             return (
               <Box sx={{ mr: 1, fontSize: '13px' }} key={ele.postingSkillSeq}>
-                {/* {JSON.stringify(ele.code.url)} */}
                 <img
                   src={process.env.REACT_APP_API_URL + ele.code.url}
                   alt=" "

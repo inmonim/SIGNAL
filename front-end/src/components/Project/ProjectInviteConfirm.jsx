@@ -94,7 +94,6 @@ function ProjectTeamSelectConfirmModal(props) {
   }
 
   return (
-    // <CssVarsProvider>
     <>
       <TeamSelectBtn state={props.apply.applyCode.name} valid={props.valid} onClick={handleOpen}>
         팀원 선택
@@ -117,7 +116,6 @@ function ProjectTeamSelectConfirmModal(props) {
         </div>
       </Dialog>
     </>
-    // </CssVarsProvider>
   )
 }
 export default ProjectTeamSelectConfirmModal
