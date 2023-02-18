@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/project")
 public class AdminProjectController {
     private final AdminProjectService adminProjectService;
+
     @Tag(name = "관리자")
     @Operation(summary = "프로젝트 목록 조회", description = "프로젝트 목록을 조회한다.")
     @ApiResponses({

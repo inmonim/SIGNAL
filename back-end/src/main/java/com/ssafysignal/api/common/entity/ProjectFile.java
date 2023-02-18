@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_file")
 public class ProjectFile {
 
@@ -38,14 +39,4 @@ public class ProjectFile {
     @Column(name = "reg_dt")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
-
-    @Builder
-    private ProjectFile(Integer fileSeq, String name, Long size, String type, String url, LocalDateTime regDt) {
-        this.fileSeq = fileSeq;
-        this.name = name;
-        this.size = size;
-        this.type = type;
-        this.url = url;
-        this.regDt = regDt;
-    }
 }

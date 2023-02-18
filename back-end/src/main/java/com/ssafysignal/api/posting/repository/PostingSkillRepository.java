@@ -1,6 +1,5 @@
 package com.ssafysignal.api.posting.repository;
 
-import com.ssafysignal.api.posting.entity.Posting;
 import com.ssafysignal.api.posting.entity.PostingSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

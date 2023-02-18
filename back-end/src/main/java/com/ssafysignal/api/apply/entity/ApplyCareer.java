@@ -20,10 +20,8 @@ public class ApplyCareer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_career_seq")
     private Integer applyCareerSeq;
-
     @Column(name = "apply_seq")
     private Integer applySeq;
-
     @Column(name = "content")
     private String content;
 }

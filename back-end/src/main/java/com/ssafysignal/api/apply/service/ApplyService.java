@@ -130,6 +130,7 @@ public class ApplyService {
 
         postingMeetingRepository.save(postingMeeting);
     }
+
     @Transactional(readOnly = true)
     public FindApplyResponse findApply(Integer applySeq) {
         Apply apply = applyRepository.findById(applySeq)
@@ -161,6 +162,7 @@ public class ApplyService {
                 .isMyApply(apply.getUserSeq().equals(userSeq))
                 .build();
     }
+
     @Transactional
     public void modifyApply(BasicApplyRequest applyModifyRequest, Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
@@ -233,6 +235,7 @@ public class ApplyService {
         }
         applyRepository.save(apply);
     }
+
     @Transactional
     public void cancleApply(Integer applySeq) throws RuntimeException {
         Apply apply = applyRepository.findById(applySeq)
@@ -250,6 +253,7 @@ public class ApplyService {
         apply.setStateCode("PAS104");
         applyRepository.save(apply);
     }
+
     @Transactional(readOnly = true)
     public String findApplyMemo(Integer applySeq) {
         Apply apply = applyRepository.findById(applySeq)
@@ -257,16 +261,19 @@ public class ApplyService {
 
         return apply.getMemo();
     }
+
     @Transactional(readOnly = true)
     public Map<String,Integer> countApplyWriter(Integer postingSeq){
         Integer totalCnt = applyRepository.countByPostingSeq(postingSeq);
         return new HashMap<String, Integer>() {{ put("count", totalCnt); }};
     }
+
     @Transactional(readOnly = true)
     public Map<String,Integer> countApplyApplyer(Integer userSeq){
         Integer totalCnt = applyRepository.countByUserSeq(userSeq);
         return new HashMap<String, Integer>() {{ put("count", totalCnt); }};
     }
+
     @Transactional(readOnly = true)
     public Map<String, Object> findAllApplyWriter(Integer postingSeq, Integer page, Integer size){
         List<Apply> applyList = applyRepository.findAllByPostingSeq(postingSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
@@ -281,11 +288,13 @@ public class ApplyService {
         resList.put("waitCnt", waitCnt);
         return resList;
     }
+
     @Transactional(readOnly = true)
     public List<Apply> findAllApplyApplyer(Integer userSeq, Integer page, Integer size){
         List<Apply> applyList = applyRepository.findAllByUserSeq(userSeq, PageRequest.of(page - 1, size, Sort.Direction.DESC, "applySeq"));
         return applyList;
     }
+
     @Transactional
     public void modifyApplyMemo(ApplyMemoRequest applyMemoRequest) {
         Apply apply = applyRepository.findById(applyMemoRequest.getApplySeq())

@@ -1,6 +1,5 @@
 package com.ssafysignal.api.todolist.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ssafysignal.api.common.entity.CommonCode;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -12,10 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_to_do")
 public class Todolist {
     @Id
@@ -36,14 +36,4 @@ public class Todolist {
     @OneToOne
     @JoinColumn(name = "to_do_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public Todolist(Integer projectToDoSeq, Integer projectSeq, Integer userSeq, String content, String toDoCode, LocalDateTime regDt) {
-        this.projectToDoSeq = projectToDoSeq;
-        this.projectSeq = projectSeq;
-        this.userSeq = userSeq;
-        this.content = content;
-        this.toDoCode = toDoCode;
-        this.regDt = regDt;
-    }
 }

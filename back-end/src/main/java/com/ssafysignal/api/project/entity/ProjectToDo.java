@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@ToString
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_to_do")
 public class ProjectToDo {
     @Id
@@ -34,15 +36,4 @@ public class ProjectToDo {
     @OneToOne
     @JoinColumn(name = "to_do_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public ProjectToDo(Integer projectToDoSeq, Integer projectSeq, Integer userSeq, String content, String toDoCode, LocalDateTime regDt, CommonCode code) {
-        this.projectToDoSeq = projectToDoSeq;
-        this.projectSeq = projectSeq;
-        this.userSeq = userSeq;
-        this.content = content;
-        this.toDoCode = toDoCode;
-        this.regDt = regDt;
-        this.code = code;
-    }
 }

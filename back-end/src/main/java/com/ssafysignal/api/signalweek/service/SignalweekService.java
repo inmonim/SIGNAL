@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,6 @@ public class SignalweekService {
     private final SignalweekRankRepository signalweekRankRepository;
     private final UserHeartLogRepository userHeartLogRepository;
 
-    // 등록
     @Transactional
     public void registSinalweek(HashMap<String, Object> signalweekRegistRequest, MultipartFile pptFile, MultipartFile readmeFile) throws IOException {
         Project project = projectRepository.findById((Integer) signalweekRegistRequest.get("projectSeq")).orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
@@ -130,7 +128,7 @@ public class SignalweekService {
             signalweekRepository.save(signalweek);
         }
     }
-    // 목록 조회
+
     @Transactional(readOnly = true)
     public FindAllSignalweekResponse findAllSignalweek(Integer page, Integer size, String searchKeyword) {
 
@@ -144,7 +142,7 @@ public class SignalweekService {
 
         return findAllSignalweekResponse;
     }
-    // 상세 조회
+
     @Transactional
     public FindSignalweekResponse findSignalweek(Integer signalweekSeq, Integer userSeq) {
         Signalweek signalweek = signalweekRepository.findBySignalweekSeq(signalweekSeq)
@@ -170,7 +168,7 @@ public class SignalweekService {
                 .vote(vote)
                 .build();
     }
-    // 투표
+
     @Transactional
     public boolean registSignalweekVote(RegistSignalweekVoteRequest registSignalweekVoteRequest) {
         boolean res = false;
@@ -198,7 +196,7 @@ public class SignalweekService {
         }
         return res;
     }
-    // 띵예의 전당
+
     @Transactional(readOnly = true)
     public List<FindSignalweekRankResponse> findAllSiganlweekRank(Integer year, Integer quarter) {
        SignalweekSchedule signalweekScheduleList = signalweekScheduleRepository.findByYearAndQuarter(year,quarter);
@@ -220,7 +218,7 @@ public class SignalweekService {
 
         return responseSignalweekRank;
     }
-    // 시그널 위크 엔딩 정산
+
     @Transactional
     public void endSignalweek() {
 
@@ -256,6 +254,7 @@ public class SignalweekService {
             }
         }
     }
+
     @Transactional
     public FindAllSignalweekScheduleResponse findAllSignalweekSchedule(Integer page, Integer size){
         Page<SignalweekSchedule> signalweekScheduleList = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.by(Sort.Order.desc("quarter"), Sort.Order.desc("year"))));

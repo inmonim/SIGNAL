@@ -19,6 +19,5 @@ public interface SignalweekRankRepository extends JpaRepository<SignalweekRank, 
             + ")\n" + "group by signalweek_seq;", nativeQuery = true)
     List<List<Integer>> findByRank(@Param("scheduleSeq") Integer signalweekScheduleSeq);
     List<SignalweekRank> findAllBySignalweekScheduleSeq(Integer signalweekScheduleSeq);
-
     Integer countBySignalweekScheduleSeq(Integer signalweekScheduleSeq);
 }

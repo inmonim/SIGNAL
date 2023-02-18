@@ -61,9 +61,6 @@ public class FileService {
         String uploadUrl = String.format("%s%s%s%s%s.%s", uploadPath + referancePath, File.separator, uploadDir, File.separator, name, type);
         String url = String.format("%s%s%s%s%s.%s", referancePath, File.separator, uploadDir, File.separator, name, type);
 
-        System.out.println("uploadUrl = " + uploadUrl);
-        System.out.println("url = " + url);
-
         // 이미지 저장
         File saveFile = new File(uploadUrl);
         uploadFile.transferTo(saveFile);

@@ -23,6 +23,7 @@ import java.util.Map;
 @RequestMapping("/admin/qna")
 public class AdminQnaController {
     private final AdminQnaService adminQnaService;
+
     @Tag(name = "관리자")
     @Operation(summary = "Faq 등록", description = "Faq를 등록한다.")
     @ApiResponses({
@@ -41,6 +42,7 @@ public class AdminQnaController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "Qna 댓글 등록", description = "Qna 댓글을 등록한다.")
     @ApiResponses({
@@ -61,6 +63,7 @@ public class AdminQnaController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "Qna 댓글 수정", description = "Qna 댓글을 수정한다.")
     @ApiResponses({
@@ -83,6 +86,7 @@ public class AdminQnaController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "Qna 댓글 삭제", description = "Qna 댓글을 삭제한다.")
     @ApiResponses({

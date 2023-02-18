@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@ToString
+@Builder
+@AllArgsConstructor
 @Table(name = "auth")
 public class Auth {
     @Id
@@ -32,15 +33,4 @@ public class Auth {
     private boolean isAuth;
     @Column(name = "code")
     private String code;
-
-    @Builder
-    public Auth(Integer authSeq, Integer userSeq, String authCode, LocalDateTime authDt, LocalDateTime regDt, boolean isAuth, String code) {
-        this.authSeq = authSeq;
-        this.userSeq = userSeq;
-        this.authCode = authCode;
-        this.authDt = authDt;
-        this.regDt = regDt;
-        this.isAuth = isAuth;
-        this.code = code;
-    }
 }

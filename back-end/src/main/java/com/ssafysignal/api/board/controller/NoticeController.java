@@ -46,7 +46,6 @@ public class NoticeController {
         }
     }
 
-
     @Tag(name = "공지사항")
     @Operation(summary = "공지사항 목록조회", description = "공지사항 목록을 조회합니다.")
     @GetMapping("")
@@ -58,12 +57,10 @@ public class NoticeController {
         return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, FindAllNoticeResponse.fromEntity(noticeList)));
     }
 
-
     @Tag(name = "공지사항")
     @Operation(summary = "공지사항 상세조회", description = "공지사항을 조회합니다.")
     @GetMapping("/{noticeSeq}")
     private  ResponseEntity<BasicResponse> findNotice(@Parameter(description = "공지사항 Seq", required = true) @PathVariable("noticeSeq") Integer noticeSeq) {
-
         log.info("findNotice - Call");
 
         try {

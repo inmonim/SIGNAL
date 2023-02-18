@@ -20,10 +20,8 @@ public class ApplySkill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_skill_seq")
     private Integer applySkillSeq;
-
     @Column(name = "apply_seq")
     private Integer applySeq;
-
     @Column(name = "skill_code")
     private String skillCode;
 }

@@ -8,13 +8,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "image_file")
 public class ImageFile {
     @Id
@@ -32,14 +33,4 @@ public class ImageFile {
     @Column(name = "reg_dt")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime regDt;
-
-    @Builder
-    public ImageFile(Integer imageFileSeq, String name, Long size, String type, String url, LocalDateTime regDt) {
-        this.imageFileSeq = imageFileSeq;
-        this.name = name;
-        this.size = size;
-        this.type = type;
-        this.url = url;
-        this.regDt = regDt;
-    }
 }

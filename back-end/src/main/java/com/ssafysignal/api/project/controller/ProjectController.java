@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
-
     private final ProjectService projectService;
 
     @Tag(name = "프로젝트")

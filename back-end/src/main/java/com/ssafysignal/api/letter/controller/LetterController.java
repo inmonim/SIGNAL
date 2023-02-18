@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/letter")
 public class LetterController {
-
     private final LetterService letterService;
 
     @Tag(name = "쪽지")

@@ -22,16 +22,12 @@ public class SignalweekVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "signalweek_vote_seq")
     private Integer signalweekVoteSeq;
-
     @Column(name = "signalweek_seq")
     private Integer signalweekSeq;
-
     @Column(name = "from_user_seq")
     private Integer fromUserSeq;
-
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-
     @Column(name = "signalweek_schedule_seq")
     private Integer signalweekScheduleSeq;
 }

@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/openprofile")
 public class OpenProfileController {
-
     private final OpenProfileService openProfileService;
+
     @Tag(name = "오픈 프로필")
     @Operation(summary = "오픈 프로필 등록", description = "오픈 프로필을 등록한다.")
     @ApiResponses({
@@ -42,7 +42,6 @@ public class OpenProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
-
 
     @Tag(name = "오픈 프로필")
     @Operation(summary = "오픈 프로필 조회", description = "오픈 프로필을 조회한다.")

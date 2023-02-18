@@ -4,7 +4,7 @@ import com.ssafysignal.api.global.response.BasicResponse;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.todolist.dto.request.ModifyTodoRequest;
 import com.ssafysignal.api.todolist.dto.request.RegistTodoRequest;
-import com.ssafysignal.api.todolist.dto.response.TodolistFindResponse;
+import com.ssafysignal.api.todolist.dto.response.FindTodolistResponse;
 import com.ssafysignal.api.todolist.service.TodolistService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +48,7 @@ public class TodolistController {
         log.info("findAllTodo - Call");
 
         try {
-            List<TodolistFindResponse> toDoList = todolistService.findAllTodoList(userSeq, projectSeq, regDt);
+            List<FindTodolistResponse> toDoList = todolistService.findAllTodoList(userSeq, projectSeq, regDt);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, toDoList));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
@@ -63,7 +63,7 @@ public class TodolistController {
         log.info("findAllTodo - Call");
 
         try {
-            TodolistFindResponse toDo = todolistService.findTodo(toDoSeq);
+            FindTodolistResponse toDo = todolistService.findTodo(toDoSeq);
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, toDo));
         } catch (RuntimeException e) {
             e.printStackTrace();

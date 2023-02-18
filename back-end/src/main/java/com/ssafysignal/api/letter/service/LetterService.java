@@ -8,8 +8,6 @@ import com.ssafysignal.api.letter.repository.LetterRepository;
 import com.ssafysignal.api.user.entity.User;
 import com.ssafysignal.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

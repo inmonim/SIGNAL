@@ -32,9 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/project")
 public class ProjectSettingController {
-
     private final ProjectSettingService projectSettingService;
-
     private final ProjectService projectService;
 
     @Tag(name = "프로젝트")

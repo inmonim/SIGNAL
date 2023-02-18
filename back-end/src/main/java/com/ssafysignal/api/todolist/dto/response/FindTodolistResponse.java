@@ -8,12 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
 @ApiModel(value = "TodolistFindResponse", description = "To do 정보")
-public class TodolistFindResponse {
+public class FindTodolistResponse {
 
     @Schema(description = "Todo Seq")
     private Integer projectToDoSeq;
@@ -24,8 +22,8 @@ public class TodolistFindResponse {
     @Schema(description = "todo code")
     private CommonCode toDoCode;
 
-    public static TodolistFindResponse fromEntity(final Todolist toDolist) {
-        return TodolistFindResponse.builder()
+    public static FindTodolistResponse fromEntity(final Todolist toDolist) {
+        return FindTodolistResponse.builder()
                 .projectToDoSeq(toDolist.getProjectToDoSeq())
                 .content(toDolist.getContent())
                 .toDoCode(toDolist.getCode())
