@@ -37,4 +37,22 @@ public class AdminProjectController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
+
+    @Tag(name = "관리자")
+    @Operation(summary = "프로젝트 평가 스케줄러", description = "프로젝트 평가 스케줄러 실행한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로젝트 평가 스케줄러 실행 완료"),
+            @ApiResponse(responseCode = "400", description = "프로젝트 평가 스케줄러 실행 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+    @GetMapping("/scheduler")
+    private ResponseEntity<BasicResponse> evaluationScheduler() {
+        log.info("evaluationScheduler - Call");
+
+        try {
+            adminProjectService.evaluationScheduler();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
+        }
+    }
 }

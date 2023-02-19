@@ -84,11 +84,11 @@ public class SignalweekScheduler {
     }
 
 
-    static class Ranking implements Comparable<Ranking> {
-        int signalweekSeq;
+    public static class Ranking implements Comparable<Ranking> {
+        public int signalweekSeq;
         int score;
 
-        Ranking(int signalweekSeq, int score){
+        public Ranking(int signalweekSeq, int score){
             this.signalweekSeq = signalweekSeq;
             this.score = score;
         }

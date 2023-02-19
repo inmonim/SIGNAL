@@ -77,6 +77,7 @@ public class AdminSignalWeekController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "시그널 위크 삭제", description = "시그널 위크를 삭제한다.")
     @ApiResponses({
@@ -89,6 +90,26 @@ public class AdminSignalWeekController {
 
         try {
             adminSignalWeekService.deleteSignalWeek(signalweekScheduleSeq);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (NotFoundException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
+        }
+    }
+
+    @Tag(name = "관리자")
+    @Operation(summary = "시그널 위크 스케줄러 작동", description = "시그널 위크 스케줄러")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "시그널 위크 삭제 완료"),
+            @ApiResponse(responseCode = "400", description = "시그널 위크 삭제 중 오류 발생"),
+            @ApiResponse(responseCode = "403", description = "권한 없음")})
+    @GetMapping("/scheduler")
+    private ResponseEntity<BasicResponse> signalweekScheduler() {
+        log.info("signalweekScheduler - Call");
+
+        try {
+            adminSignalWeekService.signalweekScheduler();
             return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_NOT_FOUND, null));
