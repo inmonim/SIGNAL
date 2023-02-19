@@ -41,11 +41,11 @@ public class PostingController {
     private ResponseEntity<BasicResponse> countPosting() {
         log.info("countPosting - Call");
 
-            try {
-                Integer postingCount = postingService.countPosting();
-                return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Integer>() {{ put("count", postingCount); }}));
-            } catch (RuntimeException e) {
-                return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        try {
+            Integer postingCount = postingService.countPosting();
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, new HashMap<String, Integer>() {{ put("count", postingCount); }}));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
 
@@ -67,6 +67,26 @@ public class PostingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
+
+    @Tag(name = "공고")
+    @Operation(summary = "재공고 등록", description = "공고를 재 등록한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "재공고 등록 완료"),
+            @ApiResponse(responseCode = "400", description = "재공고 등록 중 오류 발생"),
+            @ApiResponse(responseCode = "401", description = "로그인 필요")})
+    @PostMapping("/{projectSeq}")
+    private ResponseEntity<BasicResponse> registAgainPosting(@Parameter(description = "projectSeq") @PathVariable("projectSeq") Integer projectSeq,
+                                                             @Parameter(description = "공고 등록을 위한 정보") @RequestBody BasicPostingRequest postingRegistRequest) {
+        log.info("registAgainPosting - Call");
+
+        try {
+            postingService.registAgainPosting(projectSeq, postingRegistRequest);
+            return ResponseEntity.ok().body(BasicResponse.Body(ResponseCode.SUCCESS, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
+        }
+    }
+
 
     @Tag(name = "공고")
     @Operation(summary = "공고 목록 조회", description = "공고 전체 목록을 조회한다.")
