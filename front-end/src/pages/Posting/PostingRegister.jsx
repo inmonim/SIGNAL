@@ -27,6 +27,7 @@ import Swal from 'sweetalert2'
 import ReactSelect from 'react-select'
 import { changeSelectForm } from 'utils/changeForm'
 import SignalBtn from 'components/common/SignalBtn'
+import AlertModal from 'components/common/AlertModal'
 const Container = styled.section`
   padding: 130px 10em;
 `
@@ -81,11 +82,12 @@ const PostingRegister = () => {
     postingQuestionList: [],
   })
 
+  const [alertOpen, setAlertOpen] = useState(false)
+  const handleToClose = () => setAlertOpen(false)
   const checkHeart = () => {
     api.get(process.env.REACT_APP_API_URL + `/profile/heartCnt/${sessionStorage.getItem('userSeq')}`).then((res) => {
       if (res.data.body < 100) {
-        alert('하트가 부족해양')
-        navigate('/posting')
+        setAlertOpen(true)
       }
     })
   }
@@ -241,6 +243,12 @@ const PostingRegister = () => {
 
   return (
     <Container>
+      <AlertModal
+        msg="하트를 충전해주세요."
+        open={alertOpen}
+        onClick={() => navigate('/posting')}
+        onClose={handleToClose}
+      ></AlertModal>
       <div style={{ marginTop: '10px' }}>
         <div>
           <Title>공고 등록</Title>
