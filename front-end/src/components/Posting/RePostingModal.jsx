@@ -106,9 +106,14 @@ function RepostingModal({ open, onClose }) {
             />
           </div>
           <div style={{ textAlign: 'center', width: '100%' }}>
-            <div className="reposting-title">재공고</div>
-            <div className="login-input" style={{ display: 'inline-block' }}>
-              <div className="reposting-project-date">
+            <div className="reposting-title" style={{ fontSize: '44px' }}>
+              재공고
+            </div>
+            <div className="reposting-input" style={{ display: 'inline-block' }}>
+              <div
+                className="reposting-project-date"
+                style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 0px' }}
+              >
                 <div>프로젝트 모집 기간</div>
                 <div>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -125,7 +130,10 @@ function RepostingModal({ open, onClose }) {
                   </LocalizationProvider>
                 </div>
               </div>
-              <div className="reposting-project-meeting">
+              <div
+                className="reposting-project-meeting"
+                style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 5px' }}
+              >
                 <div>화상미팅 예약</div>
                 <div>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -149,7 +157,10 @@ function RepostingModal({ open, onClose }) {
                   </Box>
                 </div>
               </div>
-              <div className="reposting-project-position">
+              <div
+                className="reposting-project-position"
+                style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 0px' }}
+              >
                 <div>포지션 인원</div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <FilterSelect
@@ -176,21 +187,25 @@ function RepostingModal({ open, onClose }) {
                   />
                 </div>
               </div>
-              <div className="content-section">
-                <div className="label">프로젝트 소개</div>
+              <div
+                className="reposting-content"
+                style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', margin: '10px 0px' }}
+              >
+                <div>프로젝트 소개</div>
                 <div>
                   <TextField fullWidth={true} multiline={true} minRows="5" onChange={handleContentChange} />
                 </div>
               </div>
 
               {/* 지원자에게 물어 보고 싶은 말   */}
-              <div className="question-answer-section">
-                <div className="question-section">
-                  <div className="label" style={{ width: '30%' }}>
-                    지원자에게 물어 보고 싶은 말
-                  </div>
+              <div
+                className="reposting-question-answer-section"
+                style={{ display: 'flex', margin: '10px 0px', flexDirection: 'column' }}
+              >
+                <div className="reposting-question-section">
+                  <div>지원자에게 물어 보고 싶은 말</div>
                 </div>
-                <div className="answer-section">
+                <div className="reposting-answer-section">
                   <div>
                     <form
                       onSubmit={(e) => {
@@ -201,16 +216,19 @@ function RepostingModal({ open, onClose }) {
                         onReset()
                       }}
                     >
-                      <div style={{ marginBottom: '2em' }}>
+                      <div style={{ display: 'flex' }}>
                         <FilterInput
                           placeholder="질문을 입력하세요 "
                           type="text"
                           value={qnaList.text}
                           onChange={handleText}
                         ></FilterInput>
-                        <Button style={{ marginLeft: '1em' }} type="submit" variant="outlined" startIcon={<AddIcon />}>
-                          추가
-                        </Button>
+                        <Button
+                          style={{ marginLeft: '10px' }}
+                          type="submit"
+                          variant="outlined"
+                          startIcon={<AddIcon />}
+                        ></Button>
                       </div>
                       <QnaTodo />
                     </form>
