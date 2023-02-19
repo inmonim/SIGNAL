@@ -43,7 +43,6 @@ import Fourzerofour from 'pages/fourzerofour'
 import PrivateRoute from 'components/Auth/PrivateRoute'
 import AdminRoute from 'components/Auth/AuthRoute'
 import TeamBung from 'pages/TeamBung'
-import RePosting from 'pages/Posting/RePosting'
 
 const MainLayout = () => {
   return (
@@ -110,7 +109,6 @@ function App() {
               path="/postingmodify"
               element={<PrivateRoute component={<PostingModify />} loginAuthenticated={token} />}
             />
-            <Route path="/reposting" element={<PrivateRoute component={<RePosting />} loginAuthenticated={token} />} />
             <Route
               path="/signalregister"
               element={<PrivateRoute component={<Signalregister />} loginAuthenticated={token} />}
