@@ -40,6 +40,7 @@ function ProjectMaintainPage({ projectSeq, setProjectMode }) {
       </div>
       <div className="team-maintain-menu">
         <SignalBtn
+          className={`team-maintain-menu-item ${mode === 0 ? 'active' : ''}`}
           sx={projectSubMenuStyle}
           onClick={() => {
             setMode(0)
@@ -48,6 +49,7 @@ function ProjectMaintainPage({ projectSeq, setProjectMode }) {
           팀 관리
         </SignalBtn>
         <SignalBtn
+          className={`team-maintain-menu-item ${mode === 1 ? 'active' : ''}`}
           sx={projectSubMenuStyle}
           onClick={() => {
             setMode(1)
@@ -68,12 +70,18 @@ function ProjectMaintainPage({ projectSeq, setProjectMode }) {
 
 const projectSubMenuStyle = {
   backgroundColor: '#fff',
-  color: '#574B9F',
+  color: '#9A93C5',
   borderRadius: '50px',
   height: '40px',
-  width: '100px',
+  width: '150px',
+  margin: '0px 20px',
+  fontSize: '18px',
   '&:hover': {
-    backgroundColor: '#574B9F',
+    backgroundColor: '#9A93C5',
+    color: '#fff',
+  },
+  '&.active': {
+    backgroundColor: '#9A93C5',
     color: '#fff',
   },
 }

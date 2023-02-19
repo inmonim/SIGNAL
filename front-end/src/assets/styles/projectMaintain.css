@@ -1,3 +1,5 @@
+
+
 .team-maintain-container {
   width: 1200px;
   font-size: 20px;
@@ -35,6 +37,8 @@
   margin: 10px auto;
   width: 300px;
 }
+
+.team-maintain-menu-item
 
 .team-maintain-profile-image > img {
   text-align: center;
@@ -224,7 +228,11 @@
   margin-top: 10px;
 }
 
-.project-maintain-end{
+/* .project-maintain-end{
+  display: flex;
+  justify-content: center;
+} */
+.project-maintain-btn-container{
   display: flex;
   justify-content: center;
 }

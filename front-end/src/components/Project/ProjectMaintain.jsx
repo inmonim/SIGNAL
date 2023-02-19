@@ -5,6 +5,7 @@ import { Select, TextField, MenuItem } from '@mui/material'
 import 'assets/styles/projectMaintain.css'
 import api from 'api/Api'
 import AlertModal from 'components/common/AlertModal'
+import RepostingModal from 'components/Posting/RePostingModal'
 import { useNavigate } from 'react-router'
 
 function ProjectMaintain({ projectSeq }) {
@@ -135,8 +136,13 @@ function ProjectMaintain({ projectSeq }) {
       navigate('/myproject')
     })
   }
+  const [repostingModalOpen, setRepostingModalOpen] = useState(false)
+  const handleToRepostingAlert = () => {
+    setRepostingModalOpen(true)
+  }
   const handleToClose = () => {
     setEndAlertOpen(false)
+    setRepostingModalOpen(false)
   }
   return (
     <div className="project-maintain-container">
@@ -333,16 +339,38 @@ function ProjectMaintain({ projectSeq }) {
           </div>
         </div>
         <hr className="project-maintain-hr" />
-        <div className="project-maintain-end">
-          <SignalBtn sigwidth="150px" sigheight="50px" sigfontsize="24px" sx={endBtnStyle} onClick={handleToEndAlert}>
-            프로젝트 종료
-          </SignalBtn>
-          <AlertModal
-            open={endAlertOpen}
-            onClick={handleToEnd}
-            onClose={handleToClose}
-            msg="종료하시겠습니까?"
-          ></AlertModal>
+        <div className="project-maintain-btn-container">
+          <div className="project-maintain-reposting">
+            <SignalBtn
+              sigwidth="150px"
+              sigheight="50px"
+              sigfontsize="24px"
+              sigmargin="0px 10px"
+              sx={postingBtnStyle}
+              onClick={handleToRepostingAlert}
+            >
+              재공고
+            </SignalBtn>
+            <RepostingModal open={repostingModalOpen}></RepostingModal>
+          </div>
+          <div className="project-maintain-end">
+            <SignalBtn
+              sigwidth="150px"
+              sigheight="50px"
+              sigfontsize="24px"
+              sigmargin="0px 10px"
+              sx={endBtnStyle}
+              onClick={handleToEndAlert}
+            >
+              프로젝트 종료
+            </SignalBtn>
+            <AlertModal
+              open={endAlertOpen}
+              onClick={handleToEnd}
+              onClose={handleToClose}
+              msg="종료하시겠습니까?"
+            ></AlertModal>
+          </div>
         </div>
       </div>
     </div>
@@ -373,5 +401,15 @@ const endBtnStyle = {
   '&:hover': {
     backgroundColor: '#fff',
     color: '#ff0000',
+  },
+}
+
+const postingBtnStyle = {
+  backgroundColor: '#fff',
+  color: '#ff0000',
+  border: '1px solid #ff0000',
+  '&:hover': {
+    backgroundColor: '#ff0000',
+    color: '#fff',
   },
 }
