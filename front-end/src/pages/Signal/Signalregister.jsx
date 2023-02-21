@@ -40,6 +40,8 @@ function Signalregister() {
   })
   const [userProjectList, setUserProjectList] = useState()
   const [file, setFile] = useState(null)
+  const [fileAlert, setFileAlert] = useState(false)
+  const [pdfAlert, setPdfAlert] = useState(false)
   const handleChangeFile = (event) => {
     setFile(event.target.files[0])
     const maxFileSize = 100 * 1024 * 1024
@@ -47,10 +49,10 @@ function Signalregister() {
     const fileExtension = selectedFile.name.split('.').pop().toLowerCase()
 
     if (selectedFile.size > maxFileSize) {
-      alert('파일 크기가 너무 큽니다.')
+      setFileAlert(true)
       event.target.value = null // input 요소 초기화
     } else if (fileExtension !== 'pdf') {
-      alert('PDF 파일만 업로드 가능합니다.')
+      setPdfAlert(true)
       event.target.value = null // input 요소 초기화
     } else {
       setFile(selectedFile)
@@ -59,6 +61,10 @@ function Signalregister() {
   const [file2, setFile2] = useState(null)
   const handleChangeFile2 = (event) => {
     setFile2(event.target.files[0])
+  }
+  const handleToClose = () => {
+    setFileAlert(false)
+    setPdfAlert(false)
   }
   const [alertOpen, setAlertOpen] = useState(false)
   const handleInput = (e) => {
@@ -105,77 +111,97 @@ function Signalregister() {
   }, [])
 
   return (
-    <div className="signal-page-container">
-      <div className="signal-regist-container">
-        <div className="signal-regist-header">시그널위크 프로젝트 등록</div>
-        <div className="signal-regist-main">
-          <div className="signal-regist-title">
-            <label>프로젝트 제목 </label>
-            <TextField id="filled-multiline-flexible" name="title" multiline sx={inputStyle} onChange={handleInput} />
-          </div>
-          <div className="signal-regist-title">
-            <label>프로젝트 리스트</label>
-            <FilterSelect style={inputStyle2} onChange={handleInput} name="projectSeq">
-              {userProjectList &&
-                userProjectList.map((ele, i) => (
-                  <option key={i} value={ele.projectSeq}>
-                    {ele.subject}
-                  </option>
-                ))}
-            </FilterSelect>
-          </div>
-          <div className="signal-regist-title">
-            <label>UCC(YouTube 주소)</label>
-            <TextField id="filled-multiline-flexible" name="uccUrl" multiline sx={inputStyle} onChange={handleInput} />
-          </div>
-          <div className="signal-regist-title">
-            <label>배포 주소</label>
-            <TextField
-              id="filled-multiline-flexible"
-              name="deployUrl"
-              multiline
-              sx={inputStyle}
-              onChange={handleInput}
-            />
-          </div>
-          <div style={{ display: 'flex', marginBottom: '1em' }}>
+    <>
+      <AlertModal
+        msg="파일 크기가 너무 큽니다."
+        open={fileAlert}
+        onClick={handleToClose}
+        onClose={handleToClose}
+      ></AlertModal>
+      <AlertModal
+        msg="PDF 파일만 업로드 가능합니다."
+        open={pdfAlert}
+        onClick={handleToClose}
+        onClose={handleToClose}
+      ></AlertModal>
+      <div className="signal-page-container">
+        <div className="signal-regist-container">
+          <div className="signal-regist-header">시그널위크 프로젝트 등록</div>
+          <div className="signal-regist-main">
             <div className="signal-regist-title">
-              <label style={{ marginRight: '1em' }}>PDF 파일</label>
-              <input onChange={handleChangeFile} name="pptFile" type="file" id="file" multiple="multiple"></input>
+              <label>프로젝트 제목 </label>
+              <TextField id="filled-multiline-flexible" name="title" multiline sx={inputStyle} onChange={handleInput} />
             </div>
             <div className="signal-regist-title">
-              <label style={{ marginRight: '1em' }}>README 파일</label>
-              <input onChange={handleChangeFile2} name="readmeFile" type="file" id="file" multiple="multiple"></input>
+              <label>프로젝트 리스트</label>
+              <FilterSelect style={inputStyle2} onChange={handleInput} name="projectSeq">
+                {userProjectList &&
+                  userProjectList.map((ele, i) => (
+                    <option key={i} value={ele.projectSeq}>
+                      {ele.subject}
+                    </option>
+                  ))}
+              </FilterSelect>
             </div>
-          </div>
-          <div className="signal-regist-content">
-            <label>내용</label>
-            <TextField
-              id="filled-multiline-flexible"
-              rows={10}
-              multiline
-              sx={inputStyle}
-              name="content"
-              onChange={handleInput}
-            />
-          </div>
-          <div>
-            <SignalBtn
-              sigwidth="84px"
-              sigheight="45px"
-              sigfontsize="24px"
-              sigborderradius={14}
-              sigmargin="12.5px auto"
-              variant="contained"
-              onClick={handlesignalRegist}
-            >
-              완료
-            </SignalBtn>
-            <AlertModal open={alertOpen} onClick={handleAlert} msg="등록되었습니다."></AlertModal>
+            <div className="signal-regist-title">
+              <label>UCC(YouTube 주소)</label>
+              <TextField
+                id="filled-multiline-flexible"
+                name="uccUrl"
+                multiline
+                sx={inputStyle}
+                onChange={handleInput}
+              />
+            </div>
+            <div className="signal-regist-title">
+              <label>배포 주소</label>
+              <TextField
+                id="filled-multiline-flexible"
+                name="deployUrl"
+                multiline
+                sx={inputStyle}
+                onChange={handleInput}
+              />
+            </div>
+            <div style={{ display: 'flex', marginBottom: '1em' }}>
+              <div className="signal-regist-title">
+                <label style={{ marginRight: '1em' }}>PDF 파일</label>
+                <input onChange={handleChangeFile} name="pptFile" type="file" id="file" multiple="multiple"></input>
+              </div>
+              <div className="signal-regist-title">
+                <label style={{ marginRight: '1em' }}>README 파일</label>
+                <input onChange={handleChangeFile2} name="readmeFile" type="file" id="file" multiple="multiple"></input>
+              </div>
+            </div>
+            <div className="signal-regist-content">
+              <label>내용</label>
+              <TextField
+                id="filled-multiline-flexible"
+                rows={10}
+                multiline
+                sx={inputStyle}
+                name="content"
+                onChange={handleInput}
+              />
+            </div>
+            <div>
+              <SignalBtn
+                sigwidth="84px"
+                sigheight="45px"
+                sigfontsize="24px"
+                sigborderradius={14}
+                sigmargin="12.5px auto"
+                variant="contained"
+                onClick={handlesignalRegist}
+              >
+                완료
+              </SignalBtn>
+              <AlertModal open={alertOpen} onClick={handleAlert} msg="등록되었습니다."></AlertModal>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 const FilterSelect = styled.select`
