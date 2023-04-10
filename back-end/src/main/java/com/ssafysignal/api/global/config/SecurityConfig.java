@@ -25,6 +25,7 @@ public class SecurityConfig {
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final JwtExceptionFilter jwtExceptionFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserPositionRepository extends JpaRepository<UserPosition, Integer> {
     List<UserPosition> findByUserSeq(Integer userSeq);
-
     Optional<UserPosition> findByUserPositionSeq(Integer userPositionSeq);
 
 }

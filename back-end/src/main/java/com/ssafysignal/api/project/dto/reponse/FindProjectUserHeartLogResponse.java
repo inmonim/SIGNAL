@@ -14,14 +14,11 @@ import java.time.LocalDateTime;
 @Builder
 @ApiModel(value = "ProjectUserHeartLogResponse")
 public class FindProjectUserHeartLogResponse {
-
     @Schema(description = "하트의 증감 갯수")
     Integer heartCnt;
-
     @Schema(description = "로그 날짜")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", shape = JsonFormat.Shape.STRING)
     LocalDateTime regDt;
-
     @Schema(description = "상세 내역")
     String content;
 

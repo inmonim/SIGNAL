@@ -29,8 +29,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/posting")
 public class PostingController {
-
     private final PostingService postingService;
+
     @Tag(name = "공고")
     @Operation(summary = "공고 전체 수", description = "공고 전체 수를 조회한다.")
     @ApiResponses({
@@ -48,7 +48,6 @@ public class PostingController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
-
 
     @Tag(name = "공고")
     @Operation(summary = "공고 등록", description = "공고를 등록한다.")

@@ -35,7 +35,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;

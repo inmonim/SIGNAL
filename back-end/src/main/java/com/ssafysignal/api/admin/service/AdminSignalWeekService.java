@@ -30,9 +30,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminSignalWeekService {
     private final SignalweekScheduleRepository signalweekScheduleRepository;
-    private final SignalweekRankRepository signalweekRankRepository;
-    private final SignalweekRepository signalweekRepository;
-    private final SignalweekVoteRepository signalweekVoteRepository;
     @Transactional(readOnly = true)
     public FindAllAdminSignalweekResponse findAllSignalWeek(Integer page, Integer size) {
         Page<SignalweekSchedule> signalweekSchedulePage = signalweekScheduleRepository.findAll(PageRequest.of(page - 1, size, Sort.Direction.DESC, "signalweekScheduleSeq"));
@@ -42,6 +39,7 @@ public class AdminSignalWeekService {
                 .count(signalweekSchedulePage.getTotalElements())
                 .build();
     }
+
     @Transactional
     public void registSignalWeek(BasicAdminSignalWeekRequest basicAdminSignalWeekRequest) throws RuntimeException {
         signalweekScheduleRepository.save(SignalweekSchedule.builder()
@@ -53,6 +51,7 @@ public class AdminSignalWeekService {
                         .year(basicAdminSignalWeekRequest.getYear())
                         .build());
     }
+
     @Transactional
     public void modifySignalWeek(Integer signalweekScheduleSeq, BasicAdminSignalWeekRequest basicAdminSignalWeekRequest) throws RuntimeException {
         SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findById(signalweekScheduleSeq)
@@ -67,6 +66,7 @@ public class AdminSignalWeekService {
 
         signalweekScheduleRepository.save(signalweekSchedule);
     }
+
     @Transactional
     public void deleteSignalWeek(Integer signalweekScheduleSeq) throws RuntimeException {
         SignalweekSchedule signalweekSchedule = signalweekScheduleRepository.findById(signalweekScheduleSeq)

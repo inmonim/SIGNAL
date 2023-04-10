@@ -52,14 +52,6 @@ public class User {
         this.nickname = nickname;
         this.phone = phone;
     }
-    
-    public void chargeHeart(int heartCnt) { this.heartCnt = heartCnt; }
-    public void modifyPassword(String password){
-        this.password = password;
-    }
-
-    public void setImageFileSeq(int imageFileSeq){this.userImageFileSeq=imageFileSeq;}
-
 
     // Security 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

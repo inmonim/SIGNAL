@@ -7,13 +7,14 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@ToString
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "notice")
 public class Notice {
     @Id
@@ -38,16 +39,5 @@ public class Notice {
 
     public void addView(Integer view) {
         this.view = view+1;
-    }
-
-    @Builder
-    public Notice(Integer noticeSeq, Integer userSeq, String title, String content,
-                  Integer view, LocalDateTime regDt) {
-        this.noticeSeq = noticeSeq;
-        this.userSeq = userSeq;
-        this.title = title;
-        this.content = content;
-        this.view = view;
-        this.regDt = regDt;
     }
 }

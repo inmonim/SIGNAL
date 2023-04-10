@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
-
     private final UserCareerRepository userCareerRepository;
     private final UserExpRepository userExpRepository;
     private final UserPositionRepository userPositionRepository;
@@ -29,7 +28,6 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
 
-    // 프로필 조회
     @Transactional
     public BasicProfileResponse findProfile(Integer userSeq) throws RuntimeException {
 
@@ -41,9 +39,6 @@ public class ProfileService {
                 .build();
     }
 
-
-    // ========== 프로필 포지션 ==========
-    // 프로필 포지션 등록
     @Transactional
     public void registPosition(Integer userSeq, Map<String, Object> param) throws RuntimeException {
         List<UserPosition> existPositionList = userPositionRepository.findByUserSeq(userSeq);
@@ -54,8 +49,6 @@ public class ProfileService {
                 throw new NotFoundException(ResponseCode.REGIST_FAIL);
             }
         }
-        // 유저가 없으면 어카노!
-
         UserPosition userPosition = UserPosition.builder()
                 .userSeq(userSeq)
                 .positionCode(param.get("positionCode").toString())
@@ -63,8 +56,6 @@ public class ProfileService {
         userPositionRepository.save(userPosition);
     }
 
-
-    // 프로필 포지션 조회
     @Transactional()
     public BasicProfileResponse findAllPosition(Integer userSeq) throws RuntimeException {
         return BasicProfileResponse.builder()
@@ -72,7 +63,6 @@ public class ProfileService {
                 .build();
     }
 
-    // 프로필 포지션 삭제
     @Transactional
     public void deletePosition(Integer userPositionSeq) throws RuntimeException {
 
@@ -81,9 +71,6 @@ public class ProfileService {
         userPositionRepository.delete(userPosition.get());
     }
 
-
-    // ========== 기술스택 ==========
-    // 프로필 기술스택 등록
     @Transactional
     public void registSkill(Integer userSeq, Map<String, Object> param) {
         List<UserSkill> existSkillList = userSkillRepository.findByUserSeq(userSeq);
@@ -99,8 +86,6 @@ public class ProfileService {
         userSkillRepository.save(userSkill);
     }
 
-
-    // 프로필 기술스택 조회
     @Transactional
     public BasicProfileResponse findAllSkill(Integer userSeq) throws RuntimeException {
         return BasicProfileResponse.builder()
@@ -109,8 +94,6 @@ public class ProfileService {
 
     }
 
-    
-    // 프로필 기술스택 삭제
     @Transactional
     public void deleteSkill(Integer userSkillSeq) throws RuntimeException {
 
@@ -119,9 +102,6 @@ public class ProfileService {
         userSkillRepository.delete(userSkill.get());
     }
 
-
-    // ========== 커리어 ==========
-    // 프로필 커리어 등록
     @Transactional
     public void registCareer(Integer userSeq, Map<String, Object> param) throws RuntimeException {
         UserCareer userCareer = UserCareer.builder()
@@ -131,8 +111,6 @@ public class ProfileService {
         userCareerRepository.save(userCareer);
     }
 
-    
-    // 프로필 커리어 조회
     @Transactional
     public BasicProfileResponse findAllCareer(Integer userSeq) throws RuntimeException {
         return BasicProfileResponse.builder()
@@ -140,8 +118,6 @@ public class ProfileService {
                 .build();
     }
 
-
-    // 프로필 커리어 삭제
     @Transactional
     public void deleteCareer(Integer userCareerSeq) throws RuntimeException {
 
@@ -150,9 +126,6 @@ public class ProfileService {
         userCareerRepository.delete(userCareer.get());
     }
 
-
-    // ========== 경험 ==========
-    // 프로필 경험 등록
     @Transactional
     public void registExp(Integer userSeq, Map<String, Object> param) {
 
@@ -164,7 +137,6 @@ public class ProfileService {
         userExpRepository.save(userExp);
     }
 
-    // 프로필 경험 조회
     @Transactional
     public BasicProfileResponse findAllExp(Integer userSeq) throws RuntimeException {
         return BasicProfileResponse.builder()
@@ -172,7 +144,6 @@ public class ProfileService {
                 .build();
     }
 
-    // 프로필 경험 삭제
     @Transactional
     public void deleteExp(Integer userExpSeq) throws RuntimeException {
 
@@ -181,9 +152,6 @@ public class ProfileService {
         userExpRepository.delete(userExp.get());
     }
 
-    // ========== 하트 ==========
-
-    // 하트 충전
     @Transactional
     public void chargeHeart(Integer userSeq, Map<String, Object> param) {
         
@@ -210,8 +178,6 @@ public class ProfileService {
         userHeartLogRepository.save(userHeartLog);
     }
 
-
-    // 하트 로그 조회
     @Transactional
     public FindAllHeartLogResponse findAllUserHeartLog(Integer userSeq) {
         List<UserHeartLog> userHeartLogList = userHeartLogRepository.findAllByUserSeq(userSeq, Sort.by(Sort.Order.desc("regDt")));

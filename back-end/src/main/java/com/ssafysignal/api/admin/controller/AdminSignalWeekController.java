@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/signalweek")
 public class AdminSignalWeekController {
     private final AdminSignalWeekService adminSignalWeekService;
+
     @Tag(name = "관리자")
     @Operation(summary = "시그널 위크 스케줄 목록 조회", description = "시그널 위크 스케줄 목록을 조회한다.")
     @ApiResponses({
@@ -57,6 +58,7 @@ public class AdminSignalWeekController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "시그널 위크 스케줄 수정", description = "시그널 위크 스케줄을 수정한다.")
     @ApiResponses({

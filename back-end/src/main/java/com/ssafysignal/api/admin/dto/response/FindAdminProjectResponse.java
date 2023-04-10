@@ -33,6 +33,7 @@ public class FindAdminProjectResponse {
     public static List<FindAdminProjectResponse> toList(List<Project> projectList){
         return projectList.stream().map(FindAdminProjectResponse::fromEntity).collect(Collectors.toList());
     }
+
     public static FindAdminProjectResponse fromEntity(Project project){
         return FindAdminProjectResponse.builder()
                 .projectSeq(project.getProjectSeq())

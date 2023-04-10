@@ -4,11 +4,15 @@ import com.ssafysignal.api.common.entity.CommonCode;
 import com.ssafysignal.api.project.entity.ProjectPosition;
 import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value = "ProjectMemberModifyDto", description = "프로젝트 포지션 정보")
 public class ModifyProjectMemberDto {
     @Schema(description = "포지션")

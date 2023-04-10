@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostingService {
-
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final PostingRepository postingRepository;

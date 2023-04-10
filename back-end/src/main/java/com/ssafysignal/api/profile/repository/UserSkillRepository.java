@@ -10,6 +10,5 @@ import java.util.Optional;
 @Repository
 public interface UserSkillRepository extends JpaRepository<UserSkill, Integer> {
     List<UserSkill> findByUserSeq(Integer userSeq);
-
     Optional<UserSkill> findByUserSkillSeq(Integer userSkillSeq);
 }

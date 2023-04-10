@@ -1,6 +1,5 @@
 package com.ssafysignal.api.auth.repository;
 
-import com.ssafysignal.api.auth.entity.Auth;
 import com.ssafysignal.api.auth.entity.UserAuth;
 import com.ssafysignal.api.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

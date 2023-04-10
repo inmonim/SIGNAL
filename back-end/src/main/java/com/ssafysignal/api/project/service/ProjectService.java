@@ -29,14 +29,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
-
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ApplyRepository applyRepository;
     private final ProjectUserHeartLogRepository projectUserHeartLogRepository;
     private final UserRepository userRepository;
     private final UserHeartLogRepository userHeartLogRepository;
-
 
     @Transactional
     public void registProject(Integer postingSeq) throws RuntimeException {

@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProjectSettingService {
-
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final ProjectEvaluationRepository projectEvaluationRepository;
@@ -161,7 +160,6 @@ public class ProjectSettingService {
                 .orElseThrow(() -> new NotFoundException(ResponseCode.DELETE_NOT_FOUND));
         projectPosition.setPositionCnt(projectPosition.getPositionCnt() - 1);
         projectPositionRepository.save(projectPosition);
-
     }
 
     @Transactional

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminQnaService {
     private final QnaRepository qnaRepository;
+
     @Transactional
     public void registFaq(Integer qnaSeq, Boolean isTop) throws RuntimeException {
         Qna qna = qnaRepository.findById(qnaSeq)
@@ -20,6 +21,7 @@ public class AdminQnaService {
         qna.setIsTop(isTop);
         qnaRepository.save(qna);
     }
+
     @Transactional
     public void registQna(Integer qnaSeq, String content) throws RuntimeException {
         Qna qna = qnaRepository.findById(qnaSeq)
@@ -28,6 +30,7 @@ public class AdminQnaService {
         qna.setAnswer(content);
         qnaRepository.save(qna);
     }
+
     @Transactional
     public void modifyQna(Integer qnaSeq, String answer) throws RuntimeException {
         Qna qna = qnaRepository.findById(qnaSeq)
@@ -36,6 +39,7 @@ public class AdminQnaService {
         qna.setAnswer(answer);
         qnaRepository.save(qna);
     }
+
     @Transactional
     public void deleteQna(Integer qnaSeq) throws RuntimeException {
         Qna qna = qnaRepository.findById(qnaSeq)

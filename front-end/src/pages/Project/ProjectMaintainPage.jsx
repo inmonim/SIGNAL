@@ -75,7 +75,7 @@ const projectSubMenuStyle = {
   height: '40px',
   width: '150px',
   margin: '0px 20px',
-  fontSize: '16px',
+  fontSize: '18px',
   '&:hover': {
     backgroundColor: '#9A93C5',
     color: '#fff',

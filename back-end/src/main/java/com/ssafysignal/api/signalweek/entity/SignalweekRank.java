@@ -20,16 +20,12 @@ public class SignalweekRank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "signalweek_rank_seq")
     private Integer signalweekRankSeq;
-
     @Column(name = "signalweek_schedule_seq")
     private Integer signalweekScheduleSeq;
-
     @Column(name = "ranking")
     private Integer ranking;
-
     @Column(name = "signalweek_seq")
     private Integer signalweekSeq;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "signalweek_seq", insertable = false, updatable = false)
     private Signalweek signalweek;

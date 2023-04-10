@@ -92,8 +92,7 @@ public class SignalweekScheduler {
             this.signalweekSeq = signalweekSeq;
             this.score = score;
         }
-
-
+        
         @Override
         public int compareTo(Ranking o) {
             return o.score-this.score;
