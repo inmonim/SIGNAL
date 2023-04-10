@@ -92,7 +92,6 @@ function Header() {
         navigate(`/`)
       })
       .catch((e) => {
-        alert('다시 시도')
         return e.message
       })
   }
