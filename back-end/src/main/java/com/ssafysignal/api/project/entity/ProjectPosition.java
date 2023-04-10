@@ -13,6 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_position")
 public class ProjectPosition {
     @Id
@@ -28,13 +30,4 @@ public class ProjectPosition {
     @OneToOne
     @JoinColumn(name = "position_code", insertable = false, updatable = false)
     private CommonCode code;
-
-    @Builder
-    public ProjectPosition(Integer projectEvaluationSeq, Integer projectSeq, String positionCode, Integer positionCnt, CommonCode code) {
-        ProjectEvaluationSeq = projectEvaluationSeq;
-        this.projectSeq = projectSeq;
-        this.positionCode = positionCode;
-        this.positionCnt = positionCnt;
-        this.code = code;
-    }
 }

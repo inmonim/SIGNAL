@@ -24,7 +24,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
-
     private final ProfileService profileService;
 
     @Tag(name = "마이프로필")
@@ -45,9 +44,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-
-    
-    // ==================== 포지션 ====================
 
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 포지션 등록", description = "프로필 포지션을 등록한다.")
@@ -70,7 +66,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 포지션 목록 조회", description = "프로필의 포지션 목록을 조회한다")
     @GetMapping("position/{userSeq}")
@@ -84,7 +79,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-
 
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 포지션 삭제", description = "프로필의 포지션을 삭제한다")
@@ -100,9 +94,6 @@ public class ProfileController {
         }
     }
 
-
-    // ==================== 기술스택 ====================
-    
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 기술스택 등록", description = "프로필 기술스택을 등록한다.")
     @ApiResponses({
@@ -124,7 +115,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 기술스택 목록 조회", description = "프로필 기술스택 목록을 조회한다.")
     @ApiResponses({
@@ -143,7 +133,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-
     
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 스킬 삭제", description = "프로필의 스킬을 삭제한다")
@@ -158,9 +147,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
-
-    
-    // ==================== 경력 ====================
 
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경력 등록", description = "프로필 경력을 등록한다.")
@@ -183,7 +169,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경력 목록 조회", description = "프로필 경력 목록을 조회한다.")
     @ApiResponses({
@@ -203,7 +188,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경력 삭제", description = "프로필의 경력을 삭제한다")
     @DeleteMapping("career/{userCareerSeq}")
@@ -217,9 +201,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
-
-
-    // ==================== 경험 ====================
 
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경험 등록", description = "프로필 경험을 등록한다.")
@@ -242,7 +223,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경험 목록 조회", description = "프로필 경험 목록을 조회한다.")
     @ApiResponses({
@@ -262,7 +242,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "프로필 경험 삭제", description = "프로필의 경험을 삭제한다")
     @DeleteMapping("exp/{userExpSeq}")
@@ -276,8 +255,6 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
-
-    // ========== 하트 ==========
 
     @Tag(name = "마이프로필")
     @Operation(summary = "하트 충전", description = "하트를 충전한다")
@@ -294,7 +271,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "하트 로그 목록 조회", description = "하트 충전 및 사용 내력을 조회한다")
     @GetMapping("heart/{userSeq}")
@@ -309,7 +285,6 @@ public class ProfileController {
         }
     }
 
-
     @Tag(name = "마이프로필")
     @Operation(summary = "유저 하트 조회", description = "유저의 현재 하트를 조회한다")
     @GetMapping("heartCnt/{userSeq}")
@@ -323,5 +298,4 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.NOT_FOUND, null));
         }
     }
-
 }

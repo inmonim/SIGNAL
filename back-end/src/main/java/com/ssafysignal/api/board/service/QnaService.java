@@ -19,7 +19,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class QnaService {
-
     private final QnaRepository qnaRepository;
     private final SecurityService securityService;
 

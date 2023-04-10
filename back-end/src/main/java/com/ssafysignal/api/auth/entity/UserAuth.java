@@ -11,11 +11,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "user_auth")
 public class UserAuth implements GrantedAuthority {
     @Id

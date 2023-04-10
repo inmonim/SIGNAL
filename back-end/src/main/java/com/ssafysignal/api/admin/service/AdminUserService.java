@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminUserService {
-
     private final BlackUserRepository blackUserRepository;
 
     @Transactional(readOnly = true)

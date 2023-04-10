@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/admin/user")
 public class AdminUserController {
     private final AdminUserService adminUserService;
+
     @Tag(name = "관리자")
     @Operation(summary = "회원 목록 조회", description = "회원 목록을 조회한다.")
     @ApiResponses({
@@ -39,6 +40,7 @@ public class AdminUserController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.LIST_NOT_FOUND, null));
         }
     }
+
     @Tag(name = "관리자")
     @Operation(summary = "회원 밴 해제", description = "회원 밴을 해제한다.")
     @ApiResponses({

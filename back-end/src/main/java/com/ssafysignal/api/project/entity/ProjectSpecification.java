@@ -1,20 +1,11 @@
 package com.ssafysignal.api.project.entity;
 
-import com.querydsl.core.types.Expression;
 import com.ssafysignal.api.posting.entity.Posting;
-import com.ssafysignal.api.posting.entity.PostingSkill;
 
-import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.In;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @ApiModel(value = "HeartLogResponse")
 public class FindHeartLogResponse {
-
-
     @Schema(description = "하트의 증감 갯수")
     Integer heartCnt;
 

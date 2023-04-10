@@ -4,7 +4,7 @@ import com.ssafysignal.api.global.exception.NotFoundException;
 import com.ssafysignal.api.global.response.ResponseCode;
 import com.ssafysignal.api.todolist.dto.request.ModifyTodoRequest;
 import com.ssafysignal.api.todolist.dto.request.RegistTodoRequest;
-import com.ssafysignal.api.todolist.dto.response.TodolistFindResponse;
+import com.ssafysignal.api.todolist.dto.response.FindTodolistResponse;
 import com.ssafysignal.api.todolist.entity.Todolist;
 import com.ssafysignal.api.todolist.repository.TodolistRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +30,12 @@ public class TodolistService{
                 .build();
         todolistRepository.save(todo);
     }
-
     @Transactional(readOnly=true)
-    public List<TodolistFindResponse> findAllTodoList(Integer userSeq,
+    public List<FindTodolistResponse> findAllTodoList(Integer userSeq,
                                                       Integer projectSeq,
                                                       String regDt) {
         List<Todolist> toDoList = todolistRepository.findByUserSeq(userSeq);
         List<Todolist> responseTodolist = new ArrayList<>();
-
 
         for (Todolist toDo:toDoList) {
             if (toDo.getProjectSeq().equals(projectSeq)
@@ -45,19 +43,18 @@ public class TodolistService{
                 responseTodolist.add(toDo);
             }
         }
-
         return responseTodolist
                 .stream()
-                .map(TodolistFindResponse::fromEntity)
+                .map(FindTodolistResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly=true)
-    public TodolistFindResponse findTodo(Integer toDoSeq){
+    public FindTodolistResponse findTodo(Integer toDoSeq){
         Todolist toDo = todolistRepository.findByProjectToDoSeq(toDoSeq)
                 .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
 
-        return TodolistFindResponse.fromEntity(toDo);
+        return FindTodolistResponse.fromEntity(toDo);
     }
 
     @Transactional

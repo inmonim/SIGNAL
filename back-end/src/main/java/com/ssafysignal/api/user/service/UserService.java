@@ -141,7 +141,7 @@ public class UserService {
         }
         // 비밀번호 암호화
         String passwordEncode = passwordEncoder.encode(newPassword);
-        user.modifyPassword(passwordEncode);
+        user.setPassword(passwordEncode);
         userRepository.save(user);
     }
 

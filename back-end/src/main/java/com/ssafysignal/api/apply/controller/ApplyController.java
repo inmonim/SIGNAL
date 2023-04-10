@@ -52,6 +52,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.REGIST_FAIL, null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 수정", description = "지원서를 수정한다.")
     @ApiResponses({
@@ -77,6 +78,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 상세 조회", description = "지원서 상세 정보를 조회한다.")
     @ApiResponses({
@@ -96,6 +98,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 삭제", description = "지원서를 삭제한다.")
     @ApiResponses({
@@ -117,6 +120,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.DELETE_FAIL, null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "작성자 지원서 목록 조회", description = "작성자 기준으로 지원서 목록을 조회한다.")
     @ApiResponses({
@@ -137,6 +141,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "작성자 지원서 갯수 조회", description = "작성자 기준으로 지원서 갯수 조회한다.")
     @ApiResponses({
@@ -155,6 +160,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원자 지원서 목록 조회", description = "지원자 기준으로 지원서 목록을 조회한다.")
     @ApiResponses({
@@ -175,6 +181,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원자 지원서 갯수 조회", description = "지원자 기준으로 지원서 갯수를 조회한다.")
     @ApiResponses({
@@ -193,6 +200,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(e.getErrorCode(), null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 메모 등록", description = "지원서 메모 등록한다.")
     @ApiResponses({
@@ -213,6 +221,7 @@ public class ApplyController {
             return ResponseEntity.badRequest().body(BasicResponse.Body(ResponseCode.MODIFY_FAIL, null));
         }
     }
+
     @Tag(name = "지원")
     @Operation(summary = "지원서 메모 조회", description = "지원서 메모 조회한다..")
     @ApiResponses({

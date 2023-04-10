@@ -10,10 +10,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@ToString
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_evaluation")
 public class ProjectEvaluation {
     @Id
@@ -37,17 +39,4 @@ public class ProjectEvaluation {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_evaluation_seq", insertable = false, updatable = false)
     private ProjectEvaluationQuestion projectEvaluationQuestion;
-
-    @Builder
-    public ProjectEvaluation(Integer projectEvaluationSeq, Integer projectSeq, Integer fromUserSeq, Integer toUserSeq, Integer num, Integer score, Integer weekCnt, LocalDateTime regDt, ProjectEvaluationQuestion projectEvaluationQuestion) {
-        ProjectEvaluationSeq = projectEvaluationSeq;
-        this.projectSeq = projectSeq;
-        this.fromUserSeq = fromUserSeq;
-        this.toUserSeq = toUserSeq;
-        this.num = num;
-        this.score = score;
-        this.weekCnt = weekCnt;
-        this.regDt = regDt;
-        this.projectEvaluationQuestion = projectEvaluationQuestion;
-    }
 }

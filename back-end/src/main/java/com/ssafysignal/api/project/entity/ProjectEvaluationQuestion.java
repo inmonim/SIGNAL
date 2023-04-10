@@ -10,10 +10,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@ToString
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_evaluation_question")
 public class ProjectEvaluationQuestion {
     @Id
@@ -22,10 +24,4 @@ public class ProjectEvaluationQuestion {
     private Integer ProjectEvaluationQuestionSeq;
     @Column(name = "content")
     private String content;
-
-    @Builder
-    public ProjectEvaluationQuestion(Integer projectEvaluationQuestionSeq, String content) {
-        ProjectEvaluationQuestionSeq = projectEvaluationQuestionSeq;
-        this.content = content;
-    }
 }

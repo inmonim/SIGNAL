@@ -12,19 +12,18 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 @ApiModel(value = "TodolistFindAllResponse", description = "To Do List 목록 정보")
-public class TodolistFindAllResponse {
-
+public class FindAllTodolistResponse {
     @Schema(description = "TodoList 목록", required = true)
-    private List<TodolistFindResponse> todoList;
+    private List<FindTodolistResponse> todoList;
 
-    private TodolistFindAllResponse(final List<TodolistFindResponse> todoList) {
+    private FindAllTodolistResponse(final List<FindTodolistResponse> todoList) {
         this.todoList = todoList;
     }
 
-    public static TodolistFindAllResponse fromEntity(final List<Todolist> findTodoList) {
-        List<TodolistFindResponse> todoList = findTodoList.stream()
-                .map(TodolistFindResponse::fromEntity)
+    public static FindAllTodolistResponse fromEntity(final List<Todolist> findTodoList) {
+        List<FindTodolistResponse> todoList = findTodoList.stream()
+                .map(FindTodolistResponse::fromEntity)
                 .collect(Collectors.toList());
-        return new TodolistFindAllResponse(todoList);
+        return new FindAllTodolistResponse(todoList);
     }
 }

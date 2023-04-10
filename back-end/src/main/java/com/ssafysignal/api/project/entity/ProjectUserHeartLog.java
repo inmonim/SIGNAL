@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_user_heart_log")
 public class ProjectUserHeartLog {
     @Id
@@ -27,13 +29,4 @@ public class ProjectUserHeartLog {
     private String content;
     @Column(name = "reg_dt")
     private LocalDateTime regDt;
-
-    @Builder
-    public ProjectUserHeartLog(Integer projectUserHeartLogSeq, Integer projectUserSeq, Integer heartCnt, String content, LocalDateTime regDt) {
-        this.projectUserHeartLogSeq = projectUserHeartLogSeq;
-        this.projectUserSeq = projectUserSeq;
-        this.heartCnt = heartCnt;
-        this.content = content;
-        this.regDt = regDt;
-    }
 }

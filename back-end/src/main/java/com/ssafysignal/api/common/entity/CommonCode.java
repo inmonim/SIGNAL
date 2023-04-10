@@ -2,13 +2,19 @@ package com.ssafysignal.api.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
-@Getter
-@ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "common_code")
 public class CommonCode {
 
@@ -25,15 +31,4 @@ public class CommonCode {
     @Column(name = "url")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String url;
-
-    @Builder
-    public CommonCode(String code, String name, String groupCode, String groupName, String url) {
-        this.code = code;
-        this.name = name;
-        this.groupCode = groupCode;
-        this.groupName = groupName;
-        this.url = url;
-    }
-
-
 }

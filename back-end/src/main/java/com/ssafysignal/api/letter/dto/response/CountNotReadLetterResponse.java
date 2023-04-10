@@ -8,7 +8,6 @@ import lombok.Getter;
 @Builder
 public class CountNotReadLetterResponse {
     private long count;
-
     @Builder
     public CountNotReadLetterResponse(long count) {
         this.count = count;

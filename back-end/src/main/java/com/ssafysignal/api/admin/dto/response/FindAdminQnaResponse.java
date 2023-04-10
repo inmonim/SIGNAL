@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class FindAdminQnaResponse {
-
     private Integer qnaSeq;
     private Integer userSeq;
     private String title;

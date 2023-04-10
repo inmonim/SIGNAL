@@ -10,13 +10,10 @@ public class FindSignalweekRankResponse {
 
     @Schema(description = "signalweekSeq")
     private Integer signalweekSeq;
-
     @Schema(description = "시그널 위크 프로젝트 title")
     private String subject;
-
     @Schema(description = "프로젝트 대표 이미지 url")
     private String projectImageUrl;
-
     @Schema(description = "랭킹")
     private Integer rank;
 }

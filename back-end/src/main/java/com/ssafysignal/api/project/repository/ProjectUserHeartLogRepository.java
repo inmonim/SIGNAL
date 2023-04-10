@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 public interface ProjectUserHeartLogRepository extends JpaRepository<ProjectUserHeartLog, Integer> {
-    Optional<ProjectUserHeartLog> findByProjectUserSeq(Integer UserSeq);
     List<ProjectUserHeartLog> findAllByProjectUserSeq(Integer projectUserSeq, Sort sort);
 }

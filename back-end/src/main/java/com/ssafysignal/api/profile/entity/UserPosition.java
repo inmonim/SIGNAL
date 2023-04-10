@@ -8,10 +8,12 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@ToString
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "user_position")
 public class UserPosition {
 
@@ -25,11 +27,4 @@ public class UserPosition {
 
     @Column(name = "position_code")
     private String positionCode;
-
-    @Builder
-    public UserPosition(Integer userPositionSeq, Integer userSeq, String positionCode) {
-        this.userPositionSeq = userPositionSeq;
-        this.userSeq = userSeq;
-        this.positionCode = positionCode;
-    }
 }

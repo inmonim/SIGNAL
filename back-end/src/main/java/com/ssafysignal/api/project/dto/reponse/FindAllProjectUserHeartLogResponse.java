@@ -11,14 +11,12 @@ import java.util.stream.Collectors;
 @Data
 @ApiModel(value = "ProjectUserHeartLogAllResponse")
 public class FindAllProjectUserHeartLogResponse {
-
     @Schema(description = "프로젝트 유저 하트 로고 목록", required = true)
     List<FindProjectUserHeartLogResponse> projectUserHeartLogList;
 
     private FindAllProjectUserHeartLogResponse(final List<FindProjectUserHeartLogResponse> projectUserHeartLogList) {
         this.projectUserHeartLogList = projectUserHeartLogList;
     }
-
 
     public static FindAllProjectUserHeartLogResponse fromEntity(final List<ProjectUserHeartLog> findProjectUserHeartLogList) {
         return new FindAllProjectUserHeartLogResponse(findProjectUserHeartLogList.stream()

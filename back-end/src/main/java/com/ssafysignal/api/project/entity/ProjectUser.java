@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
+@Builder
+@AllArgsConstructor
 @Table(name = "project_user")
 public class ProjectUser {
     @Id
@@ -58,19 +59,5 @@ public class ProjectUser {
                 .heartCnt(100)
                 .positionCode(apply.getPositionCode())
                 .build();
-    }
-
-    @Builder
-    public ProjectUser(Integer projectUserSeq, Integer userSeq, Integer projectSeq, Integer warningCnt, String positionCode, boolean isLeader, Integer heartCnt, User user, CommonCode code, List<ProjectUserHeartLog> projectUserHeartLogList) {
-        this.projectUserSeq = projectUserSeq;
-        this.userSeq = userSeq;
-        this.projectSeq = projectSeq;
-        this.warningCnt = warningCnt;
-        this.positionCode = positionCode;
-        this.isLeader = isLeader;
-        this.heartCnt = heartCnt;
-        this.user = user;
-        this.code = code;
-        this.projectUserHeartLogList = projectUserHeartLogList;
     }
 }
