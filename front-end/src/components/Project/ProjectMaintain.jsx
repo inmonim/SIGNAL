@@ -298,7 +298,16 @@ function ProjectMaintain({ projectSeq }) {
             <div className="project-maintain-label">프로젝트 설명</div>
             <div className="project-maintain-content">
               {mode ? (
-                <div className="project-maintain-text-area">{content}</div>
+                <div className="project-maintain-text-area">
+                  {(content || '').split('\n').map((line, index) => {
+                    return (
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    )
+                  })}
+                </div>
               ) : (
                 <TextField
                   style={textAreaStyle}

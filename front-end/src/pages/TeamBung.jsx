@@ -16,7 +16,7 @@ function TeamBung() {
         <video muted autoPlay loop>
           <source src={bgPurple} type="video/webm" />
         </video>
-        <div className="team-bung-title">시그널 개발팀 &quot;붕어빵&quot;</div>
+        <div className="team-bung-title">Team &quot;붕어빵&quot; in SIGNAL</div>
         <div className="team-bung-item-container">
           <div className="team-bung-item" onClick={() => window.open('https://github.com/kwonhyeokgeun')}>
             <img className="team-bung-item-img" src={hyuk} alt="" />

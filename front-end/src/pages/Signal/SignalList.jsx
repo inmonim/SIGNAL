@@ -116,7 +116,7 @@ function SignalList() {
           </>
         ) : (
           <div className="signal-term-valid-box">
-            <div style={{ textAlign: 'center', fontSize: '27px' }}>아직 시그널 위크가 개설되지 않았습니다</div>
+            <div style={{ textAlign: 'center', fontSize: '27px' }}>시그널 위크 등록 기간이 아닙니다.</div>
           </div>
         )}
       </div>

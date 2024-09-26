@@ -148,6 +148,49 @@ public class PostingService {
                 .build());
     }
 
+    @Transactional
+    public void registAgainPosting(Integer projectSeq, BasicPostingRequest postingRegistRequest) throws RuntimeException {
+
+        Project project = projectRepository.findById(projectSeq)
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        // 공고 등록
+        Posting posting = postingRepository.findById(project.getPostingSeq())
+                .orElseThrow(() -> new NotFoundException(ResponseCode.NOT_FOUND));
+
+        posting.setPostingEndDt(postingRegistRequest.getPostingEndDt());
+        posting.setContent(postingRegistRequest.getContent());
+        posting.setPostingMeetingList(new ArrayList<>());
+        posting.setPostingPositionList(new ArrayList<>());
+        posting.setPostingQuestionList(new ArrayList<>());
+
+        // 사전 미팅
+        for (LocalDateTime meeting : postingRegistRequest.getPostingMeetingList()) {
+            posting.getPostingMeetingList().add(PostingMeeting.builder()
+                    .fromUserSeq(postingRegistRequest.getUserSeq())
+                    .meetingDt(meeting)
+                    .build()
+            );
+        }
+        // 포지션
+        for (Map<String, Object> position : postingRegistRequest.getPostingPositionList()) {
+            posting.getPostingPositionList().add(PostingPosition.builder()
+                    .positionCode((String) position.get("positionCode"))
+                    .positionCnt((Integer) position.get("positionCnt"))
+                    .build()
+            );
+        }
+        // 사전 질문
+        for (Map<String, Object> question : postingRegistRequest.getPostingQuestionList()) {
+            posting.getPostingQuestionList().add(PostingQuestion.builder()
+                    .num((Integer) question.get("num"))
+                    .content((String) question.get("content"))
+                    .build()
+            );
+        }
+        postingRepository.save(posting);
+    }
+
     @Transactional(readOnly = true)
     public Map<String, Object> findAllPosting(Integer page, Integer size, Map<String, Object> searchKeys, List<String> postingSkillList) throws RuntimeException {
         if (postingSkillList != null && postingSkillList.size() > 0) {

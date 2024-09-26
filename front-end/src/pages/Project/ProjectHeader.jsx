@@ -119,7 +119,16 @@ function ProjectHeader() {
                 </div>
               </div>
               <div className="project-detail-body-section">
-                <div className="project-detail-content">{project.content}</div>
+                <div className="project-detail-content">
+                  {(project.content || '').split('\n').map((line, index) => {
+                    return (
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    )
+                  })}
+                </div>
                 <div className="project-detail-enter-progress">
                   <div className="project-detail-enter-progress-btn" onClick={handleToProgress}>
                     입장하기 &gt;&gt;
